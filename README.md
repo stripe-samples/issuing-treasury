@@ -82,4 +82,4 @@ In order to run the application, after you installed the dependencies and create
 npm run dev
 ```
 
-*Notice: This application is intended to be an example, and it should be run in production as is.*
+*Notice: This application is intended to be an example, and it should not be run in production as is.*
