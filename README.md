@@ -1,13 +1,11 @@
+## Example Stripe Treasury integration showing Embedded Finance
 
-## About HomemadeHAM (Embedded Finance POC in a Box)
 
-  
+This demo is an application that allows you to quickly experiment with an
+Embedded Finance experience.
 
-The Embedded Finance POC in a box is an application that allows platforms to quickly experiment with an Embedded Finance experience.
 
-  
-
-With this application, platform users can:
+With this application, you can:
 
 - Sign up for a Stripe [Custom connect](https://stripe.com/docs/connect/custom-accounts) Account and for a Stripe Treasury Financial Account.
 
@@ -27,18 +25,18 @@ With this application, platform users can:
 
 - Send money from the Financial Account, either using ACH or Wire Transfers.
 
-  
+
 
 In addition to these functions, there is also a *Test Mode only* section that will help platforms understanding the different mechanisms to fund Financial Accounts by:
 
- 
+
 - Simulating receiving a Transfer from an external account to a Financial Account.
 
 - Creating a PaymentLink and then, paying out funds from the Connected Account balance to the Financial Account Balance.
 
 ## Requirements
 
-  
+
 
 **A Stripe account**: You can sign up for a Stripe account here: https://dashboard.stripe.com/register
 
@@ -46,27 +44,24 @@ In addition to these functions, there is also a *Test Mode only* section that wi
 
 **Stripe API Key**s: Available in your Stripe dashboard here: https://dashboard.stripe.com/test/apikeys
 
-  
+
 
 ## Installation instructions
 
-  
+
 
 ### Installing the dependencies
 
-  
 
 After cloning this repo, install the dependencies.
 
-  
+
 
 ```bash
-
 npm install
-
 ```
 
-  
+
 
 ### Populating the .env file
 
@@ -84,9 +79,7 @@ Edit your new .env file and add:
 In order to run the application, after you installed the dependencies and created the .env file run the following command:
 
 ```bash
-
 npm run dev
-
 ```
 
 *Notice: This application is intended to be an example, and it should be run in production as is.*
