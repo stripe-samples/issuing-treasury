@@ -24,7 +24,6 @@ export default async function handler(req, res) {
     let price;
 
     if (prices.data.length < 1) {
-      //Price is created on the platform account
       price = await stripe.prices.create(
         {
           unit_amount: 1000,
