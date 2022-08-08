@@ -1,0 +1,8 @@
+version: 2
+updates:
+  # node dependencies
+  - package-ecosystem: "npm"
+    directory: "../"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
