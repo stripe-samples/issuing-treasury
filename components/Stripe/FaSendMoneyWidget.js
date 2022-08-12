@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {formatUSD} from '../../utils/format';
 
 function FaSendMoneyWidget() {
   const [submitted, setSubmitted] = useState(false);
@@ -16,6 +17,10 @@ function FaSendMoneyWidget() {
   const [transactionResult, setTransactionResult] = useState('pending');
   const descriptor = 'FromPlatform';
   const [notes, setNotes] = useState('');
+  const [city, setCity] = useState('');
+  const [addressState, setAddressState] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [address1, setAddress1] = useState('');
 
   return (
     <div>
@@ -88,62 +93,6 @@ function FaSendMoneyWidget() {
                           <div className="grid grid-cols-6 gap-6">
                             <div className="col-span-6">
                               <label
-                                htmlFor="name"
-                                className="block text-sm font-medium text-gray-700"
-                              >
-                                Name
-                              </label>
-                              <input
-                                type="text"
-                                name="name"
-                                id="name"
-                                autoComplete="name"
-                                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                onChange={(e) => setName(e.target.value)}
-                              />
-                            </div>
-
-                            <div className="col-span-6">
-                              <label
-                                htmlFor="routing_number"
-                                className="block text-sm font-medium text-gray-700"
-                              >
-                                Routing Number
-                              </label>
-                              <input
-                                type="text"
-                                name="routing_number"
-                                id="routing_number"
-                                autoComplete="routing_number"
-                                placeholder="110000000"
-                                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                onChange={(e) =>
-                                  setRoutingNumber(e.target.value)
-                                }
-                              ></input>
-                            </div>
-
-                            <div className="col-span-6">
-                              <label
-                                htmlFor="account_number"
-                                className="block text-sm font-medium text-gray-700"
-                              >
-                                Account Number
-                              </label>
-                              <input
-                                type="text"
-                                name="account_number"
-                                id="account_number"
-                                autoComplete="account_number"
-                                placeholder="1234567890"
-                                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                onChange={(e) =>
-                                  setAccountNumber(e.target.value)
-                                }
-                              ></input>
-                            </div>
-                            <div className="col-span-6">
-                              <label
                                 htmlFor="network"
                                 className="block text-sm font-medium text-gray-700"
                               >
@@ -156,10 +105,8 @@ function FaSendMoneyWidget() {
                                       type="radio"
                                       className="form-radio"
                                       name="network"
-                                      id="network"
                                       value="ach"
-                                      checked
-                                      onChange={(e) =>
+                                      onClick={(e) =>
                                         setNetwork(e.target.value)
                                       }
                                     ></input>
@@ -170,9 +117,8 @@ function FaSendMoneyWidget() {
                                       type="radio"
                                       className="form-radio"
                                       name="network"
-                                      id="network"
                                       value="us_domestic_wire"
-                                      onChange={(e) =>
+                                      onClick={(e) =>
                                         setNetwork(e.target.value)
                                       }
                                     ></input>
@@ -208,7 +154,7 @@ function FaSendMoneyWidget() {
                         id="close-sendmoney-modal2"
                         className="absolute top-0 right-10 w-10 p-4 rounded-full cursor-pointer hover:text-gray-600"
                         onClick={() => {
-                          if (setTransferSuccess) {
+                          if (transferSuccess) {
                             window.location.reload(false);
                           }
                           setShowModal(false);
@@ -233,7 +179,121 @@ function FaSendMoneyWidget() {
                         Send Money
                       </h1>
                       <div className="bg-white">
-                        <div className="grid grid-cols-6 gap-6">
+                        <div className="grid grid-cols-6 gap-4">
+                          <div className="col-span-6">
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Name
+                            </label>
+                            <input
+                              type="text"
+                              name="name"
+                              id="name"
+                              autoComplete="name"
+                              className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                              onChange={(e) => setName(e.target.value)}
+                            />
+                          </div>
+                          {network === 'us_domestic_wire' ? (
+                           <div className="col-span-6 grid grid-cols-4 gap-4">
+                            
+                              <div className="col-span-4">
+                                <label className="block text-sm font-medium text-gray-700">
+                                  Street address
+                                </label>
+                                <input
+                                  type="text"
+                                  name="address1"
+                                  id="address1"
+                                  className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                  onChange={(e) => setAddress1(e.target.value)}
+                                ></input>
+                              </div>
+
+                              <div className="col-span-2">
+                                <label className="block text-sm font-medium text-gray-700">
+                                  City
+                                </label>
+                                <input
+                                  type="text"
+                                  name="city"
+                                  id="city"
+                                  className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                  onChange={(e) => setCity(e.target.value)}
+                                ></input>
+                              </div>
+
+                              <div className="col-span-1">
+                                <label className="block text-sm font-medium text-gray-700">
+                                  State
+                                </label>
+                                <input
+                                  type="text"
+                                  name="state"
+                                  id="state"
+                                  className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                  onChange={(e) =>
+                                    setAddressState(e.target.value)
+                                  }
+                                ></input>
+                              </div>
+
+                              <div className="col-span-1 px-2">
+                                <label className="block text-sm font-medium text-gray-700">
+                                  Postal Code
+                                </label>
+                                <input
+                                  type="text"
+                                  name="postalCode"
+                                  id="postalCode"
+                                  className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                  onChange={(e) =>
+                                    setPostalCode(e.target.value)
+                                  }
+                                ></input>
+                              </div>
+
+                              </div>
+   
+                          ) : null}
+
+                          <div className="col-span-6">
+                            <label
+                              htmlFor="routing_number"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Routing Number
+                            </label>
+                            <input
+                              type="text"
+                              name="routing_number"
+                              id="routing_number"
+                              autoComplete="routing_number"
+                              placeholder="110000000"
+                              className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                              onChange={(e) => setRoutingNumber(e.target.value)}
+                            ></input>
+                          </div>
+                          <div className="col-span-6">
+                            <label
+                              htmlFor="account_number"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Account Number
+                            </label>
+                            <input
+                              type="text"
+                              name="account_number"
+                              id="account_number"
+                              autoComplete="account_number"
+                              placeholder="1234567890"
+                              className="mt-1 p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                              onChange={(e) => setAccountNumber(e.target.value)}
+                            ></input>
+                          </div>
+
                           <div className="col-span-6">
                             <label
                               htmlFor="amount"
@@ -315,7 +375,7 @@ function FaSendMoneyWidget() {
                         id="close-sendmoney-modal3"
                         className="absolute top-0 right-10 w-10 p-4 rounded-full cursor-pointer  "
                         onClick={() => {
-                          if (setTransferSuccess) {
+                          if (transferSuccess) {
                             window.location.reload(false);
                           }
                           setShowModal(false);
@@ -342,7 +402,7 @@ function FaSendMoneyWidget() {
                           <p className="text-red-600">{errorText}</p>
                         </div>
                       ) : null}
-                      {transferSuccess ? (
+                      {transferSuccess == true ? (
                         <div className="p-2 text-center ">
                           <p className="text-green-600">
                             Transaction successful.{' '}
@@ -411,7 +471,7 @@ function FaSendMoneyWidget() {
                               className="mt-1 block w-full sm:text-sm"
                               id="review-amount"
                             >
-                              {amount}
+                              {formatUSD(amount)}
                             </span>
                           </div>
                           <div className="">
@@ -442,6 +502,22 @@ function FaSendMoneyWidget() {
                               {descriptor}
                             </span>
                           </div>
+                          {network === 'us_domestic_wire' ? (
+                          <div className="col-span-2">
+                          <label
+                            htmlFor="adress"
+                            className="block font-bold text-gray-900"
+                          >
+                            Address
+                          </label>
+                          <span
+                            className="mt-1 block w-full sm:text-sm"
+                            id="review-notes"
+                          >
+                            {address1} , {city} - {addressState} {postalCode}
+                          </span>
+                        </div>
+                          ) : null}
 
                           <div className="">
                             <label
@@ -505,6 +581,8 @@ function FaSendMoneyWidget() {
                               onClick={() => {
                                 setModalStage(0);
                                 setError(false);
+                                setErrorText('');
+                                setTransferSuccess('false');
                                 setNewTransfer(false);
                               }}
                             >
@@ -524,6 +602,10 @@ function FaSendMoneyWidget() {
                                       account_number: accountNumber,
                                       network: network,
                                       amount: amount,
+                                      line1: address1,
+                                      city: city,
+                                      state: addressState,
+                                      postalCode: postalCode,
                                       notes: notes,
                                       transaction_result: transactionResult,
                                     };

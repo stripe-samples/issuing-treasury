@@ -32,7 +32,27 @@ export default async function handler(req, res) {
       const financialAccount = financialAccounts.data[0];
 
       {
-        /* The following exmaple uses a hardcoded values for test mode */
+        /* The following exmaple uses a hardcoded values for test mode    
+        */
+      }
+      
+      let city, state, postal_code, line1;
+
+      {
+        /* Wire transfers require the address of the recipient.   
+        */
+      }
+
+      if (req.body.network == 'us_domestic_wire') {
+        city = req.body.city;
+        state = req.body.state;
+        postal_code = req.body.postalCode;
+        line1 = req.body.line1;
+      } else {
+        city = 'Alvin';
+        state = 'TX';
+        postal_code = '77511';
+        line1 = '123 Main St.';
       }
 
       const outboundPayment = await stripe.treasury.outboundPayments.create(
@@ -40,7 +60,7 @@ export default async function handler(req, res) {
           financial_account: financialAccount.id,
           amount: amount,
           currency: 'usd',
-          statement_descriptor: req.descriptor,
+          statement_descriptor: req.body.descriptor,
           destination_payment_method_data: {
             type: 'us_bank_account',
             us_bank_account: {
@@ -52,10 +72,10 @@ export default async function handler(req, res) {
               email: 'jenny@example.com',
               phone: '7135551212',
               address: {
-                city: 'Alvin',
-                state: 'TX',
-                postal_code: '77511',
-                line1: '123 Main St.',
+                city: city,
+                state: state,
+                postal_code: postal_code,
+                line1: line1,
                 country: 'US',
               },
               name: req.body.name,
