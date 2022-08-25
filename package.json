@@ -26,7 +26,7 @@
     "react-chartjs-2": "^4.0.1",
     "react-dom": "18.0.0",
     "react-script-tag": "^1.1.2",
-    "stripe": "^9.2.0"
+    "stripe": "^10.5.0"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.0",
