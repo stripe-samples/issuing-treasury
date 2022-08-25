@@ -1660,13 +1660,7 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/punycode/-/punycode-2.1.1.tgz"
 
-qs@^6.10.3:
-  version "6.10.3"
-  resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/qs/-/qs-6.10.3.tgz"
-  dependencies:
-    side-channel "^1.0.4"
-
-qs@^6.10.5:
+qs@^6.10.3, qs@^6.10.5:
   version "6.11.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.0.tgz#fd0d963446f7a65e1367e01abd85429453f0c37a"
   dependencies:
@@ -1868,9 +1862,9 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
   version "3.1.1"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/strip-json-comments/-/strip-json-comments-3.1.1.tgz"
 
-stripe@^9.2.0:
-  version "9.16.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-9.16.0.tgz#94c24549c91fced457b9e3259e8a1a1bdb6dbd0e"
+stripe@^10.5.0:
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-10.5.0.tgz#64d967f987e037c1b80f64cc870f792e6cf0fffe"
   dependencies:
     "@types/node" ">=8.1.0"
     qs "^6.10.3"
