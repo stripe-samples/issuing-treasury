@@ -11,10 +11,10 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^1.9.0",
     "@stripe/stripe-js": "^1.35.0",
-    "axios": "^0.26.1",
+    "axios": "^0.27.2",
     "babel-runtime": "^6.26.0",
     "chart.js": "^3.7.1",
-    "chartjs-plugin-datalabels": "^2.0.0",
+    "chartjs-plugin-datalabels": "^2.1.0",
     "cookie": "^0.5.0",
     "eslint": "^8.18.0",
     "eslint-config-next": "^12.1.5",
@@ -26,7 +26,7 @@
     "react-chartjs-2": "^4.0.1",
     "react-dom": "18.0.0",
     "react-script-tag": "^1.1.2",
-    "stripe": "^10.5.0"
+    "stripe": "^10.6.0"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.0",

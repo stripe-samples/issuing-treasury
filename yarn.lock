@@ -331,6 +331,10 @@ ast-types-flow@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/ast-types-flow/-/ast-types-flow-0.0.7.tgz#f70b735c6bca1a5c9c22d982c3e39e7feba3bdad"
 
+asynckit@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+
 autoprefixer@^10.4.4:
   version "10.4.4"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/autoprefixer/-/autoprefixer-10.4.4.tgz"
@@ -346,11 +350,12 @@ axe-core@^4.4.3:
   version "4.4.3"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.4.3.tgz#11c74d23d5013c0fa5d183796729bc3482bd2f6f"
 
-axios@^0.26.1:
-  version "0.26.1"
-  resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/axios/-/axios-0.26.1.tgz"
+axios@^0.27.2:
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
   dependencies:
-    follow-redirects "^1.14.8"
+    follow-redirects "^1.14.9"
+    form-data "^4.0.0"
 
 axobject-query@^2.2.0:
   version "2.2.0"
@@ -440,9 +445,9 @@ chart.js@^3.7.1:
   version "3.7.1"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/chart.js/-/chart.js-3.7.1.tgz"
 
-chartjs-plugin-datalabels@^2.0.0:
-  version "2.0.0"
-  resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.0.0.tgz"
+chartjs-plugin-datalabels@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.1.0.tgz#d42f05a0481831b2d79fb8c0521f8fa56e1e6db1"
 
 chokidar@^3.5.3:
   version "3.5.3"
@@ -477,6 +482,12 @@ color-name@1.1.3:
 color-name@^1.1.4, color-name@~1.1.4:
   version "1.1.4"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/color-name/-/color-name-1.1.4.tgz"
+
+combined-stream@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
+  dependencies:
+    delayed-stream "~1.0.0"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -552,6 +563,10 @@ define-properties@^1.1.3, define-properties@^1.1.4:
 defined@^1.0.0:
   version "1.0.0"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/defined/-/defined-1.0.0.tgz"
+
+delayed-stream@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
 
 detective@^5.2.0:
   version "5.2.0"
@@ -915,9 +930,17 @@ flatted@^3.1.0:
   version "3.2.5"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/flatted/-/flatted-3.2.5.tgz"
 
-follow-redirects@^1.14.8:
-  version "1.14.9"
-  resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/follow-redirects/-/follow-redirects-1.14.9.tgz"
+follow-redirects@^1.14.9:
+  version "1.15.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.1.tgz#0ca6a452306c9b276e4d3127483e29575e207ad5"
+
+form-data@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.8"
+    mime-types "^2.1.12"
 
 fraction.js@^4.2.0:
   version "4.2.0"
@@ -1370,6 +1393,16 @@ micromatch@^4.0.4:
   dependencies:
     braces "^3.0.2"
     picomatch "^2.3.1"
+
+mime-db@1.52.0:
+  version "1.52.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
+
+mime-types@^2.1.12:
+  version "2.1.35"
+  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.35.tgz#381a871b62a734450660ae3deee44813f70d959a"
+  dependencies:
+    mime-db "1.52.0"
 
 mini-svg-data-uri@^1.2.3:
   version "1.4.4"
@@ -1862,9 +1895,9 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
   version "3.1.1"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/strip-json-comments/-/strip-json-comments-3.1.1.tgz"
 
-stripe@^10.5.0:
-  version "10.5.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-10.5.0.tgz#64d967f987e037c1b80f64cc870f792e6cf0fffe"
+stripe@^10.6.0:
+  version "10.6.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-10.6.0.tgz#e63448295edb66970e01e7169db3309d548ba050"
   dependencies:
     "@types/node" ">=8.1.0"
     qs "^6.10.3"
