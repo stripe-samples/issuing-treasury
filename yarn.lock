@@ -440,9 +440,9 @@ chart.js@^3.7.1:
   version "3.7.1"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/chart.js/-/chart.js-3.7.1.tgz"
 
-chartjs-plugin-datalabels@^2.0.0:
-  version "2.0.0"
-  resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.0.0.tgz"
+chartjs-plugin-datalabels@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.1.0.tgz#d42f05a0481831b2d79fb8c0521f8fa56e1e6db1"
 
 chokidar@^3.5.3:
   version "3.5.3"
