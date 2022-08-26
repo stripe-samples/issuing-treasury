@@ -24,7 +24,7 @@
     "qs": "^6.10.5",
     "react": "^18.0.0",
     "react-chartjs-2": "^4.0.1",
-    "react-dom": "18.0.0",
+    "react-dom": "18.2.0",
     "react-script-tag": "^1.1.2",
     "stripe": "^10.6.0"
   },
