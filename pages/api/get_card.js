@@ -1,42 +1,24 @@
-import qs from 'qs';
-import axios from 'axios';
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
-  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-  let account = await stripe.accounts.retrieve(req.body.accountId);
+  let accountId = req.body.accountId;
   let cardId = req.body.cardId;
   let nonce = req.body.nonce;
 
-  async function getEphemeralKey(account, cardId, nonce) {
-    const data = qs.stringify({
-      issuing_card: cardId,
-      nonce: nonce,
-    });
-    const config = {
-      method: 'POST',
-      url: 'https://api.stripe.com/v1/ephemeral_keys',
-      headers: {
-        'Stripe-Version': '2020-03-02',
-        'Stripe-Account': account.id,
-        Authorization: 'Bearer ' + process.env.STRIPE_SECRET_KEY,
-      },
-      data: data,
-    };
-    try {
-      const result = await axios(config);
-      return result;
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
-  const ephemeralKey = await getEphemeralKey(account, cardId, nonce);
-
+  const ephemeralKey = await stripe.ephemeralKeys.create({
+    nonce: nonce,
+    issuing_card: cardId,
+  }, {
+    stripeAccount: accountId,
+   apiVersion: '2020-03-02' });
+  
   //Check if we have a result
   if (ephemeralKey) {
-    res.status(200).send(ephemeralKey.data);
+    res.status(200).send(ephemeralKey);
   } else {
-    res.status(500).json({statusCode: 500, message: 'Error'});
+    res.status(500).json({ statusCode: 500, message: 'Error' });
   }
 }

@@ -1,14 +1,15 @@
-import React, {useEffect} from 'react';
-import {useStripe, useElements} from '@stripe/react-stripe-js';
-import {formatUSD} from '../../utils/format';
+import React, { useEffect } from 'react';
+import { useStripe, useElements } from '@stripe/react-stripe-js';
+import { formatUSD, capitalizeFirstLetter } from '../../utils/format';
 
-function CardDetailsWidget({accountId, cardId, cardDetails, currentSpend}) {
+function CardDetailsWidget({ accountId, cardId, cardDetails, currentSpend }) {
+
   const stripe = useStripe();
   const elements = useElements();
   const card = cardDetails;
 
   useEffect(() => {
-    if (!stripe || !elements) {
+    if (!stripe || !elements || card.type == 'physical') {
       return;
     }
 
@@ -25,7 +26,7 @@ function CardDetailsWidget({accountId, cardId, cardDetails, currentSpend}) {
         issuingCard: cardId,
       });
 
-      const ephemeralKey = await fetch('/api/get_card', {
+      const ephemeralKeyResult = await fetch('/api/get_card', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -35,11 +36,13 @@ function CardDetailsWidget({accountId, cardId, cardDetails, currentSpend}) {
           cardId: cardId,
           nonce: nonceResult.nonce,
           accountId: accountId,
-        }),
-      }).then((r) => r.json());
+        })
+      });
 
+      const ephemeralKeyResponse = await ephemeralKeyResult.json();
+    
       const cardResult = await stripe.retrieveIssuingCard(cardId, {
-        ephemeralKeySecret: ephemeralKey.secret,
+        ephemeralKeySecret: ephemeralKeyResponse.secret,
         nonce: nonceResult.nonce,
       });
 
@@ -47,21 +50,28 @@ function CardDetailsWidget({accountId, cardId, cardDetails, currentSpend}) {
       const name = document.getElementById('cardholder-name');
       name.textContent = cardResult.issuingCard.cardholder.name;
 
+
       // Populate the raw card details
       const number = elements.create('issuingCardNumberDisplay', {
         issuingCard: cardId,
+        ephemeralKeySecret: ephemeralKeyResponse.secret,
+        nonce: nonceResult.nonce,
         style: STYLE,
       });
       number.mount('#card-number');
 
       const expiry = elements.create('issuingCardExpiryDisplay', {
         issuingCard: cardId,
+        ephemeralKeySecret: ephemeralKeyResponse.secret,
+        nonce: nonceResult.nonce,
         style: STYLE,
       });
       expiry.mount('#card-expiry');
 
       const cvc = elements.create('issuingCardCvcDisplay', {
         issuingCard: cardId,
+        ephemeralKeySecret: ephemeralKeyResponse.secret,
+        nonce: nonceResult.nonce,
         style: STYLE,
       });
       cvc.mount('#card-cvc');
@@ -75,27 +85,50 @@ function CardDetailsWidget({accountId, cardId, cardDetails, currentSpend}) {
       id="details-container"
       className="max-w-6xl mx-auto sm:px-6 grid grid-cols-2 gap-4 mt-16"
     >
-      <div id="card-container" className="col-span-1">
-        <div id="card-back">
-          <div id="card-details">
-            <div id="cardholder-name" className="font-semibold text-lg"></div>
-            <div id="card-number"></div>
-            <div id="expiry-cvc-wrapper">
-              <div id="expiry-wrapper">
-                <div className="font-semibold">EXP</div>
-                <div id="card-expiry"></div>
-              </div>
-              <div id="cvc-wrapper">
-                <div className="font-semibold">CVC</div>
-                <div id="card-cvc"></div>
+      {card.type == "virtual" ?
+        <div id="card-container" className="col-span-1">
+          <div id="card-back">
+            <div id="card-details">
+              <div id="cardholder-name" className="font-semibold text-lg"></div>
+              <div id="card-number"></div>
+              <div id="expiry-cvc-wrapper">
+                <div id="expiry-wrapper">
+                  <div className="font-semibold">EXP</div>
+                  <div id="card-expiry"></div>
+                </div>
+                <div id="cvc-wrapper">
+                  <div className="font-semibold">CVC</div>
+                  <div id="card-cvc"></div>
+                </div>
               </div>
             </div>
           </div>
+        </div> :
+        <div id="card-container" className="col-span-1">
+          <div id="card-back">
+            <p className="text-white font-semibold text-sm pt-20 px-4 leading-4">Physical card details cannot be displayed.</p>
+          </div>
         </div>
-      </div>
+      }
 
       <div id="cardinfo-container" className="col-span-1 grid grid-cols-2">
-        <div id="billing-address" className="col-span-2">
+        <div id="cardinfo" className="col-span-2">
+
+          <div id="status">
+            <p className="text-gray-500">
+              <strong className="text-l font-bold leading-7 text-gray-700 sm:leading-9 ">
+                Status: </strong>
+              {capitalizeFirstLetter(card.status)}
+            </p>
+          </div>
+          <div id="type">
+            <p className="text-gray-500">
+              <strong className="text-l font-bold leading-7 text-gray-700 sm:leading-9 ">
+                Card Type: &nbsp;
+              </strong>
+
+              {capitalizeFirstLetter(card.type)}</p>
+          </div>
           <h4 className="text-l font-bold leading-7 text-gray-700 sm:leading-9 ">
             Billing address
           </h4>

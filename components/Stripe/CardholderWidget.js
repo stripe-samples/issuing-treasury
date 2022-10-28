@@ -69,6 +69,15 @@ function CardHolderWidget({cardholders}) {
                         name="cardholderid"
                         value={cardholder.id}
                       ></input>
+                       <select
+                        name="card_type"
+                        id="card_type"
+                        className="mt-1 p-2 mx-2 border w-40 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      >
+                        <option value="virtual">Virtual</option>
+                        <option value="physical">Physical</option>
+                      </select>
+
                       <button
                         type="submit"
                         className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm rounded-md text-white bg-accent-color hover:bg-accent-color-light "
