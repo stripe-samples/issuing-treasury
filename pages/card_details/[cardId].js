@@ -1,6 +1,7 @@
 import React from 'react';
 import CardDetailsWidget from '../../components/Stripe/CardDetailsWidget';
 import IssuingAuthorizationsWidget from '../../components/Stripe/IssuingAuthorizationsWidget';
+import CardStatusSwitchWidget from '../../components/Stripe/CardStatusSwitchWidget';
 import {getCardTransactions} from '../../utils/stripe_helpers.js';
 import {decode} from '../../utils/jwt_encode_decode';
 import {parse} from 'cookie';
@@ -41,13 +42,16 @@ const CardDetails = (props) => {
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     {
       stripeAccount: props.account,
-      betas: ['issuing_elements_2'],
     },
   );
 
   return (
-    <div>
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 p-6">
+
       <Elements stripe={stripePromise}>
+      <div className="flex justify-end">
+        <CardStatusSwitchWidget cardStatus={props.cardDetails.status} cardId={props.cardId}/>
+        </div>
         <CardDetailsWidget
           accountId={props.account}
           cardId={props.cardId}

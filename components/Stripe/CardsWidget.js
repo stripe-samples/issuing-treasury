@@ -1,7 +1,7 @@
 import React from 'react';
-import {formatDateTime} from '../../utils/format';
+import { formatDateTime, capitalize } from '../../utils/format';
 
-function CardsWidget({cards}) {
+function CardsWidget({ cards }) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       {cards.length > 0 ? (
@@ -11,6 +11,9 @@ function CardsWidget({cards}) {
               <tr>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Card Cardholder Name
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Type
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Card Last&nbsp;4
@@ -47,6 +50,11 @@ function CardsWidget({cards}) {
                         {card.cardholder.name}
                       </p>
                     </div>
+                  </td>
+                  <td className="px-3 py-4 text-left whitespace-nowrap text-sm text-gray-500">
+                    <span className="text-gray-500 font-medium">
+                      {capitalize(card.type)}
+                    </span>
                   </td>
                   <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500">
                     <span className="text-gray-500 font-medium">
