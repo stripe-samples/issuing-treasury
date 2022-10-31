@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDateTime, capitalizeFirstLetter } from '../../utils/format';
+import { formatDateTime, capitalize } from '../../utils/format';
 
 function CardsWidget({ cards }) {
   return (
@@ -53,7 +53,7 @@ function CardsWidget({ cards }) {
                   </td>
                   <td className="px-3 py-4 text-left whitespace-nowrap text-sm text-gray-500">
                     <span className="text-gray-500 font-medium">
-                      {capitalizeFirstLetter(card.type)}
+                      {capitalize(card.type)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500">

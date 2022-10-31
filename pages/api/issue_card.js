@@ -15,30 +15,25 @@ export default async function handler(req, res) {
     });
 
     const financialAccount = financialAccounts.data[0];
+    const { cardholderid, card_type } = req.body
     const cardholder = await stripe.issuing.cardholders.retrieve(
-      req.body.cardholderid,
+      cardholderid,
       { stripeAccount: StripeAccountId },
 
     );
 
-    if (req.body.card_type == 'physical') {
+    if (card_type == 'physical') {
 
       const card = await stripe.issuing.cards.create(
         {
-          cardholder: req.body.cardholderid,
+          cardholder: cardholderid,
           financial_account: financialAccount.id,
           currency: 'usd',
           shipping: {
             name: cardholder.name,
             service: 'standard',
             type: 'individual',
-            address: {
-              line1: cardholder.billing.address.line1, 
-              state:  cardholder.billing.address.state, 
-              city:  cardholder.billing.address.city, 
-              postal_code:  cardholder.billing.address.postal_code,
-              country:  cardholder.billing.address.country ,
-            },
+            address: cardholder.billing.address,
           },
           type: 'physical',
           status: 'inactive',
@@ -50,7 +45,7 @@ export default async function handler(req, res) {
 
       const card = await stripe.issuing.cards.create(
         {
-          cardholder: req.body.cardholderid,
+          cardholder: cardholderid,
           financial_account: financialAccount.id,
           currency: 'usd',
           type: 'virtual',

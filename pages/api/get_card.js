@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     issuing_card: cardId,
   }, {
     stripeAccount: accountId,
-   apiVersion: '2020-03-02' });
+   apiVersion: '2022-08-01' });
   
   //Check if we have a result
   if (ephemeralKey) {

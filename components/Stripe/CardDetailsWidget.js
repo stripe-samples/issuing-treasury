@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
-import { formatUSD, capitalizeFirstLetter } from '../../utils/format';
+import { formatUSD, capitalize } from '../../utils/format';
 
 function CardDetailsWidget({ accountId, cardId, cardDetails, currentSpend }) {
 
@@ -40,7 +40,7 @@ function CardDetailsWidget({ accountId, cardId, cardDetails, currentSpend }) {
       });
 
       const ephemeralKeyResponse = await ephemeralKeyResult.json();
-    
+
       const cardResult = await stripe.retrieveIssuingCard(cardId, {
         ephemeralKeySecret: ephemeralKeyResponse.secret,
         nonce: nonceResult.nonce,
@@ -118,7 +118,9 @@ function CardDetailsWidget({ accountId, cardId, cardDetails, currentSpend }) {
             <p className="text-gray-500">
               <strong className="text-l font-bold leading-7 text-gray-700 sm:leading-9 ">
                 Status: </strong>
-              {capitalizeFirstLetter(card.status)}
+
+              {capitalize(card.status)}
+
             </p>
           </div>
           <div id="type">
@@ -127,7 +129,7 @@ function CardDetailsWidget({ accountId, cardId, cardDetails, currentSpend }) {
                 Card Type: &nbsp;
               </strong>
 
-              {capitalizeFirstLetter(card.type)}</p>
+              {capitalize(card.type)}</p>
           </div>
           <h4 className="text-l font-bold leading-7 text-gray-700 sm:leading-9 ">
             Billing address
