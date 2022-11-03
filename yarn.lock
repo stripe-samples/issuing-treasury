@@ -67,9 +67,9 @@
   version "12.2.4"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-12.2.4.tgz#5ba9bed9970be4113773233148b4539691bfc4fe"
 
-"@next/eslint-plugin-next@12.2.4":
-  version "12.2.4"
-  resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-12.2.4.tgz#b7496cf11050577cfa815612c541195c1b4871eb"
+"@next/eslint-plugin-next@13.0.1":
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-13.0.1.tgz#b2fbf9932b125ba61326be50badb3cf1b3292ea2"
   dependencies:
     glob "7.1.7"
 
@@ -671,18 +671,18 @@ escape-string-regexp@^4.0.0:
   version "4.0.0"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz"
 
-eslint-config-next@^12.1.5:
-  version "12.2.4"
-  resolved "https://registry.yarnpkg.com/eslint-config-next/-/eslint-config-next-12.2.4.tgz#5f12f2eff1fabc3f1fb7527ceb8a4ad00235b011"
+eslint-config-next@^13.0.1:
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-next/-/eslint-config-next-13.0.1.tgz#9f346912f3b2451d6c8e9ac508b2f7a6893d9f16"
   dependencies:
-    "@next/eslint-plugin-next" "12.2.4"
+    "@next/eslint-plugin-next" "13.0.1"
     "@rushstack/eslint-patch" "^1.1.3"
     "@typescript-eslint/parser" "^5.21.0"
     eslint-import-resolver-node "^0.3.6"
     eslint-import-resolver-typescript "^2.7.1"
     eslint-plugin-import "^2.26.0"
     eslint-plugin-jsx-a11y "^6.5.1"
-    eslint-plugin-react "^7.29.4"
+    eslint-plugin-react "^7.31.7"
     eslint-plugin-react-hooks "^4.5.0"
 
 eslint-import-resolver-node@^0.3.6:
@@ -749,9 +749,9 @@ eslint-plugin-react-hooks@^4.5.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.6.0.tgz#4c3e697ad95b77e93f8646aaa1630c1ba607edd3"
 
-eslint-plugin-react@^7.29.4, eslint-plugin-react@^7.30.0:
-  version "7.30.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.30.1.tgz#2be4ab23ce09b5949c6631413ba64b2810fd3e22"
+eslint-plugin-react@^7.30.0, eslint-plugin-react@^7.31.7:
+  version "7.31.10"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.31.10.tgz#6782c2c7fe91c09e715d536067644bbb9491419a"
   dependencies:
     array-includes "^3.1.5"
     array.prototype.flatmap "^1.3.0"
