@@ -40,16 +40,10 @@ function CardDetailsWidget({ accountId, cardId, cardDetails, currentSpend }) {
       });
 
       const ephemeralKeyResponse = await ephemeralKeyResult.json();
-
-      const cardResult = await stripe.retrieveIssuingCard(cardId, {
-        ephemeralKeySecret: ephemeralKeyResponse.secret,
-        nonce: nonceResult.nonce,
-      });
-
+      
       // Display the cardholder's name
       const name = document.getElementById('cardholder-name');
-      name.textContent = cardResult.issuingCard.cardholder.name;
-
+      name.textContent = card.cardholder.name;
 
       // Populate the raw card details
       const number = elements.create('issuingCardNumberDisplay', {
