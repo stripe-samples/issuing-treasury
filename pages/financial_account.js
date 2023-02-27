@@ -5,7 +5,7 @@ import FaSendMoneyWidget from '../components/Stripe/FaSendMoneyWidget';
 import FaAccountInfoWidget from '../components/Stripe/FaAccountInfoWidget';
 import {
   getFinancialAccountDetailsExp,
-  getFinancialAccountTransactions,
+  getFinancialAccountTransactionsExpanded,
 } from '../utils/stripe_helpers.js';
 import {decode} from '../utils/jwt_encode_decode';
 import {parse} from 'cookie';
@@ -29,7 +29,7 @@ export async function getServerSideProps(context) {
         StripeAccountID,
       );
       const financialAccount = responseFaDetails.financialaccount;
-      let responseFaTransactions = await getFinancialAccountTransactions(
+      let responseFaTransactions = await getFinancialAccountTransactionsExpanded(
         StripeAccountID,
       );
       const faTransactions = responseFaTransactions.fa_transactions;
