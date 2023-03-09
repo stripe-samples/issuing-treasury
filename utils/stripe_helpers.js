@@ -17,6 +17,25 @@ export async function getFinancialAccountTransactions(StripeAccountID) {
   };
 }
 
+
+export async function getFinancialAccountTransactionsExpanded(StripeAccountID) {
+  const financialAccounts = await stripe.treasury.financialAccounts.list({
+    stripeAccount: StripeAccountID,
+  });
+  const financialAccount = financialAccounts.data[0];
+  const fa_transactions = await stripe.treasury.transactions.list(
+    {
+      financial_account: financialAccount.id,
+      limit: 30,
+      expand: ['data.flow_details'],
+    }, 
+    {stripeAccount: StripeAccountID},
+  );
+  return {
+    fa_transactions: fa_transactions.data,
+  };
+}
+
 export async function getFinancialAccountDetails(StripeAccountID) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,

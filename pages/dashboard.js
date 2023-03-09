@@ -3,7 +3,7 @@ import FaBalanceInOutChart from '../components/Stripe/FaBalanceInOutChart';
 import FaBalanceWidget from '../components/Stripe/FaBalanceWidget';
 import FaTransactionsWidget from '../components/Stripe/FaTransactionsWidget';
 import {
-  getFinancialAccountTransactions,
+  getFinancialAccountTransactionsExpanded,
   getFinancialAccountDetails,
   getFinancialAccountTransactionDetails,
 } from '../utils/stripe_helpers.js';
@@ -27,7 +27,7 @@ export async function getServerSideProps(context) {
       const StripeAccountID = session.accountId;
       let responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
       const financialAccount = responseFaDetails.financialaccount;
-      let responseFaTransations = await getFinancialAccountTransactions(
+      let responseFaTransations = await getFinancialAccountTransactionsExpanded(
         StripeAccountID,
       );
       const faTransactions = responseFaTransations.fa_transactions;
