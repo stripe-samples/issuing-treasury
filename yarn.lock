@@ -1688,9 +1688,9 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://artifactory-content.stripe.build/artifactory/api/npm/npm/punycode/-/punycode-2.1.1.tgz"
 
-qs@^6.10.3, qs@^6.10.5:
-  version "6.11.0"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.0.tgz#fd0d963446f7a65e1367e01abd85429453f0c37a"
+qs@^6.10.3, qs@^6.11.1:
+  version "6.11.1"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.1.tgz#6c29dff97f0c0060765911ba65cbc9764186109f"
   dependencies:
     side-channel "^1.0.4"
 
