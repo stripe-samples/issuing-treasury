@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {formatDateTime} from '../../utils/format';
+import CardholderUpdateWidget from './CardholderUpdateWidget';
+
 
 function CardHolderWidget({cardholders}) {
   const [showModal, setShowModal] = useState(false);
@@ -31,7 +33,8 @@ function CardHolderWidget({cardholders}) {
               {cardholders.map((cardholder, i) => (
                 <tr className="bg-white" key={i}>
                   <td className="max-w-0 px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div className="flex">
+                    <div className="flex">      
+                    {cardholder.individual ?
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500"
@@ -45,8 +48,12 @@ function CardHolderWidget({cardholders}) {
                           strokeWidth="2"
                           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                         />
-                      </svg>
-                      <p className="text-gray-500 truncate group-hover:text-gray-900 ml-5">
+                      </svg>    :
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+</svg>                   
+                    }
+                    <p className="text-gray-500 truncate group-hover:text-gray-900 ml-5">
                         {cardholder.name}
                       </p>
                     </div>
@@ -62,6 +69,7 @@ function CardHolderWidget({cardholders}) {
                     </div>
                   </td>
                   <td className="hidden px-6 py-4 whitespace-nowrap text-sm text-gray-500 md:block text-right">
+                  {cardholder.individual ?              
                     <form action="/api/issue_card" method="POST">
                       <input
                         type="hidden"
@@ -99,6 +107,9 @@ function CardHolderWidget({cardholders}) {
                         </svg>
                       </button>
                     </form>
+                    :
+                   <CardholderUpdateWidget cardholderId={cardholder.id} />
+                  }
                   </td>
                 </tr>
               ))}
