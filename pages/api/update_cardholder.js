@@ -9,11 +9,9 @@ export default async function handler(req, res) {
     const StripeAccountId = session.accountId;
     try {
       const ip = req.headers["x-real-ip"] || req.connection.remoteAddress;
-      const cardholder = await stripe.issuing.cardholders.create(
+      const cardholder = await stripe.issuing.cardholders.update(
+        req.body.cardholderId,
         {
-          type: "individual",
-          name: req.body.firstName + " " + req.body.lastName,
-          email: req.body.email,
           individual: {
             first_name: req.body.firstName,
             last_name: req.body.lastName,
@@ -22,15 +20,6 @@ export default async function handler(req, res) {
                 date: Date.now(),
                 ip: ip,
               },
-            },
-          },
-          billing: {
-            address: {
-              city: req.body.city,
-              line1: req.body.address1,
-              state: req.body.state,
-              postal_code: req.body.postalCode,
-              country: req.body.country,
             },
           },
         },
