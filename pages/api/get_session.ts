@@ -1,4 +1,3 @@
-
 import {parse} from 'cookie';
 import {decode} from '../../utils/jwt_encode_decode';
 

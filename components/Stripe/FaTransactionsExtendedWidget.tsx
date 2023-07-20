@@ -1,9 +1,7 @@
-import React from "react";
-import { formatUSD, formatDateTime } from "../../utils/format";
+import React from 'react';
+import {formatUSD, formatDateTime} from '../../utils/format';
 
-function FaTransactionsExtendedWidget({
-  faTransactions
-}: any) {
+function FaTransactionsExtendedWidget({faTransactions}: any) {
   return (
     <div className="mx-auto max-w-6xl mt-4 mb-4">
       <div className="py-4">
@@ -42,7 +40,7 @@ function FaTransactionsExtendedWidget({
                       </td>
                       <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500 uppercase">
                         <span className="text-gray-500 font-medium">
-                          {formatUSD(transaction.amount / 100)}{" "}
+                          {formatUSD(transaction.amount / 100)}{' '}
                           {transaction.currency}
                         </span>
                       </td>

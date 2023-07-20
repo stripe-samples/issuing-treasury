@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 
-function FaAccountWidget({
-  financialAccount
-}: any) {
+function FaAccountWidget({financialAccount}: any) {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -118,7 +116,7 @@ function FaAccountWidget({
                             {network.toUpperCase().replace(/_/g, ' ')}
                           </span>
                         </div>
-                      ),
+                      )
                     )}
                   </div>
                 </div>

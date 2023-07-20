@@ -7,10 +7,10 @@ function PayoutWidget(props: any) {
   const [gotUrl, setGotUrl] = useState(false);
   const [url, setUrl] = useState('');
   const [availableBalance, setAvailableBalance] = useState(
-    props.availableBalance,
+    props.availableBalance
   );
   const [hasExternalAccount, setHasExternalAccount] = useState(
-    props.hasExternalAccount,
+    props.hasExternalAccount
   );
 
   var formatter = new Intl.NumberFormat('en-US', {

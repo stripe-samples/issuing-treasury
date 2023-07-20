@@ -1,8 +1,6 @@
 import React from 'react';
 
-function OnboardWidget({
-  url
-}: any) {
+function OnboardWidget({url}: any) {
   const handleLogout = async (e: any) => {
     e.preventDefault();
     const response = await fetch('api/logout', {

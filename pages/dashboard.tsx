@@ -28,7 +28,7 @@ export async function getServerSideProps(context: any) {
       let responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
       const financialAccount = responseFaDetails.financialaccount;
       let responseFaTransations = await getFinancialAccountTransactionsExpanded(
-        StripeAccountID,
+        StripeAccountID
       );
       const faTransactions = responseFaTransations.fa_transactions;
       let responseFaTransations_chart =

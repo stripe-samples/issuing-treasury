@@ -19,7 +19,7 @@ export async function getServerSideProps(context: any) {
         //Create the onboarding link and redirect
         const url = await createAccountOnboardingUrl(
           account.id,
-          process.env.DEMO_HOST,
+          process.env.DEMO_HOST
         );
         return {
           props: {
@@ -32,7 +32,7 @@ export async function getServerSideProps(context: any) {
         const cookie = encode(session);
         context.res.setHeader(
           'Set-Cookie',
-          serialize('app_auth', cookie, {path: '/', httpOnly: true}),
+          serialize('app_auth', cookie, {path: '/', httpOnly: true})
         );
         return {
           redirect: {

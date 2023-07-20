@@ -10,15 +10,16 @@ export async function getFinancialAccountTransactions(StripeAccountID: any) {
       financial_account: financialAccount.id,
       limit: 30,
     },
-    {stripeAccount: StripeAccountID},
+    {stripeAccount: StripeAccountID}
   );
   return {
     fa_transactions: fa_transactions.data,
   };
 }
 
-
-export async function getFinancialAccountTransactionsExpanded(StripeAccountID: any) {
+export async function getFinancialAccountTransactionsExpanded(
+  StripeAccountID: any
+) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
   });
@@ -28,8 +29,8 @@ export async function getFinancialAccountTransactionsExpanded(StripeAccountID: a
       financial_account: financialAccount.id,
       limit: 30,
       expand: ['data.flow_details'],
-    }, 
-    {stripeAccount: StripeAccountID},
+    },
+    {stripeAccount: StripeAccountID}
   );
   return {
     fa_transactions: fa_transactions.data,
@@ -51,7 +52,7 @@ export async function getFinancialAccountDetailsExp(StripeAccountID: any) {
     {expand: ['data.financial_addresses.aba.account_number']},
     {
       stripeAccount: StripeAccountID,
-    },
+    }
   );
   const financialAccount = financialAccounts.data[0];
   return {
@@ -59,7 +60,9 @@ export async function getFinancialAccountDetailsExp(StripeAccountID: any) {
   };
 }
 
-export async function getFinancialAccountTransactionDetails(StripeAccountID: any) {
+export async function getFinancialAccountTransactionDetails(
+  StripeAccountID: any
+) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
   });
@@ -69,15 +72,12 @@ export async function getFinancialAccountTransactionDetails(StripeAccountID: any
       financial_account: financialAccount.id,
       limit: 100,
     },
-    {stripeAccount: StripeAccountID},
+    {stripeAccount: StripeAccountID}
   );
 
   //get FinancialAccount balance
   const transactions_dates: {
-    [formattedDate: string]: {
-      funds_in: number;
-      funds_out: number;
-    };
+    [formattedDate: string]: {funds_in: number; funds_out: number};
   } = {};
   //To show a history of the balance we will start from the latest balance and apply subtract the operations
   //Get Transactions
@@ -155,11 +155,11 @@ export async function getFinancialAccountTransactionDetails(StripeAccountID: any
 export async function getCardholders(StripeAccountID: any) {
   const cardholders = await stripe.issuing.cardholders.list(
     {limit: 10},
-    {stripeAccount: StripeAccountID},
+    {stripeAccount: StripeAccountID}
   );
   const cards = await stripe.issuing.cards.list(
     {limit: 10},
-    {stripeAccount: StripeAccountID},
+    {stripeAccount: StripeAccountID}
   );
 
   return {
@@ -170,7 +170,7 @@ export async function getCardholders(StripeAccountID: any) {
 export async function getCards(StripeAccountID: any) {
   const cards = await stripe.issuing.cards.list(
     {limit: 10},
-    {stripeAccount: StripeAccountID},
+    {stripeAccount: StripeAccountID}
   );
 
   return {
@@ -187,7 +187,7 @@ export async function getCardTransactions(StripeAccountID: any, cardId: any) {
       card: cardId,
       limit: 10,
     },
-    {stripeAccount: StripeAccountID},
+    {stripeAccount: StripeAccountID}
   );
 
   //Calculate current spend
@@ -219,7 +219,7 @@ export async function getCardTransactions(StripeAccountID: any, cardId: any) {
     {expand: ['cardholder']},
     {
       stripeAccount: StripeAccountID,
-    },
+    }
   );
   let cardTransactions = {};
   // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message

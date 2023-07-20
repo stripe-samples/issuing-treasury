@@ -1,4 +1,3 @@
-
 import {parse} from 'cookie';
 import {decode} from '../../utils/jwt_encode_decode';
 
@@ -15,7 +14,7 @@ export default async function handler(req: any, res: any) {
         {expand: ['data.financial_addresses.aba.account_number']},
         {
           stripeAccount: StripeAccountId,
-        },
+        }
       );
 
       const financialAccount = financialAccounts.data[0];

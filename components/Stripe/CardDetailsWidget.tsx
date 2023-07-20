@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
-import { useStripe, useElements } from '@stripe/react-stripe-js';
-import { formatUSD, capitalize } from '../../utils/format';
+import React, {useEffect} from 'react';
+import {useStripe, useElements} from '@stripe/react-stripe-js';
+import {formatUSD, capitalize} from '../../utils/format';
 
 function CardDetailsWidget({
   accountId,
   cardId,
   cardDetails,
-  currentSpend
+  currentSpend,
 }: any) {
-
   const stripe = useStripe();
   const elements = useElements();
   const card = cardDetails;
@@ -41,11 +40,11 @@ function CardDetailsWidget({
           cardId: cardId,
           nonce: nonceResult.nonce,
           accountId: accountId,
-        })
+        }),
       });
 
       const ephemeralKeyResponse = await ephemeralKeyResult.json();
-      
+
       // Display the cardholder's name
       const name = document.getElementById('cardholder-name');
       // @ts-expect-error TS(2531): Object is possibly 'null'.
@@ -85,7 +84,7 @@ function CardDetailsWidget({
       id="details-container"
       className="max-w-6xl mx-auto sm:px-6 grid grid-cols-2 gap-4 mt-16"
     >
-      {card.type == "virtual" ?
+      {card.type == 'virtual' ? (
         <div id="card-container" className="col-span-1">
           <div id="card-back">
             <div id="card-details">
@@ -103,24 +102,26 @@ function CardDetailsWidget({
               </div>
             </div>
           </div>
-        </div> :
+        </div>
+      ) : (
         <div id="card-container" className="col-span-1">
           <div id="card-back">
-            <p className="text-white font-semibold text-sm pt-20 px-4 leading-4">Physical card details cannot be displayed.</p>
+            <p className="text-white font-semibold text-sm pt-20 px-4 leading-4">
+              Physical card details cannot be displayed.
+            </p>
           </div>
         </div>
-      }
+      )}
 
       <div id="cardinfo-container" className="col-span-1 grid grid-cols-2">
         <div id="cardinfo" className="col-span-2">
-
           <div id="status">
             <p className="text-gray-500">
               <strong className="text-l font-bold leading-7 text-gray-700 sm:leading-9 ">
-                Status: </strong>
+                Status:{' '}
+              </strong>
 
               {capitalize(card.status)}
-
             </p>
           </div>
           <div id="type">
@@ -129,7 +130,8 @@ function CardDetailsWidget({
                 Card Type: &nbsp;
               </strong>
 
-              {capitalize(card.type)}</p>
+              {capitalize(card.type)}
+            </p>
           </div>
           <h4 className="text-l font-bold leading-7 text-gray-700 sm:leading-9 ">
             Billing address
@@ -164,7 +166,7 @@ function CardDetailsWidget({
           <p className="text-gray-500">
             {' '}
             {formatUSD(
-              card.spending_controls.spending_limits[0].amount / 100,
+              card.spending_controls.spending_limits[0].amount / 100
             )}{' '}
             {card.spending_controls.spending_limits[0].interval}{' '}
           </p>

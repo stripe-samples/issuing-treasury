@@ -1,4 +1,3 @@
-
 import {parse} from 'cookie';
 import {decode} from '../../utils/jwt_encode_decode';
 
@@ -28,20 +27,20 @@ export default async function handler(req: any, res: any) {
       //Get financial accounts for the Connected Account
       const financialAccounts = await stripe.treasury.financialAccounts.list(
         {expand: ['data.financial_addresses.aba.account_number']},
-        {stripeAccount: StripeAccountId},
+        {stripeAccount: StripeAccountId}
       );
       const financialAccount = financialAccounts.data[0];
 
       {
-        /* The following exmaple uses a hardcoded values for test mode    
-        */
+        /* The following exmaple uses a hardcoded values for test mode
+         */
       }
-      
+
       let city, state, postal_code, line1;
 
       {
-        /* Wire transfers require the address of the recipient.   
-        */
+        /* Wire transfers require the address of the recipient.
+         */
       }
 
       if (req.body.network == 'us_domestic_wire') {
@@ -88,28 +87,28 @@ export default async function handler(req: any, res: any) {
             },
           },
         },
-        {stripeAccount: StripeAccountId},
+        {stripeAccount: StripeAccountId}
       );
 
       if (req.body.transaction_result == 'post') {
         const outboundPaymentresult =
           await stripe.testHelpers.treasury.outboundPayments.post(
             outboundPayment.id,
-            {stripeAccount: StripeAccountId},
+            {stripeAccount: StripeAccountId}
           );
       }
       if (req.body.transaction_result == 'return') {
         const outboundPaymentresult =
           await stripe.testHelpers.treasury.returnOutboundPayments(
             outboundPayment.id,
-            {stripeAccount: StripeAccountId},
+            {stripeAccount: StripeAccountId}
           );
       }
       if (req.body.transaction_result == 'fail') {
         const outboundPaymentresult =
           await stripe.testHelpers.treasury.outboundPayments.fail(
             outboundPayment.id,
-            {stripeAccount: StripeAccountId},
+            {stripeAccount: StripeAccountId}
           );
       }
 

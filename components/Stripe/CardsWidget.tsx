@@ -1,9 +1,7 @@
 import React from 'react';
-import { formatDateTime, capitalize } from '../../utils/format';
+import {formatDateTime, capitalize} from '../../utils/format';
 
-function CardsWidget({
-  cards
-}: any) {
+function CardsWidget({cards}: any) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       {cards.length > 0 ? (

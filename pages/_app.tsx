@@ -5,10 +5,7 @@ import {decode} from '../utils/jwt_encode_decode';
 import {parse} from 'cookie';
 import React, {Component} from 'react';
 
-function HomeMadeHam({
-  Component,
-  pageProps
-}: any) {
+function HomeMadeHam({Component, pageProps}: any) {
   return (
     <Layout {...pageProps}>
       <Component {...pageProps} />

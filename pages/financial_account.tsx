@@ -27,12 +27,11 @@ export async function getServerSideProps(context: any) {
       }
       const StripeAccountID = session.accountId;
       let responseFaDetails = await getFinancialAccountDetailsExp(
-        StripeAccountID,
+        StripeAccountID
       );
       const financialAccount = responseFaDetails.financialaccount;
-      let responseFaTransactions = await getFinancialAccountTransactionsExpanded(
-        StripeAccountID,
-      );
+      let responseFaTransactions =
+        await getFinancialAccountTransactionsExpanded(StripeAccountID);
       const faTransactions = responseFaTransactions.fa_transactions;
       return {
         props: {financialAccount, faTransactions}, // will be passed to the page component as props

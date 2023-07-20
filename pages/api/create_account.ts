@@ -1,5 +1,5 @@
-import { createAccountOnboardingUrl } from '../../utils/stripe_helpers';
-import { authenticateUser, } from '../../utils/authentication';
+import {createAccountOnboardingUrl} from '../../utils/stripe_helpers';
+import {authenticateUser} from '../../utils/authentication';
 import {serialize} from 'cookie';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -55,7 +55,7 @@ export default async function handler(req: any, res: any) {
           },
         },
       },
-      {stripeAccount: account.id},
+      {stripeAccount: account.id}
     );
 
     const customer = await stripe.customers.create({
@@ -71,18 +71,18 @@ export default async function handler(req: any, res: any) {
 
     const url = await createAccountOnboardingUrl(
       account.id,
-      process.env.DEMO_HOST,
+      process.env.DEMO_HOST
     );
 
     res.setHeader(
       'Set-Cookie',
       // @ts-expect-error TS(2531): Object is possibly 'null'.
-      serialize('app_auth', user.cookie, {path: '/', httpOnly: true}),
+      serialize('app_auth', user.cookie, {path: '/', httpOnly: true})
     );
 
     return res.json({accountCreated: true, url: url});
   } catch (err) {
-    console.error(err)
+    console.error(err);
     return res.status(401).json({
       accountCreated: false,
       // @ts-expect-error TS(2571): Object is of type 'unknown'.

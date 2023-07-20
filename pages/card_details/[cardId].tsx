@@ -47,15 +47,17 @@ const CardDetails = (props: any) => {
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     {
       stripeAccount: props.account,
-    },
+    }
   );
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 p-6">
-
       <Elements stripe={stripePromise}>
-      <div className="flex justify-end">
-        <CardStatusSwitchWidget cardStatus={props.cardDetails.status} cardId={props.cardId}/>
+        <div className="flex justify-end">
+          <CardStatusSwitchWidget
+            cardStatus={props.cardDetails.status}
+            cardId={props.cardId}
+          />
         </div>
         <CardDetailsWidget
           accountId={props.account}

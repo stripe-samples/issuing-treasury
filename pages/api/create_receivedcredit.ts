@@ -1,4 +1,3 @@
-
 import {parse} from 'cookie';
 import {decode} from '../../utils/jwt_encode_decode';
 
@@ -14,7 +13,7 @@ export default async function handler(req: any, res: any) {
       //Get financial accounts for the Connected Account
       const financialAccounts = await stripe.treasury.financialAccounts.list(
         {expand: ['data.financial_addresses.aba.account_number']},
-        {stripeAccount: StripeAccountId},
+        {stripeAccount: StripeAccountId}
       );
       const financialAccount = financialAccounts.data[0];
 
@@ -26,7 +25,7 @@ export default async function handler(req: any, res: any) {
             financial_account: financialAccount.id,
             network: 'ach',
           },
-          {stripeAccount: StripeAccountId},
+          {stripeAccount: StripeAccountId}
         );
       return res.json({receivedCredit: receivedCredit.id});
     } catch (err) {

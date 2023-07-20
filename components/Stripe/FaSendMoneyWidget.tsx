@@ -202,8 +202,7 @@ function FaSendMoneyWidget() {
                             />
                           </div>
                           {network === 'us_domestic_wire' ? (
-                           <div className="col-span-6 grid grid-cols-4 gap-4">
-                            
+                            <div className="col-span-6 grid grid-cols-4 gap-4">
                               <div className="col-span-4">
                                 <label className="block text-sm font-medium text-gray-700">
                                   Street address
@@ -259,9 +258,7 @@ function FaSendMoneyWidget() {
                                   }
                                 ></input>
                               </div>
-
-                              </div>
-   
+                            </div>
                           ) : null}
 
                           <div className="col-span-6">
@@ -509,20 +506,21 @@ function FaSendMoneyWidget() {
                             </span>
                           </div>
                           {network === 'us_domestic_wire' ? (
-                          <div className="col-span-2">
-                          <label
-                            htmlFor="adress"
-                            className="block font-bold text-gray-900"
-                          >
-                            Address
-                          </label>
-                          <span
-                            className="mt-1 block w-full sm:text-sm"
-                            id="review-notes"
-                          >
-                            {address1} , {city} - {addressState} {postalCode}
-                          </span>
-                        </div>
+                            <div className="col-span-2">
+                              <label
+                                htmlFor="adress"
+                                className="block font-bold text-gray-900"
+                              >
+                                Address
+                              </label>
+                              <span
+                                className="mt-1 block w-full sm:text-sm"
+                                id="review-notes"
+                              >
+                                {address1} , {city} - {addressState}{' '}
+                                {postalCode}
+                              </span>
+                            </div>
                           ) : null}
 
                           <div className="">
@@ -626,7 +624,7 @@ function FaSendMoneyWidget() {
                                             'application/json;charset=utf-8',
                                         },
                                         body: JSON.stringify(body),
-                                      },
+                                      }
                                     );
                                     const responseData = await response.json();
                                     if (responseData.success === true) {
@@ -640,7 +638,7 @@ function FaSendMoneyWidget() {
                                     }
                                   } else {
                                     setErrorText(
-                                      'Name and Amount fields are required',
+                                      'Name and Amount fields are required'
                                     );
                                     setSubmitted(false);
                                     setError(true);

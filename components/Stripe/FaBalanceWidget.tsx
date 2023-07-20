@@ -1,9 +1,7 @@
 import React from 'react';
 import {formatUSD} from '../../utils/format';
 
-function FaBalanceWidget({
-  financialAccount
-}: any) {
+function FaBalanceWidget({financialAccount}: any) {
   return (
     <div>
       <div className="mx-auto max-w-6xl px-4 py-2 sm:px-6 lg:px-8 mt-4 mb-4">
@@ -76,7 +74,7 @@ function FaBalanceWidget({
                     <dd>
                       <div className="text-lg font-medium text-gray-900">
                         {formatUSD(
-                          financialAccount.balance.outbound_pending.usd / 100,
+                          financialAccount.balance.outbound_pending.usd / 100
                         )}
                       </div>
                     </dd>

@@ -1,4 +1,3 @@
-
 import {parse} from 'cookie';
 import {decode} from '../../utils/jwt_encode_decode';
 
@@ -19,7 +18,7 @@ export default async function handler(req: any, res: any) {
       },
       {
         stripeAccount: StripeAccountId,
-      },
+      }
     );
 
     let price;
@@ -35,7 +34,7 @@ export default async function handler(req: any, res: any) {
         },
         {
           stripeAccount: StripeAccountId,
-        },
+        }
       );
     } else {
       price = prices.data[0];
@@ -53,7 +52,7 @@ export default async function handler(req: any, res: any) {
         },
         {
           stripeAccount: StripeAccountId,
-        },
+        }
       );
       return res.json({urlCreated: true, paymentLink: paymentLink.url});
     } catch (err) {

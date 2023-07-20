@@ -1,4 +1,3 @@
-
 import {parse} from 'cookie';
 import {decode} from '../../utils/jwt_encode_decode';
 
@@ -20,7 +19,7 @@ export default async function handler(req: any, res: any) {
           amount: balance.available[0].amount,
           currency: 'usd',
         },
-        {stripeAccount: StripeAccountId},
+        {stripeAccount: StripeAccountId}
       );
 
       return res.json({success: true});

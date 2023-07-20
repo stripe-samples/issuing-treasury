@@ -11,7 +11,7 @@ export async function authenticateUser(email: any, password: any) {
       console.log('customer has account');
       //Check if there are missing requirements
       const account = await stripe.accounts.retrieve(
-        customer.metadata.accountId,
+        customer.metadata.accountId
       );
       let requiresOnboarding = false;
       if (account.requirements.currently_due.length > 1) {

@@ -1,4 +1,3 @@
-
 import {parse, serialize} from 'cookie';
 
 export default function handler(req: any, res: any) {

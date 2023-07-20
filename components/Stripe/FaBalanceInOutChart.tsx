@@ -11,9 +11,7 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {Bar} from 'react-chartjs-2';
 
-function FaBalanceInOutChart({
-  faTransactionsChart
-}: any) {
+function FaBalanceInOutChart({faTransactionsChart}: any) {
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -21,7 +19,7 @@ function FaBalanceInOutChart({
     Title,
     Tooltip,
     Legend,
-    ChartDataLabels,
+    ChartDataLabels
   );
 
   const options = {

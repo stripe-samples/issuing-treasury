@@ -1,14 +1,14 @@
 module.exports = {
   mode: 'jit',
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-      'accent-color':'#1f2937',
-      'accent-color-light': '#445a78',
+        'accent-color': '#1f2937',
+        'accent-color-light': '#445a78',
         blurple: '#635BFF',
         'light-gray': '#F6F9FC',
         'dark-gray': {
@@ -50,11 +50,11 @@ module.exports = {
         heliotrope: '#AD4FFB',
         yellow: '#FBEECE',
         'light-brown': '#BA9F5D',
-      }
+      },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/aspect-ratio')],
-}
-
-
-
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/aspect-ratio'),
+  ],
+};

@@ -2,9 +2,7 @@ import Header from './Header';
 import Navbar from './Navbar';
 import React from 'react';
 
-const Layout = ({
-  children
-}: any) => {
+const Layout = ({children}: any) => {
   return (
     <div>
       {children.props.session ? (
