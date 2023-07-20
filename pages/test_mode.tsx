@@ -1,7 +1,7 @@
 import React from 'react';
-import PaymentLinkCreate from '../components/Stripe/TestModePaymentLinkCreateWidget.js';
-import ReceivedCreditCreate from '../components/Stripe/TestModeReceivedCreditCreateWidget.js';
-import PayoutWidget from '../components/Stripe/TestModePayouts.js';
+import PaymentLinkCreate from '../components/Stripe/TestModePaymentLinkCreateWidget';
+import ReceivedCreditCreate from '../components/Stripe/TestModeReceivedCreditCreateWidget';
+import PayoutWidget from '../components/Stripe/TestModePayouts';
 import {decode} from '../utils/jwt_encode_decode';
 // @ts-expect-error TS(7016): Could not find a declaration file for module 'cook... Remove this comment to see the full error message
 import {parse} from 'cookie';
