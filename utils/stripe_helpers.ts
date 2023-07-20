@@ -73,50 +73,44 @@ export async function getFinancialAccountTransactionDetails(StripeAccountID: any
   );
 
   //get FinancialAccount balance
-  let transactions_dates = {};
+  const transactions_dates: {
+    [formattedDate: string]: {
+      funds_in: number;
+      funds_out: number;
+    };
+  } = {};
   //To show a history of the balance we will start from the latest balance and apply subtract the operations
   //Get Transactions
 
   //Parse Transactions
   fa_transactions.data.forEach((element: any) => {
-    var date = new Date(element.created * 1000);
-    // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'Date'.
-    date =
+    const date = new Date(element.created * 1000);
+    const formattedDate =
       date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
     //Check if date already exists as a key in the JSON object
-    // @ts-expect-error TS(2345): Argument of type 'Date' is not assignable to param... Remove this comment to see the full error message
-    if (transactions_dates.hasOwnProperty(date)) {
+    if (transactions_dates.hasOwnProperty(formattedDate)) {
       if (element.amount > 0) {
-        // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-        transactions_dates[date]['funds_in'] =
-          // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-          transactions_dates[date]['funds_in'] + element.amount / 100;
+        transactions_dates[formattedDate]['funds_in'] =
+          transactions_dates[formattedDate]['funds_in'] + element.amount / 100;
       } else {
-        // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-        transactions_dates[date]['funds_out'] =
-          // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-          transactions_dates[date]['funds_out'] +
+        transactions_dates[formattedDate]['funds_out'] =
+          transactions_dates[formattedDate]['funds_out'] +
           Math.abs(element.amount) / 100;
       }
     } else {
       //Initialize the key, only update balance when adding the day as this is the ending balance
-      // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-      transactions_dates[date] = {
+      transactions_dates[formattedDate] = {
         funds_in: 0,
         funds_out: 0,
       };
       //Populate the funds_in and funds_out values
       if (element.amount > 0) {
-        // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-        transactions_dates[date]['funds_in'] =
-          // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-          transactions_dates[date]['funds_in'] + element.amount / 100;
+        transactions_dates[formattedDate]['funds_in'] =
+          transactions_dates[formattedDate]['funds_in'] + element.amount / 100;
       } else {
         //We are calculating the total funds out by using its absolute value so we can stack and compare
-        // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-        transactions_dates[date]['funds_out'] =
-          // @ts-expect-error TS(2538): Type 'Date' cannot be used as an index type.
-          transactions_dates[date]['funds_out'] +
+        transactions_dates[formattedDate]['funds_out'] =
+          transactions_dates[formattedDate]['funds_out'] +
           Math.abs(element.amount) / 100;
       }
     }
@@ -134,9 +128,7 @@ export async function getFinancialAccountTransactionDetails(StripeAccountID: any
   } else {
     Object.keys(transactions_dates).forEach(function (key) {
       dates_array.push(key);
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       funds_in_array.push(transactions_dates[key].funds_in);
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       funds_out_array.push(transactions_dates[key].funds_out);
     });
     dates_array = dates_array.reverse();
