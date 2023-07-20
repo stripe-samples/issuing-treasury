@@ -1,9 +1,15 @@
 import jwt from 'jsonwebtoken';
 
-export function encode(payload: any) {
-  return jwt.sign(payload, process.env.SESSION_SECRET_KEY);
+if (!process.env.SESSION_SECRET_KEY) {
+  throw new Error('SESSION_SECRET_KEY is not defined');
 }
 
-export function decode(token: any) {
-  return jwt.verify(token, process.env.SESSION_SECRET_KEY);
+const secretKey = process.env.SESSION_SECRET_KEY;
+
+export function encode(payload: string) {
+  return jwt.sign(payload, secretKey);
+}
+
+export function decode(token: string) {
+  return jwt.verify(token, secretKey);
 }
