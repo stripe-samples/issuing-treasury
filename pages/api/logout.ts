@@ -1,4 +1,4 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'cook... Remove this comment to see the full error message
+
 import {parse, serialize} from 'cookie';
 
 export default function handler(req: any, res: any) {
