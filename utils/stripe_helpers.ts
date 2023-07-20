@@ -1,3 +1,4 @@
+import Stripe from 'stripe';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export async function getFinancialAccountTransactions(StripeAccountID: any) {
@@ -191,24 +192,23 @@ export async function getCardTransactions(StripeAccountID: any, cardId: any) {
   );
 
   // Calculate current spend
-  let current_spend = 0;
+  let current_spend_amount: number = 0;
+  let current_spend: string = '';
 
   card_authorizations.data.forEach(function (authorization: any) {
     // Validate the authorization was approved before adding it to the total spend
     if (authorization.approved == true) {
-      current_spend = current_spend + authorization.amount;
+      current_spend_amount = current_spend_amount + authorization.amount;
     }
   });
 
-  if (current_spend > 0) {
-    // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'number'.
-    current_spend = (current_spend / 100).toLocaleString('en-US', {
+  if (current_spend_amount > 0) {
+    current_spend = (current_spend_amount / 100).toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
     });
   } else {
-    // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'number'.
-    current_spend = current_spend.toLocaleString('en-US', {
+    current_spend = current_spend_amount.toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
     });
@@ -221,12 +221,18 @@ export async function getCardTransactions(StripeAccountID: any, cardId: any) {
       stripeAccount: StripeAccountID,
     }
   );
-  let cardTransactions = {};
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
+  let cardTransactions: {
+    card_authorizations: Stripe.Issuing.Authorization[];
+    current_spend: string;
+    card_details: Stripe.Issuing.Card;
+  } = {
+    card_authorizations: [],
+    current_spend: '',
+    card_details: {} as Stripe.Issuing.Card,
+  };
   cardTransactions['card_authorizations'] = card_authorizations.data;
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   cardTransactions['current_spend'] = current_spend;
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   cardTransactions['card_details'] = card_details;
 
   return cardTransactions;

@@ -22,13 +22,10 @@ export async function getServerSideProps(context: any) {
 
       return {
         props: {
-          // @ts-expect-error TS(2339): Property 'card_authorizations' does not exist on t... Remove this comment to see the full error message
           cardAuthorizations: cardTransactions.card_authorizations,
-          // @ts-expect-error TS(2339): Property 'current_spend' does not exist on type '{... Remove this comment to see the full error message
           CurrentSpend: cardTransactions.current_spend,
           account: StripeAccountID,
           cardId: context.params.cardId,
-          // @ts-expect-error TS(2339): Property 'card_details' does not exist on type '{}... Remove this comment to see the full error message
           cardDetails: cardTransactions.card_details,
         },
       };
