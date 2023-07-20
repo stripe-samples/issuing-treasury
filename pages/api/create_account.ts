@@ -13,7 +13,7 @@ export default async function handler(req: any, res: any) {
     body: {name, email},
   } = req;
   try {
-    //Check if user exists
+    // Check if user exists
     const {data: customers} = await stripe.customers.list({email});
     if (customers.length) {
       return res.json({

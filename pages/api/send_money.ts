@@ -14,17 +14,17 @@ export default async function handler(req: any, res: any) {
         stripeAccount: StripeAccountId,
       });
 
-      //fields from req
+      // fields from req
       let amount = req.body.amount;
-      //clean up amount
+      // clean up amount
       if (req.body.amount.includes('.')) {
         amount = amount.replace('.', '');
       } else {
-        //convert to cents
+        // convert to cents
         amount = amount * 100;
       }
 
-      //Get financial accounts for the Connected Account
+      // Get financial accounts for the Connected Account
       const financialAccounts = await stripe.treasury.financialAccounts.list(
         {expand: ['data.financial_addresses.aba.account_number']},
         {stripeAccount: StripeAccountId}

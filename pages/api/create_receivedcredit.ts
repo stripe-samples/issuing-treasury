@@ -10,7 +10,7 @@ export default async function handler(req: any, res: any) {
     try {
       const StripeAccountId = session.accountId;
 
-      //Get financial accounts for the Connected Account
+      // Get financial accounts for the Connected Account
       const financialAccounts = await stripe.treasury.financialAccounts.list(
         {expand: ['data.financial_addresses.aba.account_number']},
         {stripeAccount: StripeAccountId}

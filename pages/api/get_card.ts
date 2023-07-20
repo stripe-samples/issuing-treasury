@@ -16,7 +16,7 @@ export default async function handler(req: any, res: any) {
     }
   );
 
-  //Check if we have a result
+  // Check if we have a result
   if (ephemeralKey) {
     res.status(200).send(ephemeralKey);
   } else {

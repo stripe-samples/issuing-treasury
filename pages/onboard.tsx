@@ -14,9 +14,9 @@ export async function getServerSideProps(context: any) {
       const session = decode(cookie.app_auth);
       const StripeAccountID = session.accountId;
       const account = await stripe.accounts.retrieve(StripeAccountID);
-      //Check if there are requirements due
+      // Check if there are requirements due
       if (account.requirements.currently_due.length > 1) {
-        //Create the onboarding link and redirect
+        // Create the onboarding link and redirect
         const url = await createAccountOnboardingUrl(
           account.id,
           process.env.DEMO_HOST
@@ -27,7 +27,7 @@ export async function getServerSideProps(context: any) {
           },
         };
       } else {
-        //Renew cookie
+        // Renew cookie
         session.requiresOnboarding = false;
         const cookie = encode(session);
         context.res.setHeader(

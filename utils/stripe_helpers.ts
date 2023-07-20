@@ -75,19 +75,19 @@ export async function getFinancialAccountTransactionDetails(
     {stripeAccount: StripeAccountID}
   );
 
-  //get FinancialAccount balance
+  // get FinancialAccount balance
   const transactions_dates: {
     [formattedDate: string]: {funds_in: number; funds_out: number};
   } = {};
-  //To show a history of the balance we will start from the latest balance and apply subtract the operations
-  //Get Transactions
+  // To show a history of the balance we will start from the latest balance and apply subtract the operations
+  // Get Transactions
 
-  //Parse Transactions
+  // Parse Transactions
   fa_transactions.data.forEach((element: any) => {
     const date = new Date(element.created * 1000);
     const formattedDate =
       date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-    //Check if date already exists as a key in the JSON object
+    // Check if date already exists as a key in the JSON object
     if (transactions_dates.hasOwnProperty(formattedDate)) {
       if (element.amount > 0) {
         transactions_dates[formattedDate]['funds_in'] =
@@ -98,30 +98,30 @@ export async function getFinancialAccountTransactionDetails(
           Math.abs(element.amount) / 100;
       }
     } else {
-      //Initialize the key, only update balance when adding the day as this is the ending balance
+      // Initialize the key, only update balance when adding the day as this is the ending balance
       transactions_dates[formattedDate] = {
         funds_in: 0,
         funds_out: 0,
       };
-      //Populate the funds_in and funds_out values
+      // Populate the funds_in and funds_out values
       if (element.amount > 0) {
         transactions_dates[formattedDate]['funds_in'] =
           transactions_dates[formattedDate]['funds_in'] + element.amount / 100;
       } else {
-        //We are calculating the total funds out by using its absolute value so we can stack and compare
+        // We are calculating the total funds out by using its absolute value so we can stack and compare
         transactions_dates[formattedDate]['funds_out'] =
           transactions_dates[formattedDate]['funds_out'] +
           Math.abs(element.amount) / 100;
       }
     }
   });
-  //Initialize chart arrays
+  // Initialize chart arrays
   let dates_array: any = [];
   let funds_in_array: any = [];
   let funds_out_array: any = [];
 
   if (Object.keys(transactions_dates).length === 0) {
-    //If the transactions_dates object is empty populate arrays with 0
+    // If the transactions_dates object is empty populate arrays with 0
     dates_array.push('0');
     funds_in_array.push('0');
     funds_out_array.push('0');
@@ -134,7 +134,7 @@ export async function getFinancialAccountTransactionDetails(
     dates_array = dates_array.reverse();
     funds_in_array = funds_in_array.reverse();
     funds_out_array = funds_out_array.reverse();
-    //If there are multiple days, remove first element to ensure we have the whole day balance, else we could have partial operations for the day
+    // If there are multiple days, remove first element to ensure we have the whole day balance, else we could have partial operations for the day
     if (dates_array.length > 1) {
       dates_array.shift();
       funds_in_array.shift();
@@ -181,7 +181,7 @@ export async function getCards(StripeAccountID: any) {
 export async function getCardTransactions(StripeAccountID: any, cardId: any) {
   const today = Math.trunc(new Date().setHours(0, 0) / 1000);
 
-  //Retrieve last 10 authorizations
+  // Retrieve last 10 authorizations
   const card_authorizations = await stripe.issuing.authorizations.list(
     {
       card: cardId,
@@ -190,11 +190,11 @@ export async function getCardTransactions(StripeAccountID: any, cardId: any) {
     {stripeAccount: StripeAccountID}
   );
 
-  //Calculate current spend
+  // Calculate current spend
   let current_spend = 0;
 
   card_authorizations.data.forEach(function (authorization: any) {
-    //Validate the authorization was approved before adding it to the total spend
+    // Validate the authorization was approved before adding it to the total spend
     if (authorization.approved == true) {
       current_spend = current_spend + authorization.amount;
     }

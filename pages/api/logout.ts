@@ -4,7 +4,7 @@ export default function handler(req: any, res: any) {
   if (req.method !== 'GET') {
     return res.status(404).end();
   }
-  //Delete up all cookies
+  // Delete up all cookies
   if ('cookie' in req.headers) {
     const cookie = parse(req.headers.cookie);
     res.cookieArray = [];

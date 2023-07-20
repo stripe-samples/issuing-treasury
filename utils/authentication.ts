@@ -9,7 +9,7 @@ export async function authenticateUser(email: any, password: any) {
     console.log('customer found');
     if (customer.metadata.accountId) {
       console.log('customer has account');
-      //Check if there are missing requirements
+      // Check if there are missing requirements
       const account = await stripe.accounts.retrieve(
         customer.metadata.accountId
       );

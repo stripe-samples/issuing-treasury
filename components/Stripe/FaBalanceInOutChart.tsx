@@ -69,12 +69,12 @@ function FaBalanceInOutChart({faTransactionsChart}: any) {
       x: {
         stacked: false,
         ticks: {
-          //maxRotation: 90,
-          //minRotation: 90
+          // maxRotation: 90,
+          // minRotation: 90
         },
       },
       y: {
-        //Provide extra space on the boundaries
+        // Provide extra space on the boundaries
         display: true,
         ticks: {
           callback: function (value: any, index: any, values: any) {
