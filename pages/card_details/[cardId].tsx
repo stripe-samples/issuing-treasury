@@ -18,7 +18,10 @@ export async function getServerSideProps(context: any) {
       const session = decode(cookie.app_auth);
       const cardId = context.params.cardId;
       const StripeAccountID = session.accountId;
-      let cardTransactions = await getCardTransactions(StripeAccountID, cardId);
+      const cardTransactions = await getCardTransactions(
+        StripeAccountID,
+        cardId
+      );
 
       return {
         props: {

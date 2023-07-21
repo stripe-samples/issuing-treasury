@@ -10,7 +10,7 @@ export default async function handler(req: any, res: any) {
       const session = decode(app_auth);
 
       const StripeAccountId = session.accountId;
-      let balance = await stripe.balance.retrieve({
+      const balance = await stripe.balance.retrieve({
         stripeAccount: StripeAccountId,
       });
 

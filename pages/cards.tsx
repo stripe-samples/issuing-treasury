@@ -22,8 +22,8 @@ export async function getServerSideProps(context: any) {
       }
       // There is no accountId here? It's customerId, tho
       const StripeAccountID = session.accountId;
-      let responseCardholders = await getCardholders(StripeAccountID);
-      let responseCards = await getCards(StripeAccountID);
+      const responseCardholders = await getCardholders(StripeAccountID);
+      const responseCards = await getCards(StripeAccountID);
       return {
         props: {
           cardholders: responseCardholders.cardholders.data,

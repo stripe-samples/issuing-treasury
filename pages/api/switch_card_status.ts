@@ -11,7 +11,7 @@ export default async function handler(req: any, res: any) {
       const StripeAccountId = session.accountId;
       const cardId = req.body.card_id;
       const {new_status} = req.body;
-      let status = new_status == 'active' ? 'active' : 'inactive';
+      const status = new_status == 'active' ? 'active' : 'inactive';
       const result = await stripe.issuing.cards.update(
         cardId,
         {status: status},

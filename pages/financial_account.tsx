@@ -26,11 +26,11 @@ export async function getServerSideProps(context: any) {
         };
       }
       const StripeAccountID = session.accountId;
-      let responseFaDetails = await getFinancialAccountDetailsExp(
+      const responseFaDetails = await getFinancialAccountDetailsExp(
         StripeAccountID
       );
       const financialAccount = responseFaDetails.financialaccount;
-      let responseFaTransactions =
+      const responseFaTransactions =
         await getFinancialAccountTransactionsExpanded(StripeAccountID);
       const faTransactions = responseFaTransactions.fa_transactions;
       return {

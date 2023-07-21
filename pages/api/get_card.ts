@@ -1,9 +1,9 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: any, res: any) {
-  let accountId = req.body.accountId;
-  let cardId = req.body.cardId;
-  let nonce = req.body.nonce;
+  const accountId = req.body.accountId;
+  const cardId = req.body.cardId;
+  const nonce = req.body.nonce;
 
   const ephemeralKey = await stripe.ephemeralKeys.create(
     {

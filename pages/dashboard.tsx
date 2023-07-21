@@ -25,13 +25,14 @@ export async function getServerSideProps(context: any) {
         };
       }
       const StripeAccountID = session.accountId;
-      let responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
-      const financialAccount = responseFaDetails.financialaccount;
-      let responseFaTransations = await getFinancialAccountTransactionsExpanded(
+      const responseFaDetails = await getFinancialAccountDetails(
         StripeAccountID
       );
+      const financialAccount = responseFaDetails.financialaccount;
+      const responseFaTransations =
+        await getFinancialAccountTransactionsExpanded(StripeAccountID);
       const faTransactions = responseFaTransations.fa_transactions;
-      let responseFaTransations_chart =
+      const responseFaTransations_chart =
         await getFinancialAccountTransactionDetails(StripeAccountID);
       const faTransactionsChart =
         responseFaTransations_chart.faTransactions_chart;
