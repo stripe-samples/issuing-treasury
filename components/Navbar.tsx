@@ -69,19 +69,19 @@ const NavBar = ({session}: any) => {
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
-                <Link href="/dashboard">
+                <Link legacyBehavior href="/dashboard">
                   <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                     Home
                   </a>
                 </Link>
 
-                <Link href="/cards">
+                <Link legacyBehavior href="/cards">
                   <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                     Cards
                   </a>
                 </Link>
 
-                <Link href="/financial_account">
+                <Link legacyBehavior href="/financial_account">
                   <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                     Financial Account
                   </a>
