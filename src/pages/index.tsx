@@ -40,8 +40,10 @@ export async function getServerSideProps(context: any) {
     },
   };
 }
-const Signin = () => {
+
+// Sign in page
+const Page = () => {
   return <div></div>;
 };
 
-export default Signin;
+export default Page;

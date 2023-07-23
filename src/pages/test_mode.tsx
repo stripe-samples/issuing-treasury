@@ -48,7 +48,7 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const TestMode = (props: any) => {
+const Page = (props: any) => {
   return (
     <div>
       <ReceivedCreditCreate />
@@ -61,4 +61,4 @@ const TestMode = (props: any) => {
   );
 };
 
-export default TestMode;
+export default Page;

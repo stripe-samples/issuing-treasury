@@ -49,7 +49,7 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const Onboard = (props: any) => {
+const Page = (props: any) => {
   return (
     <div>
       <OnboardWidget url={props.url} />
@@ -57,4 +57,4 @@ const Onboard = (props: any) => {
   );
 };
 
-export default Onboard;
+export default Page;

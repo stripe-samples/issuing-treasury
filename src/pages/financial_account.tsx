@@ -11,8 +11,6 @@ import {
   getFinancialAccountTransactionsExpanded,
 } from "../utils/stripe_helpers";
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-
 export async function getServerSideProps(context: any) {
   if ("cookie" in context.req.headers) {
     const cookie = parse(context.req.headers.cookie);
@@ -45,7 +43,7 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const FinancialAccountDetails = (props: any) => {
+const Page = (props: any) => {
   return (
     <div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 p-6">
@@ -60,4 +58,4 @@ const FinancialAccountDetails = (props: any) => {
   );
 };
 
-export default FinancialAccountDetails;
+export default Page;

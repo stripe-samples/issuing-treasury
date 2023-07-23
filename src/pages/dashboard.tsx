@@ -53,13 +53,15 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const Page = (props: {
+const Page = ({
+  financialAccount,
+  faTransactionsChart,
+  faTransactions,
+}: {
   financialAccount: any;
   faTransactionsChart: any;
   faTransactions: any;
 }) => {
-  const { financialAccount, faTransactionsChart, faTransactions } = props;
-
   return (
     <>
       <Head>
@@ -88,13 +90,11 @@ const Page = (props: {
             </Grid>
             <Grid item xs={12}>
               <OverviewFinancialAccountFundsFlowChart
-                faTransactionsChart={props.faTransactionsChart}
+                faTransactionsChart={faTransactionsChart}
               />
             </Grid>
             <Grid item xs={12}>
-              <OverviewLatestTransactions
-                faTransactions={props.faTransactions}
-              />
+              <OverviewLatestTransactions faTransactions={faTransactions} />
             </Grid>
           </Grid>
         </Container>

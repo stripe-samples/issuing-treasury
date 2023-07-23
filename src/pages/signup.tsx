@@ -28,7 +28,7 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const SignUp = () => {
+const Page = () => {
   return (
     <div>
       <SignupWidget />
@@ -36,4 +36,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Page;

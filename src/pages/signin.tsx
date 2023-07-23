@@ -30,7 +30,7 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const Signin = () => {
+const Page = () => {
   return (
     <div>
       <SigninWidget />
@@ -38,4 +38,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default Page;
