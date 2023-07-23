@@ -17,5 +17,7 @@
       "source.fixAll.eslint": true
     }
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "gitlens.currentLine.enabled": false,
+  "gitlens.hovers.currentLine.over": "line"
 }
