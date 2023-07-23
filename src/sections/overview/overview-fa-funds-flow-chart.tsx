@@ -164,20 +164,6 @@ export const OverviewFinancialAccountFundsFlowChart = (props: {
       <CardContent>
         <Bar options={chartOptions} data={data} />
       </CardContent>
-      <Divider />
-      <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button
-          color="inherit"
-          endIcon={
-            <SvgIcon fontSize="small">
-              <ArrowRightIcon />
-            </SvgIcon>
-          }
-          size="small"
-        >
-          Overview
-        </Button>
-      </CardActions>
     </Card>
   );
 };
