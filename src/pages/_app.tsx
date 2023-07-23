@@ -5,9 +5,9 @@ import {parse} from 'cookie';
 import {AppContext, AppProps} from 'next/app';
 import React from 'react';
 
-import Layout from '../components/Layout';
-import createEmotionCache from '../config/createEmotionCache';
-import theme from '../config/theme';
+import Layout from '../layouts/dashboard/layout';
+import {createTheme} from '../theme';
+import createEmotionCache from '../utils/create-emotion-cache';
 import {decode} from '../utils/jwt_encode_decode';
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -22,6 +22,8 @@ export default function HomeMadeHam({
   emotionCache = clientSideEmotionCache,
   pageProps,
 }: HomeMadeHamProps) {
+  const theme = createTheme();
+
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
