@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 
 import Logo from "../../components/CustomIcon";
 import { Scrollbar } from "../../components/scrollbar";
+import { useAuthContext } from "../../contexts/auth-context";
 
 import { items } from "./config";
 import { SideNavItem } from "./side-nav-item";
@@ -21,6 +22,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   const { open, onClose } = props;
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const { user } = useAuthContext();
 
   const content = (
     <Scrollbar
@@ -67,7 +69,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           >
             <div>
               <Typography color="inherit" variant="subtitle1">
-                snasir 1
+                {user?.name}
               </Typography>
               <Typography color="neutral.400" variant="body2">
                 Production

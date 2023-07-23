@@ -6,6 +6,7 @@ import { NextComponentType, NextPageContext } from "next";
 import { AppContext, AppProps } from "next/app";
 import React from "react";
 
+import { AuthConsumer, AuthProvider } from "../contexts/auth-context";
 import { createTheme } from "../theme";
 import createEmotionCache from "../utils/create-emotion-cache";
 import { decode } from "../utils/jwt_encode_decode";
@@ -31,9 +32,20 @@ export default function SampleApp({
 
   return (
     <CacheProvider value={emotionCache}>
-      <ThemeProvider theme={theme}>
-        {getLayout(<Component {...pageProps} />)}
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <AuthConsumer>
+            {(auth) =>
+              auth.isLoading ? (
+                // <SplashScreen />
+                <div>Loading...</div>
+              ) : (
+                getLayout(<Component {...pageProps} />)
+              )
+            }
+          </AuthConsumer>
+        </ThemeProvider>
+      </AuthProvider>
     </CacheProvider>
   );
 }
