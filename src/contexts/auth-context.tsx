@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
 import {
   createContext,
+  ReactNode,
   useContext,
   useEffect,
   useReducer,
@@ -86,12 +86,7 @@ export const AuthContext = createContext<State>({
   user: null,
 });
 
-type AuthProviderProps = {
-  children: React.ReactNode;
-};
-
-export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
-  const { children } = props;
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
 
@@ -202,10 +197,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-AuthProvider.propTypes = {
-  children: PropTypes.node,
 };
 
 export const AuthConsumer = AuthContext.Consumer;

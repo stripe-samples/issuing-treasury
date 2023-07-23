@@ -14,7 +14,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import PropTypes from "prop-types";
 // import {usePopover} from 'src/hooks/use-popover';
 
 import { AccountPopover } from "./account-popover";
@@ -22,8 +21,7 @@ import { AccountPopover } from "./account-popover";
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
-export const TopNav = (props: any) => {
-  const { onNavOpen } = props;
+export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   // const accountPopover = usePopover();
 
@@ -109,8 +107,4 @@ export const TopNav = (props: any) => {
       /> */}
     </>
   );
-};
-
-TopNav.propTypes = {
-  onNavOpen: PropTypes.func,
 };
