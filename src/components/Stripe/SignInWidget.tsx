@@ -27,7 +27,7 @@ function SigninWidget() {
         if (data.requiresOnboarding === true) {
           window.location.replace("/onboard");
         } else {
-          window.location.replace("/dashboard");
+          window.location.replace("/overview");
         }
       } else {
         setSubmitted(false);
