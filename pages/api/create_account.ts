@@ -1,6 +1,7 @@
-import {createAccountOnboardingUrl} from '../../utils/stripe_helpers';
-import {authenticateUser} from '../../utils/authentication';
 import {serialize} from 'cookie';
+
+import {authenticateUser} from '../../utils/authentication';
+import {createAccountOnboardingUrl} from '../../utils/stripe_helpers';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 

@@ -1,15 +1,15 @@
+import {parse} from 'cookie';
 import React from 'react';
-import FaBalanceWidget from '../components/Stripe/FaBalanceWidget';
-import FaTransactionsExtendedWidget from '../components/Stripe/FaTransactionsExtendedWidget';
-import FaSendMoneyWidget from '../components/Stripe/FaSendMoneyWidget';
+
 import FaAccountInfoWidget from '../components/Stripe/FaAccountInfoWidget';
+import FaBalanceWidget from '../components/Stripe/FaBalanceWidget';
+import FaSendMoneyWidget from '../components/Stripe/FaSendMoneyWidget';
+import FaTransactionsExtendedWidget from '../components/Stripe/FaTransactionsExtendedWidget';
+import {decode} from '../utils/jwt_encode_decode';
 import {
   getFinancialAccountDetailsExp,
   getFinancialAccountTransactionsExpanded,
 } from '../utils/stripe_helpers';
-import {decode} from '../utils/jwt_encode_decode';
-
-import {parse} from 'cookie';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 

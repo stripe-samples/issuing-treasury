@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {formatUSD} from '../../utils/format';
 
 function FaBalanceWidget({financialAccount}: any) {

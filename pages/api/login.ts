@@ -1,7 +1,8 @@
 // @ts-expect-error TS(7016): Could not find a declaration file for module 'cook... Remove this comment to see the full error message
 import {serialize} from 'cookie';
-import {createAccountOnboardingUrl} from '../../utils/stripe_helpers';
+
 import {authenticateUser} from '../../utils/authentication';
+import {createAccountOnboardingUrl} from '../../utils/stripe_helpers';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 

@@ -1,4 +1,5 @@
 import {parse} from 'cookie';
+
 import {decode} from '../../utils/jwt_encode_decode';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);

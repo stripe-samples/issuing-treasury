@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+
 import {formatUSD} from '../../utils/format';
 
 function FaSendMoneyWidget() {

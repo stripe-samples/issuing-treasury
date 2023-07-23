@@ -1,5 +1,6 @@
 import React from 'react';
-import {formatUSD, formatDateTime} from '../../utils/format';
+
+import {formatDateTime, formatUSD} from '../../utils/format';
 
 function FaTransactionsExtendedWidget({faTransactions}: any) {
   return (

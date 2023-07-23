@@ -1,13 +1,13 @@
-import React from 'react';
-import CardDetailsWidget from '../../components/Stripe/CardDetailsWidget';
-import IssuingAuthorizationsWidget from '../../components/Stripe/IssuingAuthorizationsWidget';
-import CardStatusSwitchWidget from '../../components/Stripe/CardStatusSwitchWidget';
-import {getCardTransactions} from '../../utils/stripe_helpers';
-import {decode} from '../../utils/jwt_encode_decode';
-
-import {parse} from 'cookie';
-import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import {parse} from 'cookie';
+import React from 'react';
+
+import CardDetailsWidget from '../../components/Stripe/CardDetailsWidget';
+import CardStatusSwitchWidget from '../../components/Stripe/CardStatusSwitchWidget';
+import IssuingAuthorizationsWidget from '../../components/Stripe/IssuingAuthorizationsWidget';
+import {decode} from '../../utils/jwt_encode_decode';
+import {getCardTransactions} from '../../utils/stripe_helpers';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 

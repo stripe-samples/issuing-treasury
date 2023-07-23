@@ -1,6 +1,6 @@
+import {parse} from 'cookie';
 import React from 'react';
 
-import {parse} from 'cookie';
 import {decode} from '../utils/jwt_encode_decode';
 
 export async function getServerSideProps(context: any) {

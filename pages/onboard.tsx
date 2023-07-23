@@ -1,9 +1,9 @@
-import React from 'react';
-import {decode, encode} from '../utils/jwt_encode_decode';
-
 import {parse, serialize} from 'cookie';
-import {createAccountOnboardingUrl} from '../utils/stripe_helpers';
+import React from 'react';
+
 import OnboardWidget from '../components/Stripe/OnboardWidget';
+import {decode, encode} from '../utils/jwt_encode_decode';
+import {createAccountOnboardingUrl} from '../utils/stripe_helpers';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 

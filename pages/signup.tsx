@@ -1,7 +1,7 @@
-import React from 'react';
-import SignupWidget from '../components/Stripe/SignUpWidget';
-
 import {parse} from 'cookie';
+import React from 'react';
+
+import SignupWidget from '../components/Stripe/SignUpWidget';
 import {decode} from '../utils/jwt_encode_decode';
 
 export async function getServerSideProps(context: any) {

@@ -1,16 +1,16 @@
 import '../styles/globals.css';
-import Layout from '../components/Layout';
-import {AppProps, AppContext} from 'next/app';
-import Head from 'next/head';
-import {ThemeProvider} from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import {CacheProvider, EmotionCache} from '@emotion/react';
-import {decode} from '../utils/jwt_encode_decode';
-import theme from '../config/theme';
-import createEmotionCache from '../config/createEmotionCache';
-
+import CssBaseline from '@mui/material/CssBaseline';
+import {ThemeProvider} from '@mui/material/styles';
 import {parse} from 'cookie';
-import * as React from 'react';
+import {AppContext, AppProps} from 'next/app';
+import Head from 'next/head';
+import React from 'react';
+
+import Layout from '../components/Layout';
+import createEmotionCache from '../config/createEmotionCache';
+import theme from '../config/theme';
+import {decode} from '../utils/jwt_encode_decode';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
