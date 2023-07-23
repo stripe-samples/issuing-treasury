@@ -1,6 +1,8 @@
 import { parse } from "cookie";
 import React, { ReactNode } from "react";
 
+import CardholderCreateWidget from "../components/Stripe/CardholderCreateWidget";
+import CardholderWidget from "../components/Stripe/CardholderWidget";
 import CardsWidget from "../components/Stripe/CardsWidget";
 import DashboardLayout from "../layouts/dashboard/layout";
 import { decode } from "../utils/jwt_encode_decode";
@@ -41,6 +43,8 @@ export async function getServerSideProps(context: any) {
 const Page = (props: any) => {
   return (
     <>
+      <CardholderCreateWidget />
+      <CardholderWidget cardholders={props.cardholders} />
       <CardsWidget cards={props.cards} />
     </>
   );
