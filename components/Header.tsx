@@ -4,8 +4,9 @@ import React from 'react';
 const Header = () => {
   return (
     <Head>
-      <title>HomeMadeHam </title>
-      <link rel="icon" href="/favicon.ico" />
+      <title>Homex</title>
+      <link rel="icon" href="/favicon.svg" />
+      <meta name="viewport" content="initial-scale=1, width=device-width" />
     </Head>
   );
 };
