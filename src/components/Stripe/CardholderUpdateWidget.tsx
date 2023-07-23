@@ -1,30 +1,30 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 function CardholderUpdateWidget(props: any) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
+  const [errorText, setErrorText] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [accept, setAccept] = useState('false');
+  const [accept, setAccept] = useState("false");
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setSubmitted(true);
-    if (accept != 'false') {
+    if (accept != "false") {
       const body = {
         cardholderId: props.cardholderId,
         firstName: props.firstName,
         lastName: props.lastName,
       };
-      const response = await fetch('api/update_cardholder', {
-        method: 'POST',
+      const response = await fetch("api/update_cardholder", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json;charset=utf-8',
+          "Content-Type": "application/json;charset=utf-8",
         },
         body: JSON.stringify(body),
       });
       if (response.ok) {
-        window.location.replace('/cards');
+        window.location.replace("/cards");
       } else {
         setSubmitted(false);
         const result = await response.json();
@@ -32,7 +32,7 @@ function CardholderUpdateWidget(props: any) {
         setErrorText(result.error);
       }
     } else {
-      setErrorText('All fields are required.');
+      setErrorText("All fields are required.");
       setSubmitted(false);
       setError(true);
     }
@@ -91,23 +91,23 @@ function CardholderUpdateWidget(props: any) {
                       id="accept-terms"
                       className="mx-2"
                       onChange={(e) => {
-                        if (accept == 'false') {
-                          setAccept('true');
+                        if (accept == "false") {
+                          setAccept("true");
                         } else {
-                          setAccept('false');
+                          setAccept("false");
                         }
                       }}
                     ></input>
 
                     <label className="block text-sm font-medium text-gray-700">
-                      This cardholder has agreed to the{' '}
+                      This cardholder has agreed to the{" "}
                       <a
                         className="underline font-medium text-blue-700"
                         href="https://stripe.com/legal/issuing/celtic-authorized-user-terms"
                       >
                         Celtic Bank Authorized User Terms
-                      </a>{' '}
-                      and{' '}
+                      </a>{" "}
+                      and{" "}
                       <a
                         className="underline font-medium text-blue-700"
                         href="https://www.celticbank.com/privacy"

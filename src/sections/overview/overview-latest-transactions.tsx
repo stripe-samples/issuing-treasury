@@ -1,4 +1,4 @@
-import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
+import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
 import {
   Box,
   Button,
@@ -12,30 +12,30 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from '@mui/material';
-import {format} from 'date-fns';
+} from "@mui/material";
+import { format } from "date-fns";
 
-import {Scrollbar} from '../../components/scrollbar';
-import {SeverityPill} from '../../components/severity-pill';
-import {formatUSD} from '../../utils/format';
+import { Scrollbar } from "../../components/scrollbar";
+import { SeverityPill } from "../../components/severity-pill";
+import { formatUSD } from "../../utils/format";
 
 const statusMap = {
-  pending: 'warning',
-  delivered: 'success',
-  refunded: 'error',
+  pending: "warning",
+  delivered: "success",
+  refunded: "error",
 };
 
 export const OverviewLatestTransactions = (props: {
   faTransactions: [];
   sx?: object;
 }) => {
-  const {faTransactions = [], sx} = props;
+  const { faTransactions = [], sx } = props;
 
   return (
     <Card sx={sx}>
       <CardHeader title="Latest Transactions" />
-      <Scrollbar sx={{flexGrow: 1}}>
-        <Box sx={{minWidth: 800}}>
+      <Scrollbar sx={{ flexGrow: 1 }}>
+        <Box sx={{ minWidth: 800 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -48,7 +48,7 @@ export const OverviewLatestTransactions = (props: {
             </TableHead>
             <TableBody>
               {faTransactions.map((transaction) => {
-                const createdAt = format(transaction.created, 'dd/MM/yyyy');
+                const createdAt = format(transaction.created, "dd/MM/yyyy");
 
                 return (
                   <TableRow hover key={transaction.id}>
@@ -56,7 +56,7 @@ export const OverviewLatestTransactions = (props: {
                     <TableCell>
                       {`${formatUSD(transaction.amount / 100)} USD`}
                     </TableCell>
-                    <TableCell sx={{textTransform: 'uppercase'}}>
+                    <TableCell sx={{ textTransform: "uppercase" }}>
                       {transaction.flow_details[transaction.flow_type]
                         .hosted_regulatory_receipt_url ? (
                         <span className="text-gray-500 font-medium flex justify-between">
@@ -105,7 +105,7 @@ export const OverviewLatestTransactions = (props: {
         </Box>
       </Scrollbar>
       <Divider />
-      <CardActions sx={{justifyContent: 'flex-end'}}>
+      <CardActions sx={{ justifyContent: "flex-end" }}>
         <Button
           color="inherit"
           endIcon={

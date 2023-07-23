@@ -1,5 +1,5 @@
-import ArrowTopRightOnSquareIcon from '@heroicons/react/24/solid/ArrowTopRightOnSquareIcon';
-import ChevronUpDownIcon from '@heroicons/react/24/solid/ChevronUpDownIcon';
+import ArrowTopRightOnSquareIcon from "@heroicons/react/24/solid/ArrowTopRightOnSquareIcon";
+import ChevronUpDownIcon from "@heroicons/react/24/solid/ChevronUpDownIcon";
 import {
   Box,
   Button,
@@ -9,47 +9,47 @@ import {
   SvgIcon,
   Typography,
   useMediaQuery,
-} from '@mui/material';
-import NextLink from 'next/link';
-import {usePathname} from 'next/navigation';
-import PropTypes from 'prop-types';
-import Logo from 'src/components/CustomIcon';
+} from "@mui/material";
+import NextLink from "next/link";
+import { usePathname } from "next/navigation";
+import PropTypes from "prop-types";
+import Logo from "src/components/CustomIcon";
 
-import {Scrollbar} from '../../components/scrollbar';
+import { Scrollbar } from "../../components/scrollbar";
 
-import {items} from './config';
-import {SideNavItem} from './side-nav-item';
+import { items } from "./config";
+import { SideNavItem } from "./side-nav-item";
 
 export const SideNav = (props: any) => {
-  const {open, onClose} = props;
+  const { open, onClose } = props;
   const pathname = usePathname();
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
   const content = (
     <Scrollbar
       sx={{
-        height: '100%',
-        '& .simplebar-content': {
-          height: '100%',
+        height: "100%",
+        "& .simplebar-content": {
+          height: "100%",
         },
-        '& .simplebar-scrollbar:before': {
-          background: 'neutral.400',
+        "& .simplebar-scrollbar:before": {
+          background: "neutral.400",
         },
       }}
     >
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
         }}
       >
-        <Box sx={{p: 3}}>
+        <Box sx={{ p: 3 }}>
           <Box
             component={NextLink}
             href="/"
             sx={{
-              display: 'inline-flex',
+              display: "inline-flex",
               height: 32,
               width: 32,
             }}
@@ -58,14 +58,14 @@ export const SideNav = (props: any) => {
           </Box>
           <Box
             sx={{
-              alignItems: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.04)',
+              alignItems: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.04)",
               borderRadius: 1,
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
               mt: 2,
-              p: '12px',
+              p: "12px",
             }}
           >
             <div>
@@ -76,12 +76,12 @@ export const SideNav = (props: any) => {
                 Production
               </Typography>
             </div>
-            <SvgIcon fontSize="small" sx={{color: 'neutral.500'}}>
+            <SvgIcon fontSize="small" sx={{ color: "neutral.500" }}>
               <ChevronUpDownIcon />
             </SvgIcon>
           </Box>
         </Box>
-        <Divider sx={{borderColor: 'neutral.700'}} />
+        <Divider sx={{ borderColor: "neutral.700" }} />
         <Box
           component="nav"
           sx={{
@@ -94,7 +94,7 @@ export const SideNav = (props: any) => {
             component="ul"
             spacing={0.5}
             sx={{
-              listStyle: 'none',
+              listStyle: "none",
               p: 0,
               m: 0,
             }}
@@ -116,7 +116,7 @@ export const SideNav = (props: any) => {
             })}
           </Stack>
         </Box>
-        <Divider sx={{borderColor: 'neutral.700'}} />
+        <Divider sx={{ borderColor: "neutral.700" }} />
       </Box>
     </Scrollbar>
   );
@@ -128,8 +128,8 @@ export const SideNav = (props: any) => {
         open
         PaperProps={{
           sx: {
-            backgroundColor: 'neutral.800',
-            color: 'common.white',
+            backgroundColor: "neutral.800",
+            color: "common.white",
             width: 280,
           },
         }}
@@ -147,12 +147,12 @@ export const SideNav = (props: any) => {
       open={open}
       PaperProps={{
         sx: {
-          backgroundColor: 'neutral.800',
-          color: 'common.white',
+          backgroundColor: "neutral.800",
+          color: "common.white",
           width: 280,
         },
       }}
-      sx={{zIndex: (theme) => theme.zIndex.appBar + 100}}
+      sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
       variant="temporary"
     >
       {content}

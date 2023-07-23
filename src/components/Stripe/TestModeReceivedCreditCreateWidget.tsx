@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 function ReceivedCreditCreate(props: any) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
+  const [errorText, setErrorText] = useState("");
 
   return (
     <div className="flex-1 flex justify-center px-4 sm:px-6 lg:px-8">
       <div className="pt-4 max-w-2xl w-full space-y-8">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-extrabold text-dark-gray-900">
-            Simulate Received Credit{' '}
+            Simulate Received Credit{" "}
           </h2>
           <p className="text-justify mt-6 max-w-2xl text-base text-dark-gray-500">
             By pressing the Create Received Credit button, you will simulate
@@ -39,15 +39,15 @@ function ReceivedCreditCreate(props: any) {
               onClick={async (e) => {
                 e.preventDefault();
                 setSubmitted(true);
-                const response = await fetch('api/create_receivedcredit', {
-                  method: 'POST',
+                const response = await fetch("api/create_receivedcredit", {
+                  method: "POST",
                   headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
+                    "Content-Type": "application/json;charset=utf-8",
                   },
                 });
                 const responseData = await response.json();
                 if (responseData.urlCreated === true) {
-                  console.log('success');
+                  console.log("success");
                 } else {
                   setSubmitted(false);
                   setError(true);
@@ -55,7 +55,7 @@ function ReceivedCreditCreate(props: any) {
                 }
               }}
             >
-              {' '}
+              {" "}
               {submitted ? (
                 <svg
                   role="status"

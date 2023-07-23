@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
-import {formatDateTime} from '../../utils/format';
+import { formatDateTime } from "../../utils/format";
 
-import CardholderUpdateWidget from './CardholderUpdateWidget';
+import CardholderUpdateWidget from "./CardholderUpdateWidget";
 
-function CardHolderWidget({cardholders}: any) {
+function CardHolderWidget({ cardholders }: any) {
   const [showModal, setShowModal] = useState(false);
 
   return (

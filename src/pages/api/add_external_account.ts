@@ -1,30 +1,30 @@
-import {parse} from 'cookie';
+import { parse } from "cookie";
 
-import {decode} from '../../utils/jwt_encode_decode';
+import { decode } from "../../utils/jwt_encode_decode";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: any, res: any) {
-  if (req.method === 'POST') {
-    const {app_auth} = parse(req.headers.cookie || '');
+  if (req.method === "POST") {
+    const { app_auth } = parse(req.headers.cookie || "");
     const session = decode(app_auth);
     try {
       const StripeAccountId = session.accountId;
 
       const financialAccounts = await stripe.treasury.financialAccounts.list(
-        {expand: ['data.financial_addresses.aba.account_number']},
+        { expand: ["data.financial_addresses.aba.account_number"] },
         {
           stripeAccount: StripeAccountId,
-        }
+        },
       );
 
       const financialAccount = financialAccounts.data[0];
 
       await stripe.accounts.createExternalAccount(StripeAccountId, {
         external_account: {
-          object: 'bank_account',
-          country: 'US',
-          currency: 'usd',
+          object: "bank_account",
+          country: "US",
+          currency: "usd",
           account_number:
             financialAccount.financial_addresses[0].aba.account_number,
           routing_number:
@@ -32,7 +32,7 @@ export default async function handler(req: any, res: any) {
         },
       });
 
-      return res.json({externalAcctAdded: true});
+      return res.json({ externalAcctAdded: true });
     } catch (err) {
       return res.status(401).json({
         urlCreated: false,
@@ -41,6 +41,6 @@ export default async function handler(req: any, res: any) {
       });
     }
   } else {
-    res.status(400).json({error: 'Bad Request'});
+    res.status(400).json({ error: "Bad Request" });
   }
 }

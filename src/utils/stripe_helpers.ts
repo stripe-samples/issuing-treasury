@@ -1,5 +1,6 @@
-import Stripe from 'stripe';
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from "stripe";
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function getFinancialAccountTransactions(StripeAccountID: any) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
@@ -11,7 +12,7 @@ export async function getFinancialAccountTransactions(StripeAccountID: any) {
       financial_account: financialAccount.id,
       limit: 30,
     },
-    {stripeAccount: StripeAccountID}
+    { stripeAccount: StripeAccountID },
   );
   return {
     fa_transactions: fa_transactions.data,
@@ -19,7 +20,7 @@ export async function getFinancialAccountTransactions(StripeAccountID: any) {
 }
 
 export async function getFinancialAccountTransactionsExpanded(
-  StripeAccountID: any
+  StripeAccountID: any,
 ) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
@@ -29,9 +30,9 @@ export async function getFinancialAccountTransactionsExpanded(
     {
       financial_account: financialAccount.id,
       limit: 30,
-      expand: ['data.flow_details'],
+      expand: ["data.flow_details"],
     },
-    {stripeAccount: StripeAccountID}
+    { stripeAccount: StripeAccountID },
   );
   return {
     fa_transactions: fa_transactions.data,
@@ -50,10 +51,10 @@ export async function getFinancialAccountDetails(StripeAccountID: any) {
 
 export async function getFinancialAccountDetailsExp(StripeAccountID: any) {
   const financialAccounts = await stripe.treasury.financialAccounts.list(
-    {expand: ['data.financial_addresses.aba.account_number']},
+    { expand: ["data.financial_addresses.aba.account_number"] },
     {
       stripeAccount: StripeAccountID,
-    }
+    },
   );
   const financialAccount = financialAccounts.data[0];
   return {
@@ -62,7 +63,7 @@ export async function getFinancialAccountDetailsExp(StripeAccountID: any) {
 }
 
 export async function getFinancialAccountTransactionDetails(
-  StripeAccountID: any
+  StripeAccountID: any,
 ) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
@@ -73,12 +74,12 @@ export async function getFinancialAccountTransactionDetails(
       financial_account: financialAccount.id,
       limit: 100,
     },
-    {stripeAccount: StripeAccountID}
+    { stripeAccount: StripeAccountID },
   );
 
   // get FinancialAccount balance
   const transactions_dates: {
-    [formattedDate: string]: {funds_in: number; funds_out: number};
+    [formattedDate: string]: { funds_in: number; funds_out: number };
   } = {};
   // To show a history of the balance we will start from the latest balance and apply subtract the operations
   // Get Transactions
@@ -87,15 +88,15 @@ export async function getFinancialAccountTransactionDetails(
   fa_transactions.data.forEach((element: any) => {
     const date = new Date(element.created * 1000);
     const formattedDate =
-      date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+      date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
     // Check if date already exists as a key in the JSON object
     if (transactions_dates.hasOwnProperty(formattedDate)) {
       if (element.amount > 0) {
-        transactions_dates[formattedDate]['funds_in'] =
-          transactions_dates[formattedDate]['funds_in'] + element.amount / 100;
+        transactions_dates[formattedDate]["funds_in"] =
+          transactions_dates[formattedDate]["funds_in"] + element.amount / 100;
       } else {
-        transactions_dates[formattedDate]['funds_out'] =
-          transactions_dates[formattedDate]['funds_out'] +
+        transactions_dates[formattedDate]["funds_out"] =
+          transactions_dates[formattedDate]["funds_out"] +
           Math.abs(element.amount) / 100;
       }
     } else {
@@ -106,12 +107,12 @@ export async function getFinancialAccountTransactionDetails(
       };
       // Populate the funds_in and funds_out values
       if (element.amount > 0) {
-        transactions_dates[formattedDate]['funds_in'] =
-          transactions_dates[formattedDate]['funds_in'] + element.amount / 100;
+        transactions_dates[formattedDate]["funds_in"] =
+          transactions_dates[formattedDate]["funds_in"] + element.amount / 100;
       } else {
         // We are calculating the total funds out by using its absolute value so we can stack and compare
-        transactions_dates[formattedDate]['funds_out'] =
-          transactions_dates[formattedDate]['funds_out'] +
+        transactions_dates[formattedDate]["funds_out"] =
+          transactions_dates[formattedDate]["funds_out"] +
           Math.abs(element.amount) / 100;
       }
     }
@@ -123,9 +124,9 @@ export async function getFinancialAccountTransactionDetails(
 
   if (Object.keys(transactions_dates).length === 0) {
     // If the transactions_dates object is empty populate arrays with 0
-    dates_array.push('0');
-    funds_in_array.push('0');
-    funds_out_array.push('0');
+    dates_array.push("0");
+    funds_in_array.push("0");
+    funds_out_array.push("0");
   } else {
     Object.keys(transactions_dates).forEach(function (key) {
       dates_array.push(key);
@@ -155,12 +156,12 @@ export async function getFinancialAccountTransactionDetails(
 
 export async function getCardholders(StripeAccountID: any) {
   const cardholders = await stripe.issuing.cardholders.list(
-    {limit: 10},
-    {stripeAccount: StripeAccountID}
+    { limit: 10 },
+    { stripeAccount: StripeAccountID },
   );
   const cards = await stripe.issuing.cards.list(
-    {limit: 10},
-    {stripeAccount: StripeAccountID}
+    { limit: 10 },
+    { stripeAccount: StripeAccountID },
   );
 
   return {
@@ -170,8 +171,8 @@ export async function getCardholders(StripeAccountID: any) {
 
 export async function getCards(StripeAccountID: any) {
   const cards = await stripe.issuing.cards.list(
-    {limit: 10},
-    {stripeAccount: StripeAccountID}
+    { limit: 10 },
+    { stripeAccount: StripeAccountID },
   );
 
   return {
@@ -188,12 +189,12 @@ export async function getCardTransactions(StripeAccountID: any, cardId: any) {
       card: cardId,
       limit: 10,
     },
-    {stripeAccount: StripeAccountID}
+    { stripeAccount: StripeAccountID },
   );
 
   // Calculate current spend
-  let current_spend_amount: number = 0;
-  let current_spend: string = '';
+  let current_spend_amount = 0;
+  let current_spend = "";
 
   card_authorizations.data.forEach(function (authorization: any) {
     // Validate the authorization was approved before adding it to the total spend
@@ -203,47 +204,47 @@ export async function getCardTransactions(StripeAccountID: any, cardId: any) {
   });
 
   if (current_spend_amount > 0) {
-    current_spend = (current_spend_amount / 100).toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    current_spend = (current_spend_amount / 100).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
     });
   } else {
-    current_spend = current_spend_amount.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    current_spend = current_spend_amount.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
     });
   }
 
-  let card_details = await stripe.issuing.cards.retrieve(
+  const card_details = await stripe.issuing.cards.retrieve(
     cardId,
-    {expand: ['cardholder']},
+    { expand: ["cardholder"] },
     {
       stripeAccount: StripeAccountID,
-    }
+    },
   );
 
-  let cardTransactions: {
+  const cardTransactions: {
     card_authorizations: Stripe.Issuing.Authorization[];
     current_spend: string;
     card_details: Stripe.Issuing.Card;
   } = {
     card_authorizations: [],
-    current_spend: '',
+    current_spend: "",
     card_details: {} as Stripe.Issuing.Card,
   };
-  cardTransactions['card_authorizations'] = card_authorizations.data;
-  cardTransactions['current_spend'] = current_spend;
-  cardTransactions['card_details'] = card_details;
+  cardTransactions["card_authorizations"] = card_authorizations.data;
+  cardTransactions["current_spend"] = current_spend;
+  cardTransactions["card_details"] = card_details;
 
   return cardTransactions;
 }
 
 export async function createAccountOnboardingUrl(accountId: any, host: any) {
-  const {url} = await stripe.accountLinks.create({
-    type: 'account_onboarding',
+  const { url } = await stripe.accountLinks.create({
+    type: "account_onboarding",
     account: accountId,
-    refresh_url: host + '/onboard',
-    return_url: host + '/onboard',
+    refresh_url: host + "/onboard",
+    return_url: host + "/onboard",
   });
   return url;
 }

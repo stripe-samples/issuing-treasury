@@ -1,33 +1,33 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 function SigninWidget() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [errorText, setErrorText] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSignIn = async (e: any) => {
     e.preventDefault();
     setSubmitted(true);
-    if (email != '' && password != '') {
+    if (email != "" && password != "") {
       const body = {
         email: email,
         password: password,
       };
-      const response = await fetch('api/login', {
-        method: 'POST',
+      const response = await fetch("api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json;charset=utf-8',
+          "Content-Type": "application/json;charset=utf-8",
         },
         body: JSON.stringify(body),
       });
       if (response.ok) {
         const data = await response.json();
         if (data.requiresOnboarding === true) {
-          window.location.replace('/onboard');
+          window.location.replace("/onboard");
         } else {
-          window.location.replace('/dashboard');
+          window.location.replace("/dashboard");
         }
       } else {
         setSubmitted(false);
@@ -36,7 +36,7 @@ function SigninWidget() {
         setErrorText(result.error);
       }
     } else {
-      setErrorText('Email or Password cannot be empty.');
+      setErrorText("Email or Password cannot be empty.");
       setSubmitted(false);
       setError(true);
     }

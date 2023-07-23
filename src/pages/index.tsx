@@ -1,12 +1,12 @@
-import {parse} from 'cookie';
-import React from 'react';
+import { parse } from "cookie";
+import React from "react";
 
-import {decode} from '../utils/jwt_encode_decode';
+import { decode } from "../utils/jwt_encode_decode";
 
 export async function getServerSideProps(context: any) {
-  if ('cookie' in context.req.headers) {
+  if ("cookie" in context.req.headers) {
     const cookie = parse(context.req.headers.cookie);
-    if ('app_auth' in cookie) {
+    if ("app_auth" in cookie) {
       let session;
       try {
         session = decode(cookie.app_auth);
@@ -14,29 +14,29 @@ export async function getServerSideProps(context: any) {
         console.log(e);
         return {
           redirect: {
-            destination: '/signin',
+            destination: "/signin",
           },
         };
       }
       if (session.requiresOnboarding) {
         return {
           redirect: {
-            destination: '/onboard',
+            destination: "/onboard",
           },
         };
       }
       return {
         redirect: {
-          destination: '/dashboard',
+          destination: "/dashboard",
         },
       };
     }
   } else {
-    console.log('app_auth not in cookie');
+    console.log("app_auth not in cookie");
   }
   return {
     redirect: {
-      destination: '/signin',
+      destination: "/signin",
     },
   };
 }

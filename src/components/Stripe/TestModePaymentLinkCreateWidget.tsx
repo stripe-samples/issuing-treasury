@@ -1,21 +1,21 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 function PaymentLinkCreate(props: any) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
+  const [errorText, setErrorText] = useState("");
   const [gotUrl, setGotUrl] = useState(false);
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
 
   return (
     <div className="flex-1 flex justify-center px-4 sm:px-6 lg:px-8">
       <div className="pt-4 max-w-2xl w-full space-y-8">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-extrabold text-dark-gray-900">
-            Create PaymentLink{' '}
+            Create PaymentLink{" "}
           </h2>
           <p className="text-justify mt-6 max-w-2xl text-base text-dark-gray-500">
-            By pressing the Create PaymentLink button you will generate a{' '}
+            By pressing the Create PaymentLink button you will generate a{" "}
             <a
               href="https://stripe.com/docs/payments/payment-links"
               target="_blank"
@@ -23,7 +23,7 @@ function PaymentLinkCreate(props: any) {
               className="underline"
             >
               PaymentLink
-            </a>{' '}
+            </a>{" "}
             that you can use to receive a payment into your Connected
             Account&apos;s Stripe Balance.
           </p>
@@ -42,7 +42,7 @@ function PaymentLinkCreate(props: any) {
                   type="button"
                   className="relative flex justify-center items-center w-full p-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-accent-color hover:bg-accent-color-light active:ring-2 active:ring-offset-2 active:ring-light-red-900"
                   onClick={(e) => {
-                    window.open(url, '_blank');
+                    window.open(url, "_blank");
                   }}
                 >
                   Go to PaymentLink
@@ -56,10 +56,10 @@ function PaymentLinkCreate(props: any) {
                 onClick={async (e) => {
                   e.preventDefault();
                   setSubmitted(true);
-                  const response = await fetch('api/create_paymentlink', {
-                    method: 'GET',
+                  const response = await fetch("api/create_paymentlink", {
+                    method: "GET",
                     headers: {
-                      'Content-Type': 'application/json;charset=utf-8',
+                      "Content-Type": "application/json;charset=utf-8",
                     },
                   });
                   const responseData = await response.json();
@@ -73,7 +73,7 @@ function PaymentLinkCreate(props: any) {
                   }
                 }}
               >
-                {' '}
+                {" "}
                 {submitted ? (
                   <svg
                     role="status"

@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import Header from './Header';
-import Navbar from './Navbar';
+import Header from "./Header";
+import Navbar from "./Navbar";
 
-const Layout = ({children}: any) => (
+const Layout = ({ children }: any) => (
   <>
     {children.props.session ? (
       children.props.session.requiresOnboarding === false ? (

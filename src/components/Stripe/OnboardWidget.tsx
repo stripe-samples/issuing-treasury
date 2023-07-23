@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
-function OnboardWidget({url}: any) {
+function OnboardWidget({ url }: any) {
   const handleLogout = async (e: any) => {
     e.preventDefault();
-    const response = await fetch('api/logout', {
-      method: 'GET',
+    const response = await fetch("api/logout", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json;charset=utf-8',
+        "Content-Type": "application/json;charset=utf-8",
       },
     });
-    window.location.replace('/signin');
+    window.location.replace("/signin");
   };
   return (
     <div className="flex-1 flex justify-center px-4 sm:px-6 lg:px-8">
@@ -42,8 +42,8 @@ function OnboardWidget({url}: any) {
               type="button"
               className="relative flex justify-center items-center w-full p-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-accent-color hover:bg-accent-color-light active:ring-2 active:ring-offset-2 active:ring-light-red-900"
             >
-              {' '}
-              Logout{' '}
+              {" "}
+              Logout{" "}
             </button>
           </div>
         </div>

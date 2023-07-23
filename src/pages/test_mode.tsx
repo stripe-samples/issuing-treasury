@@ -1,22 +1,22 @@
-import {parse} from 'cookie';
-import React from 'react';
+import { parse } from "cookie";
+import React from "react";
 
-import PaymentLinkCreate from '../components/Stripe/TestModePaymentLinkCreateWidget';
-import PayoutWidget from '../components/Stripe/TestModePayouts';
-import ReceivedCreditCreate from '../components/Stripe/TestModeReceivedCreditCreateWidget';
-import {decode} from '../utils/jwt_encode_decode';
+import PaymentLinkCreate from "../components/Stripe/TestModePaymentLinkCreateWidget";
+import PayoutWidget from "../components/Stripe/TestModePayouts";
+import ReceivedCreditCreate from "../components/Stripe/TestModeReceivedCreditCreateWidget";
+import { decode } from "../utils/jwt_encode_decode";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function getServerSideProps(context: any) {
-  if ('cookie' in context.req.headers) {
+  if ("cookie" in context.req.headers) {
     const cookie = parse(context.req.headers.cookie);
-    if ('app_auth' in cookie) {
+    if ("app_auth" in cookie) {
       const session = decode(cookie.app_auth);
       if (session.requiresOnboarding === true) {
         return {
           redirect: {
-            destination: '/onboard',
+            destination: "/onboard",
           },
         };
       }
@@ -37,13 +37,13 @@ export async function getServerSideProps(context: any) {
         hasExternalAccount = true;
       }
       return {
-        props: {hasExternalAccount, availableBalance}, // will be passed to the page component as props
+        props: { hasExternalAccount, availableBalance }, // will be passed to the page component as props
       };
     }
   }
   return {
     redirect: {
-      destination: '/signin',
+      destination: "/signin",
     },
   };
 }

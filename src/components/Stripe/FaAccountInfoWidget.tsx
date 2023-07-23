@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
-function FaAccountWidget({financialAccount}: any) {
+function FaAccountWidget({ financialAccount }: any) {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -113,10 +113,10 @@ function FaAccountWidget({financialAccount}: any) {
                             className="mt-1 block w-full sm:text-sm"
                             id="review-account_number"
                           >
-                            {network.toUpperCase().replace(/_/g, ' ')}
+                            {network.toUpperCase().replace(/_/g, " ")}
                           </span>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 </div>

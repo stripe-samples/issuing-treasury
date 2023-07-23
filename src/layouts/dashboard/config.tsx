@@ -5,13 +5,13 @@ import {
   ChartBarIcon,
   UsersIcon,
   WrenchScrewdriverIcon,
-} from '@heroicons/react/24/solid';
-import {SvgIcon} from '@mui/material';
+} from "@heroicons/react/24/solid";
+import { SvgIcon } from "@mui/material";
 
 export const items = [
   {
-    title: 'Overview',
-    path: '/dashboard',
+    title: "Overview",
+    path: "/dashboard",
     icon: (
       <SvgIcon fontSize="small">
         <ChartBarIcon />
@@ -19,8 +19,8 @@ export const items = [
     ),
   },
   {
-    title: 'Cardholders',
-    path: '/cardholders',
+    title: "Cardholders",
+    path: "/cardholders",
     icon: (
       <SvgIcon fontSize="small">
         <UsersIcon />
@@ -28,8 +28,8 @@ export const items = [
     ),
   },
   {
-    title: 'Cards',
-    path: '/cards',
+    title: "Cards",
+    path: "/cards",
     icon: (
       <SvgIcon fontSize="small">
         <CreditCardIcon />
@@ -37,8 +37,8 @@ export const items = [
     ),
   },
   {
-    title: 'Financial Account',
-    path: '/financial_account',
+    title: "Financial Account",
+    path: "/financial_account",
     icon: (
       <SvgIcon fontSize="small">
         <BanknotesIcon />
@@ -46,8 +46,8 @@ export const items = [
     ),
   },
   {
-    title: 'Settings',
-    path: '/settings',
+    title: "Settings",
+    path: "/settings",
     icon: (
       <SvgIcon fontSize="small">
         <CogIcon />
@@ -56,8 +56,8 @@ export const items = [
   },
 
   {
-    title: 'Test Data',
-    path: '/test_mode',
+    title: "Test Data",
+    path: "/test_mode",
     icon: (
       <SvgIcon fontSize="small">
         <WrenchScrewdriverIcon />

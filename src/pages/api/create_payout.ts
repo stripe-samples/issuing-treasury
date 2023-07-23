@@ -1,12 +1,12 @@
-import {parse} from 'cookie';
+import { parse } from "cookie";
 
-import {decode} from '../../utils/jwt_encode_decode';
+import { decode } from "../../utils/jwt_encode_decode";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: any, res: any) {
-  if (req.method === 'POST') {
-    const {app_auth} = parse(req.headers.cookie || '');
+  if (req.method === "POST") {
+    const { app_auth } = parse(req.headers.cookie || "");
     const session = decode(app_auth);
     try {
       const StripeAccountId = session.accountId;
@@ -18,12 +18,12 @@ export default async function handler(req: any, res: any) {
       const payout = await stripe.payouts.create(
         {
           amount: balance.available[0].amount,
-          currency: 'usd',
+          currency: "usd",
         },
-        {stripeAccount: StripeAccountId}
+        { stripeAccount: StripeAccountId },
       );
 
-      return res.json({success: true});
+      return res.json({ success: true });
     } catch (err) {
       return res.status(401).json({
         urlCreated: false,
@@ -32,6 +32,6 @@ export default async function handler(req: any, res: any) {
       });
     }
   } else {
-    res.status(400).json({error: 'Bad Request'});
+    res.status(400).json({ error: "Bad Request" });
   }
 }

@@ -1,26 +1,26 @@
-import {Elements} from '@stripe/react-stripe-js';
-import {loadStripe} from '@stripe/stripe-js';
-import {parse} from 'cookie';
-import React from 'react';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { parse } from "cookie";
+import React from "react";
 
-import CardDetailsWidget from '../../components/Stripe/CardDetailsWidget';
-import CardStatusSwitchWidget from '../../components/Stripe/CardStatusSwitchWidget';
-import IssuingAuthorizationsWidget from '../../components/Stripe/IssuingAuthorizationsWidget';
-import {decode} from '../../utils/jwt_encode_decode';
-import {getCardTransactions} from '../../utils/stripe_helpers';
+import CardDetailsWidget from "../../components/Stripe/CardDetailsWidget";
+import CardStatusSwitchWidget from "../../components/Stripe/CardStatusSwitchWidget";
+import IssuingAuthorizationsWidget from "../../components/Stripe/IssuingAuthorizationsWidget";
+import { decode } from "../../utils/jwt_encode_decode";
+import { getCardTransactions } from "../../utils/stripe_helpers";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function getServerSideProps(context: any) {
-  if ('cookie' in context.req.headers) {
+  if ("cookie" in context.req.headers) {
     const cookie = parse(context.req.headers.cookie);
-    if ('app_auth' in cookie) {
+    if ("app_auth" in cookie) {
       const session = decode(cookie.app_auth);
       const cardId = context.params.cardId;
       const StripeAccountID = session.accountId;
       const cardTransactions = await getCardTransactions(
         StripeAccountID,
-        cardId
+        cardId,
       );
 
       return {
@@ -36,7 +36,7 @@ export async function getServerSideProps(context: any) {
   }
   return {
     redirect: {
-      destination: '/signin',
+      destination: "/signin",
     },
   };
 }
@@ -47,7 +47,7 @@ const CardDetails = (props: any) => {
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     {
       stripeAccount: props.account,
-    }
+    },
   );
 
   return (

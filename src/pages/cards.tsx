@@ -1,23 +1,23 @@
-import {parse} from 'cookie';
-import React from 'react';
+import { parse } from "cookie";
+import React from "react";
 
-import CardholderCreateWidget from '../components/Stripe/CardholderCreateWidget';
-import CardholderWidget from '../components/Stripe/CardholderWidget';
-import CardsWidget from '../components/Stripe/CardsWidget';
-import {decode} from '../utils/jwt_encode_decode';
-import {getCardholders, getCards} from '../utils/stripe_helpers';
+import CardholderCreateWidget from "../components/Stripe/CardholderCreateWidget";
+import CardholderWidget from "../components/Stripe/CardholderWidget";
+import CardsWidget from "../components/Stripe/CardsWidget";
+import { decode } from "../utils/jwt_encode_decode";
+import { getCardholders, getCards } from "../utils/stripe_helpers";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function getServerSideProps(context: any) {
-  if ('cookie' in context.req.headers) {
+  if ("cookie" in context.req.headers) {
     const cookie = parse(context.req.headers.cookie);
-    if ('app_auth' in cookie) {
+    if ("app_auth" in cookie) {
       const session = decode(cookie.app_auth);
       if (session.requiresOnboarding === true) {
         return {
           redirect: {
-            destination: '/onboard',
+            destination: "/onboard",
           },
         };
       }
@@ -36,7 +36,7 @@ export async function getServerSideProps(context: any) {
   }
   return {
     redirect: {
-      destination: '/signin',
+      destination: "/signin",
     },
   };
 }

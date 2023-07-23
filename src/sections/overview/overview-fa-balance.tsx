@@ -1,4 +1,4 @@
-import {ScaleIcon} from '@heroicons/react/24/solid';
+import { ScaleIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
   Card,
@@ -6,15 +6,15 @@ import {
   Stack,
   SvgIcon,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import {formatUSD} from '../../utils/format';
+import { formatUSD } from "../../utils/format";
 
 export const OverviewFinancialAccountBalance = (props: {
   sx: object;
   value: number;
 }) => {
-  const {sx, value} = props;
+  const { sx, value } = props;
 
   return (
     <Card sx={sx}>
@@ -34,7 +34,7 @@ export const OverviewFinancialAccountBalance = (props: {
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: 'error.main',
+              backgroundColor: "error.main",
               height: 56,
               width: 56,
             }}

@@ -1,19 +1,19 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 function SignupWidget(props: any) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
-  const [businessName, setBusinessName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [errorText, setErrorText] = useState("");
+  const [businessName, setBusinessName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <div className="flex-1 flex justify-center px-4 sm:px-6 lg:px-8">
       <div className="pt-12 max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-extrabold text-dark-gray-900">
-            Create Account{' '}
+            Create Account{" "}
           </h2>
         </div>
         <form className="mt-8 space-y-6" id="form">
@@ -91,20 +91,20 @@ function SignupWidget(props: any) {
               onClick={async (e) => {
                 e.preventDefault();
                 setSubmitted(true);
-                if (businessName === '' || email === '' || password === '') {
+                if (businessName === "" || email === "" || password === "") {
                   setSubmitted(false);
                   setError(true);
-                  setErrorText('Missing fields.');
+                  setErrorText("Missing fields.");
                 } else {
                   const body = {
                     name: businessName,
                     email: email,
                     password: password,
                   };
-                  const response = await fetch('api/create_account', {
-                    method: 'POST',
+                  const response = await fetch("api/create_account", {
+                    method: "POST",
                     headers: {
-                      'Content-Type': 'application/json;charset=utf-8',
+                      "Content-Type": "application/json;charset=utf-8",
                     },
                     body: JSON.stringify(body),
                   });

@@ -1,21 +1,21 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 function PayoutWidget(props: any) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
+  const [errorText, setErrorText] = useState("");
   const [gotUrl, setGotUrl] = useState(false);
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
   const [availableBalance, setAvailableBalance] = useState(
-    props.availableBalance
+    props.availableBalance,
   );
   const [hasExternalAccount, setHasExternalAccount] = useState(
-    props.hasExternalAccount
+    props.hasExternalAccount,
   );
 
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
   });
 
   return (
@@ -23,7 +23,7 @@ function PayoutWidget(props: any) {
       <div className="pt-4 max-w-2xl w-full space-y-8">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-extrabold text-dark-gray-900">
-            Create Payout{' '}
+            Create Payout{" "}
           </h2>
           <p className="text-justify mt-6 max-w-2xl text-base text-dark-gray-500">
             In order to enable payouts, you need to set your Financial Account
@@ -37,7 +37,7 @@ function PayoutWidget(props: any) {
           </p>
           <p className="text-justify mt-6 max-w-2xl text-base text-dark-gray-500">
             Platforms have the abilty to setup automatic payouts with different
-            schedules. You can dive deep into this topic on{' '}
+            schedules. You can dive deep into this topic on{" "}
             <a
               href="https://stripe.com/docs/treasury/moving-money/payouts"
               target="_blank"
@@ -49,7 +49,7 @@ function PayoutWidget(props: any) {
             .
           </p>
           <p className="text-justify mt-6 max-w-2xl text-base text-dark-gray-500">
-            Currently your connected account has an{' '}
+            Currently your connected account has an{" "}
             <a
               href="https://stripe.com/docs/connect/account-balances"
               target="_blank"
@@ -57,8 +57,8 @@ function PayoutWidget(props: any) {
               className="underline"
             >
               Available Balance
-            </a>{' '}
-            of{' '}
+            </a>{" "}
+            of{" "}
             <strong className="bold">
               {formatter.format(availableBalance / 100)}
             </strong>
@@ -80,10 +80,10 @@ function PayoutWidget(props: any) {
                 onClick={async (e) => {
                   e.preventDefault();
                   setSubmitted(true);
-                  const response = await fetch('api/create_payout', {
-                    method: 'POST',
+                  const response = await fetch("api/create_payout", {
+                    method: "POST",
                     headers: {
-                      'Content-Type': 'application/json;charset=utf-8',
+                      "Content-Type": "application/json;charset=utf-8",
                     },
                   });
                   const responseData = await response.json();
@@ -97,7 +97,7 @@ function PayoutWidget(props: any) {
                   }
                 }}
               >
-                {' '}
+                {" "}
                 {submitted ? (
                   <svg
                     role="status"
@@ -128,10 +128,10 @@ function PayoutWidget(props: any) {
                   onClick={async (e) => {
                     e.preventDefault();
                     setSubmitted(true);
-                    const response = await fetch('api/add_external_account', {
-                      method: 'POST',
+                    const response = await fetch("api/add_external_account", {
+                      method: "POST",
                       headers: {
-                        'Content-Type': 'application/json;charset=utf-8',
+                        "Content-Type": "application/json;charset=utf-8",
                       },
                     });
                     const responseData = await response.json();
@@ -145,7 +145,7 @@ function PayoutWidget(props: any) {
                     }
                   }}
                 >
-                  {' '}
+                  {" "}
                   {submitted ? (
                     <svg
                       role="status"

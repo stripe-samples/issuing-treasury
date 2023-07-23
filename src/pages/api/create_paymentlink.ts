@@ -1,12 +1,12 @@
-import {parse} from 'cookie';
+import { parse } from "cookie";
 
-import {decode} from '../../utils/jwt_encode_decode';
+import { decode } from "../../utils/jwt_encode_decode";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: any, res: any) {
-  if (req.method === 'GET') {
-    const {app_auth} = parse(req.headers.cookie || '');
+  if (req.method === "GET") {
+    const { app_auth } = parse(req.headers.cookie || "");
     const session = decode(app_auth);
 
     const StripeAccountId = session.accountId;
@@ -15,11 +15,11 @@ export default async function handler(req: any, res: any) {
       {
         limit: 1,
         active: true,
-        type: 'one_time',
+        type: "one_time",
       },
       {
         stripeAccount: StripeAccountId,
-      }
+      },
     );
 
     let price;
@@ -28,14 +28,14 @@ export default async function handler(req: any, res: any) {
       price = await stripe.prices.create(
         {
           unit_amount: 1000,
-          currency: 'usd',
+          currency: "usd",
           product_data: {
-            name: 'Unit',
+            name: "Unit",
           },
         },
         {
           stripeAccount: StripeAccountId,
-        }
+        },
       );
     } else {
       price = prices.data[0];
@@ -47,15 +47,15 @@ export default async function handler(req: any, res: any) {
             {
               price: price.id,
               quantity: 1,
-              adjustable_quantity: {enabled: true},
+              adjustable_quantity: { enabled: true },
             },
           ],
         },
         {
           stripeAccount: StripeAccountId,
-        }
+        },
       );
-      return res.json({urlCreated: true, paymentLink: paymentLink.url});
+      return res.json({ urlCreated: true, paymentLink: paymentLink.url });
     } catch (err) {
       return res.status(401).json({
         urlCreated: false,
@@ -64,6 +64,6 @@ export default async function handler(req: any, res: any) {
       });
     }
   } else {
-    res.status(400).json({error: 'Bad Request'});
+    res.status(400).json({ error: "Bad Request" });
   }
 }

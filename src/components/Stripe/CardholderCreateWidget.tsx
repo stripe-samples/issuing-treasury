@@ -1,32 +1,32 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 function CardholderCreateWidget(props: any) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
+  const [errorText, setErrorText] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [address1, setAddress1] = useState('');
-  const [city, setCity] = useState('');
-  const [addressState, setAddressState] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [country, setCountry] = useState('US');
-  const [accept, setAccept] = useState('false');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [city, setCity] = useState("");
+  const [addressState, setAddressState] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [country, setCountry] = useState("US");
+  const [accept, setAccept] = useState("false");
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setSubmitted(true);
     if (
-      firstName != '' &&
-      lastName != '' &&
-      email != '' &&
-      address1 != '' &&
-      city != '' &&
-      addressState != '' &&
-      postalCode != '' &&
-      accept != 'false'
+      firstName != "" &&
+      lastName != "" &&
+      email != "" &&
+      address1 != "" &&
+      city != "" &&
+      addressState != "" &&
+      postalCode != "" &&
+      accept != "false"
     ) {
       const body = {
         firstName: firstName,
@@ -38,15 +38,15 @@ function CardholderCreateWidget(props: any) {
         postalCode: postalCode,
         country: country,
       };
-      const response = await fetch('api/add_cardholder', {
-        method: 'POST',
+      const response = await fetch("api/add_cardholder", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json;charset=utf-8',
+          "Content-Type": "application/json;charset=utf-8",
         },
         body: JSON.stringify(body),
       });
       if (response.ok) {
-        window.location.replace('/cards');
+        window.location.replace("/cards");
       } else {
         setSubmitted(false);
         const result = await response.json();
@@ -54,7 +54,7 @@ function CardholderCreateWidget(props: any) {
         setErrorText(result.error);
       }
     } else {
-      setErrorText('All fields are required.');
+      setErrorText("All fields are required.");
       setSubmitted(false);
       setError(true);
     }
@@ -69,7 +69,7 @@ function CardholderCreateWidget(props: any) {
           type="button"
           className="inline-flex items-center px-10 py-2.5 border border-transparent shadow-sm text-xs md:text-sm font-medium rounded-md text-white bg-accent-color hover:bg-accent-color-light ml-2 mr-2"
         >
-          New Cardholder{' '}
+          New Cardholder{" "}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 pl-2"
@@ -233,24 +233,24 @@ function CardholderCreateWidget(props: any) {
                         id="accept-terms"
                         className="mx-2"
                         onChange={(e) => {
-                          if (accept == 'false') {
-                            setAccept('true');
+                          if (accept == "false") {
+                            setAccept("true");
                           } else {
-                            setAccept('false');
+                            setAccept("false");
                           }
                         }}
                       ></input>
                     </div>
                     <div className="col-span-5">
                       <label className="block text-sm font-medium text-gray-700">
-                        This cardholder has agreed to the{' '}
+                        This cardholder has agreed to the{" "}
                         <a
                           className="underline font-medium text-blue-700"
                           href="https://stripe.com/legal/issuing/celtic-authorized-user-terms"
                         >
                           Celtic Bank Authorized User Terms
-                        </a>{' '}
-                        and{' '}
+                        </a>{" "}
+                        and{" "}
                         <a
                           className="underline font-medium text-blue-700"
                           href="https://www.celticbank.com/privacy"

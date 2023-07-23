@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import {capitalize, formatDateTime} from '../../utils/format';
+import { capitalize, formatDateTime } from "../../utils/format";
 
-function CardsWidget({cards}: any) {
+function CardsWidget({ cards }: any) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       {cards.length > 0 ? (
@@ -71,7 +71,7 @@ function CardsWidget({cards}: any) {
                     <div className="flex hover:text-gray-900 hover:underline">
                       <a
                         className="flex items-center"
-                        href={'/card_details/' + card.id}
+                        href={"/card_details/" + card.id}
                       >
                         Details
                         <svg

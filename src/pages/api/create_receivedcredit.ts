@@ -1,20 +1,20 @@
-import {parse} from 'cookie';
+import { parse } from "cookie";
 
-import {decode} from '../../utils/jwt_encode_decode';
+import { decode } from "../../utils/jwt_encode_decode";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: any, res: any) {
-  if (req.method === 'POST') {
-    const {app_auth} = parse(req.headers.cookie || '');
+  if (req.method === "POST") {
+    const { app_auth } = parse(req.headers.cookie || "");
     const session = decode(app_auth);
     try {
       const StripeAccountId = session.accountId;
 
       // Get financial accounts for the Connected Account
       const financialAccounts = await stripe.treasury.financialAccounts.list(
-        {expand: ['data.financial_addresses.aba.account_number']},
-        {stripeAccount: StripeAccountId}
+        { expand: ["data.financial_addresses.aba.account_number"] },
+        { stripeAccount: StripeAccountId },
       );
       const financialAccount = financialAccounts.data[0];
 
@@ -22,13 +22,13 @@ export default async function handler(req: any, res: any) {
         await stripe.testHelpers.treasury.receivedCredits.create(
           {
             amount: 50000,
-            currency: 'usd',
+            currency: "usd",
             financial_account: financialAccount.id,
-            network: 'ach',
+            network: "ach",
           },
-          {stripeAccount: StripeAccountId}
+          { stripeAccount: StripeAccountId },
         );
-      return res.json({receivedCredit: receivedCredit.id});
+      return res.json({ receivedCredit: receivedCredit.id });
     } catch (err) {
       return res.status(401).json({
         urlCreated: false,
@@ -37,6 +37,6 @@ export default async function handler(req: any, res: any) {
       });
     }
   } else {
-    res.status(400).json({error: 'Bad Request'});
+    res.status(400).json({ error: "Bad Request" });
   }
 }

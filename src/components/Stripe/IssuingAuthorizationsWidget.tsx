@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import {formatDateTime, formatUSD} from '../../utils/format';
+import { formatDateTime, formatUSD } from "../../utils/format";
 
-function IssuingAuthorizationsWidget({cardAuthorizations}: any) {
+function IssuingAuthorizationsWidget({ cardAuthorizations }: any) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-6">
       {cardAuthorizations.length > 0 ? (
@@ -55,7 +55,7 @@ function IssuingAuthorizationsWidget({cardAuthorizations}: any) {
                                   />
                                 </svg>
                                 <p className="text-gray-500 truncate group-hover:text-gray-900">
-                                  {card_authorization.merchant_data.name}{' '}
+                                  {card_authorization.merchant_data.name}{" "}
                                   {card_authorization.id}
                                 </p>
                               </a>
@@ -63,7 +63,7 @@ function IssuingAuthorizationsWidget({cardAuthorizations}: any) {
                           </td>
                           <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500 uppercase">
                             <span className="text-gray-500 font-medium">
-                              {formatUSD(card_authorization.amount / 100)}{' '}
+                              {formatUSD(card_authorization.amount / 100)}{" "}
                               {card_authorization.currency}
                             </span>
                           </td>
@@ -91,7 +91,7 @@ function IssuingAuthorizationsWidget({cardAuthorizations}: any) {
                             </div>
                           </td>
                         </tr>
-                      )
+                      ),
                     )}
                   </tbody>
                 </table>

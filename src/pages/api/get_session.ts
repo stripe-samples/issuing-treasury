@@ -1,16 +1,16 @@
-import {parse} from 'cookie';
+import { parse } from "cookie";
 
-import {decode} from '../../utils/jwt_encode_decode';
+import { decode } from "../../utils/jwt_encode_decode";
 
 export default function handler(req: any, res: any) {
-  if (req.method !== 'GET') {
+  if (req.method !== "GET") {
     return res.status(404).end();
   }
 
-  const {app_auth} = parse(req.headers.cookie || '');
+  const { app_auth } = parse(req.headers.cookie || "");
 
   if (!app_auth) {
-    return res.json({isAuthenticated: false});
+    return res.json({ isAuthenticated: false });
   }
 
   return res.json({

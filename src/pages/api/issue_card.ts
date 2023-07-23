@@ -1,12 +1,12 @@
-import {parse} from 'cookie';
+import { parse } from "cookie";
 
-import {decode} from '../../utils/jwt_encode_decode';
+import { decode } from "../../utils/jwt_encode_decode";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: any, res: any) {
-  if (req.method === 'POST') {
-    const {app_auth} = parse(req.headers.cookie || '');
+  if (req.method === "POST") {
+    const { app_auth } = parse(req.headers.cookie || "");
     const session = decode(app_auth);
 
     const StripeAccountId = session.accountId;
@@ -16,42 +16,42 @@ export default async function handler(req: any, res: any) {
     });
 
     const financialAccount = financialAccounts.data[0];
-    const {cardholderid, card_type} = req.body;
+    const { cardholderid, card_type } = req.body;
     const cardholder = await stripe.issuing.cardholders.retrieve(cardholderid, {
       stripeAccount: StripeAccountId,
     });
 
-    if (card_type == 'physical') {
+    if (card_type == "physical") {
       const card = await stripe.issuing.cards.create(
         {
           cardholder: cardholderid,
           financial_account: financialAccount.id,
-          currency: 'usd',
+          currency: "usd",
           shipping: {
             name: cardholder.name,
-            service: 'standard',
-            type: 'individual',
+            service: "standard",
+            type: "individual",
             address: cardholder.billing.address,
           },
-          type: 'physical',
-          status: 'inactive',
+          type: "physical",
+          status: "inactive",
         },
-        {stripeAccount: StripeAccountId}
+        { stripeAccount: StripeAccountId },
       );
     } else {
       const card = await stripe.issuing.cards.create(
         {
           cardholder: cardholderid,
           financial_account: financialAccount.id,
-          currency: 'usd',
-          type: 'virtual',
-          status: 'active',
+          currency: "usd",
+          type: "virtual",
+          status: "active",
         },
-        {stripeAccount: StripeAccountId}
+        { stripeAccount: StripeAccountId },
       );
     }
-    res.redirect('/cards');
+    res.redirect("/cards");
   } else {
-    res.status(400).json({error: 'Bad Request'});
+    res.status(400).json({ error: "Bad Request" });
   }
 }

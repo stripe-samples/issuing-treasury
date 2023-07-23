@@ -1,27 +1,27 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
-import {formatUSD} from '../../utils/format';
+import { formatUSD } from "../../utils/format";
 
 function FaSendMoneyWidget() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
+  const [errorText, setErrorText] = useState("");
   const [newTransfer, setNewTransfer] = useState(false);
   const [transferSuccess, setTransferSuccess] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalStage, setModalStage] = useState('0');
-  const [name, setName] = useState('');
-  const [routingNumber, setRoutingNumber] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [amount, setAmount] = useState('');
-  const [network, setNetwork] = useState('ach');
-  const [transactionResult, setTransactionResult] = useState('pending');
-  const descriptor = 'FromPlatform';
-  const [notes, setNotes] = useState('');
-  const [city, setCity] = useState('');
-  const [addressState, setAddressState] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [address1, setAddress1] = useState('');
+  const [modalStage, setModalStage] = useState("0");
+  const [name, setName] = useState("");
+  const [routingNumber, setRoutingNumber] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [amount, setAmount] = useState("");
+  const [network, setNetwork] = useState("ach");
+  const [transactionResult, setTransactionResult] = useState("pending");
+  const descriptor = "FromPlatform";
+  const [notes, setNotes] = useState("");
+  const [city, setCity] = useState("");
+  const [addressState, setAddressState] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [address1, setAddress1] = useState("");
 
   return (
     <div>
@@ -39,7 +39,7 @@ function FaSendMoneyWidget() {
         <form action="/api/send_money" method="POST">
           <>
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-              {modalStage == '0' ? (
+              {modalStage == "0" ? (
                 <>
                   <div id="sendmoney-modal" className="flex pt-4 pb-4 pl-4">
                     {/*Send Money part 1 */}
@@ -58,7 +58,7 @@ function FaSendMoneyWidget() {
                               window.location.reload(false);
                             }
                             setShowModal(false);
-                            setModalStage('0');
+                            setModalStage("0");
                           }}
                         >
                           <svg
@@ -137,7 +137,7 @@ function FaSendMoneyWidget() {
                             id="send-money-next-btn-1"
                             type="button"
                             className="mt-8 w-full px-12 py-2.5 text-white bg-accent-color hover:bg-accent-color-light rounded-md text-center font-medium cursor-pointer"
-                            onClick={() => setModalStage('1')}
+                            onClick={() => setModalStage("1")}
                           >
                             Next
                           </button>
@@ -148,7 +148,7 @@ function FaSendMoneyWidget() {
                 </>
               ) : null}
               {/*Send Money part 2 */}
-              {modalStage == '1' ? (
+              {modalStage == "1" ? (
                 <>
                   <div
                     className="flex fixed z-50 inset-0 overflow-auto bg-black bg-opacity-50"
@@ -164,7 +164,7 @@ function FaSendMoneyWidget() {
                             window.location.reload(false);
                           }
                           setShowModal(false);
-                          setModalStage('0');
+                          setModalStage("0");
                         }}
                       >
                         <svg
@@ -202,7 +202,7 @@ function FaSendMoneyWidget() {
                               onChange={(e) => setName(e.target.value)}
                             />
                           </div>
-                          {network === 'us_domestic_wire' ? (
+                          {network === "us_domestic_wire" ? (
                             <div className="col-span-6 grid grid-cols-4 gap-4">
                               <div className="col-span-4">
                                 <label className="block text-sm font-medium text-gray-700">
@@ -350,7 +350,7 @@ function FaSendMoneyWidget() {
                         id="send-money-next-btn-2"
                         type="button"
                         className="mt-8 w-full px-12 py-2.5 text-white bg-accent-color hover:bg-accent-color-light rounded-md text-center font-medium cursor-pointer"
-                        onClick={() => setModalStage('2')}
+                        onClick={() => setModalStage("2")}
                       >
                         Next
                       </button>
@@ -358,7 +358,7 @@ function FaSendMoneyWidget() {
                         id="send-money-back-btn-1"
                         type="button"
                         className="mt-4 w-full px-12 py-2.5 text-white bg-accent-color hover:bg-accent-color-light rounded-md text-center font-medium cursor-pointer"
-                        onClick={() => setModalStage('0')}
+                        onClick={() => setModalStage("0")}
                       >
                         Back
                       </button>
@@ -367,7 +367,7 @@ function FaSendMoneyWidget() {
                 </>
               ) : null}
               {/*Confirmation */}
-              {modalStage == '2' ? (
+              {modalStage == "2" ? (
                 <>
                   <div
                     className="flex fixed z-50 inset-0 overflow-auto bg-black bg-opacity-50"
@@ -383,7 +383,7 @@ function FaSendMoneyWidget() {
                             window.location.reload(false);
                           }
                           setShowModal(false);
-                          setModalStage('0');
+                          setModalStage("0");
                         }}
                       >
                         <svg
@@ -409,7 +409,7 @@ function FaSendMoneyWidget() {
                       {transferSuccess == true ? (
                         <div className="p-2 text-center ">
                           <p className="text-green-600">
-                            Transaction successful.{' '}
+                            Transaction successful.{" "}
                           </p>
                           <p className="text-green-600">
                             Please click &quot;Start Over&quot; to intiate a new
@@ -506,7 +506,7 @@ function FaSendMoneyWidget() {
                               {descriptor}
                             </span>
                           </div>
-                          {network === 'us_domestic_wire' ? (
+                          {network === "us_domestic_wire" ? (
                             <div className="col-span-2">
                               <label
                                 htmlFor="adress"
@@ -518,7 +518,7 @@ function FaSendMoneyWidget() {
                                 className="mt-1 block w-full sm:text-sm"
                                 id="review-notes"
                               >
-                                {address1} , {city} - {addressState}{' '}
+                                {address1} , {city} - {addressState}{" "}
                                 {postalCode}
                               </span>
                             </div>
@@ -587,9 +587,9 @@ function FaSendMoneyWidget() {
                                 // @ts-expect-error TS(2345): Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
                                 setModalStage(0);
                                 setError(false);
-                                setErrorText('');
+                                setErrorText("");
                                 // @ts-expect-error TS(2345): Argument of type '"false"' is not assignable to pa... Remove this comment to see the full error message
-                                setTransferSuccess('false');
+                                setTransferSuccess("false");
                                 setNewTransfer(false);
                               }}
                             >
@@ -602,7 +602,7 @@ function FaSendMoneyWidget() {
                                 onClick={async (e) => {
                                   e.preventDefault();
                                   setSubmitted(true);
-                                  if (name != '' && amount != '') {
+                                  if (name != "" && amount != "") {
                                     const body = {
                                       name: name,
                                       routing_number: routingNumber,
@@ -617,15 +617,15 @@ function FaSendMoneyWidget() {
                                       transaction_result: transactionResult,
                                     };
                                     const response = await fetch(
-                                      'api/send_money',
+                                      "api/send_money",
                                       {
-                                        method: 'POST',
+                                        method: "POST",
                                         headers: {
-                                          'Content-Type':
-                                            'application/json;charset=utf-8',
+                                          "Content-Type":
+                                            "application/json;charset=utf-8",
                                         },
                                         body: JSON.stringify(body),
-                                      }
+                                      },
                                     );
                                     const responseData = await response.json();
                                     if (responseData.success === true) {
@@ -639,14 +639,14 @@ function FaSendMoneyWidget() {
                                     }
                                   } else {
                                     setErrorText(
-                                      'Name and Amount fields are required'
+                                      "Name and Amount fields are required",
                                     );
                                     setSubmitted(false);
                                     setError(true);
                                   }
                                 }}
                               >
-                                {' '}
+                                {" "}
                                 {submitted ? (
                                   <svg
                                     role="status"
@@ -673,7 +673,7 @@ function FaSendMoneyWidget() {
                                 type="button"
                                 className="mt-4 w-full px-12 py-2.5 text-white bg-accent-color hover:bg-accent-color-light rounded-md text-center font-medium cursor-pointer"
                                 onClick={() => {
-                                  setModalStage('1');
+                                  setModalStage("1");
                                 }}
                               >
                                 Back

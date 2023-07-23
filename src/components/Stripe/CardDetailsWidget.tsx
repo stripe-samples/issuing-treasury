@@ -1,7 +1,7 @@
-import {useElements, useStripe} from '@stripe/react-stripe-js';
-import React, {useEffect} from 'react';
+import { useElements, useStripe } from "@stripe/react-stripe-js";
+import React, { useEffect } from "react";
 
-import {capitalize, formatUSD} from '../../utils/format';
+import { capitalize, formatUSD } from "../../utils/format";
 
 function CardDetailsWidget({
   accountId,
@@ -14,16 +14,16 @@ function CardDetailsWidget({
   const card = cardDetails;
 
   useEffect(() => {
-    if (!stripe || !elements || card.type == 'physical') {
+    if (!stripe || !elements || card.type == "physical") {
       return;
     }
 
     const renderCard = async () => {
       const STYLE = {
         base: {
-          color: 'white',
-          fontSize: '14px',
-          lineHeight: '24px',
+          color: "white",
+          fontSize: "14px",
+          lineHeight: "24px",
         },
       };
 
@@ -31,11 +31,11 @@ function CardDetailsWidget({
         issuingCard: cardId,
       });
 
-      const ephemeralKeyResult = await fetch('/api/get_card', {
-        method: 'POST',
+      const ephemeralKeyResult = await fetch("/api/get_card", {
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           cardId: cardId,
@@ -47,34 +47,34 @@ function CardDetailsWidget({
       const ephemeralKeyResponse = await ephemeralKeyResult.json();
 
       // Display the cardholder's name
-      const name = document.getElementById('cardholder-name');
+      const name = document.getElementById("cardholder-name");
       // @ts-expect-error TS(2531): Object is possibly 'null'.
       name.textContent = card.cardholder.name;
 
       // Populate the raw card details
-      const number = elements.create('issuingCardNumberDisplay', {
+      const number = elements.create("issuingCardNumberDisplay", {
         issuingCard: cardId,
         ephemeralKeySecret: ephemeralKeyResponse.secret,
         nonce: nonceResult.nonce,
         style: STYLE,
       });
-      number.mount('#card-number');
+      number.mount("#card-number");
 
-      const expiry = elements.create('issuingCardExpiryDisplay', {
+      const expiry = elements.create("issuingCardExpiryDisplay", {
         issuingCard: cardId,
         ephemeralKeySecret: ephemeralKeyResponse.secret,
         nonce: nonceResult.nonce,
         style: STYLE,
       });
-      expiry.mount('#card-expiry');
+      expiry.mount("#card-expiry");
 
-      const cvc = elements.create('issuingCardCvcDisplay', {
+      const cvc = elements.create("issuingCardCvcDisplay", {
         issuingCard: cardId,
         ephemeralKeySecret: ephemeralKeyResponse.secret,
         nonce: nonceResult.nonce,
         style: STYLE,
       });
-      cvc.mount('#card-cvc');
+      cvc.mount("#card-cvc");
     };
 
     renderCard();
@@ -85,7 +85,7 @@ function CardDetailsWidget({
       id="details-container"
       className="max-w-6xl mx-auto sm:px-6 grid grid-cols-2 gap-4 mt-16"
     >
-      {card.type == 'virtual' ? (
+      {card.type == "virtual" ? (
         <div id="card-container" className="col-span-1">
           <div id="card-back">
             <div id="card-details">
@@ -119,7 +119,7 @@ function CardDetailsWidget({
           <div id="status">
             <p className="text-gray-500">
               <strong className="text-l font-bold leading-7 text-gray-700 sm:leading-9 ">
-                Status:{' '}
+                Status:{" "}
               </strong>
 
               {capitalize(card.status)}
@@ -139,17 +139,17 @@ function CardDetailsWidget({
           </h4>
 
           <p className="text-gray-500">
-            {' '}
+            {" "}
             {card.cardholder.billing.address.line1}
           </p>
           <p className="text-gray-500">
-            {' '}
+            {" "}
             {card.cardholder.billing.address.line2}
           </p>
           <p className="text-gray-500">
-            {' '}
-            {card.cardholder.billing.address.city} -{' '}
-            {card.cardholder.billing.address.state}{' '}
+            {" "}
+            {card.cardholder.billing.address.city} -{" "}
+            {card.cardholder.billing.address.state}{" "}
             {card.cardholder.billing.address.postal_code}
           </p>
         </div>
@@ -165,11 +165,11 @@ function CardDetailsWidget({
             Limit
           </h4>
           <p className="text-gray-500">
-            {' '}
+            {" "}
             {formatUSD(
-              card.spending_controls.spending_limits[0].amount / 100
-            )}{' '}
-            {card.spending_controls.spending_limits[0].interval}{' '}
+              card.spending_controls.spending_limits[0].amount / 100,
+            )}{" "}
+            {card.spending_controls.spending_limits[0].interval}{" "}
           </p>
         </div>
       </div>
