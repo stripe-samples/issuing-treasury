@@ -4,6 +4,7 @@ import {
   CogIcon,
   ChartBarIcon,
   UsersIcon,
+  WrenchScrewdriverIcon,
 } from '@heroicons/react/24/solid';
 import {SvgIcon} from '@mui/material';
 
@@ -50,6 +51,16 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <CogIcon />
+      </SvgIcon>
+    ),
+  },
+
+  {
+    title: 'Test Data',
+    path: '/test_mode',
+    icon: (
+      <SvgIcon fontSize="small">
+        <WrenchScrewdriverIcon />
       </SvgIcon>
     ),
   },
