@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import { CacheProvider, EmotionCache } from "@emotion/react";
+import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { parse } from "cookie";
 import { NextComponentType, NextPageContext } from "next";
@@ -7,6 +8,7 @@ import { AppContext, AppProps } from "next/app";
 import React, { ReactNode } from "react";
 
 import { AuthConsumer, AuthProvider } from "../contexts/auth-context";
+import { useNProgress } from "../hooks/use-nprogress";
 import { createTheme } from "../theme";
 import createEmotionCache from "../utils/create-emotion-cache";
 import { decode } from "../utils/jwt_encode_decode";
@@ -26,6 +28,8 @@ export default function SampleApp({
   emotionCache = clientSideEmotionCache,
   pageProps,
 }: SampleAppProps) {
+  useNProgress();
+
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const theme = createTheme();
@@ -34,6 +38,7 @@ export default function SampleApp({
     <CacheProvider value={emotionCache}>
       <AuthProvider>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <AuthConsumer>
             {(auth) =>
               auth.isLoading ? (
