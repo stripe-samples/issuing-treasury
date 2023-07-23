@@ -10,7 +10,7 @@ export const SideNavItem = ({
   title,
 }: {
   active: boolean;
-  external: boolean;
+  external?: boolean;
   icon: ReactNode;
   path: string;
   title: string;
