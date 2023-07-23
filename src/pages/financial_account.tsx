@@ -1,10 +1,10 @@
 import { parse } from "cookie";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import FaAccountInfoWidget from "../components/Stripe/FaAccountInfoWidget";
-import FaBalanceWidget from "../components/Stripe/FaBalanceWidget";
 import FaSendMoneyWidget from "../components/Stripe/FaSendMoneyWidget";
 import FaTransactionsExtendedWidget from "../components/Stripe/FaTransactionsExtendedWidget";
+import DashboardLayout from "../layouts/dashboard/layout";
 import { decode } from "../utils/jwt_encode_decode";
 import {
   getFinancialAccountDetailsExp,
@@ -52,10 +52,12 @@ const Page = (props: any) => {
           <FaSendMoneyWidget />
         </div>
       </div>
-      <FaBalanceWidget financialAccount={props.financialAccount} />
+      {/* <FaBalanceWidget financialAccount={props.financialAccount} /> */}
       <FaTransactionsExtendedWidget faTransactions={props.faTransactions} />
     </div>
   );
 };
+
+Page.getLayout = (page: ReactNode) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;

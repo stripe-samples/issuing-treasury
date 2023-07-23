@@ -1,9 +1,10 @@
 import { parse } from "cookie";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import CardholderCreateWidget from "../components/Stripe/CardholderCreateWidget";
 import CardholderWidget from "../components/Stripe/CardholderWidget";
 import CardsWidget from "../components/Stripe/CardsWidget";
+import DashboardLayout from "../layouts/dashboard/layout";
 import { decode } from "../utils/jwt_encode_decode";
 import { getCardholders, getCards } from "../utils/stripe_helpers";
 
@@ -48,5 +49,7 @@ const Page = (props: any) => {
     </>
   );
 };
+
+Page.getLayout = (page: ReactNode) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;

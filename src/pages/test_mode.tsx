@@ -1,9 +1,10 @@
 import { parse } from "cookie";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import PaymentLinkCreate from "../components/Stripe/TestModePaymentLinkCreateWidget";
 import PayoutWidget from "../components/Stripe/TestModePayouts";
 import ReceivedCreditCreate from "../components/Stripe/TestModeReceivedCreditCreateWidget";
+import DashboardLayout from "../layouts/dashboard/layout";
 import { decode } from "../utils/jwt_encode_decode";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -60,5 +61,7 @@ const Page = (props: any) => {
     </div>
   );
 };
+
+Page.getLayout = (page: ReactNode) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;

@@ -5,7 +5,7 @@ import { parse } from "cookie";
 import Head from "next/head";
 import React, { ReactNode } from "react";
 
-import { Layout as DashboardLayout } from "../layouts/dashboard/layout";
+import DashboardLayout from "../layouts/dashboard/layout";
 import { OverviewFinancialAccountBalance } from "../sections/overview/overview-fa-balance";
 import { OverviewFinancialAccountFundsFlowChart } from "../sections/overview/overview-fa-funds-flow-chart";
 import { OverviewFinancialAccountOutboundPending } from "../sections/overview/overview-fa-outbound-pending";
