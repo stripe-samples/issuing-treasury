@@ -1,3 +1,14 @@
+import ArrowPathIcon from '@heroicons/react/24/solid/ArrowPathIcon';
+import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Divider,
+  SvgIcon,
+} from '@mui/material';
 import {
   BarElement,
   CategoryScale,
@@ -8,21 +19,10 @@ import {
   Tooltip,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import React from 'react';
 import {Bar} from 'react-chartjs-2';
 
-function FaBalanceInOutChart({faTransactionsChart}: any) {
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-    ChartDataLabels
-  );
-
-  const options = {
+const useChartOptions = () => {
+  return {
     interaction: {
       intersect: false,
       axis: 'x',
@@ -91,6 +91,25 @@ function FaBalanceInOutChart({faTransactionsChart}: any) {
       },
     },
   };
+};
+
+export const OverviewFinancialAccountFundsFlowChart = (props: {
+  faTransactionsChart: any;
+  sx?: object;
+}) => {
+  const {faTransactionsChart, sx} = props;
+
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ChartDataLabels
+  );
+
+  const chartOptions = useChartOptions();
 
   const data = {
     labels: faTransactionsChart.faTransactionsDates,
@@ -123,10 +142,42 @@ function FaBalanceInOutChart({faTransactionsChart}: any) {
       },
     ],
   };
+
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-4 mb-4">
-      <Bar options={options} data={data} className="max-h-96" />
-    </div>
+    <Card sx={sx}>
+      <CardHeader
+        action={
+          <Button
+            color="inherit"
+            size="small"
+            startIcon={
+              <SvgIcon fontSize="small">
+                <ArrowPathIcon />
+              </SvgIcon>
+            }
+          >
+            Sync
+          </Button>
+        }
+        title="Account Funds Flow"
+      />
+      <CardContent>
+        <Bar options={chartOptions} data={data} />
+      </CardContent>
+      <Divider />
+      <CardActions sx={{justifyContent: 'flex-end'}}>
+        <Button
+          color="inherit"
+          endIcon={
+            <SvgIcon fontSize="small">
+              <ArrowRightIcon />
+            </SvgIcon>
+          }
+          size="small"
+        >
+          Overview
+        </Button>
+      </CardActions>
+    </Card>
   );
-}
-export default FaBalanceInOutChart;
+};

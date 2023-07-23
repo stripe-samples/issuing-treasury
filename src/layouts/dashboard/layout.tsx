@@ -23,7 +23,7 @@ const LayoutContainer = styled('div')({
   width: '100%',
 });
 
-const Layout = (props: any) => {
+export const Layout = (props: any) => {
   const {children} = props;
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(false);
@@ -52,6 +52,3 @@ const Layout = (props: any) => {
     </>
   );
 };
-
-// TODO: Make this use the same pattern as the reference repo
-export default Layout;

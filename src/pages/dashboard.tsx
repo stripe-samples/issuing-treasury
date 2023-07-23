@@ -1,17 +1,21 @@
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import {parse} from 'cookie';
-import React from 'react';
+import Head from 'next/head';
+import React, {ReactNode} from 'react';
 
-import FaBalanceInOutChart from '../components/Stripe/FaBalanceInOutChart';
-import FaBalanceWidget from '../components/Stripe/FaBalanceWidget';
-import FaTransactionsWidget from '../components/Stripe/FaTransactionsWidget';
+import {Layout as DashboardLayout} from '../layouts/dashboard/layout';
+import {OverviewFinancialAccountBalance} from '../sections/overview/overview-fa-balance';
+import {OverviewFinancialAccountFundsFlowChart} from '../sections/overview/overview-fa-funds-flow-chart';
+import {OverviewFinancialAccountOutboundPending} from '../sections/overview/overview-fa-outbound-pending';
+import {OverviewLatestTransactions} from '../sections/overview/overview-latest-transactions';
 import {decode} from '../utils/jwt_encode_decode';
 import {
   getFinancialAccountDetails,
   getFinancialAccountTransactionDetails,
   getFinancialAccountTransactionsExpanded,
 } from '../utils/stripe_helpers';
-
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export async function getServerSideProps(context: any) {
   if ('cookie' in context.req.headers) {
@@ -49,14 +53,56 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const Dashboard = (props: any) => {
+const Page = (props: {
+  financialAccount: any;
+  faTransactionsChart: any;
+  faTransactions: any;
+}) => {
+  const {financialAccount, faTransactionsChart, faTransactions} = props;
+
   return (
-    <div>
-      <FaBalanceWidget financialAccount={props.financialAccount} />
-      <FaBalanceInOutChart faTransactionsChart={props.faTransactionsChart} />
-      <FaTransactionsWidget faTransactions={props.faTransactions} />
-    </div>
+    <>
+      <Head>
+        <title>Overview | Homex</title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8,
+        }}
+      >
+        <Container maxWidth="xl">
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <OverviewFinancialAccountBalance
+                sx={{height: '100%'}}
+                value={financialAccount.balance.cash.usd}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <OverviewFinancialAccountOutboundPending
+                sx={{height: '100%'}}
+                value={financialAccount.balance.outbound_pending.usd}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <OverviewFinancialAccountFundsFlowChart
+                faTransactionsChart={props.faTransactionsChart}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <OverviewLatestTransactions
+                faTransactions={props.faTransactions}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+    </>
   );
 };
 
-export default Dashboard;
+Page.getLayout = (page: ReactNode) => <DashboardLayout>{page}</DashboardLayout>;
+
+export default Page;

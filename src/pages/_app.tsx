@@ -2,10 +2,10 @@ import '../styles/globals.css';
 import {CacheProvider, EmotionCache} from '@emotion/react';
 import {ThemeProvider} from '@mui/material/styles';
 import {parse} from 'cookie';
+import {NextComponentType, NextPageContext} from 'next';
 import {AppContext, AppProps} from 'next/app';
 import React from 'react';
 
-import Layout from '../layouts/dashboard/layout';
 import {createTheme} from '../theme';
 import createEmotionCache from '../utils/create-emotion-cache';
 import {decode} from '../utils/jwt_encode_decode';
@@ -14,6 +14,9 @@ import {decode} from '../utils/jwt_encode_decode';
 const clientSideEmotionCache = createEmotionCache();
 
 interface SampleAppProps extends AppProps {
+  Component: NextComponentType<NextPageContext, any, any> & {
+    getLayout?: (page: React.ReactNode) => React.ReactNode;
+  };
   emotionCache?: EmotionCache;
 }
 
@@ -22,14 +25,14 @@ export default function SampleApp({
   emotionCache = clientSideEmotionCache,
   pageProps,
 }: SampleAppProps) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   const theme = createTheme();
 
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
-        <Layout {...pageProps}>
-          <Component {...pageProps} />
-        </Layout>
+        {getLayout(<Component {...pageProps} />)}
       </ThemeProvider>
     </CacheProvider>
   );
