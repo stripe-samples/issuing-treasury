@@ -8,7 +8,7 @@
     position: relative;
     width: 384px;
     height: 244px;
-    background-image: url('../public/images/card-back.png');
+    background-image: url('../../public/images/card-back.png');
     background-size: 100%;
     background-repeat: no-repeat;
   }
