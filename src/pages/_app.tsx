@@ -13,15 +13,15 @@ import {decode} from '../utils/jwt_encode_decode';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-interface HomeMadeHamProps extends AppProps {
+interface SampleAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-export default function HomeMadeHam({
+export default function SampleApp({
   Component,
   emotionCache = clientSideEmotionCache,
   pageProps,
-}: HomeMadeHamProps) {
+}: SampleAppProps) {
   const theme = createTheme();
 
   return (
@@ -35,7 +35,7 @@ export default function HomeMadeHam({
   );
 }
 
-HomeMadeHam.getInitialProps = (context: AppContext) => {
+SampleApp.getInitialProps = (context: AppContext) => {
   const cookie = parse(context.ctx.req?.headers.cookie ?? '');
   if ('app_auth' in cookie) {
     const session = decode(cookie.app_auth);
