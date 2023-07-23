@@ -1,8 +1,6 @@
-import ArrowTopRightOnSquareIcon from "@heroicons/react/24/solid/ArrowTopRightOnSquareIcon";
 import ChevronUpDownIcon from "@heroicons/react/24/solid/ChevronUpDownIcon";
 import {
   Box,
-  Button,
   Divider,
   Drawer,
   Stack,
@@ -12,15 +10,14 @@ import {
 } from "@mui/material";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import PropTypes from "prop-types";
-import Logo from "src/components/CustomIcon";
 
+import Logo from "../../components/CustomIcon";
 import { Scrollbar } from "../../components/scrollbar";
 
 import { items } from "./config";
 import { SideNavItem } from "./side-nav-item";
 
-export const SideNav = (props: any) => {
+export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   const { open, onClose } = props;
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
@@ -70,7 +67,7 @@ export const SideNav = (props: any) => {
           >
             <div>
               <Typography color="inherit" variant="subtitle1">
-                Devias
+                snasir 1
               </Typography>
               <Typography color="neutral.400" variant="body2">
                 Production
@@ -105,8 +102,6 @@ export const SideNav = (props: any) => {
               return (
                 <SideNavItem
                   active={active}
-                  disabled={item.disabled}
-                  external={item.external}
                   icon={item.icon}
                   key={item.title}
                   path={item.path}
@@ -158,9 +153,4 @@ export const SideNav = (props: any) => {
       {content}
     </Drawer>
   );
-};
-
-SideNav.propTypes = {
-  onClose: PropTypes.func,
-  open: PropTypes.bool,
 };
