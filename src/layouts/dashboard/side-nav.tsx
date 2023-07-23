@@ -33,17 +33,20 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
       }}
     >
       <Box sx={{ p: 3 }}>
-        <Box
-          component={NextLink}
-          href="/"
-          sx={{
-            display: "inline-flex",
-            height: 32,
-            width: 32,
-          }}
-        >
-          <Logo />
-        </Box>
+        <Stack direction="row" spacing={2}>
+          <Box
+            component={NextLink}
+            href="/"
+            sx={{
+              display: "inline-flex",
+              height: 32,
+              width: 32,
+            }}
+          >
+            <Logo />
+          </Box>
+          {/* <Typography>Issuing & Treasury</Typography> */}
+        </Stack>
         <Box
           sx={{
             alignItems: "center",

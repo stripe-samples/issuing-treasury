@@ -7,12 +7,19 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import PropTypes from "prop-types";
 import { useCallback } from "react";
-import { useAuth } from "src/hooks/use-auth";
 
-export const AccountPopover = (props) => {
-  const { anchorEl, onClose, open } = props;
+import { useAuth } from "../../hooks/use-auth";
+
+export const AccountPopover = ({
+  anchorEl,
+  onClose,
+  open,
+}: {
+  anchorEl: Element | null;
+  onClose: () => void;
+  open: boolean;
+}) => {
   const router = useRouter();
   const auth = useAuth();
 
@@ -59,10 +66,4 @@ export const AccountPopover = (props) => {
       </MenuList>
     </Popover>
   );
-};
-
-AccountPopover.propTypes = {
-  anchorEl: PropTypes.any,
-  onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired,
 };

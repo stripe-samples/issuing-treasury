@@ -14,7 +14,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-// import {usePopover} from 'src/hooks/use-popover';
+
+import { usePopover } from "../../hooks/use-popover";
 
 import { AccountPopover } from "./account-popover";
 
@@ -23,7 +24,7 @@ const TOP_NAV_HEIGHT = 64;
 
 export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
-  // const accountPopover = usePopover();
+  const accountPopover = usePopover();
 
   return (
     <>
@@ -87,24 +88,24 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
                 </Badge>
               </IconButton>
             </Tooltip>
-            {/* <Avatar
+            <Avatar
               onClick={accountPopover.handleOpen}
               ref={accountPopover.anchorRef}
               sx={{
-                cursor: 'pointer',
+                cursor: "pointer",
                 height: 40,
                 width: 40,
               }}
               src="/assets/avatars/avatar-anika-visser.png"
-            /> */}
+            />
           </Stack>
         </Stack>
       </Box>
-      {/* <AccountPopover
+      <AccountPopover
         anchorEl={accountPopover.anchorRef.current}
         open={accountPopover.open}
         onClose={accountPopover.handleClose}
-      /> */}
+      />
     </>
   );
 };
