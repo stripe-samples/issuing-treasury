@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { SideNav } from "./side-nav";
 import { TopNav } from "./top-nav";
@@ -23,8 +23,7 @@ const LayoutContainer = styled("div")({
   width: "100%",
 });
 
-const Layout = (props: any) => {
-  const { children } = props;
+const Layout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(false);
 

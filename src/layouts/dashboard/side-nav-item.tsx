@@ -1,10 +1,20 @@
-import { Box, ButtonBase } from "@mui/material";
+import { Box, ButtonBase, Theme } from "@mui/material";
 import NextLink from "next/link";
-import PropTypes from "prop-types";
+import { ReactNode } from "react";
 
-export const SideNavItem = (props: any) => {
-  const { active = false, disabled, external, icon, path, title } = props;
-
+export const SideNavItem = ({
+  active = false,
+  external,
+  icon,
+  path,
+  title,
+}: {
+  active: boolean;
+  external: boolean;
+  icon: ReactNode;
+  path: string;
+  title: string;
+}) => {
   const linkProps = path
     ? external
       ? {
@@ -62,16 +72,13 @@ export const SideNavItem = (props: any) => {
           sx={{
             color: "neutral.400",
             flexGrow: 1,
-            fontFamily: (theme) => theme.typography.fontFamily,
+            fontFamily: (theme: Theme) => theme.typography.fontFamily,
             fontSize: 14,
             fontWeight: 600,
             lineHeight: "24px",
             whiteSpace: "nowrap",
             ...(active && {
               color: "common.white",
-            }),
-            ...(disabled && {
-              color: "neutral.500",
             }),
           }}
         >
@@ -80,13 +87,4 @@ export const SideNavItem = (props: any) => {
       </ButtonBase>
     </li>
   );
-};
-
-SideNavItem.propTypes = {
-  active: PropTypes.bool,
-  disabled: PropTypes.bool,
-  external: PropTypes.bool,
-  icon: PropTypes.node,
-  path: PropTypes.string,
-  title: PropTypes.string.isRequired,
 };

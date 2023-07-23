@@ -5,6 +5,7 @@ import {
   Drawer,
   Stack,
   SvgIcon,
+  Theme,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -21,7 +22,7 @@ import { SideNavItem } from "./side-nav-item";
 export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   const { open, onClose } = props;
   const pathname = usePathname();
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   const { user } = useAuthContext();
 
   const content = (

@@ -9,6 +9,7 @@ import {
   IconButton,
   Stack,
   SvgIcon,
+  Theme,
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
@@ -23,7 +24,7 @@ const TOP_NAV_HEIGHT = 64;
 
 export const TopNav = (props: any) => {
   const { onNavOpen } = props;
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   // const accountPopover = usePopover();
 
   return (
@@ -42,7 +43,7 @@ export const TopNav = (props: any) => {
           width: {
             lg: `calc(100% - ${SIDE_NAV_WIDTH}px)`,
           },
-          zIndex: (theme) => theme.zIndex.appBar,
+          zIndex: (theme: Theme) => theme.zIndex.appBar,
         }}
       >
         <Stack

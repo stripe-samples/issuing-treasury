@@ -4,7 +4,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { parse } from "cookie";
 import { NextComponentType, NextPageContext } from "next";
 import { AppContext, AppProps } from "next/app";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { AuthConsumer, AuthProvider } from "../contexts/auth-context";
 import { createTheme } from "../theme";
@@ -15,7 +15,7 @@ import { decode } from "../utils/jwt_encode_decode";
 const clientSideEmotionCache = createEmotionCache();
 
 interface SampleAppProps extends AppProps {
-  Component: NextComponentType<NextPageContext, any, any> & {
+  Component: NextComponentType<NextPageContext, ReactNode, EmotionCache> & {
     getLayout?: (page: React.ReactNode) => React.ReactNode;
   };
   emotionCache?: EmotionCache;
