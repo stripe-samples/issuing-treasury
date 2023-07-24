@@ -21,10 +21,10 @@ import React, {
 } from "react";
 
 import CardholderCreateWidget from "../components/Stripe/CardholderCreateWidget";
-import CardholderWidget from "../components/Stripe/CardholderWidget";
 import { useSelection } from "../hooks/use-selection";
 import DashboardLayout from "../layouts/dashboard/layout";
 import { CardholdersSearch } from "../sections/cardholders/cardholders-search";
+import CardholdersTable from "../sections/cardholders/cardholders-table";
 import Cardholder from "../types/cardholder";
 import { applyPagination } from "../utils/apply-pagination";
 import { decode } from "../utils/jwt_encode_decode";
@@ -144,7 +144,7 @@ const Page = ({
               <CardholderCreateWidget />
             </Stack>
             <CardholdersSearch />
-            <CardholderWidget
+            <CardholdersTable
               count={allCardholders.length}
               items={cardholders}
               onDeselectAll={cardholdersSelection.handleDeselectAll}

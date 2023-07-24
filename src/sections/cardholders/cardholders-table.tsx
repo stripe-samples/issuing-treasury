@@ -21,11 +21,10 @@ import {
 import { format, fromUnixTime } from "date-fns";
 import React, { ChangeEvent } from "react";
 
+import CardholderUpdateWidget from "../../components/Stripe/CardholderUpdateWidget";
 import Cardholder from "../../types/cardholder";
 
-import CardholderUpdateWidget from "./CardholderUpdateWidget";
-
-const CardHolderWidget = ({
+const CardholdersTable = ({
   count = 0,
   items = [],
   onDeselectAll,
@@ -169,4 +168,4 @@ const CardHolderWidget = ({
   );
 };
 
-export default CardHolderWidget;
+export default CardholdersTable;
