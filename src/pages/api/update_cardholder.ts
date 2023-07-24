@@ -1,8 +1,8 @@
 import { parse } from "cookie";
 
 import { decode } from "../../utils/jwt_encode_decode";
+import stripe from "../../utils/stripe-loader";
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export default async function handler(req: any, res: any) {
   if (req.method === "POST") {
     const { app_auth } = parse(req.headers.cookie || "");

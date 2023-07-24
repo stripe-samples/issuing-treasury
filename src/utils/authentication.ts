@@ -1,6 +1,5 @@
 import { encode } from "./jwt_encode_decode";
-
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import stripe from "./utils/stripe-loader";
 
 export async function authenticateUser(email: any, password: any) {
   const { data: customers } = await stripe.customers.list({ email });

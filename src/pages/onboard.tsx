@@ -3,9 +3,8 @@ import React from "react";
 
 import OnboardWidget from "../components/Stripe/OnboardWidget";
 import { decode, encode } from "../utils/jwt_encode_decode";
+import stripe from "../utils/stripe-loader";
 import { createAccountOnboardingUrl } from "../utils/stripe_helpers";
-
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function getServerSideProps(context: any) {
   if ("cookie" in context.req.headers) {

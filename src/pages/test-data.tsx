@@ -8,8 +8,7 @@ import TestDataCreatePaymentLink from "../sections/test-data/test-data-create-pa
 import TestDataCreatePayouts from "../sections/test-data/test-data-create-payout";
 import TestDataCreateReceivedCredit from "../sections/test-data/test-data-create-received-credit";
 import { decode } from "../utils/jwt_encode_decode";
-
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import stripe from "../utils/stripe-loader";
 
 export async function getServerSideProps(context: any) {
   if ("cookie" in context.req.headers) {

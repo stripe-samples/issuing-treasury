@@ -1,9 +1,8 @@
 import { serialize } from "cookie";
 
 import { authenticateUser } from "../../utils/authentication";
+import stripe from "../../utils/stripe-loader";
 import { createAccountOnboardingUrl } from "../../utils/stripe_helpers";
-
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {

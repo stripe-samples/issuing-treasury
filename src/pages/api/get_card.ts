@@ -1,4 +1,4 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import stripe from "../../utils/stripe-loader";
 
 export default async function handler(req: any, res: any) {
   const accountId = req.body.accountId;
