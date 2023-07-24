@@ -1,4 +1,4 @@
-import { AddCircleOutlineOutlined } from "@mui/icons-material";
+import { PlusIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Checkbox,
@@ -11,6 +11,7 @@ import {
   Grid,
   Link,
   MenuItem,
+  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
@@ -54,11 +55,15 @@ const CardholderCreateWidget = () => {
   return (
     <div>
       <Button
+        startIcon={
+          <SvgIcon fontSize="small">
+            <PlusIcon />
+          </SvgIcon>
+        }
         onClick={() => setShowModal(true)}
-        startIcon={<AddCircleOutlineOutlined />}
         variant="contained"
       >
-        New Cardholder
+        Add
       </Button>
       <Dialog
         open={showModal}
