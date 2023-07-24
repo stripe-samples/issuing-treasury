@@ -18,7 +18,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { format } from "date-fns";
+import { format, fromUnixTime } from "date-fns";
 
 import { SeverityPill } from "../../components/severity-pill";
 import { formatUSD } from "../../utils/format";
@@ -51,7 +51,10 @@ export const OverviewLatestTransactions = (props: {
           </TableHead>
           <TableBody>
             {faTransactions.map((transaction) => {
-              const createdAt = format(transaction.created, "dd/MM/yyyy");
+              const createdAt = format(
+                fromUnixTime(transaction.created),
+                "dd/MM/yyyy",
+              );
 
               return (
                 <TableRow hover key={transaction.id}>
