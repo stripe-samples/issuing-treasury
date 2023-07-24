@@ -2,9 +2,9 @@ import { Container, Grid } from "@mui/material";
 import { parse } from "cookie";
 import React, { ReactNode } from "react";
 
-import PayoutWidget from "../components/Stripe/TestModePayouts";
 import DashboardLayout from "../layouts/dashboard/layout";
 import TestModeCreatePaymentLink from "../sections/test_mode/test-mode-create-payment-link";
+import TestModeCreatePayouts from "../sections/test_mode/test-mode-create-payout";
 import TestModeCreateReceivedCredit from "../sections/test_mode/test-mode-create-received-credit";
 import { decode } from "../utils/jwt_encode_decode";
 
@@ -62,7 +62,7 @@ const Page = (props: any) => {
             <TestModeCreatePaymentLink />
           </Grid>
           <Grid item>
-            <PayoutWidget
+            <TestModeCreatePayouts
               hasExternalAccount={props.hasExternalAccount}
               availableBalance={props.availableBalance}
             />
