@@ -1,6 +1,7 @@
 import { parse } from "cookie";
 import React, { ReactNode } from "react";
 
+import "../styles/globals.css";
 import FaAccountInfoWidget from "../components/Stripe/FaAccountInfoWidget";
 import FaSendMoneyWidget from "../components/Stripe/FaSendMoneyWidget";
 import FaTransactionsExtendedWidget from "../components/Stripe/FaTransactionsExtendedWidget";

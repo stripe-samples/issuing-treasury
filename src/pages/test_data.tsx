@@ -1,10 +1,11 @@
+import { Container, Grid } from "@mui/material";
 import { parse } from "cookie";
 import React, { ReactNode } from "react";
 
 import PaymentLinkCreate from "../components/Stripe/TestModePaymentLinkCreateWidget";
 import PayoutWidget from "../components/Stripe/TestModePayouts";
-import ReceivedCreditCreate from "../components/Stripe/TestModeReceivedCreditCreateWidget";
 import DashboardLayout from "../layouts/dashboard/layout";
+import TestModeCreateReceivedCredit from "../sections/test_mode/test-mode-create-received-credit";
 import { decode } from "../utils/jwt_encode_decode";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -51,14 +52,24 @@ export async function getServerSideProps(context: any) {
 
 const Page = (props: any) => {
   return (
-    <div>
-      <ReceivedCreditCreate />
-      <PaymentLinkCreate />
-      <PayoutWidget
-        hasExternalAccount={props.hasExternalAccount}
-        availableBalance={props.availableBalance}
-      />
-    </div>
+    <>
+      <Container>
+        <Grid container spacing={3}>
+          <Grid item>
+            <TestModeCreateReceivedCredit />
+          </Grid>
+          <Grid item>
+            <PaymentLinkCreate />
+          </Grid>
+          <Grid item>
+            <PayoutWidget
+              hasExternalAccount={props.hasExternalAccount}
+              availableBalance={props.availableBalance}
+            />
+          </Grid>
+        </Grid>
+      </Container>
+    </>
   );
 };
 

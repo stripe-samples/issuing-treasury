@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   CardActions,
+  CardContent,
   CardHeader,
   Divider,
   Link,
@@ -91,7 +92,6 @@ export const OverviewLatestTransactions = (props: {
           </TableBody>
         </Table>
       </Box>
-      <Divider />
       <CardActions sx={{ justifyContent: "flex-end" }}>
         <Button
           color="inherit"

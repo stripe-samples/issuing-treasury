@@ -1,6 +1,7 @@
 import { parse } from "cookie";
 import React, { ReactNode } from "react";
 
+import "../styles/globals.css";
 import CardholderCreateWidget from "../components/Stripe/CardholderCreateWidget";
 import CardholderWidget from "../components/Stripe/CardholderWidget";
 import CardsWidget from "../components/Stripe/CardsWidget";
