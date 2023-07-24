@@ -1,3 +1,5 @@
+import { PlusIcon } from "@heroicons/react/24/solid";
+import { Button, SvgIcon } from "@mui/material";
 import React, { useState } from "react";
 
 function CardholderCreateWidget(props: any) {
@@ -62,31 +64,19 @@ function CardholderCreateWidget(props: any) {
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <div className="p-6 mt-10 space-x-3 md:mt-0 md:ml-4 grid justify-items-end">
-        <button
-          onClick={() => setShowModal(true)}
-          id="new-cardholder-btn"
-          type="button"
-          className="inline-flex items-center px-10 py-2.5 border border-transparent shadow-sm text-xs md:text-sm font-medium rounded-md text-white bg-accent-color hover:bg-accent-color-light ml-2 mr-2"
-        >
-          New Cardholder{" "}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 pl-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-        </button>
-      </div>
-
+      New cardholder button:
+      <Button
+        id="new-cardholder-btn"
+        onClick={() => setShowModal(true)}
+        startIcon={
+          <SvgIcon fontSize="small">
+            <PlusIcon />
+          </SvgIcon>
+        }
+        variant="contained"
+      >
+        New Cardholder
+      </Button>
       {showModal ? (
         <>
           <div id="new-cardholder-modal">
