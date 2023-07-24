@@ -1,5 +1,6 @@
-import { Container, Grid } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import { parse } from "cookie";
+import Head from "next/head";
 import React, { ReactNode } from "react";
 
 import DashboardLayout from "../layouts/dashboard/layout";
@@ -53,22 +54,33 @@ export async function getServerSideProps(context: any) {
 const Page = (props: any) => {
   return (
     <>
-      <Container>
-        <Grid container spacing={3}>
-          <Grid item>
-            <TestDataCreateReceivedCredit />
+      <Head>
+        <title>Test Data | Homex</title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8,
+        }}
+      >
+        <Container maxWidth="xl">
+          <Grid container spacing={3} justifyContent="center">
+            <Grid item xs={12} sm={10} md={8}>
+              <TestDataCreateReceivedCredit />
+            </Grid>
+            <Grid item xs={12} sm={10} md={8}>
+              <TestDataCreatePaymentLink />
+            </Grid>
+            <Grid item xs={12} sm={10} md={8}>
+              <TestDataCreatePayouts
+                hasExternalAccount={props.hasExternalAccount}
+                availableBalance={props.availableBalance}
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <TestDataCreatePaymentLink />
-          </Grid>
-          <Grid item>
-            <TestDataCreatePayouts
-              hasExternalAccount={props.hasExternalAccount}
-              availableBalance={props.availableBalance}
-            />
-          </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </Box>
     </>
   );
 };

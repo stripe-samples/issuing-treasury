@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-function TestDataCreateReceivedCredit() {
+const TestDataCreateReceivedCredit = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -39,43 +39,41 @@ function TestDataCreateReceivedCredit() {
   };
 
   return (
-    <>
-      <Card>
-        <CardHeader title="Simulate Received Credit"></CardHeader>
-        <CardContent sx={{ pt: 0 }}>
-          <Typography>
-            By pressing the Create Received Credit button, you will simulate
-            receiving a transfer into your Financial Account.
+    <Card>
+      <CardHeader title="Simulate Received Credit"></CardHeader>
+      <CardContent sx={{ pt: 0 }}>
+        <Typography>
+          By pressing the Create Received Credit button, you will simulate
+          receiving a transfer into your Financial Account.
+        </Typography>
+        <Typography>
+          You can send funds directly to your Financial Account via ACH or Wire
+          Transfers by using its Account and Routing numbers.
+        </Typography>
+        <Typography>
+          Your Financial Account will receive $ 500.00 each time you press the
+          button.
+        </Typography>
+        {error && (
+          <Typography variant="body2" color="error" align="center">
+            {errorText}
           </Typography>
-          <Typography>
-            You can send funds directly to your Financial Account via ACH or
-            Wire Transfers by using its Account and Routing numbers.
-          </Typography>
-          <Typography>
-            Your Financial Account will receive $ 500.00 each time you press the
-            button.
-          </Typography>
-          {error && (
-            <Typography variant="body2" color="error" align="center">
-              {errorText}
-            </Typography>
-          )}
-        </CardContent>
-        <Divider />
-        <CardActions sx={{ justifyContent: "center" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            disabled={submitted}
-            onClick={simulateReceivedCredit}
-          >
-            {submitted ? "Simulating..." : "Simulate Received Credit"}
-          </Button>
-        </CardActions>
-      </Card>
-    </>
+        )}
+      </CardContent>
+      <Divider />
+      <CardActions sx={{ justifyContent: "center" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          disabled={submitted}
+          onClick={simulateReceivedCredit}
+        >
+          {submitted ? "Simulating..." : "Simulate Received Credit"}
+        </Button>
+      </CardActions>
+    </Card>
   );
-}
+};
 
 export default TestDataCreateReceivedCredit;
