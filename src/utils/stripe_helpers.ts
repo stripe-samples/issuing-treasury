@@ -12,7 +12,7 @@ const stripe = new Stripe(stripeSecretKey, {
   apiVersion: API_VERSION,
 });
 
-export async function getFinancialAccountTransactions(StripeAccountID: any) {
+export async function getFinancialAccountTransactions(StripeAccountID: string) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
   });
@@ -30,7 +30,7 @@ export async function getFinancialAccountTransactions(StripeAccountID: any) {
 }
 
 export async function getFinancialAccountTransactionsExpanded(
-  StripeAccountID: any,
+  StripeAccountID: string,
 ) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
@@ -49,7 +49,7 @@ export async function getFinancialAccountTransactionsExpanded(
   };
 }
 
-export async function getFinancialAccountDetails(StripeAccountID: any) {
+export async function getFinancialAccountDetails(StripeAccountID: string) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
   });
@@ -59,7 +59,7 @@ export async function getFinancialAccountDetails(StripeAccountID: any) {
   };
 }
 
-export async function getFinancialAccountDetailsExp(StripeAccountID: any) {
+export async function getFinancialAccountDetailsExp(StripeAccountID: string) {
   const financialAccounts = await stripe.treasury.financialAccounts.list(
     { expand: ["data.financial_addresses.aba.account_number"] },
     {
@@ -73,7 +73,7 @@ export async function getFinancialAccountDetailsExp(StripeAccountID: any) {
 }
 
 export async function getFinancialAccountTransactionDetails(
-  StripeAccountID: any,
+  StripeAccountID: string,
 ) {
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
@@ -164,7 +164,7 @@ export async function getFinancialAccountTransactionDetails(
   };
 }
 
-export async function getCardholders(StripeAccountID: any) {
+export async function getCardholders(StripeAccountID: string) {
   const cardholders = await stripe.issuing.cardholders.list(
     { limit: 10 },
     { stripeAccount: StripeAccountID },
@@ -179,7 +179,7 @@ export async function getCardholders(StripeAccountID: any) {
   };
 }
 
-export async function getCards(StripeAccountID: any) {
+export async function getCards(StripeAccountID: string) {
   const cards = await stripe.issuing.cards.list(
     { limit: 10 },
     { stripeAccount: StripeAccountID },
@@ -190,7 +190,10 @@ export async function getCards(StripeAccountID: any) {
   };
 }
 
-export async function getCardTransactions(StripeAccountID: any, cardId: any) {
+export async function getCardTransactions(
+  StripeAccountID: string,
+  cardId: any,
+) {
   const today = Math.trunc(new Date().setHours(0, 0) / 1000);
 
   // Retrieve last 10 authorizations
