@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-function TestModeCreatePaymentLink() {
+function TestDataCreatePaymentLink() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -90,4 +90,4 @@ function TestModeCreatePaymentLink() {
   );
 }
 
-export default TestModeCreatePaymentLink;
+export default TestDataCreatePaymentLink;

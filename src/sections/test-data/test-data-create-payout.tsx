@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-function TestModeCreatePayout(props: {
+function TestDataCreatePayout(props: {
   availableBalance: number;
   hasExternalAccount: boolean;
 }) {
@@ -148,4 +148,4 @@ function TestModeCreatePayout(props: {
   );
 }
 
-export default TestModeCreatePayout;
+export default TestDataCreatePayout;

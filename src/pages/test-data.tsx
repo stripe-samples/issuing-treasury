@@ -3,9 +3,9 @@ import { parse } from "cookie";
 import React, { ReactNode } from "react";
 
 import DashboardLayout from "../layouts/dashboard/layout";
-import TestModeCreatePaymentLink from "../sections/test_mode/test-mode-create-payment-link";
-import TestModeCreatePayouts from "../sections/test_mode/test-mode-create-payout";
-import TestModeCreateReceivedCredit from "../sections/test_mode/test-mode-create-received-credit";
+import TestDataCreatePaymentLink from "../sections/test-data/test-data-create-payment-link";
+import TestDataCreatePayouts from "../sections/test-data/test-data-create-payout";
+import TestDataCreateReceivedCredit from "../sections/test-data/test-data-create-received-credit";
 import { decode } from "../utils/jwt_encode_decode";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -56,13 +56,13 @@ const Page = (props: any) => {
       <Container>
         <Grid container spacing={3}>
           <Grid item>
-            <TestModeCreateReceivedCredit />
+            <TestDataCreateReceivedCredit />
           </Grid>
           <Grid item>
-            <TestModeCreatePaymentLink />
+            <TestDataCreatePaymentLink />
           </Grid>
           <Grid item>
-            <TestModeCreatePayouts
+            <TestDataCreatePayouts
               hasExternalAccount={props.hasExternalAccount}
               availableBalance={props.availableBalance}
             />

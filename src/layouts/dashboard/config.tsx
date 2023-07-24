@@ -57,7 +57,7 @@ export const items = [
 
   {
     title: "Test Data",
-    path: "/test_data",
+    path: "/test-data",
     icon: (
       <SvgIcon fontSize="small">
         <WrenchScrewdriverIcon />
