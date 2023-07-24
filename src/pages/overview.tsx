@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { parse } from "cookie";
-import Head from "next/head";
 import React, { ReactNode } from "react";
 
 import DashboardLayout from "../layouts/dashboard/layout";
@@ -64,9 +63,6 @@ const Page = ({
 }) => {
   return (
     <>
-      <Head>
-        <title>Overview | Homex</title>
-      </Head>
       <Box
         component="main"
         sx={{

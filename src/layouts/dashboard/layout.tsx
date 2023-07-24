@@ -1,4 +1,5 @@
 import { styled } from "@mui/material/styles";
+import Head from "next/head";
 import { usePathname } from "next/navigation";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
@@ -43,6 +44,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
+      <Head>
+        <title>Issuing & Treasury</title>
+        <link rel="icon" href="/favicon.svg" />
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
       <TopNav onNavOpen={() => setOpenNav(true)} />
       <SideNav onClose={() => setOpenNav(false)} open={openNav} />
       <LayoutRoot>

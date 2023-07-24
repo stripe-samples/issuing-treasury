@@ -1,6 +1,5 @@
 import { Box, Container, Grid } from "@mui/material";
 import { parse } from "cookie";
-import Head from "next/head";
 import React, { ReactNode } from "react";
 
 import DashboardLayout from "../layouts/dashboard/layout";
@@ -59,9 +58,6 @@ const Page = ({
 }) => {
   return (
     <>
-      <Head>
-        <title>Test Data | Homex</title>
-      </Head>
       <Box
         component="main"
         sx={{

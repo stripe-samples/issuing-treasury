@@ -11,7 +11,6 @@ import {
   SvgIcon,
 } from "@mui/material";
 import { parse } from "cookie";
-import Head from "next/head";
 import React, {
   ChangeEvent,
   ReactNode,
@@ -103,9 +102,6 @@ const Page = ({
 
   return (
     <>
-      <Head>
-        <title>Cardholders | Homex</title>
-      </Head>
       <Box
         component="main"
         sx={{
