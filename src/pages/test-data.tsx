@@ -51,7 +51,13 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const Page = (props: any) => {
+const Page = ({
+  hasExternalAccount,
+  availableBalance,
+}: {
+  hasExternalAccount: boolean;
+  availableBalance: number;
+}) => {
   return (
     <>
       <Head>
@@ -74,8 +80,8 @@ const Page = (props: any) => {
             </Grid>
             <Grid item xs={12} sm={10} md={8}>
               <TestDataCreatePayouts
-                hasExternalAccount={props.hasExternalAccount}
-                availableBalance={props.availableBalance}
+                hasExternalAccount={hasExternalAccount}
+                availableBalance={availableBalance}
               />
             </Grid>
           </Grid>
