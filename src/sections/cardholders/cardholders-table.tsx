@@ -4,8 +4,6 @@ import {
   Button,
   Card,
   Checkbox,
-  FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Stack,
@@ -21,8 +19,9 @@ import {
 import { format, fromUnixTime } from "date-fns";
 import React, { ChangeEvent } from "react";
 
-import CardholderUpdateWidget from "../../components/Stripe/CardholderUpdateWidget";
 import Cardholder from "../../types/cardholder";
+
+import CardholderUpdateWidget from "./cardholder-update-widget";
 
 const CardholdersTable = ({
   count = 0,

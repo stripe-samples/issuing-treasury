@@ -19,9 +19,9 @@ import React, {
   useState,
 } from "react";
 
-import CardholderCreateWidget from "../components/Stripe/CardholderCreateWidget";
 import { useSelection } from "../hooks/use-selection";
 import DashboardLayout from "../layouts/dashboard/layout";
+import CardholderCreateWidget from "../sections/cardholders/cardholder-create-widget";
 import { CardholdersSearch } from "../sections/cardholders/cardholders-search";
 import CardholdersTable from "../sections/cardholders/cardholders-table";
 import Cardholder from "../types/cardholder";
