@@ -1,7 +1,6 @@
 import { parse } from "cookie";
 import React, { ReactNode } from "react";
 
-import "../styles/globals.css";
 import CardsWidget from "../components/Stripe/CardsWidget";
 import DashboardLayout from "../layouts/dashboard/layout";
 import { decode } from "../utils/jwt_encode_decode";
