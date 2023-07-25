@@ -26,13 +26,16 @@ const handler = async (
     const financialAccount = financialAccounts.data[0];
 
     await stripe.accounts.createExternalAccount(StripeAccountId, {
+      // @ts-expect-error TS(2345): Argument of type '{ object: string; country: string; currency: string; account_number: any; routing_number: any; }' is not assignable to parameter of type 'BankAccountCreateParams'.
       external_account: {
         object: "bank_account",
         country: "US",
         currency: "usd",
         account_number:
+          // @ts-expect-error TS(2339): Property 'aba' does not exist on type 'FinancialAccount'.
           financialAccount.financial_addresses[0].aba.account_number,
         routing_number:
+          // @ts-expect-error TS(2339): Property 'aba' does not exist on type 'FinancialAccount'.
           financialAccount.financial_addresses[0].aba.routing_number,
       },
     });
