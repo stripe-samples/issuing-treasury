@@ -29,15 +29,12 @@ enum ActionTypes {
 type Action =
   | { type: ActionTypes.INITIALIZE; payload?: User }
   | { type: ActionTypes.SIGN_IN; payload: User }
-  | { type: ActionTypes.SIGN_OUT };
+  | { type: ActionTypes.SIGN_OUT; payload?: undefined };
 
 const initialState: State = {
   isAuthenticated: false,
   isLoading: true,
-  user: {
-    // TODO: Use actual user data
-    name: "snasir-1",
-  },
+  user: null,
 };
 
 const handlers: Record<ActionTypes, (state: State, action: Action) => State> = {
@@ -63,14 +60,14 @@ const handlers: Record<ActionTypes, (state: State, action: Action) => State> = {
     return {
       ...state,
       isAuthenticated: true,
-      user,
+      user: user ?? null, // Set the user property to null if user is undefined
     };
   },
   [ActionTypes.SIGN_OUT]: (state) => {
     return {
       ...state,
       isAuthenticated: false,
-      user: null,
+      user: null, // Set the user to null when signing out
     };
   },
 };
@@ -80,10 +77,22 @@ const reducer = (state: State, action: Action) =>
 
 // The role of this context is to propagate authentication state through the App tree.
 
-export const AuthContext = createContext<State>({
+export const AuthContext = createContext<{
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: User | null;
+  skip: () => void;
+  signIn: (email: string, password: string) => void;
+  signOut: () => void;
+  signUp: (email: string, name: string, password: string) => void;
+}>({
   isAuthenticated: false,
   isLoading: true,
   user: null,
+  skip: () => ({}),
+  signIn: () => ({}),
+  signOut: () => ({}),
+  signUp: () => ({}),
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {

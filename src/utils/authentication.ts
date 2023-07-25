@@ -1,5 +1,5 @@
 import { encode } from "./jwt_encode_decode";
-import stripe from "./utils/stripe-loader";
+import stripe from "./stripe-loader";
 
 export async function authenticateUser(email: any, password: any) {
   const { data: customers } = await stripe.customers.list({ email });

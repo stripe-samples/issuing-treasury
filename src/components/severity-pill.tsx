@@ -1,7 +1,13 @@
 import { styled } from "@mui/material/styles";
 
-const SeverityPillRoot = styled("span")(({ theme, ownerState }) => {
-  const backgroundColor = theme.palette[ownerState.color].alpha12;
+const SeverityPillRoot = styled("span", {
+  shouldForwardProp: (prop) => prop !== "ownerState",
+})<{
+  ownerState: {
+    color: "primary" | "secondary" | "error" | "info" | "warning" | "success";
+  };
+}>(({ theme, ownerState }) => {
+  const backgroundColor = theme.palette[ownerState.color].light;
   const color =
     theme.palette.mode === "dark"
       ? theme.palette[ownerState.color].main

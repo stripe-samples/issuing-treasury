@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 
 function SigninWidget() {
@@ -136,12 +137,12 @@ function SigninWidget() {
           <p className="mt-6 max-w-2xl text-base text-dark-gray-500">
             Do not have an account yet?
           </p>
-          <a
+          <Link
             href="/signup"
             className="hover:underline mt-6 max-w-2xl text-base"
           >
             Sign up
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 
 function SignupWidget(props: any) {
@@ -142,12 +143,12 @@ function SignupWidget(props: any) {
             </button>
           </div>
           <div>
-            <a
+            <Link
               href="/"
               className="relative flex justify-center items-center w-full p-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-accent-color hover:bg-accent-color-light active:ring-2 active:ring-offset-2 active:ring-light-red-900"
             >
               <span>Cancel</span>
-            </a>
+            </Link>
           </div>
         </form>
       </div>
