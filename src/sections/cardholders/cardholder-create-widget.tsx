@@ -1,4 +1,3 @@
-import { PlusIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Checkbox,
@@ -11,7 +10,6 @@ import {
   Grid,
   Link,
   MenuItem,
-  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
@@ -54,15 +52,7 @@ const CardholderCreateWidget = () => {
 
   return (
     <div>
-      <Button
-        startIcon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        onClick={() => setShowModal(true)}
-        variant="contained"
-      >
+      <Button onClick={() => setShowModal(true)} variant="contained">
         Add
       </Button>
       <Dialog

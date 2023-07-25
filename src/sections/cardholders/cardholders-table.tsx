@@ -1,4 +1,3 @@
-import { PlusIcon } from "@heroicons/react/24/solid";
 import {
   Box,
   Button,
@@ -7,7 +6,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -137,11 +135,6 @@ const CardholdersTable = ({
                             <MenuItem value="physical">Physical</MenuItem>
                           </Select>
                           <Button
-                            startIcon={
-                              <SvgIcon>
-                                <PlusIcon />
-                              </SvgIcon>
-                            }
                             variant="contained"
                             type="submit"
                           >

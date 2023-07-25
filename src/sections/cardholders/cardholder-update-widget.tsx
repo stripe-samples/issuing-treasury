@@ -1,4 +1,3 @@
-import { PencilIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Checkbox,
@@ -10,7 +9,6 @@ import {
   FormControlLabel,
   Grid,
   Link,
-  SvgIcon,
   Typography,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
@@ -34,15 +32,7 @@ const CardholderUpdateWidget = ({ cardholderId }: { cardholderId: string }) => {
 
   return (
     <div>
-      <Button
-        startIcon={
-          <SvgIcon fontSize="small">
-            <PencilIcon />
-          </SvgIcon>
-        }
-        onClick={() => setShowModal(true)}
-        variant="contained"
-      >
+      <Button onClick={() => setShowModal(true)} variant="contained">
         Update
       </Button>
       <Dialog
