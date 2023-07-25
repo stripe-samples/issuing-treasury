@@ -1,12 +1,13 @@
 import { serialize } from "cookie";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import { authenticateUser } from "../../utils/authentication";
 import stripe from "../../utils/stripe-loader";
 import { createAccountOnboardingUrl } from "../../utils/stripe_helpers";
 
-export default async function handler(req: any, res: any) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
-    return res.status(404).end();
+    return res.status(400).json({ error: "Bad Request" });
   }
 
   const {
@@ -89,4 +90,6 @@ export default async function handler(req: any, res: any) {
       error: err.message,
     });
   }
-}
+};
+
+export default handler;

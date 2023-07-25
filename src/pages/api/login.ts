@@ -1,8 +1,9 @@
 import { serialize } from "cookie";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import { authenticateUser } from "../../utils/authentication";
 
-export default async function handler(req: any, res: any) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const {
       body: { email, password },
@@ -34,4 +35,6 @@ export default async function handler(req: any, res: any) {
       requiresOnboarding: user.requiresOnboarding,
     });
   }
-}
+};
+
+export default handler;

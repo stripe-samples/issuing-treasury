@@ -1,13 +1,19 @@
-import { parse } from "cookie";
+import { NextApiResponse } from "next";
 
-import { decode } from "../../utils/jwt_encode_decode";
+import withAuth from "../../middleware/auth-middleware";
+import NextApiRequestWithSession from "../../types/next-api-request-with-session";
 import stripe from "../../utils/stripe-loader";
 
-export default async function handler(req: any, res: any) {
-  if (req.method === "GET") {
-    const { app_auth } = parse(req.headers.cookie || "");
-    const session = decode(app_auth);
+const handler = async (
+  req: NextApiRequestWithSession,
+  res: NextApiResponse,
+) => {
+  if (req.method !== "GET") {
+    return res.status(400).json({ error: "Bad Request" });
+  }
 
+  try {
+    const { session } = req;
     const StripeAccountId = session.accountId;
 
     const prices = await stripe.prices.list(
@@ -39,30 +45,29 @@ export default async function handler(req: any, res: any) {
     } else {
       price = prices.data[0];
     }
-    try {
-      const paymentLink = await stripe.paymentLinks.create(
-        {
-          line_items: [
-            {
-              price: price.id,
-              quantity: 1,
-              adjustable_quantity: { enabled: true },
-            },
-          ],
-        },
-        {
-          stripeAccount: StripeAccountId,
-        },
-      );
-      return res.json({ urlCreated: true, paymentLink: paymentLink.url });
-    } catch (err) {
-      return res.status(401).json({
-        urlCreated: false,
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        error: err.message,
-      });
-    }
-  } else {
-    res.status(400).json({ error: "Bad Request" });
+
+    const paymentLink = await stripe.paymentLinks.create(
+      {
+        line_items: [
+          {
+            price: price.id,
+            quantity: 1,
+            adjustable_quantity: { enabled: true },
+          },
+        ],
+      },
+      {
+        stripeAccount: StripeAccountId,
+      },
+    );
+    return res.json({ urlCreated: true, paymentLink: paymentLink.url });
+  } catch (err) {
+    return res.status(401).json({
+      urlCreated: false,
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
+      error: err.message,
+    });
   }
-}
+};
+
+export default withAuth(handler);

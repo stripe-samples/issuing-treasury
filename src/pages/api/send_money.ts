@@ -1,131 +1,136 @@
-import { parse } from "cookie";
+import { NextApiResponse } from "next";
 
-import { decode } from "../../utils/jwt_encode_decode";
+import withAuth from "../../middleware/auth-middleware";
+import NextApiRequestWithSession from "../../types/next-api-request-with-session";
 import stripe from "../../utils/stripe-loader";
 
-export default async function handler(req: any, res: any) {
-  if (req.method === "POST") {
-    try {
-      const { app_auth } = parse(req.headers.cookie || "");
-      const session = decode(app_auth);
+const handler = async (
+  req: NextApiRequestWithSession,
+  res: NextApiResponse,
+) => {
+  if (req.method !== "POST") {
+    return res.status(400).json({ error: "Bad Request" });
+  }
 
-      const StripeAccountId = session.accountId;
-      const balance = await stripe.balance.retrieve({
-        stripeAccount: StripeAccountId,
-      });
+  try {
+    const { session } = req;
+    const StripeAccountId = session.accountId;
 
-      // fields from req
-      let amount = req.body.amount;
-      // clean up amount
-      if (req.body.amount.includes(".")) {
-        amount = amount.replace(".", "");
-      } else {
-        // convert to cents
-        amount = amount * 100;
-      }
+    const balance = await stripe.balance.retrieve({
+      stripeAccount: StripeAccountId,
+    });
 
-      // Get financial accounts for the Connected Account
-      const financialAccounts = await stripe.treasury.financialAccounts.list(
-        { expand: ["data.financial_addresses.aba.account_number"] },
-        { stripeAccount: StripeAccountId },
-      );
-      const financialAccount = financialAccounts.data[0];
+    // fields from req
+    let amount = req.body.amount;
+    // clean up amount
+    if (req.body.amount.includes(".")) {
+      amount = amount.replace(".", "");
+    } else {
+      // convert to cents
+      amount = amount * 100;
+    }
 
+    // Get financial accounts for the Connected Account
+    const financialAccounts = await stripe.treasury.financialAccounts.list(
+      { expand: ["data.financial_addresses.aba.account_number"] },
+      { stripeAccount: StripeAccountId },
+    );
+    const financialAccount = financialAccounts.data[0];
+
+    {
+      /* The following exmaple uses a hardcoded values for test mode
+       */
+    }
+
+    let city, state, postal_code, line1;
+
+    {
+      /* Wire transfers require the address of the recipient.
+       */
+    }
+
+    if (req.body.network == "us_domestic_wire") {
+      city = req.body.city;
+      state = req.body.state;
+      postal_code = req.body.postalCode;
+      line1 = req.body.line1;
+    } else {
+      city = "Alvin";
+      state = "TX";
+      postal_code = "77511";
+      line1 = "123 Main St.";
+    }
+
+    const outboundPayment = await stripe.treasury.outboundPayments.create(
       {
-        /* The following exmaple uses a hardcoded values for test mode
-         */
-      }
-
-      let city, state, postal_code, line1;
-
-      {
-        /* Wire transfers require the address of the recipient.
-         */
-      }
-
-      if (req.body.network == "us_domestic_wire") {
-        city = req.body.city;
-        state = req.body.state;
-        postal_code = req.body.postalCode;
-        line1 = req.body.line1;
-      } else {
-        city = "Alvin";
-        state = "TX";
-        postal_code = "77511";
-        line1 = "123 Main St.";
-      }
-
-      const outboundPayment = await stripe.treasury.outboundPayments.create(
-        {
-          financial_account: financialAccount.id,
-          amount: amount,
-          currency: "usd",
-          statement_descriptor: req.body.descriptor,
-          destination_payment_method_data: {
-            type: "us_bank_account",
-            us_bank_account: {
-              account_holder_type: "individual",
-              routing_number: "110000000",
-              account_number: "000000000009",
-            },
-            billing_details: {
-              email: "jenny@example.com",
-              phone: "7135551212",
-              address: {
-                city: city,
-                state: state,
-                postal_code: postal_code,
-                line1: line1,
-                country: "US",
-              },
-              name: req.body.name,
-            },
+        financial_account: financialAccount.id,
+        amount: amount,
+        currency: "usd",
+        statement_descriptor: req.body.descriptor,
+        destination_payment_method_data: {
+          type: "us_bank_account",
+          us_bank_account: {
+            account_holder_type: "individual",
+            routing_number: "110000000",
+            account_number: "000000000009",
           },
-          destination_payment_method_options: {
-            us_bank_account: {
-              network: req.body.network,
+          billing_details: {
+            email: "jenny@example.com",
+            phone: "7135551212",
+            address: {
+              city: city,
+              state: state,
+              postal_code: postal_code,
+              line1: line1,
+              country: "US",
             },
+            name: req.body.name,
           },
         },
-        { stripeAccount: StripeAccountId },
-      );
+        destination_payment_method_options: {
+          us_bank_account: {
+            network: req.body.network,
+          },
+        },
+      },
+      { stripeAccount: StripeAccountId },
+    );
 
-      if (req.body.transaction_result == "post") {
-        const outboundPaymentresult =
-          await stripe.testHelpers.treasury.outboundPayments.post(
-            outboundPayment.id,
-            { stripeAccount: StripeAccountId },
-          );
-      }
-      if (req.body.transaction_result == "return") {
-        const outboundPaymentresult =
-          await stripe.testHelpers.treasury.returnOutboundPayments(
-            outboundPayment.id,
-            { stripeAccount: StripeAccountId },
-          );
-      }
-      if (req.body.transaction_result == "fail") {
-        const outboundPaymentresult =
-          await stripe.testHelpers.treasury.outboundPayments.fail(
-            outboundPayment.id,
-            { stripeAccount: StripeAccountId },
-          );
-      }
+    if (req.body.transaction_result == "post") {
+      const outboundPaymentresult =
+        await stripe.testHelpers.treasury.outboundPayments.post(
+          outboundPayment.id,
+          { stripeAccount: StripeAccountId },
+        );
+    }
+    if (req.body.transaction_result == "return") {
+      const outboundPaymentresult =
+        await stripe.testHelpers.treasury.returnOutboundPayments(
+          outboundPayment.id,
+          { stripeAccount: StripeAccountId },
+        );
+    }
+    if (req.body.transaction_result == "fail") {
+      const outboundPaymentresult =
+        await stripe.testHelpers.treasury.outboundPayments.fail(
+          outboundPayment.id,
+          { stripeAccount: StripeAccountId },
+        );
+    }
 
-      /* Call test helper and set new status
+    /* Call test helper and set new status
           Outbound payment is generated by using a test bank account that leaves the payment on pending status
           Outbound payment status will be set using the test helper, unless it is processing, in that case nothing will change.
         */
 
-      return res.json({ success: true });
-    } catch (err) {
-      return res.status(401).json({
-        urlCreated: false,
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        error: err.message,
-      });
-    }
-  } else {
-    res.status(400).json({ error: "Bad Request" });
+    return res.json({ success: true });
+  } catch (err) {
+    return res.status(401).json({
+      urlCreated: false,
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
+      error: err.message,
+    });
   }
-}
+};
+
+export default withAuth(handler);

@@ -1,8 +1,9 @@
 import { parse } from "cookie";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import { decode } from "../../utils/jwt_encode_decode";
 
-export default function handler(req: any, res: any) {
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
     return res.status(404).end();
   }
@@ -17,4 +18,6 @@ export default function handler(req: any, res: any) {
     isAuthenticated: true,
     user: decode(app_auth),
   });
-}
+};
+
+export default handler;

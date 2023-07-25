@@ -1,6 +1,7 @@
 import { parse, serialize } from "cookie";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default function handler(req: any, res: any) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
     return res.status(404).end();
   }
@@ -16,4 +17,6 @@ export default function handler(req: any, res: any) {
   }
 
   return res.status(200).json({ isAuthenticated: false });
-}
+};
+
+export default handler;

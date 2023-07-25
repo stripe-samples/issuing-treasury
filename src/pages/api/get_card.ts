@@ -1,6 +1,8 @@
+import { NextApiRequest, NextApiResponse } from "next";
+
 import stripe from "../../utils/stripe-loader";
 
-export default async function handler(req: any, res: any) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const accountId = req.body.accountId;
   const cardId = req.body.cardId;
   const nonce = req.body.nonce;
@@ -22,4 +24,6 @@ export default async function handler(req: any, res: any) {
   } else {
     res.status(500).json({ statusCode: 500, message: "Error" });
   }
-}
+};
+
+export default handler;
