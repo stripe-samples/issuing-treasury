@@ -110,7 +110,12 @@ const CardholdersTable = ({
                   </TableCell>
                   <TableCell>{cardholder.email}</TableCell>
                   <TableCell>{createdAt}</TableCell>
-                  <TableCell sx={{ width: "1px", whiteSpace: "nowrap" }}>
+                  <TableCell
+                    sx={{
+                      width: "1px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {cardholder.individual ? (
                       <form action="/api/issue_card" method="POST">
                         <input

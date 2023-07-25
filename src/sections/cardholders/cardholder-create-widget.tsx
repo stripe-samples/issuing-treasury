@@ -74,35 +74,35 @@ const CardholderCreateWidget = () => {
       >
         <DialogTitle>Add New Cardholder</DialogTitle>
         <Divider />
-        <DialogContent>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-              try {
-                const response = await fetch("api/add_cardholder", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-                  },
-                  body: JSON.stringify(values),
-                });
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              const response = await fetch("api/add_cardholder", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(values),
+              });
 
-                if (response.ok) {
-                  window.location.replace("/cardholders");
-                } else {
-                  const result = await response.json();
-                  setErrorText(result.error);
-                }
-              } catch (error) {
-                setErrorText("An error occurred. Please try again later.");
-              } finally {
-                setSubmitting(false);
+              if (response.ok) {
+                window.location.replace("/cardholders");
+              } else {
+                const result = await response.json();
+                setErrorText(result.error);
               }
-            }}
-          >
-            {({ errors, touched, isSubmitting }) => (
-              <Form>
+            } catch (error) {
+              setErrorText("An error occurred. Please try again later.");
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+        >
+          {({ errors, touched, isSubmitting }) => (
+            <Form>
+              <DialogContent>
                 <Grid container spacing={3}>
                   {errorText != "" && (
                     <Grid item xs={12}>
@@ -214,12 +214,7 @@ const CardholderCreateWidget = () => {
                   <Grid item xs={12}>
                     <FormControlLabel
                       control={
-                        <Field
-                          as={Checkbox}
-                          name="accept"
-                          id="accept-terms"
-                          className="mx-2"
-                        />
+                        <Field as={Checkbox} name="accept" id="accept-terms" />
                       }
                       label={
                         <Typography variant="body2">
@@ -236,22 +231,22 @@ const CardholderCreateWidget = () => {
                     />
                   </Grid>
                 </Grid>
-                <Divider />
-                <DialogActions>
-                  <Button>Autofill with test data</Button>
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    variant="contained"
-                    color="primary"
-                  >
-                    {isSubmitting ? "Adding cardholder..." : "Add cardholder"}
-                  </Button>
-                </DialogActions>
-              </Form>
-            )}
-          </Formik>
-        </DialogContent>
+              </DialogContent>
+              <Divider />
+              <DialogActions>
+                <Button>Autofill with test data</Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  variant="contained"
+                  color="primary"
+                >
+                  {isSubmitting ? "Adding cardholder..." : "Add cardholder"}
+                </Button>
+              </DialogActions>
+            </Form>
+          )}
+        </Formik>
       </Dialog>
     </div>
   );
