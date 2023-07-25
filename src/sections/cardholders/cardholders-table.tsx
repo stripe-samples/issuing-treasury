@@ -134,11 +134,8 @@ const CardholdersTable = ({
                             <MenuItem value="virtual">Virtual</MenuItem>
                             <MenuItem value="physical">Physical</MenuItem>
                           </Select>
-                          <Button
-                            variant="contained"
-                            type="submit"
-                          >
-                            Issue Card
+                          <Button variant="contained" type="submit">
+                            Issue card
                           </Button>
                         </Stack>
                       </form>
