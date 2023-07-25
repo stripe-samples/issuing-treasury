@@ -1,0 +1,32 @@
+import { parse } from "cookie";
+import { decode } from "jsonwebtoken";
+import { NextApiResponse } from "next";
+
+import JwtPayload from "../types/jwt-payload";
+import NextApiRequestWithSession from "../types/next-api-request-with-session";
+
+const withAuth = (
+  handler: (
+    req: NextApiRequestWithSession,
+    res: NextApiResponse,
+  ) => Promise<void>,
+) => {
+  return async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+    if (req.method !== "POST") {
+      return res.status(400).json({ error: "Bad Request" });
+    }
+
+    const { app_auth } = parse(req.headers.cookie || "");
+    const rawSession = decode(app_auth);
+
+    if (typeof rawSession === "string") {
+      return res.status(400).json({ error: "Bad Request" });
+    }
+
+    req.session = rawSession as JwtPayload;
+
+    await handler(req, res);
+  };
+};
+
+export default withAuth;
