@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import {
   createContext,
   ReactNode,
@@ -6,6 +7,8 @@ import {
   useReducer,
   useRef,
 } from "react";
+
+import { fetchApi } from "../utils/api-helpers";
 
 type User = {
   id: string;
@@ -22,14 +25,16 @@ type State = {
 
 enum ActionTypes {
   INITIALIZE = "INITIALIZE",
-  SIGN_IN = "SIGN_IN",
-  SIGN_OUT = "SIGN_OUT",
+  REGISTRATION_SUCCEEDED = "REGISTRATION_SUCCEEDED",
+  LOGIN_SUCCEEDED = "LOGIN_SUCCEEDED",
+  LOGOUT_SUCCEEDED = "LOGOUT_SUCCEEDED",
 }
 
 type Action =
   | { type: ActionTypes.INITIALIZE; payload?: User }
-  | { type: ActionTypes.SIGN_IN; payload: User }
-  | { type: ActionTypes.SIGN_OUT; payload?: undefined };
+  | { type: ActionTypes.REGISTRATION_SUCCEEDED; payload: User }
+  | { type: ActionTypes.LOGIN_SUCCEEDED; payload: User }
+  | { type: ActionTypes.LOGOUT_SUCCEEDED; payload?: undefined };
 
 const initialState: State = {
   isAuthenticated: false,
@@ -54,20 +59,29 @@ const handlers: Record<ActionTypes, (state: State, action: Action) => State> = {
           }),
     };
   },
-  [ActionTypes.SIGN_IN]: (state, action) => {
+  [ActionTypes.REGISTRATION_SUCCEEDED]: (state, action) => {
     const user = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
-      user: user ?? null, // Set the user property to null if user is undefined
+      user: user ?? null,
     };
   },
-  [ActionTypes.SIGN_OUT]: (state) => {
+  [ActionTypes.LOGIN_SUCCEEDED]: (state, action) => {
+    const user = action.payload;
+
+    return {
+      ...state,
+      isAuthenticated: true,
+      user: user ?? null,
+    };
+  },
+  [ActionTypes.LOGOUT_SUCCEEDED]: (state) => {
     return {
       ...state,
       isAuthenticated: false,
-      user: null, // Set the user to null when signing out
+      user: null,
     };
   },
 };
@@ -81,22 +95,21 @@ export const AuthContext = createContext<{
   isAuthenticated: boolean;
   isLoading: boolean;
   user: User | null;
-  skip: () => void;
-  signIn: (email: string, password: string) => void;
-  signOut: () => void;
-  signUp: (email: string, name: string, password: string) => void;
+  login: (email: string, password: string) => void;
+  logout: () => void;
+  register: (email: string, name: string, password: string) => void;
 }>({
   isAuthenticated: false,
   isLoading: true,
   user: null,
-  skip: () => ({}),
-  signIn: () => ({}),
-  signOut: () => ({}),
-  signUp: () => ({}),
+  login: () => ({}),
+  logout: () => ({}),
+  register: () => ({}),
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const router = useRouter();
   const initialized = useRef(false);
 
   const initialize = async () => {
@@ -139,68 +152,95 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initialize();
   }, []);
 
-  const skip = () => {
-    try {
-      window.sessionStorage.setItem("authenticated", "true");
-    } catch (err) {
-      console.error(err);
+  const login = async (email: string, password: string) => {
+    const body = { email: email, password: password };
+    const response = await fetchApi("/api/login", body);
+
+    if (response.ok) {
+      try {
+        window.sessionStorage.setItem("authenticated", "true");
+      } catch (err) {
+        console.error(err);
+      }
+
+      const user: User = {
+        id: email,
+        avatar: "/assets/avatars/avatar-anika-visser.png",
+        name: "Anika Visser",
+        email: email,
+      };
+
+      dispatch({
+        type: ActionTypes.LOGIN_SUCCEEDED,
+        payload: user,
+      });
+
+      const data = await response.json();
+      if (data.requiresOnboarding === true) {
+        router.push("/onboard");
+      } else {
+        router.push("/");
+      }
     }
-
-    const user: User = {
-      id: "5e86809283e28b96d2d38537",
-      avatar: "/assets/avatars/avatar-anika-visser.png",
-      name: "Anika Visser",
-      email: "anika.visser@devias.io",
-    };
-
-    dispatch({
-      type: ActionTypes.SIGN_IN,
-      payload: user,
-    });
   };
 
-  const signIn = async (email: string, password: string) => {
-    if (email !== "demo@devias.io" || password !== "Password123!") {
-      throw new Error("Please check your email and password");
+  const register = async (name: string, email: string, password: string) => {
+    const body = { name: name, email: email, password: password };
+    const response = await fetchApi("/api/create_account", body);
+
+    if (response.ok) {
+      try {
+        window.sessionStorage.setItem("authenticated", "true");
+      } catch (err) {
+        console.error(err);
+      }
+
+      const user: User = {
+        id: email,
+        avatar: "/assets/avatars/avatar-anika-visser.png",
+        name: name,
+        email: email,
+      };
+
+      dispatch({
+        type: ActionTypes.REGISTRATION_SUCCEEDED,
+        payload: user,
+      });
+
+      const data = await response.json();
+      if (data.requiresOnboarding === true) {
+        router.push("/onboard");
+      } else {
+        router.push("/");
+      }
     }
-
-    try {
-      window.sessionStorage.setItem("authenticated", "true");
-    } catch (err) {
-      console.error(err);
-    }
-
-    const user: User = {
-      id: "5e86809283e28b96d2d38537",
-      avatar: "/assets/avatars/avatar-anika-visser.png",
-      name: "Anika Visser",
-      email: "anika.visser@devias.io",
-    };
-
-    dispatch({
-      type: ActionTypes.SIGN_IN,
-      payload: user,
-    });
   };
 
-  const signUp = async (email: string, name: string, password: string) => {
-    throw new Error("Sign up is not implemented");
-  };
+  const logout = async () => {
+    const response = await fetchApi("/api/logout");
 
-  const signOut = () => {
-    dispatch({
-      type: ActionTypes.SIGN_OUT,
-    });
+    if (response.ok) {
+      try {
+        window.sessionStorage.setItem("authenticated", "false");
+      } catch (err) {
+        console.error(err);
+      }
+
+      dispatch({
+        type: ActionTypes.LOGOUT_SUCCEEDED,
+      });
+
+      router.push("/auth/login");
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
         ...state,
-        skip,
-        signIn,
-        signUp,
-        signOut,
+        login: login,
+        register: register,
+        logout: logout,
       }}
     >
       {children}

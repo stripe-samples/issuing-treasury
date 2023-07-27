@@ -3,13 +3,13 @@ import React from "react";
 function OnboardWidget({ url }: any) {
   const handleLogout = async (e: any) => {
     e.preventDefault();
-    const response = await fetch("api/logout", {
+    const response = await fetch("/api/logout", {
       method: "GET",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    window.location.replace("/signin");
+    window.location.replace("/auth/login");
   };
   return (
     <div className="flex-1 flex justify-center px-4 sm:px-6 lg:px-8">

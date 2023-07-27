@@ -2,7 +2,7 @@ import { parse, serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "GET") {
+  if (req.method !== "POST") {
     return res.status(404).end();
   }
   // Delete up all cookies
