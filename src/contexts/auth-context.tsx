@@ -122,25 +122,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     let isAuthenticated = false;
 
-    try {
-      isAuthenticated =
-        window.sessionStorage.getItem("authenticated") === "true";
-    } catch (err) {
-      console.error(err);
-    }
+    isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
 
     if (isAuthenticated) {
-      const user: User = {
-        id: "5e86809283e28b96d2d38537",
-        avatar: "/assets/avatars/avatar-anika-visser.png",
-        name: "Anika Visser",
-        email: "anika.visser@devias.io",
-      };
-
-      dispatch({
-        type: ActionTypes.INITIALIZE,
-        payload: user,
-      });
+      const userString = window.sessionStorage.getItem("user");
+      if (userString) {
+        const user: User = JSON.parse(userString);
+        dispatch({
+          type: ActionTypes.INITIALIZE,
+          payload: user,
+        });
+      } else {
+        dispatch({
+          type: ActionTypes.INITIALIZE,
+        });
+      }
     } else {
       dispatch({
         type: ActionTypes.INITIALIZE,
@@ -157,11 +153,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const response = await fetchApi("/api/login", body);
 
     if (response.ok) {
-      try {
-        window.sessionStorage.setItem("authenticated", "true");
-      } catch (err) {
-        console.error(err);
-      }
+      const data = await response.json();
 
       const user: User = {
         id: email,
@@ -170,12 +162,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: email,
       };
 
+      window.sessionStorage.setItem("authenticated", "true");
+      window.sessionStorage.setItem("user", JSON.stringify(user));
+
       dispatch({
         type: ActionTypes.LOGIN_SUCCEEDED,
         payload: user,
       });
 
-      const data = await response.json();
       if (data.requiresOnboarding === true) {
         router.push("/onboard");
       } else {
@@ -189,25 +183,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const response = await fetchApi("/api/create_account", body);
 
     if (response.ok) {
-      try {
-        window.sessionStorage.setItem("authenticated", "true");
-      } catch (err) {
-        console.error(err);
-      }
+      const data = await response.json();
 
       const user: User = {
         id: email,
         avatar: "/assets/avatars/avatar-anika-visser.png",
-        name: name,
+        name: "Anika Visser",
         email: email,
       };
+
+      window.sessionStorage.setItem("authenticated", "true");
+      window.sessionStorage.setItem("user", JSON.stringify(user));
 
       dispatch({
         type: ActionTypes.REGISTRATION_SUCCEEDED,
         payload: user,
       });
 
-      const data = await response.json();
       if (data.requiresOnboarding === true) {
         router.push("/onboard");
       } else {
@@ -220,11 +212,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const response = await fetchApi("/api/logout");
 
     if (response.ok) {
-      try {
-        window.sessionStorage.setItem("authenticated", "false");
-      } catch (err) {
-        console.error(err);
-      }
+      window.sessionStorage.setItem("authenticated", "false");
+      window.sessionStorage.removeItem("user");
 
       dispatch({
         type: ActionTypes.LOGOUT_SUCCEEDED,
