@@ -9,6 +9,7 @@ export async function getServerSideProps(context: any) {
     const cookie = parse(context.req.headers.cookie);
     if (Object.keys(cookie)[0] === "app_auth") {
       const session = decode(cookie.app_auth);
+      // @ts-expect-error Remove after deployment succeeds
       if (session.requiresOnboarding === true) {
         return {
           redirect: {

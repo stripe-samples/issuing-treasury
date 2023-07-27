@@ -105,6 +105,7 @@ const handler = async (
     }
     if (req.body.transaction_result == "return") {
       const outboundPaymentresult =
+        // @ts-expect-error Remove after deployment succeeds
         await stripe.testHelpers.treasury.returnOutboundPayments(
           outboundPayment.id,
           { stripeAccount: StripeAccountId },

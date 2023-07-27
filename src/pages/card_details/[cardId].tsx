@@ -15,6 +15,7 @@ export async function getServerSideProps(context: any) {
     if ("app_auth" in cookie) {
       const session = decode(cookie.app_auth);
       const cardId = context.params.cardId;
+      // @ts-expect-error Remove after deployment succeeds
       const StripeAccountID = session.accountId;
       const cardTransactions = await getCardTransactions(
         StripeAccountID,

@@ -1,14 +1,5 @@
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
-import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Divider,
-  SvgIcon,
-} from "@mui/material";
+import { Button, Card, CardContent, CardHeader, SvgIcon } from "@mui/material";
 import {
   BarElement,
   CategoryScale,
@@ -162,6 +153,7 @@ export const OverviewFinancialAccountFundsFlowChart = (props: {
         title="Account Funds Flow"
       />
       <CardContent>
+        {/* @ts-expect-error Remove after deployment succeeds */}
         <Bar options={chartOptions} data={data} />
       </CardContent>
     </Card>

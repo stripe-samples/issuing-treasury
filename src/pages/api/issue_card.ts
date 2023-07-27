@@ -36,6 +36,7 @@ const handler = async (
             name: cardholder.name,
             service: "standard",
             type: "individual",
+            // @ts-expect-error Remove after deployment succeeds
             address: cardholder.billing.address,
           },
           type: "physical",

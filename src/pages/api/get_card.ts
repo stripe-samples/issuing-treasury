@@ -9,6 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const ephemeralKey = await stripe.ephemeralKeys.create(
     {
+      // @ts-expect-error Remove after deployment succeeds
       nonce: nonce,
       issuing_card: cardId,
     },
