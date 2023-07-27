@@ -116,6 +116,7 @@ const Page = () => {
                         helperText={touched.password && errors.password}
                         label="Password"
                         name="password"
+                        type="password"
                       />
                     </Stack>
                     {errors.submit && (

@@ -41,12 +41,7 @@ export default function SampleApp({
           <CssBaseline />
           <AuthConsumer>
             {(auth) =>
-              auth.isLoading ? (
-                // <SplashScreen />
-                <div>Loading...</div>
-              ) : (
-                getLayout(<Component {...pageProps} />)
-              )
+              auth.isLoading ? <></> : getLayout(<Component {...pageProps} />)
             }
           </AuthConsumer>
         </ThemeProvider>

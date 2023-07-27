@@ -1,40 +1,57 @@
 import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
+import * as Yup from "yup";
 
 import { authenticateUser } from "../../utils/authentication";
 
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Must be a valid email")
+    .max(255)
+    .required("Email is required"),
+  password: Yup.string().max(255).required("Password is required"),
+});
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
-    const {
-      body: { email, password },
-    } = req;
+  if (req.method !== "POST") {
+    return res.status(400).json({ error: "Bad Request" });
+  }
 
-    if (!email) {
-      return res.status(500).json({ error: "Email shouldn't be empty!" });
-    }
+  const {
+    body: { email, password },
+  } = req;
 
-    if (!password) {
-      return res.status(500).json({ error: "Password shouldn't be empty!" });
-    }
+  try {
+    await validationSchema.validate({ email, password }, { abortEarly: false });
+  } catch (error) {
+    return res.status(400).json({ errors: (error as Error).message });
+  }
 
-    const user = await authenticateUser(email, password);
+  const authenticationResult = await authenticateUser(email);
 
-    if (!user) {
-      return res.status(401).json({
-        isAuthenticated: false,
-        error: "Wrong email or password",
-      });
-    }
-    res.setHeader(
-      "Set-Cookie",
-      serialize("app_auth", user.cookie, { path: "/", httpOnly: true }),
-    );
-
-    return res.json({
-      isAuthenticated: true,
-      requiresOnboarding: user.requiresOnboarding,
+  if (!authenticationResult) {
+    return res.status(401).json({
+      isAuthenticated: false,
+      errors: ["Wrong email or password"],
     });
   }
+
+  res.setHeader(
+    "Set-Cookie",
+    serialize("app_auth", authenticationResult.cookie, {
+      path: "/",
+      httpOnly: true,
+    }),
+  );
+
+  return res.json({
+    isAuthenticated: true,
+    requiresOnboarding: authenticationResult.requiresOnboarding,
+    businessName: authenticationResult.businessName,
+    accountId: authenticationResult.accountId,
+    userEmail: authenticationResult.userEmail,
+    userId: authenticationResult.userId,
+  });
 };
 
 export default handler;

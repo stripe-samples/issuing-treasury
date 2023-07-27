@@ -11,6 +11,7 @@ import {
   SvgIcon,
 } from "@mui/material";
 import { parse } from "cookie";
+import { NextPageContext } from "next";
 import React, {
   ChangeEvent,
   ReactNode,
@@ -25,16 +26,20 @@ import CardholderCreateWidget from "../sections/cardholders/cardholder-create-wi
 import { CardholdersSearch } from "../sections/cardholders/cardholders-search";
 import CardholdersTable from "../sections/cardholders/cardholders-table";
 import Cardholder from "../types/cardholder";
+import JwtPayload from "../types/jwt-payload";
 import { applyPagination } from "../utils/apply-pagination";
 import { decode } from "../utils/jwt_encode_decode";
 import { getCardholders } from "../utils/stripe_helpers";
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: NextPageContext) {
   if ("cookie" in context.req.headers) {
     const cookie = parse(context.req.headers.cookie);
     if ("app_auth" in cookie) {
-      const session = decode(cookie.app_auth);
-      // @ts-expect-error Remove after deployment succeeds
+      const session: JwtPayload = decode(cookie.app_auth) as JwtPayload;
+      if (!session.accountId) {
+        throw new Error("Stripe account ID is missing in the session");
+      }
+
       if (session.requiresOnboarding === true) {
         return {
           redirect: {
@@ -42,8 +47,7 @@ export async function getServerSideProps(context: any) {
           },
         };
       }
-      // There is no accountId here? It's customerId, tho
-      // @ts-expect-error Remove after deployment succeeds
+
       const StripeAccountID = session.accountId;
       const responseCardholders = await getCardholders(StripeAccountID);
       return {
@@ -55,7 +59,7 @@ export async function getServerSideProps(context: any) {
   }
   return {
     redirect: {
-      destination: "/signin",
+      destination: "/auth/login",
     },
   };
 }

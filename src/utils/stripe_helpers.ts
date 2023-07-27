@@ -159,6 +159,8 @@ export async function getCardholders(StripeAccountID: string) {
     { limit: 10 },
     { stripeAccount: StripeAccountID },
   );
+  console.log(StripeAccountID);
+  console.log(cardholders);
   const cards = await stripe.issuing.cards.list(
     { limit: 10 },
     { stripeAccount: StripeAccountID },

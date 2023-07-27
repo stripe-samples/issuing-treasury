@@ -12,6 +12,7 @@ import { fetchApi } from "../utils/api-helpers";
 
 type User = {
   id: string;
+  accountId: string;
   avatar: string;
   name: string;
   email: string;
@@ -148,25 +149,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initialize();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const body = { email: email, password: password };
-    const response = await fetchApi("/api/login", body);
+  const register = async (name: string, email: string, password: string) => {
+    const body = { name: name, email: email, password: password };
+    const response = await fetchApi("/api/register", body);
 
     if (response.ok) {
       const data = await response.json();
 
       const user: User = {
-        id: email,
+        id: data.userId,
+        accountId: data.accountId,
         avatar: "/assets/avatars/avatar-anika-visser.png",
-        name: "Anika Visser",
-        email: email,
+        name: data.businessName,
+        email: data.userEmail,
       };
 
       window.sessionStorage.setItem("authenticated", "true");
       window.sessionStorage.setItem("user", JSON.stringify(user));
 
       dispatch({
-        type: ActionTypes.LOGIN_SUCCEEDED,
+        type: ActionTypes.REGISTRATION_SUCCEEDED,
         payload: user,
       });
 
@@ -178,25 +180,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
-    const body = { name: name, email: email, password: password };
-    const response = await fetchApi("/api/create_account", body);
+  const login = async (email: string, password: string) => {
+    const body = { email: email, password: password };
+    const response = await fetchApi("/api/login", body);
 
     if (response.ok) {
       const data = await response.json();
 
       const user: User = {
-        id: email,
+        id: data.userId,
+        accountId: data.accountId,
         avatar: "/assets/avatars/avatar-anika-visser.png",
-        name: "Anika Visser",
-        email: email,
+        name: data.businessName,
+        email: data.userEmail,
       };
 
       window.sessionStorage.setItem("authenticated", "true");
       window.sessionStorage.setItem("user", JSON.stringify(user));
 
       dispatch({
-        type: ActionTypes.REGISTRATION_SUCCEEDED,
+        type: ActionTypes.LOGIN_SUCCEEDED,
         payload: user,
       });
 

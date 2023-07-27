@@ -14,7 +14,7 @@ export async function getServerSideProps(context: any) {
         console.log(e);
         return {
           redirect: {
-            destination: "/signin",
+            destination: "/auth/login",
           },
         };
       }
@@ -37,7 +37,7 @@ export async function getServerSideProps(context: any) {
   }
   return {
     redirect: {
-      destination: "/signin",
+      destination: "/auth/login",
     },
   };
 }

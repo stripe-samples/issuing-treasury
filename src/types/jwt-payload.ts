@@ -1,11 +1,8 @@
 interface JwtPayload {
   accountId: string;
-  customerid: string;
-  customerName: string;
+  requiresOnboarding: boolean;
   userEmail: string;
-  isAuthenticated: boolean;
-  requireNotifications: boolean;
-  iat: number;
+  userId: string;
 }
 
 export default JwtPayload;
