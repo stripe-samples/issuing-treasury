@@ -7,7 +7,8 @@ const SeverityPillRoot = styled("span", {
     color: "primary" | "secondary" | "error" | "info" | "warning" | "success";
   };
 }>(({ theme, ownerState }) => {
-  const backgroundColor = theme.palette[ownerState.color].light;
+  // @ts-expect-error missing `alpha12` in PaletteColorOptions
+  const backgroundColor = theme.palette[ownerState.color].alpha12;
   const color =
     theme.palette.mode === "dark"
       ? theme.palette[ownerState.color].main
