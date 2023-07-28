@@ -1,5 +1,7 @@
 import Stripe from "stripe";
 
+import { ChartData } from "../types/chart-data";
+
 import stripe from "./stripe-loader";
 
 export async function getFinancialAccountTransactions(StripeAccountID: string) {
@@ -117,16 +119,17 @@ export async function getFinancialAccountTransactionDetails(
       }
     }
   });
+
   // Initialize chart arrays
-  let dates_array: any = [];
-  let funds_in_array: any = [];
-  let funds_out_array: any = [];
+  let dates_array: string[] = [];
+  let funds_in_array: number[] = [];
+  let funds_out_array: number[] = [];
 
   if (Object.keys(transactions_dates).length === 0) {
     // If the transactions_dates object is empty populate arrays with 0
     dates_array.push("0");
-    funds_in_array.push("0");
-    funds_out_array.push("0");
+    funds_in_array.push(0);
+    funds_out_array.push(0);
   } else {
     Object.keys(transactions_dates).forEach(function (key) {
       dates_array.push(key);
@@ -144,7 +147,7 @@ export async function getFinancialAccountTransactionDetails(
     }
   }
 
-  const faTransactions_chart = {
+  const faTransactions_chart: ChartData = {
     faTransactionsDates: dates_array,
     faTransactionsFundsIn: funds_in_array,
     faTransactionsFundsOut: funds_out_array,

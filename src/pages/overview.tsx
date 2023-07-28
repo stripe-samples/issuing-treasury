@@ -1,67 +1,55 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import { parse } from "cookie";
+import { JwtPayload } from "jsonwebtoken";
+import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
+import Stripe from "stripe";
 
 import DashboardLayout from "../layouts/dashboard/layout";
+import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
 import { OverviewFinancialAccountBalance } from "../sections/overview/overview-fa-balance";
 import { OverviewFinancialAccountFundsFlowChart } from "../sections/overview/overview-fa-funds-flow-chart";
 import { OverviewFinancialAccountOutboundPending } from "../sections/overview/overview-fa-outbound-pending";
 import { OverviewLatestTransactions } from "../sections/overview/overview-latest-transactions";
-import { decode } from "../utils/jwt_encode_decode";
+import { ChartData } from "../types/chart-data";
 import {
   getFinancialAccountDetails,
   getFinancialAccountTransactionDetails,
   getFinancialAccountTransactionsExpanded,
 } from "../utils/stripe_helpers";
 
-export async function getServerSideProps(context: NextPageContext) {
-  if ("cookie" in context.req.headers) {
-    const cookie = parse(context.req.headers.cookie);
-    if ("app_auth" in cookie) {
-      const session = decode(cookie.app_auth);
-      // @ts-expect-error Remove after deployment succeeds
-      if (session.requiresOnboarding === true) {
-        return {
-          redirect: {
-            destination: "/onboard",
-          },
-        };
-      }
-      // @ts-expect-error Remove after deployment succeeds
-      const StripeAccountID = session.accountId;
-      const responseFaDetails = await getFinancialAccountDetails(
-        StripeAccountID,
-      );
-      const financialAccount = responseFaDetails.financialaccount;
-      const responseFaTransations =
-        await getFinancialAccountTransactionsExpanded(StripeAccountID);
-      const faTransactions = responseFaTransations.fa_transactions;
-      const responseFaTransations_chart =
-        await getFinancialAccountTransactionDetails(StripeAccountID);
-      const faTransactionsChart =
-        responseFaTransations_chart.faTransactions_chart;
-      return {
-        props: { financialAccount, faTransactions, faTransactionsChart }, // will be passed to the page component as props
-      };
-    }
-  }
-  return {
-    redirect: {
-      destination: "/auth/login",
-    },
-  };
-}
+export const getServerSideProps = withAuthRequiringOnboarded(
+  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+    const StripeAccountID = session.accountId;
+
+    const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
+    const financialAccount = responseFaDetails.financialaccount;
+
+    const responseFaTransations_chart =
+      await getFinancialAccountTransactionDetails(StripeAccountID);
+    const faTransactionsChart =
+      responseFaTransations_chart.faTransactions_chart;
+
+    const responseFaTransations = await getFinancialAccountTransactionsExpanded(
+      StripeAccountID,
+    );
+    const faTransactions = responseFaTransations.fa_transactions;
+
+    return {
+      props: { financialAccount, faTransactionsChart, faTransactions },
+    };
+  },
+);
 
 const Page = ({
   financialAccount,
   faTransactionsChart,
   faTransactions,
 }: {
-  financialAccount: any;
-  faTransactionsChart: any;
-  faTransactions: any;
+  financialAccount: Stripe.Treasury.FinancialAccount;
+  faTransactionsChart: ChartData;
+  faTransactions: Stripe.Treasury.Transaction[];
 }) => {
   return (
     <>
