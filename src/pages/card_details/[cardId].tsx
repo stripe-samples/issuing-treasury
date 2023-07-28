@@ -1,44 +1,32 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { parse } from "cookie";
+import { GetServerSidePropsContext } from "next";
 import React from "react";
 
 import CardDetailsWidget from "../../components/Stripe/CardDetailsWidget";
 import CardStatusSwitchWidget from "../../components/Stripe/CardStatusSwitchWidget";
 import IssuingAuthorizationsWidget from "../../components/Stripe/IssuingAuthorizationsWidget";
-import { decode } from "../../utils/jwt_encode_decode";
+import { withAuthRequiringOnboarded } from "../../middleware/auth-middleware";
+import JwtPayload from "../../types/jwt-payload";
 import { getCardTransactions } from "../../utils/stripe_helpers";
 
-export async function getServerSideProps(context: NextPageContext) {
-  if ("cookie" in context.req.headers) {
-    const cookie = parse(context.req.headers.cookie);
-    if ("app_auth" in cookie) {
-      const session = decode(cookie.app_auth);
-      const cardId = context.params.cardId;
-      // @ts-expect-error Remove after deployment succeeds
-      const StripeAccountID = session.accountId;
-      const cardTransactions = await getCardTransactions(
-        StripeAccountID,
-        cardId,
-      );
+export const getServerSideProps = withAuthRequiringOnboarded(
+  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+    const cardId = context?.params?.cardId;
+    const StripeAccountID = session.accountId;
+    const cardTransactions = await getCardTransactions(StripeAccountID, cardId);
 
-      return {
-        props: {
-          cardAuthorizations: cardTransactions.card_authorizations,
-          CurrentSpend: cardTransactions.current_spend,
-          account: StripeAccountID,
-          cardId: context.params.cardId,
-          cardDetails: cardTransactions.card_details,
-        },
-      };
-    }
-  }
-  return {
-    redirect: {
-      destination: "/auth/login",
-    },
-  };
-}
+    return {
+      props: {
+        cardAuthorizations: cardTransactions.card_authorizations,
+        CurrentSpend: cardTransactions.current_spend,
+        account: StripeAccountID,
+        cardId: context?.params?.cardId,
+        cardDetails: cardTransactions.card_details,
+      },
+    };
+  },
+);
 
 const CardDetails = (props: any) => {
   const stripePromise = loadStripe(

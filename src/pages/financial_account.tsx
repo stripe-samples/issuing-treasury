@@ -1,61 +1,52 @@
-import { parse } from "cookie";
+import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
+import Stripe from "stripe";
 
 import FaAccountInfoWidget from "../components/Stripe/FaAccountInfoWidget";
 import FaSendMoneyWidget from "../components/Stripe/FaSendMoneyWidget";
 import FaTransactionsExtendedWidget from "../components/Stripe/FaTransactionsExtendedWidget";
 import DashboardLayout from "../layouts/dashboard/layout";
-import { decode } from "../utils/jwt_encode_decode";
+import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
+import JwtPayload from "../types/jwt-payload";
 import {
   getFinancialAccountDetailsExp,
   getFinancialAccountTransactionsExpanded,
 } from "../utils/stripe_helpers";
 
-export async function getServerSideProps(context: NextPageContext) {
-  if ("cookie" in context.req.headers) {
-    const cookie = parse(context.req.headers.cookie);
-    if ("app_auth" in cookie) {
-      const session = decode(cookie.app_auth);
-      // @ts-expect-error Remove after deployment succeeds
-      if (session.requiresOnboarding === true) {
-        return {
-          redirect: {
-            destination: "/onboard",
-          },
-        };
-      }
-      // @ts-expect-error Remove after deployment succeeds
-      const StripeAccountID = session.accountId;
-      const responseFaDetails = await getFinancialAccountDetailsExp(
-        StripeAccountID,
-      );
-      const financialAccount = responseFaDetails.financialaccount;
-      const responseFaTransactions =
-        await getFinancialAccountTransactionsExpanded(StripeAccountID);
-      const faTransactions = responseFaTransactions.fa_transactions;
-      return {
-        props: { financialAccount, faTransactions }, // will be passed to the page component as props
-      };
-    }
-  }
-  return {
-    redirect: {
-      destination: "/auth/login",
-    },
-  };
-}
+export const getServerSideProps = withAuthRequiringOnboarded(
+  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+    const StripeAccountID = session.accountId;
 
-const Page = (props: any) => {
+    const responseFaDetails = await getFinancialAccountDetailsExp(
+      StripeAccountID,
+    );
+    const financialAccount = responseFaDetails.financialaccount;
+    const responseFaTransactions =
+      await getFinancialAccountTransactionsExpanded(StripeAccountID);
+    const faTransactions = responseFaTransactions.fa_transactions;
+    return {
+      props: { financialAccount, faTransactions },
+    };
+  },
+);
+
+const Page = ({
+  financialAccount,
+  faTransactions,
+}: {
+  financialAccount: Stripe.Treasury.FinancialAccount;
+  faTransactions: Stripe.Treasury.Transaction[];
+}) => {
   return (
     <div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 p-6">
         <div className="flex justify-end">
-          <FaAccountInfoWidget financialAccount={props.financialAccount} />
+          <FaAccountInfoWidget financialAccount={financialAccount} />
           <FaSendMoneyWidget />
         </div>
       </div>
-      {/* <FaBalanceWidget financialAccount={props.financialAccount} /> */}
-      <FaTransactionsExtendedWidget faTransactions={props.faTransactions} />
+      {/* <FaBalanceWidget financialAccount={financialAccount} /> */}
+      <FaTransactionsExtendedWidget faTransactions={faTransactions} />
     </div>
   );
 };

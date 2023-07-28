@@ -21,12 +21,15 @@ export function createTheme() {
         xl: 1440,
       },
     },
+    // @ts-expect-error Until the theme setup is properly typed
     components,
     palette,
+    // @ts-expect-error Until the theme setup is properly typed
     shadows,
     shape: {
       borderRadius: 8,
     },
+    // @ts-expect-error Until the theme setup is properly typed
     typography,
   });
 }

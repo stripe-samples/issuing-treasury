@@ -1,47 +1,27 @@
-import { parse } from "cookie";
+import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
+import Stripe from "stripe";
 
 import CardsWidget from "../components/Stripe/CardsWidget";
 import DashboardLayout from "../layouts/dashboard/layout";
-import { decode } from "../utils/jwt_encode_decode";
+import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
+import JwtPayload from "../types/jwt-payload";
 import { getCards } from "../utils/stripe_helpers";
 
-export async function getServerSideProps(context: NextPageContext) {
-  if ("cookie" in context.req.headers) {
-    const cookie = parse(context.req.headers.cookie);
-    if ("app_auth" in cookie) {
-      const session = decode(cookie.app_auth);
-      // @ts-expect-error Remove after deployment succeeds
-      if (session.requiresOnboarding === true) {
-        return {
-          redirect: {
-            destination: "/onboard",
-          },
-        };
-      }
-      // There is no accountId here? It's customerId, tho
-      // @ts-expect-error Remove after deployment succeed
-      const StripeAccountID = session.accountId;
-      const responseCards = await getCards(StripeAccountID);
-      return {
-        props: {
-          cards: responseCards.cards.data,
-          account: StripeAccountID,
-        }, // will be passed to the page component as props
-      };
-    }
-  }
-  return {
-    redirect: {
-      destination: "/auth/login",
-    },
-  };
-}
+export const getServerSideProps = withAuthRequiringOnboarded(
+  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+    const StripeAccountID = session.accountId;
+    const responseCards = await getCards(StripeAccountID);
+    return {
+      props: { cards: responseCards.cards.data, account: StripeAccountID },
+    };
+  },
+);
 
-const Page = (props: any) => {
+const Page = ({ cards }: { cards: Stripe.Issuing.Card[] }) => {
   return (
     <>
-      <CardsWidget cards={props.cards} />
+      <CardsWidget cards={cards} />
     </>
   );
 };

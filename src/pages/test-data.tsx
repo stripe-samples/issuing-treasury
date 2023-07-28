@@ -1,56 +1,38 @@
 import { Box, Container, Grid } from "@mui/material";
-import { parse } from "cookie";
+import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
 
 import DashboardLayout from "../layouts/dashboard/layout";
+import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
 import TestDataCreatePaymentLink from "../sections/test-data/test-data-create-payment-link";
 import TestDataCreatePayouts from "../sections/test-data/test-data-create-payout";
 import TestDataCreateReceivedCredit from "../sections/test-data/test-data-create-received-credit";
-import { decode } from "../utils/jwt_encode_decode";
+import JwtPayload from "../types/jwt-payload";
 import stripe from "../utils/stripe-loader";
 
-export async function getServerSideProps(context: NextPageContext) {
-  if ("cookie" in context.req.headers) {
-    const cookie = parse(context.req.headers.cookie);
-    if ("app_auth" in cookie) {
-      const session = decode(cookie.app_auth);
-      // @ts-expect-error Remove after deployment succeeds
-      if (session.requiresOnboarding === true) {
-        return {
-          redirect: {
-            destination: "/onboard",
-          },
-        };
-      }
+export const getServerSideProps = withAuthRequiringOnboarded(
+  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+    const StripeAccountID = session.accountId;
 
-      // @ts-expect-error Remove after deployment succeeds
-      const StripeAccountID = session.accountId;
+    const responseAccount = await stripe.accounts.retrieve(StripeAccountID);
+    // @ts-expect-error Remove after deployment succeeds
+    const accountExternalAccount = responseAccount.external_accounts.data[0];
 
-      const responseAccount = await stripe.accounts.retrieve(StripeAccountID);
-      // @ts-expect-error Remove after deployment succeeds
-      const accountExternalAccount = responseAccount.external_accounts.data[0];
+    const responseBalance = await stripe.balance.retrieve({
+      stripeAccount: StripeAccountID,
+    });
+    const availableBalance = responseBalance.available[0].amount;
 
-      const responseBalance = await stripe.balance.retrieve({
-        stripeAccount: StripeAccountID,
-      });
-      const availableBalance = responseBalance.available[0].amount;
+    let hasExternalAccount = false;
 
-      let hasExternalAccount = false;
-
-      if (accountExternalAccount) {
-        hasExternalAccount = true;
-      }
-      return {
-        props: { hasExternalAccount, availableBalance }, // will be passed to the page component as props
-      };
+    if (accountExternalAccount) {
+      hasExternalAccount = true;
     }
-  }
-  return {
-    redirect: {
-      destination: "/auth/login",
-    },
-  };
-}
+    return {
+      props: { hasExternalAccount, availableBalance }, // will be passed to the page component as props
+    };
+  },
+);
 
 const Page = ({
   hasExternalAccount,
