@@ -6,7 +6,7 @@ import DashboardLayout from "../layouts/dashboard/layout";
 import { decode } from "../utils/jwt_encode_decode";
 import { getCards } from "../utils/stripe_helpers";
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: NextPageContext) {
   if ("cookie" in context.req.headers) {
     const cookie = parse(context.req.headers.cookie);
     if ("app_auth" in cookie) {

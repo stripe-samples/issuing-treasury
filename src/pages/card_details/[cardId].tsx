@@ -9,7 +9,7 @@ import IssuingAuthorizationsWidget from "../../components/Stripe/IssuingAuthoriz
 import { decode } from "../../utils/jwt_encode_decode";
 import { getCardTransactions } from "../../utils/stripe_helpers";
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: NextPageContext) {
   if ("cookie" in context.req.headers) {
     const cookie = parse(context.req.headers.cookie);
     if ("app_auth" in cookie) {

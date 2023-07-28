@@ -1,28 +1,57 @@
-import { parse } from "cookie";
-import { decode } from "jsonwebtoken";
-import { NextApiResponse } from "next";
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 
 import JwtPayload from "../types/jwt-payload";
-import NextApiRequestWithSession from "../types/next-api-request-with-session";
+import { getSessionFromCookie } from "../utils/cookie-helpers";
 
-const withAuth = (
-  handler: (
-    req: NextApiRequestWithSession,
-    res: NextApiResponse,
-  ) => Promise<void>,
-) => {
-  return async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const { app_auth } = parse(req.headers.cookie || "");
-    const rawSession = decode(app_auth);
+export const withAuth =
+  (
+    handler: (
+      context: GetServerSidePropsContext,
+      session: JwtPayload,
+    ) => Promise<GetServerSidePropsResult<any>>,
+  ) =>
+  async (context: GetServerSidePropsContext) => {
+    const session = getSessionFromCookie(context);
 
-    if (typeof rawSession === "string") {
-      return res.status(400).json({ error: "Bad Request" });
+    if (!session) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
     }
 
-    req.session = rawSession as JwtPayload;
-
-    await handler(req, res);
+    return handler(context, session);
   };
-};
 
-export default withAuth;
+export const withAuthRequiringOnboarded =
+  (
+    handler: (
+      context: GetServerSidePropsContext,
+      session: JwtPayload,
+    ) => Promise<GetServerSidePropsResult<any>>,
+  ) =>
+  async (context: GetServerSidePropsContext) => {
+    const session = getSessionFromCookie(context);
+
+    if (!session) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    }
+
+    if (session.requiresOnboarding === true) {
+      return {
+        redirect: {
+          destination: "/onboard",
+          permanent: false,
+        },
+      };
+    }
+
+    return handler(context, session);
+  };

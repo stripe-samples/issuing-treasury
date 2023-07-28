@@ -31,7 +31,7 @@ const initialValues = {
   submit: null,
 };
 
-const Page = (): JSX.Element => {
+const Page = () => {
   const auth = useAuth();
 
   return (

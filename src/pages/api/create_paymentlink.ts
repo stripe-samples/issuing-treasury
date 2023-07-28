@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withAuth from "../../middleware/auth-middleware";
+import withAuth from "../../middleware/api/auth-middleware";
 import NextApiRequestWithSession from "../../types/next-api-request-with-session";
 import stripe from "../../utils/stripe-loader";
 

@@ -10,8 +10,7 @@ import {
   Button,
   SvgIcon,
 } from "@mui/material";
-import { parse } from "cookie";
-import { NextPageContext } from "next";
+import { GetServerSidePropsContext } from "next";
 import React, {
   ChangeEvent,
   ReactNode,
@@ -22,47 +21,27 @@ import React, {
 
 import { useSelection } from "../hooks/use-selection";
 import DashboardLayout from "../layouts/dashboard/layout";
+import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
 import CardholderCreateWidget from "../sections/cardholders/cardholder-create-widget";
 import { CardholdersSearch } from "../sections/cardholders/cardholders-search";
 import CardholdersTable from "../sections/cardholders/cardholders-table";
 import Cardholder from "../types/cardholder";
 import JwtPayload from "../types/jwt-payload";
 import { applyPagination } from "../utils/apply-pagination";
-import { decode } from "../utils/jwt_encode_decode";
 import { getCardholders } from "../utils/stripe_helpers";
 
-export async function getServerSideProps(context: NextPageContext) {
-  if ("cookie" in context.req.headers) {
-    const cookie = parse(context.req.headers.cookie);
-    if ("app_auth" in cookie) {
-      const session: JwtPayload = decode(cookie.app_auth) as JwtPayload;
-      if (!session.accountId) {
-        throw new Error("Stripe account ID is missing in the session");
-      }
+export const getServerSideProps = withAuthRequiringOnboarded(
+  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+    const StripeAccountID = session.accountId;
+    const responseCardholders = await getCardholders(StripeAccountID);
 
-      if (session.requiresOnboarding === true) {
-        return {
-          redirect: {
-            destination: "/onboard",
-          },
-        };
-      }
-
-      const StripeAccountID = session.accountId;
-      const responseCardholders = await getCardholders(StripeAccountID);
-      return {
-        props: {
-          cardholders: responseCardholders.cardholders.data,
-        }, // will be passed to the page component as props
-      };
-    }
-  }
-  return {
-    redirect: {
-      destination: "/auth/login",
-    },
-  };
-}
+    return {
+      props: {
+        cardholders: responseCardholders.cardholders.data,
+      },
+    };
+  },
+);
 
 function useCardholders(
   cardholders: Cardholder[],

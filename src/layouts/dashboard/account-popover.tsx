@@ -6,7 +6,6 @@ import {
   Popover,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 import { useAuthContext } from "../../contexts/auth-context";
@@ -21,15 +20,13 @@ export const AccountPopover = ({
   onClose: () => void;
   open: boolean;
 }) => {
-  const router = useRouter();
   const auth = useAuth();
   const { user } = useAuthContext();
 
-  const handleSignOut = useCallback(() => {
+  const handleLogout = useCallback(() => {
     onClose?.();
     auth.logout();
-    router.push("/auth/login");
-  }, [onClose, auth, router]);
+  }, [onClose, auth]);
 
   return (
     <Popover
@@ -64,7 +61,7 @@ export const AccountPopover = ({
           },
         }}
       >
-        <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+        <MenuItem onClick={handleLogout}>Sign out</MenuItem>
       </MenuList>
     </Popover>
   );
