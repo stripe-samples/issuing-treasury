@@ -24,7 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await validationSchema.validate({ email, password }, { abortEarly: false });
   } catch (error) {
-    return res.status(400).json({ errors: (error as Error).message });
+    return res.status(400).json({ error: (error as Error).message });
   }
 
   const authenticationResult = await authenticateUser(email);
@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!authenticationResult) {
     return res.status(401).json({
       isAuthenticated: false,
-      errors: ["Wrong email or password"],
+      error: "Wrong email or password",
     });
   }
 

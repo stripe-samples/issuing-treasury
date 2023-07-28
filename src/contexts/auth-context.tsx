@@ -152,10 +152,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (name: string, email: string, password: string) => {
     const body = { name: name, email: email, password: password };
     const response = await fetchApi("/api/register", body);
+    const data = await response.json();
 
     if (response.ok) {
-      const data = await response.json();
-
       const user: User = {
         id: data.userId,
         accountId: data.accountId,
@@ -177,16 +176,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         router.push("/");
       }
+    } else {
+      throw new Error(`Registration failed: ${data.error}`);
     }
   };
 
   const login = async (email: string, password: string) => {
     const body = { email: email, password: password };
     const response = await fetchApi("/api/login", body);
+    const data = await response.json();
 
     if (response.ok) {
-      const data = await response.json();
-
       const user: User = {
         id: data.userId,
         accountId: data.accountId,
@@ -208,6 +208,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         router.push("/");
       }
+    } else {
+      throw new Error(`Login failed: ${data.error}`);
     }
   };
 

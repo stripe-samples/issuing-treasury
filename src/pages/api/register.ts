@@ -30,13 +30,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       { abortEarly: false },
     );
   } catch (error) {
-    return res.status(400).json({ errors: (error as Error).message });
+    return res.status(400).json({ error: (error as Error).message });
   }
 
   // Check if user exists
   const { data: customers } = await stripe.customers.list({ email });
   if (customers.length) {
-    return res.json({
+    return res.status(400).json({
       error: "Account already exists.",
     });
   }
@@ -90,7 +90,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!authenticationResult) {
     return res.status(500).json({
       isAuthenticated: false,
-      errors: ["Unknown error occurred"],
+      error: "Unknown error occurred",
     });
   }
 
