@@ -36,7 +36,7 @@ export const getServerSideProps = withAuth(
         serialize("app_auth", cookie, { path: "/", httpOnly: true }),
       );
       return {
-        redirect: { destination: "/overview", permanent: false },
+        redirect: { destination: "/", permanent: false },
       };
     }
   },
