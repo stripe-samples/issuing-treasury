@@ -2,19 +2,19 @@
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import { parse } from "cookie";
 import { NextComponentType, NextPageContext } from "next";
-import { AppContext, AppProps } from "next/app";
+import { AppProps } from "next/app";
 import React, { ReactNode } from "react";
 
 import { AuthConsumer, AuthProvider } from "../contexts/auth-context";
 import { useNProgress } from "../hooks/use-nprogress";
 import { createTheme } from "../theme";
 import createEmotionCache from "../utils/create-emotion-cache";
-import { decode } from "../utils/jwt_encode_decode";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
+
+const SplashScreen = () => null;
 
 interface SampleAppProps extends AppProps {
   Component: NextComponentType<NextPageContext, ReactNode, EmotionCache> & {
@@ -23,7 +23,7 @@ interface SampleAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-export default function SampleApp({
+export default function App({
   Component,
   emotionCache = clientSideEmotionCache,
   pageProps,
@@ -41,7 +41,11 @@ export default function SampleApp({
           <CssBaseline />
           <AuthConsumer>
             {(auth) =>
-              auth.isLoading ? <></> : getLayout(<Component {...pageProps} />)
+              auth.isLoading ? (
+                <SplashScreen />
+              ) : (
+                getLayout(<Component {...pageProps} />)
+              )
             }
           </AuthConsumer>
         </ThemeProvider>
@@ -49,17 +53,3 @@ export default function SampleApp({
     </CacheProvider>
   );
 }
-
-SampleApp.getInitialProps = (context: AppContext) => {
-  const cookie = parse(context.ctx.req?.headers.cookie ?? "");
-  if ("app_auth" in cookie) {
-    const session = decode(cookie.app_auth);
-    return {
-      pageProps: { session: session },
-    };
-  }
-
-  return {
-    pageProps: {},
-  };
-};
