@@ -22,6 +22,8 @@ import Stripe from "stripe";
 import { SeverityPill } from "../../components/severity-pill";
 import { formatUSD } from "../../utils/format";
 
+import TransactionFlowDetails from "./transaction-flow-details";
+
 const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
   open: "warning",
   posted: "success",
@@ -55,13 +57,6 @@ export const OverviewLatestTransactions = (props: {
                 "dd/MM/yyyy",
               );
 
-              type FlowDetailsWithRegulatoryReceiptUrl<T extends string> =
-                T extends "other" | "issuing_authorization" ? never : T;
-
-              const flowType =
-                transaction.flow_type as FlowDetailsWithRegulatoryReceiptUrl<Stripe.Treasury.Transaction.FlowType>;
-              const flowDetails = transaction.flow_details?.[flowType];
-
               return (
                 <>
                   <TableRow hover key={transaction.id}>
@@ -70,24 +65,8 @@ export const OverviewLatestTransactions = (props: {
                       {`${formatUSD(transaction.amount / 100)} USD`}
                     </TableCell>
                     <TableCell sx={{ textTransform: "uppercase" }}>
-                      {flowDetails &&
-                      flowDetails.hosted_regulatory_receipt_url ? (
-                        <Stack direction="row" spacing={1}>
-                          <Typography>{transaction.flow_type}</Typography>
-                          <Link
-                            href={flowDetails.hosted_regulatory_receipt_url}
-                            target="_blank"
-                          >
-                            <SvgIcon>
-                              <DocumentArrowDownIcon />
-                            </SvgIcon>
-                          </Link>
-                        </Stack>
-                      ) : (
-                        <Typography>{transaction.flow_type}</Typography>
-                      )}
+                      <TransactionFlowDetails transaction={transaction} />
                     </TableCell>
-
                     <TableCell>
                       <SeverityPill color={statusMap[transaction.status]}>
                         {transaction.status}
