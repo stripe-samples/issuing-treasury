@@ -1,4 +1,4 @@
-import { DocumentArrowDownIcon } from "@heroicons/react/24/solid";
+import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { Stack, Typography, SvgIcon } from "@mui/material";
 import Link from "next/link";
 import Stripe from "stripe";

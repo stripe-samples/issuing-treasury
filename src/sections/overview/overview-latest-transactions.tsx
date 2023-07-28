@@ -1,4 +1,3 @@
-import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
 import {
   Box,
@@ -6,15 +5,12 @@ import {
   Card,
   CardActions,
   CardHeader,
-  Link,
-  Stack,
   SvgIcon,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 import { format, fromUnixTime } from "date-fns";
 import Stripe from "stripe";
@@ -58,23 +54,21 @@ export const OverviewLatestTransactions = (props: {
               );
 
               return (
-                <>
-                  <TableRow hover key={transaction.id}>
-                    <TableCell>{createdAt}</TableCell>
-                    <TableCell>
-                      {`${formatUSD(transaction.amount / 100)} USD`}
-                    </TableCell>
-                    <TableCell sx={{ textTransform: "uppercase" }}>
-                      <TransactionFlowDetails transaction={transaction} />
-                    </TableCell>
-                    <TableCell>
-                      <SeverityPill color={statusMap[transaction.status]}>
-                        {transaction.status}
-                      </SeverityPill>
-                    </TableCell>
-                    <TableCell>{transaction.description}</TableCell>
-                  </TableRow>
-                </>
+                <TableRow hover key={transaction.id}>
+                  <TableCell>{createdAt}</TableCell>
+                  <TableCell>
+                    {`${formatUSD(transaction.amount / 100)} USD`}
+                  </TableCell>
+                  <TableCell sx={{ textTransform: "uppercase" }}>
+                    <TransactionFlowDetails transaction={transaction} />
+                  </TableCell>
+                  <TableCell>
+                    <SeverityPill color={statusMap[transaction.status]}>
+                      {transaction.status}
+                    </SeverityPill>
+                  </TableCell>
+                  <TableCell>{transaction.description}</TableCell>
+                </TableRow>
               );
             })}
           </TableBody>
