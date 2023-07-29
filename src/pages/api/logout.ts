@@ -1,26 +1,40 @@
 import { parse, serialize } from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+import withAuth from "../../middleware/api/auth-middleware";
+import NextApiRequestWithSession from "../../types/next-api-request-with-session";
+
+type NextApiResponseWithCookieArray<T = Record<string, unknown>> =
+  NextApiResponse<T> & {
+    cookieArray?: string[];
+  };
+
+const handler = async (
+  req: NextApiRequestWithSession,
+  res: NextApiResponseWithCookieArray,
+) => {
   if (req.method !== "POST") {
-    return res.status(404).end();
+    return res.status(400).json({ error: "Bad Request" });
   }
+
   // Delete up all cookies
-  if ("cookie" in req.headers) {
-    // @ts-expect-error Remove after deployment succeeds
-    const cookie = parse(req.headers.cookie);
-    // @ts-expect-error Remove after deployment succeeds
+  if ("cookie" in req.headers && req.headers.cookie?.length) {
+    const cookie: Record<string, string> = parse(req.headers.cookie);
+
     res.cookieArray = [];
     const options = { path: "/", httpOnly: true, maxAge: 0 };
-    Object.keys(cookie).forEach(function (cookie_element) {
-      // @ts-expect-error Remove after deployment succeeds
-      res.cookieArray.push(serialize(cookie_element, "", options));
+    Object.keys(cookie).forEach(function (cookieEntry) {
+      if (res.cookieArray) {
+        res.cookieArray.push(serialize(cookieEntry, "", options));
+      }
     });
-    // @ts-expect-error Remove after deployment succeeds
-    res.setHeader("Set-Cookie", res.cookieArray);
+
+    if (res.cookieArray) {
+      res.setHeader("Set-Cookie", res.cookieArray);
+    }
   }
 
   return res.status(200).json({ isAuthenticated: false });
 };
 
-export default handler;
+export default withAuth(handler);
