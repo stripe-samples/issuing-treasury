@@ -26,19 +26,8 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
       },
     },
     colors: [theme.palette.primary.main, theme.palette.error.light],
-    responsive: [
-      {
-        breakpoint: 480,
-      },
-    ],
     dataLabels: {
       enabled: false,
-    },
-    legend: {
-      fontSize: "16px",
-      itemMargin: {
-        horizontal: 16,
-      },
     },
     fill: {
       opacity: 1,
@@ -61,22 +50,11 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
         bottom: 32,
       },
     },
-    tooltip: {
-      intersect: false,
-      x: {
-        show: false,
+    legend: {
+      fontSize: "16px",
+      itemMargin: {
+        horizontal: 16,
       },
-      y: {
-        formatter: (value: number) =>
-          new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-          }).format(value),
-      },
-    },
-    stroke: {
-      show: false,
     },
     theme: {
       mode: theme.palette.mode,
@@ -112,6 +90,16 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
           fontSize: "16px",
           colors: theme.palette.text.secondary,
         },
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: (value: number) =>
+          new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 2,
+          }).format(value),
       },
     },
   };
