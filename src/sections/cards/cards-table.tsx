@@ -1,11 +1,11 @@
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import {
   Box,
   Button,
   Card,
   Checkbox,
-  MenuItem,
-  Select,
   Stack,
+  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -18,9 +18,14 @@ import { format, fromUnixTime } from "date-fns";
 import React, { ChangeEvent } from "react";
 import Stripe from "stripe";
 
-import CardholderUpdateWidget from "./cardholder-update-widget";
+import { SeverityPill } from "../../components/severity-pill";
 
-const CardholdersTable = ({
+const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
+  virtual: "info",
+  physical: "warning",
+};
+
+const CardsTable = ({
   count = 0,
   items = [],
   onDeselectAll,
@@ -34,7 +39,7 @@ const CardholdersTable = ({
   selected = [],
 }: {
   count?: number;
-  items: Stripe.Issuing.Cardholder[];
+  items: Stripe.Issuing.Card[];
   onDeselectAll: () => void;
   onDeselectOne: (item: string) => void;
   onPageChange: (
@@ -70,30 +75,31 @@ const CardholdersTable = ({
                   }}
                 />
               </TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell>Cardholder Name</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Card Last 4</TableCell>
               <TableCell>Created</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((cardholder) => {
-              const isSelected = selected.includes(cardholder.id);
+            {items.map((card) => {
+              const isSelected = selected.includes(card.id);
               const createdAt = format(
-                fromUnixTime(cardholder.created),
+                fromUnixTime(card.created),
                 "MMM dd, yyyy",
               );
 
               return (
-                <TableRow hover key={cardholder.id}>
+                <TableRow hover key={card.id}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isSelected}
                       onChange={(event) => {
                         if (event.target.checked) {
-                          onSelectOne?.(cardholder.id);
+                          onSelectOne?.(card.id);
                         } else {
-                          onDeselectOne?.(cardholder.id);
+                          onDeselectOne?.(card.id);
                         }
                       }}
                     />
@@ -101,11 +107,16 @@ const CardholdersTable = ({
                   <TableCell>
                     <Stack alignItems="center" direction="row" spacing={2}>
                       <Typography variant="subtitle2">
-                        {cardholder.name}
+                        {card.cardholder.name}
                       </Typography>
                     </Stack>
                   </TableCell>
-                  <TableCell>{cardholder.email}</TableCell>
+                  <TableCell>
+                    <SeverityPill color={statusMap[card.type]}>
+                      {card.type}
+                    </SeverityPill>
+                  </TableCell>
+                  <TableCell>{card.last4}</TableCell>
                   <TableCell>{createdAt}</TableCell>
                   <TableCell
                     sx={{
@@ -113,34 +124,17 @@ const CardholdersTable = ({
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {cardholder.individual ? (
-                      <form action="/api/issue_card" method="POST">
-                        <input
-                          type="hidden"
-                          id="cardholderid"
-                          name="cardholderid"
-                          value={cardholder.id}
-                        ></input>
-                        <Stack direction="row" spacing={1.5}>
-                          <Select
-                            labelId="card-type-label"
-                            id="card_type"
-                            name="card_type"
-                            defaultValue="virtual"
-                            label="Card Type"
-                            sx={{ minWidth: 200, height: 40 }}
-                          >
-                            <MenuItem value="virtual">Virtual</MenuItem>
-                            <MenuItem value="physical">Physical</MenuItem>
-                          </Select>
-                          <Button variant="contained" type="submit">
-                            Issue card
-                          </Button>
-                        </Stack>
-                      </form>
-                    ) : (
-                      <CardholderUpdateWidget cardholderId={cardholder.id} />
-                    )}
+                    <Button
+                      color="inherit"
+                      endIcon={
+                        <SvgIcon fontSize="small">
+                          <ArrowRightIcon />
+                        </SvgIcon>
+                      }
+                      href={`/cards/${card.id}`}
+                    >
+                      Details
+                    </Button>
                   </TableCell>
                 </TableRow>
               );
@@ -161,4 +155,4 @@ const CardholdersTable = ({
   );
 };
 
-export default CardholdersTable;
+export default CardsTable;

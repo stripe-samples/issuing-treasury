@@ -18,6 +18,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import Stripe from "stripe";
 
 import { useSelection } from "../hooks/use-selection";
 import DashboardLayout from "../layouts/dashboard/layout";
@@ -25,7 +26,6 @@ import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
 import CardholderCreateWidget from "../sections/cardholders/cardholder-create-widget";
 import { CardholdersSearch } from "../sections/cardholders/cardholders-search";
 import CardholdersTable from "../sections/cardholders/cardholders-table";
-import Cardholder from "../types/cardholder";
 import JwtPayload from "../types/jwt-payload";
 import { applyPagination } from "../utils/apply-pagination";
 import { getCardholders } from "../utils/stripe_helpers";
@@ -44,16 +44,16 @@ export const getServerSideProps = withAuthRequiringOnboarded(
 );
 
 function useCardholders(
-  cardholders: Cardholder[],
+  cardholders: Stripe.Issuing.Cardholder[],
   page: number,
   rowsPerPage: number,
-): Cardholder[] {
+): Stripe.Issuing.Cardholder[] {
   return useMemo(() => {
     return applyPagination(cardholders, page, rowsPerPage);
   }, [cardholders, page, rowsPerPage]);
 }
 
-function useCardholderIds(cardholders: Cardholder[]): string[] {
+function useCardholderIds(cardholders: Stripe.Issuing.Cardholder[]): string[] {
   return useMemo(() => {
     return cardholders.map((cardholder) => cardholder.id);
   }, [cardholders]);
@@ -62,7 +62,7 @@ function useCardholderIds(cardholders: Cardholder[]): string[] {
 const Page = ({
   cardholders: allCardholders,
 }: {
-  cardholders: Cardholder[];
+  cardholders: Stripe.Issuing.Cardholder[];
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
