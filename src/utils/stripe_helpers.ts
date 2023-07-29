@@ -72,6 +72,7 @@ type FundsFlowByDate = {
 };
 
 const NUMBER_OF_DAYS = 7;
+const DATE_FORMAT = "MMM dd";
 
 export async function getFinancialAccountTransactionDetails(
   stripeAccountID: string,
@@ -101,7 +102,7 @@ export async function getFinancialAccountTransactionDetails(
     { length: NUMBER_OF_DAYS },
     (_, index) => {
       const date = addDays(endDate, -index);
-      return format(date, "MM/dd/yyyy");
+      return format(date, DATE_FORMAT);
     },
   );
 
@@ -120,7 +121,7 @@ export async function getFinancialAccountTransactionDetails(
 
   faTransactions.data.forEach((element: Stripe.Treasury.Transaction) => {
     const date = new Date(element.created * 1000);
-    const formattedDate = format(date, "MM/dd/yyyy");
+    const formattedDate = format(date, DATE_FORMAT);
     const amountInDollars = Math.abs(element.amount) / 100;
 
     if (fundsFlowByDate.hasOwnProperty(formattedDate)) {
