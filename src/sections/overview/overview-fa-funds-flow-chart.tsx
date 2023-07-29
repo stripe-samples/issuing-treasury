@@ -25,7 +25,7 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
         show: false,
       },
     },
-    colors: [theme.palette.primary.main, theme.palette.error.light],
+    colors: [theme.palette.primary.main, theme.palette.primary.light],
     dataLabels: {
       enabled: false,
     },
