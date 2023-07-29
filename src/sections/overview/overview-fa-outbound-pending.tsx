@@ -36,7 +36,7 @@ export const OverviewFinancialAccountOutboundPending = (props: {
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: "primary.main",
+              backgroundColor: "error.main",
               height: 56,
               width: 56,
             }}

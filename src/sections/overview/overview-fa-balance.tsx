@@ -1,4 +1,4 @@
-import { ScaleIcon } from "@heroicons/react/24/solid";
+import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
   Card,
@@ -34,13 +34,13 @@ export const OverviewFinancialAccountBalance = (props: {
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: "error.main",
+              backgroundColor: "success.main",
               height: 56,
               width: 56,
             }}
           >
             <SvgIcon>
-              <ScaleIcon />
+              <CurrencyDollarIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
