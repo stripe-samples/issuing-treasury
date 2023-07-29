@@ -1,21 +1,31 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 
+import withAuth from "../../middleware/api/auth-middleware";
+import NextApiRequestWithSession from "../../types/next-api-request-with-session";
 import stripe from "../../utils/stripe-loader";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (
+  req: NextApiRequestWithSession,
+  res: NextApiResponse,
+) => {
+  if (req.method !== "POST") {
+    return res.status(400).json({ error: "Bad Request" });
+  }
+
   const accountId = req.body.accountId;
   const cardId = req.body.cardId;
   const nonce = req.body.nonce;
+  const apiVersion = "2022-08-01";
 
   const ephemeralKey = await stripe.ephemeralKeys.create(
     {
-      // @ts-expect-error Remove after deployment succeeds
+      // @ts-expect-error Investigate why nonce is not part of this API anymore once the card details page is revamped
       nonce: nonce,
       issuing_card: cardId,
     },
     {
       stripeAccount: accountId,
-      apiVersion: "2022-08-01",
+      apiVersion: apiVersion,
     },
   );
 
@@ -27,4 +37,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withAuth(handler);
