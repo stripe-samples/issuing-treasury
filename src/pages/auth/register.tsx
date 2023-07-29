@@ -131,7 +131,6 @@ const Page = () => {
                     justifyContent="center"
                     mt={3}
                   >
-                    {/* @ts-expect-error We want to use the primary color here */}
                     <Alert color="primary" severity="info">
                       Password field is illustrative and not verified
                     </Alert>
