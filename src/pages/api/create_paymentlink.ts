@@ -62,11 +62,9 @@ const handler = async (
     );
     return res.json({ urlCreated: true, paymentLink: paymentLink.url });
   } catch (err) {
-    return res.status(401).json({
-      urlCreated: false,
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
-      error: err.message,
-    });
+    return res
+      .status(401)
+      .json({ urlCreated: false, error: (err as Error).message });
   }
 };
 

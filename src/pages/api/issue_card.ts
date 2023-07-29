@@ -58,10 +58,7 @@ const handler = async (
     }
     res.redirect("/cards");
   } catch (err) {
-    return res.status(401).json({
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
-      error: err.message,
-    });
+    return res.status(401).json({ error: (err as Error).message });
   }
 };
 

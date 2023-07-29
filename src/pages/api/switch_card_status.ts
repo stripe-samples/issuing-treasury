@@ -28,11 +28,9 @@ const handler = async (
       success: true,
     });
   } catch (err) {
-    return res.status(401).json({
-      success: false,
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
-      error: err.message,
-    });
+    return res
+      .status(401)
+      .json({ success: false, error: (err as Error).message });
   }
 };
 
