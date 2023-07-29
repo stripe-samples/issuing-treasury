@@ -1,9 +1,12 @@
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import {
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
+  Divider,
   SvgIcon,
   useTheme,
 } from "@mui/material";
@@ -31,6 +34,12 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
     dataLabels: {
       enabled: false,
     },
+    legend: {
+      fontSize: "16px",
+      itemMargin: {
+        horizontal: 16,
+      },
+    },
     fill: {
       opacity: 1,
       type: "solid",
@@ -47,6 +56,9 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
         lines: {
           show: true,
         },
+      },
+      padding: {
+        bottom: 32,
       },
     },
     tooltip: {
@@ -82,6 +94,7 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
       labels: {
         offsetY: 5,
         style: {
+          fontSize: "16px",
           colors: theme.palette.text.secondary,
         },
       },
@@ -96,6 +109,7 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
           }).format(value),
         offsetX: -10,
         style: {
+          fontSize: "16px",
           colors: theme.palette.text.secondary,
         },
       },
@@ -150,6 +164,20 @@ export const OverviewFinancialAccountFundsFlowChart = ({
           width="100%"
         />
       </CardContent>
+      <Divider />
+      <CardActions sx={{ justifyContent: "flex-end" }}>
+        <Button
+          color="inherit"
+          endIcon={
+            <SvgIcon fontSize="small">
+              <ArrowRightIcon />
+            </SvgIcon>
+          }
+          size="small"
+        >
+          Overview
+        </Button>
+      </CardActions>
     </Card>
   );
 };
