@@ -26,10 +26,10 @@ export const getServerSideProps = withAuthRequiringOnboarded(
     const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
     const financialAccount = responseFaDetails.financialaccount;
 
-    const responseFaTransations_chart =
+    const faFundsFlowChartDataResult =
       await getFinancialAccountTransactionDetails(StripeAccountID);
-    const faTransactionsChart =
-      responseFaTransations_chart.faTransactions_chart;
+    const faFundsFlowChartData =
+      faFundsFlowChartDataResult.faFundsFlowChartData;
 
     const responseFaTransations = await getFinancialAccountTransactionsExpanded(
       StripeAccountID,
@@ -37,18 +37,18 @@ export const getServerSideProps = withAuthRequiringOnboarded(
     const faTransactions = responseFaTransations.fa_transactions;
 
     return {
-      props: { financialAccount, faTransactionsChart, faTransactions },
+      props: { financialAccount, faFundsFlowChartData, faTransactions },
     };
   },
 );
 
 const Page = ({
   financialAccount,
-  faTransactionsChart,
+  faFundsFlowChartData,
   faTransactions,
 }: {
   financialAccount: Stripe.Treasury.FinancialAccount;
-  faTransactionsChart: ChartData;
+  faFundsFlowChartData: ChartData;
   faTransactions: Stripe.Treasury.Transaction[];
 }) => {
   return (
@@ -76,7 +76,7 @@ const Page = ({
             </Grid>
             <Grid item xs={12}>
               <OverviewFinancialAccountFundsFlowChart
-                faTransactionsChart={faTransactionsChart}
+                faFundsFlowChartData={faFundsFlowChartData}
               />
             </Grid>
             <Grid item xs={12}>
