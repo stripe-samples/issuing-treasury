@@ -1,6 +1,5 @@
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import {
-  alpha,
   Button,
   Card,
   CardContent,
@@ -8,94 +7,11 @@ import {
   SvgIcon,
   useTheme,
 } from "@mui/material";
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  Title,
-  Tooltip,
-} from "chart.js";
-// import ChartDataLabels from "chartjs-plugin-datalabels";
-// import { Bar } from "react-chartjs-2";
 
 import { Chart } from "../../components/chart";
 import { ChartData } from "../../types/chart-data";
 
-const useChartOptions = () => {
-  return {
-    interaction: {
-      intersect: false,
-      axis: "x",
-    },
-    responsive: true,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: function (context: any) {
-            return Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-              minimumFractionDigits: 2,
-            }).format(context.parsed.y);
-          },
-        },
-      },
-      legend: {
-        position: "top",
-        align: "left",
-        labels: {
-          usePointStyle: true,
-        },
-      },
-      datalabels: {
-        anchor: "end", // remove this line to get label in middle of the bar
-        align: "end",
-        display: "auto",
-        formatter: function (value: any, context: any) {
-          return Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-          }).format(value);
-        },
-        labels: {
-          value: {
-            color: "#666666",
-          },
-        },
-      },
-    },
-    scales: {
-      x: {
-        stacked: false,
-        ticks: {
-          // maxRotation: 90,
-          // minRotation: 90
-        },
-      },
-      y: {
-        // Provide extra space on the boundaries
-        display: true,
-        ticks: {
-          callback: function (value: any, index: any, values: any) {
-            return Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-              minimumFractionDigits: 2,
-            }).format(value);
-          },
-        },
-        scaleLabel: {
-          display: true,
-        },
-      },
-    },
-  };
-};
-
-const useApexChartOptions = (faFundsFlowChartData: ChartData) => {
+const useChartOptions = (faFundsFlowChartData: ChartData) => {
   const theme = useTheme();
 
   return {
@@ -110,11 +26,6 @@ const useApexChartOptions = (faFundsFlowChartData: ChartData) => {
     responsive: [
       {
         breakpoint: 480,
-        // options: {
-        //   legend: {
-        //     position: "bottom",
-        //   },
-        // },
       },
     ],
     dataLabels: {
@@ -138,38 +49,22 @@ const useApexChartOptions = (faFundsFlowChartData: ChartData) => {
         },
       },
     },
-    // tooltip: {
-    //   intersect: false,
-    //   x: {
-    //     show: false,
-    //   },
-    //   y: {
-    //     formatter: function (value: any) {
-    //       return new Intl.NumberFormat("en-US", {
-    //         style: "currency",
-    //         currency: "USD",
-    //         minimumFractionDigits: 2,
-    //       }).format(value);
-    //     },
-    //   },
-    // },
-    legend: {
-      // show: false,
-      // position: "bottom",
-      // horizontalAlign: "left",
-      // markers: {
-      //   useSeriesColors: true,
-      // },
+    tooltip: {
+      intersect: false,
+      x: {
+        show: false,
+      },
+      y: {
+        formatter: (value: number) =>
+          new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 2,
+          }).format(value),
+      },
     },
-    // plotOptions: {
-    //   bar: {
-    //     columnWidth: "20px",
-    //   },
-    // },
     stroke: {
-      // colors: ["transparent"],
       show: false,
-      // width: 2,
     },
     theme: {
       mode: theme.palette.mode,
@@ -215,48 +110,7 @@ export const OverviewFinancialAccountFundsFlowChart = ({
   faFundsFlowChartData: ChartData;
   sx?: object;
 }) => {
-  const chartOptions = useApexChartOptions(faFundsFlowChartData);
-
-  // const chartOptions = {
-  //   chart: {
-  //     id: "basic-bar",
-  //   },
-  //   xaxis: {
-  //     categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-  //   },
-  // };
-
-  // const chartSeries2 = {
-  //   labels: faFundsFlowChartData.faTransactionsDates,
-  //   datasets: [
-  //     {
-  //       label: "Funds in",
-  //       type: "bar",
-  //       // this dataset is drawn on top
-  //       order: 2,
-  //       data: faFundsFlowChartData.faTransactionsFundsIn,
-  //       backgroundColor: ["rgba(220, 252, 231, 0.4)"],
-  //       borderColor: ["rgba(22, 101, 52,  1)"],
-  //       borderWidth: 1,
-  //       datalabels: {
-  //         color: "#666666",
-  //       },
-  //     },
-  //     {
-  //       label: "Funds Out",
-  //       type: "bar",
-  //       // this dataset is drawn on top
-  //       order: 2,
-  //       data: faFundsFlowChartData.faTransactionsFundsOut,
-  //       backgroundColor: ["rgba(247, 132, 134, 0.4)"],
-  //       borderColor: ["rgba(250, 0, 4, 1)"],
-  //       borderWidth: 1,
-  //       datalabels: {
-  //         color: "#666666",
-  //       },
-  //     },
-  //   ],
-  // };
+  const chartOptions = useChartOptions(faFundsFlowChartData);
 
   const chartSeries = [
     {
