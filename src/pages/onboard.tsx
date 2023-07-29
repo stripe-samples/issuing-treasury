@@ -14,8 +14,8 @@ import { createAccountOnboardingUrl } from "../utils/stripe_helpers";
 export const getServerSideProps = withAuth(
   async (context: GetServerSidePropsContext, session: JwtPayload) => {
     const account = await stripe.accounts.retrieve(session.accountId);
-    // @ts-expect-error Remove after deployment succeeds
-    if (account.requirements.currently_due.length > 1) {
+
+    if (account?.requirements?.currently_due?.length ?? 0 > 1) {
       // Create the onboarding link and redirect
       const url = await createAccountOnboardingUrl(
         account.id,
@@ -104,7 +104,6 @@ const Page = ({ url }: { url: string }) => {
             justifyContent="center"
             mt={3}
           >
-            {/* @ts-expect-error We want to use the primary color here */}
             <Alert color="primary" severity="info">
               Password field is illustrative and not verified
             </Alert>
