@@ -82,48 +82,114 @@ const Page = ({
               <Card sx={{ height: "100%" }}>
                 <CardHeader title="Account Information" />
                 <List sx={{ p: 0 }}>
-                  <ListItem divider={true} sx={{ px: 3, py: 1.5 }}>
-                    <ListItemText
-                      sx={{ m: 0 }}
-                      primary={
-                        <Typography variant="subtitle2">
-                          Account Holder Name
-                        </Typography>
-                      }
-                      secondary={
-                        <Box sx={{ mt: 0.5 }}>
-                          <Typography variant="body2" color="text.secondary">
-                            {
-                              financialAccount.financial_addresses[0].aba
-                                ?.account_holder_name
-                            }
-                          </Typography>
-                        </Box>
-                      }
-                      disableTypography={true}
-                    ></ListItemText>
-                  </ListItem>
-                  <ListItem sx={{ px: 3, py: 1.5 }}>
-                    <ListItemText
-                      sx={{ m: 0 }}
-                      primary={
-                        <Typography variant="subtitle2">
-                          Routing Number
-                        </Typography>
-                      }
-                      secondary={
-                        <Box sx={{ mt: 0.5 }}>
-                          <Typography variant="body2" color="text.secondary">
-                            {
-                              financialAccount.financial_addresses[0].aba
-                                ?.routing_number
-                            }
-                          </Typography>
-                        </Box>
-                      }
-                      disableTypography={true}
-                    ></ListItemText>
-                  </ListItem>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <ListItem divider sx={{ px: 3, py: 1.5 }}>
+                        <ListItemText
+                          sx={{ m: 0 }}
+                          primary={
+                            <Typography variant="subtitle2">
+                              Account Holder Name
+                            </Typography>
+                          }
+                          secondary={
+                            <Box sx={{ mt: 0.5 }}>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {
+                                  financialAccount.financial_addresses[0].aba
+                                    ?.account_holder_name
+                                }
+                              </Typography>
+                            </Box>
+                          }
+                          disableTypography={true}
+                        ></ListItemText>
+                      </ListItem>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <ListItem divider sx={{ py: 1.5 }}>
+                        <ListItemText
+                          sx={{ m: 0 }}
+                          primary={
+                            <Typography variant="subtitle2">
+                              Bank Name
+                            </Typography>
+                          }
+                          secondary={
+                            <Box sx={{ mt: 0.5 }}>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {
+                                  financialAccount.financial_addresses[0].aba
+                                    ?.bank_name
+                                }
+                              </Typography>
+                            </Box>
+                          }
+                          disableTypography={true}
+                        ></ListItemText>
+                      </ListItem>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <ListItem sx={{ px: 3, py: 1.5 }}>
+                        <ListItemText
+                          sx={{ m: 0 }}
+                          primary={
+                            <Typography variant="subtitle2">
+                              Routing Number
+                            </Typography>
+                          }
+                          secondary={
+                            <Box sx={{ mt: 0.5 }}>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {
+                                  financialAccount.financial_addresses[0].aba
+                                    ?.routing_number
+                                }
+                              </Typography>
+                            </Box>
+                          }
+                          disableTypography={true}
+                        ></ListItemText>
+                      </ListItem>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <ListItem sx={{ py: 1.5 }}>
+                        <ListItemText
+                          sx={{ m: 0 }}
+                          primary={
+                            <Typography variant="subtitle2">
+                              Account Number
+                            </Typography>
+                          }
+                          secondary={
+                            <Box sx={{ mt: 0.5 }}>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {
+                                  financialAccount.financial_addresses[0].aba
+                                    ?.account_number
+                                }
+                              </Typography>
+                            </Box>
+                          }
+                          disableTypography={true}
+                        ></ListItemText>
+                      </ListItem>
+                    </Grid>
+                  </Grid>
                 </List>
               </Card>
             </Grid>
