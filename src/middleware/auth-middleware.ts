@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 
-import JwtPayload from "../types/jwt-payload";
-import { getSessionFromCookie } from "../utils/cookie-helpers";
+import JwtPayload from "src/types/jwt-payload";
+import { getSessionFromCookie } from "src/utils/cookie-helpers";
 
 export const withAuth =
   (

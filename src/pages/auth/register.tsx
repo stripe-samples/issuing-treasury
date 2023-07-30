@@ -12,8 +12,8 @@ import NextLink from "next/link";
 import { ReactNode } from "react";
 import * as Yup from "yup";
 
-import { useAuth } from "../../hooks/use-auth";
-import AuthLayout from "../../layouts/auth/layout";
+import { useAuth } from "src/hooks/use-auth";
+import AuthLayout from "src/layouts/auth/layout";
 
 const validationSchema = Yup.object({
   email: Yup.string()

@@ -3,13 +3,13 @@ import { serialize } from "cookie";
 import { GetServerSidePropsContext } from "next";
 import React, { ReactNode, useState } from "react";
 
-import { useAuth } from "../hooks/use-auth";
-import AuthLayout from "../layouts/auth/layout";
-import { withAuth } from "../middleware/auth-middleware";
-import JwtPayload from "../types/jwt-payload";
-import { encode } from "../utils/jwt_encode_decode";
-import stripe from "../utils/stripe-loader";
-import { createAccountOnboardingUrl } from "../utils/stripe_helpers";
+import { useAuth } from "src/hooks/use-auth";
+import AuthLayout from "src/layouts/auth/layout";
+import { withAuth } from "src/middleware/auth-middleware";
+import JwtPayload from "src/types/jwt-payload";
+import { encode } from "src/utils/jwt_encode_decode";
+import stripe from "src/utils/stripe-loader";
+import { createAccountOnboardingUrl } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuth(
   async (context: GetServerSidePropsContext, session: JwtPayload) => {

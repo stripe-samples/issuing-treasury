@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 
-import { fetchApi } from "../utils/api-helpers";
+import { fetchApi } from "src/utils/api-helpers";
 
 type User = {
   id: string;

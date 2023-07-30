@@ -1,6 +1,6 @@
 import React from "react";
 
-import { capitalize, formatDateTime } from "../../utils/format";
+import { capitalize, formatDateTime } from "src/utils/format";
 
 function CardsWidget({ cards }: any) {
   return (

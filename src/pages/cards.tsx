@@ -20,14 +20,14 @@ import React, {
 } from "react";
 import Stripe from "stripe";
 
-import { useSelection } from "../hooks/use-selection";
-import DashboardLayout from "../layouts/dashboard/layout";
-import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
-import { CardsSearch } from "../sections/cards/cards-search";
-import CardsTable from "../sections/cards/cards-table";
-import JwtPayload from "../types/jwt-payload";
-import { applyPagination } from "../utils/apply-pagination";
-import { getCards } from "../utils/stripe_helpers";
+import { useSelection } from "src/hooks/use-selection";
+import DashboardLayout from "src/layouts/dashboard/layout";
+import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
+import { CardsSearch } from "src/sections/cards/cards-search";
+import CardsTable from "src/sections/cards/cards-table";
+import JwtPayload from "src/types/jwt-payload";
+import { applyPagination } from "src/utils/apply-pagination";
+import { getCards } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
   async (context: GetServerSidePropsContext, session: JwtPayload) => {

@@ -6,10 +6,10 @@ import { NextComponentType, NextPageContext } from "next";
 import { AppProps } from "next/app";
 import React, { ReactNode } from "react";
 
-import { AuthConsumer, AuthProvider } from "../contexts/auth-context";
-import { useNProgress } from "../hooks/use-nprogress";
-import { createTheme } from "../theme";
-import createEmotionCache from "../utils/create-emotion-cache";
+import { AuthConsumer, AuthProvider } from "src/contexts/auth-context";
+import { useNProgress } from "src/hooks/use-nprogress";
+import { createTheme } from "src/theme";
+import createEmotionCache from "src/utils/create-emotion-cache";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();

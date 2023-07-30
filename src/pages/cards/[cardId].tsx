@@ -3,12 +3,13 @@ import { loadStripe } from "@stripe/stripe-js";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
 
-import CardDetailsWidget from "../../components/Stripe/CardDetailsWidget";
-import CardStatusSwitchWidget from "../../components/Stripe/CardStatusSwitchWidget";
-import IssuingAuthorizationsWidget from "../../components/Stripe/IssuingAuthorizationsWidget";
-import { withAuthRequiringOnboarded } from "../../middleware/auth-middleware";
-import JwtPayload from "../../types/jwt-payload";
-import { getCardTransactions } from "../../utils/stripe_helpers";
+import CardDetailsWidget from "src/components/Stripe/CardDetailsWidget";
+import CardStatusSwitchWidget from "src/components/Stripe/CardStatusSwitchWidget";
+import IssuingAuthorizationsWidget from "src/components/Stripe/IssuingAuthorizationsWidget";
+import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
+import JwtPayload from "src/types/jwt-payload";
+
+import { getCardTransactions } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
   async (context: GetServerSidePropsContext, session: JwtPayload) => {

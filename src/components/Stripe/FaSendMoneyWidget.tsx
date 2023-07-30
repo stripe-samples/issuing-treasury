@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { formatUSD } from "../../utils/format";
+import { formatUSD } from "src/utils/format";
 
 function FaSendMoneyWidget() {
   const [submitted, setSubmitted] = useState(false);

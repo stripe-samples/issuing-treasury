@@ -1,7 +1,6 @@
-import JwtPayload from "../types/jwt-payload";
-
-import { encode } from "./jwt_encode_decode";
-import stripe from "./stripe-loader";
+import JwtPayload from "src/types/jwt-payload";
+import { encode } from "src/utils/jwt_encode_decode";
+import stripe from "src/utils/stripe-loader";
 
 // We don't need the password for this method since it is only collected for demonstration purposes.
 export async function authenticateUser(email: string) {

@@ -2,16 +2,16 @@ import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
-import FaAccountInfoWidget from "../components/Stripe/FaAccountInfoWidget";
-import FaSendMoneyWidget from "../components/Stripe/FaSendMoneyWidget";
-import FaTransactionsExtendedWidget from "../components/Stripe/FaTransactionsExtendedWidget";
-import DashboardLayout from "../layouts/dashboard/layout";
-import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
-import JwtPayload from "../types/jwt-payload";
+import FaAccountInfoWidget from "src/components/Stripe/FaAccountInfoWidget";
+import FaSendMoneyWidget from "src/components/Stripe/FaSendMoneyWidget";
+import FaTransactionsExtendedWidget from "src/components/Stripe/FaTransactionsExtendedWidget";
+import DashboardLayout from "src/layouts/dashboard/layout";
+import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
+import JwtPayload from "src/types/jwt-payload";
 import {
   getFinancialAccountDetailsExp,
   getFinancialAccountTransactionsExpanded,
-} from "../utils/stripe_helpers";
+} from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
   async (context: GetServerSidePropsContext, session: JwtPayload) => {

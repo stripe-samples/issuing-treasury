@@ -1,8 +1,9 @@
 import { NextApiResponse } from "next";
 
-import withAuth from "../../middleware/api/auth-middleware";
-import NextApiRequestWithSession from "../../types/next-api-request-with-session";
-import stripe from "../../utils/stripe-loader";
+import withAuth from "src/middleware/api/auth-middleware";
+import NextApiRequestWithSession from "src/types/next-api-request-with-session";
+
+import stripe from "src/utils/stripe-loader";
 
 const handler = async (
   req: NextApiRequestWithSession,

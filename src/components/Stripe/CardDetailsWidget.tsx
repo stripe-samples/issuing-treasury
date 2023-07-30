@@ -1,7 +1,7 @@
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import React, { useEffect } from "react";
 
-import { capitalize, formatUSD } from "../../utils/format";
+import { capitalize, formatUSD } from "src/utils/format";
 
 function CardDetailsWidget({
   accountId,

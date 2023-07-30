@@ -14,10 +14,9 @@ import {
 } from "@mui/material";
 import Stripe from "stripe";
 
-import { SeverityPill } from "../../components/severity-pill";
-import { formatDateTime, formatUSD } from "../../utils/format";
-
-import TransactionFlowDetails from "./transaction-flow-details";
+import { SeverityPill } from "src/components/severity-pill";
+import TransactionFlowDetails from "src/sections/overview/transaction-flow-details";
+import { formatDateTime, formatUSD } from "src/utils/format";
 
 const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
   open: "warning",

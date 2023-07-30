@@ -1,8 +1,8 @@
 import { parse, serialize } from "cookie";
 import { NextApiResponse } from "next";
 
-import withAuth from "../../middleware/api/auth-middleware";
-import NextApiRequestWithSession from "../../types/next-api-request-with-session";
+import withAuth from "src/middleware/api/auth-middleware";
+import NextApiRequestWithSession from "src/types/next-api-request-with-session";
 
 type NextApiResponseWithCookieArray<T = Record<string, unknown>> =
   NextApiResponse<T> & {

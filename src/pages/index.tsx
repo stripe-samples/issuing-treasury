@@ -6,18 +6,18 @@ import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
-import DashboardLayout from "../layouts/dashboard/layout";
-import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
-import { OverviewFinancialAccountBalance } from "../sections/overview/overview-fa-balance";
-import { OverviewFinancialAccountFundsFlowChart } from "../sections/overview/overview-fa-funds-flow-chart";
-import { OverviewFinancialAccountOutboundPending } from "../sections/overview/overview-fa-outbound-pending";
-import { OverviewLatestTransactions } from "../sections/overview/overview-latest-transactions";
-import { ChartData } from "../types/chart-data";
+import DashboardLayout from "src/layouts/dashboard/layout";
+import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
+import { OverviewFinancialAccountBalance } from "src/sections/overview/overview-fa-balance";
+import { OverviewFinancialAccountFundsFlowChart } from "src/sections/overview/overview-fa-funds-flow-chart";
+import { OverviewFinancialAccountOutboundPending } from "src/sections/overview/overview-fa-outbound-pending";
+import { OverviewLatestTransactions } from "src/sections/overview/overview-latest-transactions";
+import { ChartData } from "src/types/chart-data";
 import {
   getFinancialAccountDetails,
   getFinancialAccountTransactionDetails,
   getFinancialAccountTransactionsExpanded,
-} from "../utils/stripe_helpers";
+} from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
   async (context: GetServerSidePropsContext, session: JwtPayload) => {

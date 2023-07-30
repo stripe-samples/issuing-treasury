@@ -15,9 +15,8 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-import { usePopover } from "../../hooks/use-popover";
-
-import { AccountPopover } from "./account-popover";
+import { usePopover } from "src/hooks/use-popover";
+import { AccountPopover } from "src/layouts/dashboard/account-popover";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;

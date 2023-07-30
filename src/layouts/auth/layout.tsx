@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import NextLink from "next/link";
 import { ReactNode } from "react";
 
-import { Logo } from "../../components/logo";
+import { Logo } from "src/components/logo";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (

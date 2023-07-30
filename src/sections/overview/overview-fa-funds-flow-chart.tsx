@@ -11,9 +11,10 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { Chart } from "../../components/chart";
-import { ChartData } from "../../types/chart-data";
-import { formatUSD } from "../../utils/format";
+import { Chart } from "src/components/chart";
+import { ChartData } from "src/types/chart-data";
+
+import { formatUSD } from "src/utils/format";
 
 const useChartOptions = (faFundsFlowChartData: ChartData) => {
   const theme = useTheme();

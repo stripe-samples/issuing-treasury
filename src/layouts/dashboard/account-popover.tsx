@@ -8,8 +8,8 @@ import {
 } from "@mui/material";
 import { useCallback } from "react";
 
-import { useAuthContext } from "../../contexts/auth-context";
-import { useAuth } from "../../hooks/use-auth";
+import { useAuthContext } from "src/contexts/auth-context";
+import { useAuth } from "src/hooks/use-auth";
 
 export const AccountPopover = ({
   anchorEl,

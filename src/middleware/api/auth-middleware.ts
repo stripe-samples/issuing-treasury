@@ -2,8 +2,8 @@ import { parse } from "cookie";
 import { decode } from "jsonwebtoken";
 import { NextApiResponse } from "next";
 
-import JwtPayload from "../../types/jwt-payload";
-import NextApiRequestWithSession from "../../types/next-api-request-with-session";
+import JwtPayload from "src/types/jwt-payload";
+import NextApiRequestWithSession from "src/types/next-api-request-with-session";
 
 const withAuth = (
   handler: (

@@ -17,8 +17,9 @@ import {
 import React, { ChangeEvent } from "react";
 import Stripe from "stripe";
 
-import { SeverityPill } from "../../components/severity-pill";
-import { formatDateTime } from "../../utils/format";
+import { SeverityPill } from "src/components/severity-pill";
+
+import { formatDateTime } from "src/utils/format";
 
 const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
   virtual: "info",

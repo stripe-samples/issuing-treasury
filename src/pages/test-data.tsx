@@ -2,13 +2,13 @@ import { Box, Container, Grid } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
 
-import DashboardLayout from "../layouts/dashboard/layout";
-import { withAuthRequiringOnboarded } from "../middleware/auth-middleware";
-import TestDataCreatePaymentLink from "../sections/test-data/test-data-create-payment-link";
-import TestDataCreatePayouts from "../sections/test-data/test-data-create-payout";
-import TestDataCreateReceivedCredit from "../sections/test-data/test-data-create-received-credit";
-import JwtPayload from "../types/jwt-payload";
-import stripe from "../utils/stripe-loader";
+import DashboardLayout from "src/layouts/dashboard/layout";
+import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
+import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
+import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
+import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
+import JwtPayload from "src/types/jwt-payload";
+import stripe from "src/utils/stripe-loader";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
   async (context: GetServerSidePropsContext, session: JwtPayload) => {

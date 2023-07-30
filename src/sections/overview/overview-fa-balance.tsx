@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { formatUSD } from "../../utils/format";
+import { formatUSD } from "src/utils/format";
 
 export const OverviewFinancialAccountBalance = (props: {
   sx: object;

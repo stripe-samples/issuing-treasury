@@ -17,9 +17,8 @@ import {
 import React, { ChangeEvent } from "react";
 import Stripe from "stripe";
 
-import { formatDateTime } from "../../utils/format";
-
-import CardholderUpdateWidget from "./cardholder-update-widget";
+import CardholderUpdateWidget from "src/sections/cardholders/cardholder-update-widget";
+import { formatDateTime } from "src/utils/format";
 
 const CardholdersTable = ({
   count = 0,

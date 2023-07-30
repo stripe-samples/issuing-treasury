@@ -10,7 +10,7 @@ import Document, {
 } from "next/document";
 import { Children } from "react";
 
-import createEmotionCache from "../utils/create-emotion-cache";
+import createEmotionCache from "src/utils/create-emotion-cache";
 
 const Favicon = () => (
   <>

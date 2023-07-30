@@ -2,7 +2,7 @@ import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
-import { authenticateUser } from "../../utils/authentication";
+import { authenticateUser } from "src/utils/authentication";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()

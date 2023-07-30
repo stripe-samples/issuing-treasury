@@ -2,9 +2,9 @@ import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
-import { authenticateUser } from "../../utils/authentication";
-import stripe from "../../utils/stripe-loader";
-import { createAccountOnboardingUrl } from "../../utils/stripe_helpers";
+import { authenticateUser } from "src/utils/authentication";
+import stripe from "src/utils/stripe-loader";
+import { createAccountOnboardingUrl } from "src/utils/stripe_helpers";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().max(255).required("Business name is required"),

@@ -3,8 +3,8 @@ import Head from "next/head";
 import { usePathname } from "next/navigation";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
-import { SideNav } from "./side-nav";
-import { TopNav } from "./top-nav";
+import { SideNav } from "src/layouts/dashboard/side-nav";
+import { TopNav } from "src/layouts/dashboard/top-nav";
 
 const SIDE_NAV_WIDTH = 280;
 

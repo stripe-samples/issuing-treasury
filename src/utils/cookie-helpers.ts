@@ -2,7 +2,7 @@ import { parse } from "cookie";
 import { decode } from "jsonwebtoken";
 import { GetServerSidePropsContext } from "next";
 
-import JwtPayload from "../types/jwt-payload";
+import JwtPayload from "src/types/jwt-payload";
 
 export const getSessionFromCookie = (context: GetServerSidePropsContext) => {
   const { req } = context;
