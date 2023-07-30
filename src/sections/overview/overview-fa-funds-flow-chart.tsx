@@ -13,6 +13,7 @@ import {
 
 import { Chart } from "../../components/chart";
 import { ChartData } from "../../types/chart-data";
+import { formatUSD } from "../../utils/format";
 
 const useChartOptions = (faFundsFlowChartData: ChartData) => {
   const theme = useTheme();
@@ -79,12 +80,7 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
     },
     yaxis: {
       labels: {
-        formatter: (value: number) =>
-          new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-          }).format(value),
+        formatter: formatUSD,
         offsetX: -10,
         style: {
           fontSize: "16px",
@@ -94,12 +90,7 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
     },
     tooltip: {
       y: {
-        formatter: (value: number) =>
-          new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-          }).format(value),
+        formatter: formatUSD,
       },
     },
   };

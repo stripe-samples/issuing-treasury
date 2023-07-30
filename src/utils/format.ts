@@ -1,10 +1,11 @@
-const formatter = new Intl.NumberFormat("en-US", {
+const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
+  minimumFractionDigits: 2,
 });
 
-export function formatUSD(amount: any) {
-  return formatter.format(amount);
+export function formatUSD(amount: number) {
+  return currencyFormatter.format(amount);
 }
 
 export function formatDateTime(secondsSinceEpoch: any) {
@@ -22,6 +23,6 @@ export function formatDateTime(secondsSinceEpoch: any) {
   return d.toLocaleDateString("en-US", options);
 }
 
-export function capitalize(string: any) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+export function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
