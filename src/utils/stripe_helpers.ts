@@ -71,7 +71,7 @@ type FundsFlowByDate = {
   fundsOut: number;
 };
 
-const NUMBER_OF_DAYS = 7;
+const NUMBER_OF_DAYS = 10;
 const DATE_FORMAT = "MMM dd";
 
 export async function getFinancialAccountTransactionDetails(
