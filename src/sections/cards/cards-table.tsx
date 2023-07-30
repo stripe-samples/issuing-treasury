@@ -17,6 +17,7 @@ import {
 import React, { ChangeEvent } from "react";
 import Stripe from "stripe";
 
+import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
 import { formatDateTime } from "src/utils/format";
 
@@ -58,85 +59,87 @@ const CardsTable = ({
 
   return (
     <Card>
-      <Box sx={{ minWidth: 800 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedAll}
-                  indeterminate={selectedSome}
-                  onChange={(event) => {
-                    if (event.target.checked) {
-                      onSelectAll?.();
-                    } else {
-                      onDeselectAll?.();
-                    }
-                  }}
-                />
-              </TableCell>
-              <TableCell>Cardholder Name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Card Last 4</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {items.map((card) => {
-              const isSelected = selected.includes(card.id);
-              return (
-                <TableRow hover key={card.id}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(event) => {
-                        if (event.target.checked) {
-                          onSelectOne?.(card.id);
-                        } else {
-                          onDeselectOne?.(card.id);
-                        }
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Stack alignItems="center" direction="row" spacing={2}>
-                      <Typography variant="subtitle2">
-                        {card.cardholder.name}
-                      </Typography>
-                    </Stack>
-                  </TableCell>
-                  <TableCell>
-                    <SeverityPill color={statusMap[card.type]}>
-                      {card.type}
-                    </SeverityPill>
-                  </TableCell>
-                  <TableCell>{card.last4}</TableCell>
-                  <TableCell>{formatDateTime(card.created)}</TableCell>
-                  <TableCell
-                    sx={{
-                      width: "1px",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <Button
-                      color="inherit"
-                      endIcon={
-                        <SvgIcon fontSize="small">
-                          <ArrowRightIcon />
-                        </SvgIcon>
+      <Scrollbar sx={{ flexGrow: 1 }}>
+        <Box sx={{ minWidth: 800 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={selectedAll}
+                    indeterminate={selectedSome}
+                    onChange={(event) => {
+                      if (event.target.checked) {
+                        onSelectAll?.();
+                      } else {
+                        onDeselectAll?.();
                       }
-                      href={`/cards/${card.id}`}
+                    }}
+                  />
+                </TableCell>
+                <TableCell>Cardholder Name</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Card Last 4</TableCell>
+                <TableCell>Created</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {items.map((card) => {
+                const isSelected = selected.includes(card.id);
+                return (
+                  <TableRow hover key={card.id}>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={isSelected}
+                        onChange={(event) => {
+                          if (event.target.checked) {
+                            onSelectOne?.(card.id);
+                          } else {
+                            onDeselectOne?.(card.id);
+                          }
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Stack alignItems="center" direction="row" spacing={2}>
+                        <Typography variant="subtitle2">
+                          {card.cardholder.name}
+                        </Typography>
+                      </Stack>
+                    </TableCell>
+                    <TableCell>
+                      <SeverityPill color={statusMap[card.type]}>
+                        {card.type}
+                      </SeverityPill>
+                    </TableCell>
+                    <TableCell>{card.last4}</TableCell>
+                    <TableCell>{formatDateTime(card.created)}</TableCell>
+                    <TableCell
+                      sx={{
+                        width: "1px",
+                        whiteSpace: "nowrap",
+                      }}
                     >
-                      Details
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Box>
+                      <Button
+                        color="inherit"
+                        endIcon={
+                          <SvgIcon fontSize="small">
+                            <ArrowRightIcon />
+                          </SvgIcon>
+                        }
+                        href={`/cards/${card.id}`}
+                      >
+                        Details
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Box>
+      </Scrollbar>
       <TablePagination
         component="div"
         count={count}
