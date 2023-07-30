@@ -475,7 +475,7 @@ function FaSendMoneyWidget() {
                               className="mt-1 block w-full sm:text-sm"
                               id="review-amount"
                             >
-                              {formatUSD(amount)}
+                              {amount}
                             </span>
                           </div>
                           <div className="">
