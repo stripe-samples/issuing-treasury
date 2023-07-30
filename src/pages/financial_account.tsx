@@ -82,9 +82,9 @@ const Page = ({
               <Card sx={{ height: "100%" }}>
                 <CardHeader title="Account Information" />
                 <List sx={{ p: 0 }}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6}>
-                      <ListItem divider sx={{ px: 3, py: 1.5 }}>
+                  <ListItem divider sx={{ px: 3, py: 1.5 }}>
+                    <Grid container spacing={1}>
+                      <Grid item xs={6}>
                         <ListItemText
                           sx={{ m: 0 }}
                           primary={
@@ -107,10 +107,8 @@ const Page = ({
                           }
                           disableTypography={true}
                         ></ListItemText>
-                      </ListItem>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <ListItem divider sx={{ py: 1.5 }}>
+                      </Grid>
+                      <Grid item xs={6}>
                         <ListItemText
                           sx={{ m: 0 }}
                           primary={
@@ -133,12 +131,12 @@ const Page = ({
                           }
                           disableTypography={true}
                         ></ListItemText>
-                      </ListItem>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6}>
-                      <ListItem sx={{ px: 3, py: 1.5 }}>
+                  </ListItem>
+                  <ListItem sx={{ px: 3, py: 1.5 }}>
+                    <Grid container spacing={1}>
+                      <Grid item xs={6}>
                         <ListItemText
                           sx={{ m: 0 }}
                           primary={
@@ -161,10 +159,8 @@ const Page = ({
                           }
                           disableTypography={true}
                         ></ListItemText>
-                      </ListItem>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <ListItem sx={{ py: 1.5 }}>
+                      </Grid>
+                      <Grid item xs={6}>
                         <ListItemText
                           sx={{ m: 0 }}
                           primary={
@@ -187,9 +183,9 @@ const Page = ({
                           }
                           disableTypography={true}
                         ></ListItemText>
-                      </ListItem>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                  </ListItem>
                 </List>
               </Card>
             </Grid>
