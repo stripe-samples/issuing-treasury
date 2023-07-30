@@ -14,11 +14,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { format, fromUnixTime } from "date-fns";
 import React, { ChangeEvent } from "react";
 import Stripe from "stripe";
 
 import { SeverityPill } from "../../components/severity-pill";
+import { formatDateTime } from "../../utils/format";
 
 const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
   virtual: "info",
@@ -85,11 +85,6 @@ const CardsTable = ({
           <TableBody>
             {items.map((card) => {
               const isSelected = selected.includes(card.id);
-              const createdAt = format(
-                fromUnixTime(card.created),
-                "MMM dd, yyyy",
-              );
-
               return (
                 <TableRow hover key={card.id}>
                   <TableCell padding="checkbox">
@@ -117,7 +112,7 @@ const CardsTable = ({
                     </SeverityPill>
                   </TableCell>
                   <TableCell>{card.last4}</TableCell>
-                  <TableCell>{createdAt}</TableCell>
+                  <TableCell>{formatDateTime(card.created)}</TableCell>
                   <TableCell
                     sx={{
                       width: "1px",

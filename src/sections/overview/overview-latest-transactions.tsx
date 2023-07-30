@@ -12,11 +12,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { format, fromUnixTime } from "date-fns";
 import Stripe from "stripe";
 
 import { SeverityPill } from "../../components/severity-pill";
-import { formatUSD } from "../../utils/format";
+import { formatDateTime, formatUSD } from "../../utils/format";
 
 import TransactionFlowDetails from "./transaction-flow-details";
 
@@ -48,14 +47,9 @@ export const OverviewLatestTransactions = (props: {
           </TableHead>
           <TableBody>
             {faTransactions.map((transaction) => {
-              const createdAt = format(
-                fromUnixTime(transaction.created),
-                "dd/MM/yyyy",
-              );
-
               return (
                 <TableRow hover key={transaction.id}>
-                  <TableCell>{createdAt}</TableCell>
+                  <TableCell>{formatDateTime(transaction.created)}</TableCell>
                   <TableCell>
                     {`${formatUSD(transaction.amount / 100)} USD`}
                   </TableCell>
