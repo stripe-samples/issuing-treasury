@@ -13,7 +13,6 @@ import {
 
 import { Chart } from "src/components/chart";
 import { ChartData } from "src/types/chart-data";
-
 import { formatUSD } from "src/utils/format";
 
 const useChartOptions = (faFundsFlowChartData: ChartData) => {

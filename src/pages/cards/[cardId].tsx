@@ -8,7 +8,6 @@ import CardStatusSwitchWidget from "src/components/Stripe/CardStatusSwitchWidget
 import IssuingAuthorizationsWidget from "src/components/Stripe/IssuingAuthorizationsWidget";
 import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
 import JwtPayload from "src/types/jwt-payload";
-
 import { getCardTransactions } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
