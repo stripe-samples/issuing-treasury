@@ -1,4 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
+import Image from "next/image";
 import NextLink from "next/link";
 import { ReactNode } from "react";
 
@@ -84,7 +85,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <Typography align="center" sx={{ mb: 3 }} variant="subtitle1">
               Try embedded finance features and examine our open source GitHub
             </Typography>
-            {/* <img alt="" src="/assets/auth-illustration.svg" /> */}
+            <Box>
+              <img
+                alt="Issuing credit cards"
+                src="/assets/issuing-credit-cards.png"
+              />
+            </Box>
           </Box>
         </Grid>
       </Grid>
