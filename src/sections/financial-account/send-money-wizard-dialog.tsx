@@ -1,4 +1,11 @@
-import { Dialog, DialogTitle, Divider, Button } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  Divider,
+  Button,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import { useMachine } from "@xstate/react";
 import React from "react";
 
@@ -34,6 +41,41 @@ const SendMoneyWizardDialog = () => {
       >
         <DialogTitle>Send Money</DialogTitle>
         <Divider />
+        <DialogContent>
+          {current.matches("selectingNetwork") && <div>selectingNetwork</div>}
+          {current.matches("collectingDestinationAddress") && (
+            <div>collectingDestinationAddress</div>
+          )}
+          {current.matches("confirmingTransfer") && <div>selectingNetwork</div>}
+        </DialogContent>
+        <Divider />
+        <DialogActions>
+          {current.matches("selectingNetwork") && (
+            <div>
+              <Button onClick={handleNext} variant="contained">
+                Next
+              </Button>
+            </div>
+          )}
+          {current.matches("collectingDestinationAddress") && (
+            <div>
+              <Button onClick={handleBack} variant="contained">
+                Back
+              </Button>
+              <Button onClick={handleNext} variant="contained">
+                Next
+              </Button>
+            </div>
+          )}
+          {current.matches("confirmingTransfer") && (
+            <div>
+              <Button onClick={handleBack} variant="contained">
+                Back
+              </Button>
+              <Button variant="contained">Transfer</Button>
+            </div>
+          )}
+        </DialogActions>
       </Dialog>
     </>
   );

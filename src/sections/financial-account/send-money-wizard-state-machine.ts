@@ -1,16 +1,16 @@
 import { createMachine } from "xstate";
 
 const stateMachine = createMachine({
-  initial: "green",
+  initial: "selectingNetwork",
   states: {
-    green: {
-      on: { NEXT: "yellow" },
+    selectingNetwork: {
+      on: { NEXT: "collectingDestinationAddress" },
     },
-    yellow: {
-      on: { NEXT: "red" },
+    collectingDestinationAddress: {
+      on: { NEXT: "confirmingTransfer", BACK: "selectingNetwork" },
     },
-    red: {
-      on: { NEXT: "green" },
+    confirmingTransfer: {
+      on: { BACK: "collectingDestinationAddress" },
     },
   },
 });
