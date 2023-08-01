@@ -28,6 +28,11 @@ import * as Yup from "yup";
 
 import stateMachine from "src/sections/financial-account/send-money-wizard-state-machine";
 
+enum NetworkType {
+  ACH = "ach",
+  US_DOMESTIC_WIRE = "us_domestic_wire",
+}
+
 const SelectingNetworkForm = ({
   formRef,
   onFormSubmit,
@@ -35,13 +40,15 @@ const SelectingNetworkForm = ({
 }: {
   formRef: RefObject<FormikProps<FormikValues>>;
   onFormSubmit: () => void;
-  setNetwork: (network: string) => void;
+  setNetwork: (network: NetworkType) => void;
 }) => {
   const initialValues = {
     network: "",
   };
   const validationSchema = Yup.object().shape({
-    network: Yup.string().required("Please select a network"),
+    network: Yup.string()
+      .oneOf(Object.values(NetworkType))
+      .required("Please select a network"),
   });
 
   return (
@@ -75,9 +82,13 @@ const SelectingNetworkForm = ({
             <Grid item xs={12}>
               <FormLabel htmlFor="network">Network</FormLabel>
               <Field as={RadioGroup} aria-label="network" name="network">
-                <FormControlLabel value="ach" control={<Radio />} label="ACH" />
                 <FormControlLabel
-                  value="us_domestic_wire"
+                  value={NetworkType.ACH}
+                  control={<Radio />}
+                  label="ACH"
+                />
+                <FormControlLabel
+                  value={NetworkType.US_DOMESTIC_WIRE}
                   control={<Radio />}
                   label="Wire Transfer"
                 />
@@ -143,7 +154,7 @@ const CollectingDestinationAddressForm = ({
                 helperText={touched.name && errors.name}
               />
             </Grid>
-            {network === "us_domestic_wire" && (
+            {network === NetworkType.US_DOMESTIC_WIRE && (
               <>
                 <Grid item xs={12}>
                   <Field
