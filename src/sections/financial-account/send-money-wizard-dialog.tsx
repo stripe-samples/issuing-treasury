@@ -56,33 +56,41 @@ const SelectingNetworkForm = ({
     >
       {({ errors, touched, isSubmitting }) => (
         <Form>
-          <Typography>
-            In this demo you can test an experience for sending funds from a
-            Treasury Financial Account to an external 3rd party US bank account.
-            Depending on the network type, timing for funds to be available may
-            vary.
-          </Typography>
-          <Typography>
-            You can set the status of the transaction before sending the payment
-            for demo purposes. Do not forget to check the Financial Account
-            balance afterwards!
-          </Typography>
-          <FormLabel htmlFor="network">Network</FormLabel>
-          <Field as={RadioGroup} aria-label="network" name="network">
-            <FormControlLabel value="ach" control={<Radio />} label="ACH" />
-            <FormControlLabel
-              value="us_domestic_wire"
-              control={<Radio />}
-              label="Wire Transfer"
-            />
-          </Field>
-          <ErrorMessage name="network">
-            {(errorMsg: string) => (
-              <FormHelperText error={Boolean(errors.network)}>
-                {errorMsg}
-              </FormHelperText>
-            )}
-          </ErrorMessage>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography>
+                In this demo you can test an experience for sending funds from a
+                Treasury Financial Account to an external 3rd party US bank
+                account. Depending on the network type, timing for funds to be
+                available may vary.
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                You can set the status of the transaction before sending the
+                payment for demo purposes. Do not forget to check the Financial
+                Account balance afterwards!
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <FormLabel htmlFor="network">Network</FormLabel>
+              <Field as={RadioGroup} aria-label="network" name="network">
+                <FormControlLabel value="ach" control={<Radio />} label="ACH" />
+                <FormControlLabel
+                  value="us_domestic_wire"
+                  control={<Radio />}
+                  label="Wire Transfer"
+                />
+              </Field>
+              <ErrorMessage name="network">
+                {(errorMsg: string) => (
+                  <FormHelperText error={Boolean(errors.network)}>
+                    {errorMsg}
+                  </FormHelperText>
+                )}
+              </ErrorMessage>
+            </Grid>
+          </Grid>
         </Form>
       )}
     </Formik>
