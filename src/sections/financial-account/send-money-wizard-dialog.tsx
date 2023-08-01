@@ -13,6 +13,12 @@ import {
   FormHelperText,
   TextField,
   Grid,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Alert,
 } from "@mui/material";
 import { useMachine } from "@xstate/react";
 import {
@@ -23,7 +29,7 @@ import {
   FormikValues,
   ErrorMessage,
 } from "formik";
-import React, { RefObject, use, useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import * as Yup from "yup";
 
 import stateMachine from "src/sections/financial-account/send-money-wizard-state-machine";
@@ -31,6 +37,12 @@ import stateMachine from "src/sections/financial-account/send-money-wizard-state
 enum NetworkType {
   ACH = "ach",
   US_DOMESTIC_WIRE = "us_domestic_wire",
+}
+
+enum TransactionResult {
+  Pending = "pending",
+  Posted = "post",
+  Failed = "fail",
 }
 
 type DestinationAddress = {
@@ -133,15 +145,16 @@ const CollectingDestinationAddressForm = ({
 }) => {
   let initialValues = {
     name: "",
-    routing_number: "",
-    account_number: "",
+    routingNumber: "",
+    accountNumber: "",
     amount: "",
+    accountNotes: "",
   };
 
   const requiredFieldsValidationSchema = {
     name: Yup.string().required("Name is required"),
-    routing_number: Yup.string().required("Routing Number is required"),
-    account_number: Yup.string().required("Account Number is required"),
+    routingNumber: Yup.string().required("Routing Number is required"),
+    accountNumber: Yup.string().required("Account Number is required"),
     amount: Yup.number().required("Amount is required").min(0),
   };
 
@@ -175,10 +188,10 @@ const CollectingDestinationAddressForm = ({
   ) => {
     const destinationAddress: DestinationAddress = {
       name: values.name,
-      routingNumber: values.routing_number,
-      accountNumber: values.account_number,
+      routingNumber: values.routingNumber,
+      accountNumber: values.accountNumber,
       amount: values.amount,
-      accountNotes: values.account_notes,
+      accountNotes: values.accountNotes,
     };
 
     if (network === NetworkType.US_DOMESTIC_WIRE) {
@@ -198,7 +211,6 @@ const CollectingDestinationAddressForm = ({
       innerRef={formRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      validateOnBlur={true}
       onSubmit={handleSubmit}
     >
       {({ errors, touched }) => (
@@ -266,23 +278,23 @@ const CollectingDestinationAddressForm = ({
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name="routing_number"
+                name="routingNumber"
                 required
                 label="Routing Number"
                 fullWidth
-                error={touched.routing_number && Boolean(errors.routing_number)}
-                helperText={touched.routing_number && errors.routing_number}
+                error={touched.routingNumber && Boolean(errors.routingNumber)}
+                helperText={touched.routingNumber && errors.routingNumber}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name="account_number"
+                name="accountNumber"
                 required
                 label="Account Number"
                 fullWidth
-                error={touched.account_number && Boolean(errors.account_number)}
-                helperText={touched.account_number && errors.account_number}
+                error={touched.accountNumber && Boolean(errors.accountNumber)}
+                helperText={touched.accountNumber && errors.accountNumber}
               />
             </Grid>
             <Grid item xs={12}>
@@ -300,11 +312,11 @@ const CollectingDestinationAddressForm = ({
             <Grid item xs={12}>
               <Field
                 as={TextField}
-                name="account_notes"
+                name="accountNotes"
                 label="Account Notes (Optional)"
                 fullWidth
-                error={touched.account_notes && Boolean(errors.account_notes)}
-                helperText={touched.account_notes && errors.account_notes}
+                error={touched.accountNotes && Boolean(errors.accountNotes)}
+                helperText={touched.accountNotes && errors.accountNotes}
               />
             </Grid>
           </Grid>
@@ -314,153 +326,170 @@ const CollectingDestinationAddressForm = ({
   );
 };
 
-// const ConfirmingTransferForm = ({
-//   formRef,
-//   onFormSubmit,
-//   network,
-//   destinationAddress,
-// }: {
-//   formRef: RefObject<FormikProps<FormikValues>>;
-//   onFormSubmit: () => void;
-//   network: string;
-//   destinationAddress: DestinationAddress | null;
-// }) => {
-//   const initialValues = {
-//     name: "",
-//     routing_number: "",
-//     account_number: "",
-//     amount: "",
-//   };
+const ConfirmingTransferForm = ({
+  formRef,
+  onFormSubmit,
+  network,
+  destinationAddress,
+  setTransactionResult,
+}: {
+  formRef: RefObject<FormikProps<FormikValues>>;
+  onFormSubmit: () => void;
+  network: string;
+  destinationAddress: DestinationAddress | null;
+  setTransactionResult: (transactionResult: string) => void;
+}) => {
+  if (!destinationAddress) {
+    throw new Error("Destination address is required");
+  }
 
-//   const validationSchema = Yup.object().shape({
-//     name: Yup.string().required("Name is required"),
-//     routing_number: Yup.string().required("Routing Number is required"),
-//     account_number: Yup.string().required("Account Number is required"),
-//     amount: Yup.number().required("Amount is required").min(0),
-//   });
+  const transactionResultOptions: { [key: string]: string } = {};
+  for (const key in TransactionResult) {
+    const value = TransactionResult[key as keyof typeof TransactionResult];
+    transactionResultOptions[key] = value;
+  }
 
-//   return (
-//     <Formik
-//       innerRef={formRef}
-//       initialValues={initialValues}
-//       validationSchema={validationSchema}
-//       onSubmit={async (values, { setSubmitting }) => {
-//         onFormSubmit();
-//       }}
-//     >
-//       {({ errors, touched }) => (
-//         <Form>
-//           <Grid container spacing={3}>
-//             <Grid item xs={12}>
-//               <Field
-//                 as={TextField}
-//                 name="name"
-//                 required
-//                 label="Name"
-//                 fullWidth
-//                 error={touched.name && Boolean(errors.name)}
-//                 helperText={touched.name && errors.name}
-//               />
-//             </Grid>
-//             {network === NetworkType.US_DOMESTIC_WIRE && (
-//               <>
-//                 <Grid item xs={12}>
-//                   <Field
-//                     as={TextField}
-//                     fullWidth
-//                     required
-//                     label="Street address"
-//                     name="address1"
-//                     error={touched.address1 && Boolean(errors.address1)}
-//                     helperText={touched.address1 && errors.address1}
-//                   />
-//                 </Grid>
-//                 <Grid item xs={12} md={4}>
-//                   <Field
-//                     as={TextField}
-//                     fullWidth
-//                     required
-//                     label="City"
-//                     name="city"
-//                     error={touched.city && Boolean(errors.city)}
-//                     helperText={touched.city && errors.city}
-//                   />
-//                 </Grid>
-//                 <Grid item xs={12} md={4}>
-//                   <Field
-//                     as={TextField}
-//                     fullWidth
-//                     required
-//                     label="State"
-//                     name="state"
-//                     error={touched.state && Boolean(errors.state)}
-//                     helperText={touched.state && errors.state}
-//                   />
-//                 </Grid>
-//                 <Grid item xs={12} md={4}>
-//                   <Field
-//                     as={TextField}
-//                     fullWidth
-//                     required
-//                     label="ZIP / Postal code"
-//                     name="postalCode"
-//                     error={touched.postalCode && Boolean(errors.postalCode)}
-//                     helperText={touched.postalCode && errors.postalCode}
-//                   />
-//                 </Grid>
-//               </>
-//             )}
-//             <Grid item xs={12} md={6}>
-//               <Field
-//                 as={TextField}
-//                 name="routing_number"
-//                 required
-//                 label="Routing Number"
-//                 fullWidth
-//                 error={touched.routing_number && Boolean(errors.routing_number)}
-//                 helperText={touched.routing_number && errors.routing_number}
-//               />
-//             </Grid>
-//             <Grid item xs={12} md={6}>
-//               <Field
-//                 as={TextField}
-//                 name="account_number"
-//                 required
-//                 label="Account Number"
-//                 fullWidth
-//                 error={touched.account_number && Boolean(errors.account_number)}
-//                 helperText={touched.account_number && errors.account_number}
-//               />
-//             </Grid>
-//             <Grid item xs={12}>
-//               <Field
-//                 as={TextField}
-//                 name="amount"
-//                 type="number"
-//                 required
-//                 label="Amount"
-//                 fullWidth
-//                 error={touched.amount && Boolean(errors.amount)}
-//                 helperText={touched.amount && errors.amount}
-//               />
-//             </Grid>
-//             <Grid item xs={12}>
-//               <Field
-//                 as={TextField}
-//                 name="account_notes"
-//                 type="number"
-//                 label="Account Notes (Optional)"
-//                 fullWidth
-//                 error={touched.account_notes && Boolean(errors.account_notes)}
-//                 helperText={touched.account_notes && errors.account_notes}
-//               />
-//             </Grid>
-//           </Grid>
-//         </Form>
-//       )}
-//     </Formik>
-//   );
-// };
+  const initialValues = {
+    transactionResult: TransactionResult.Pending,
+  };
+
+  const validationSchema = Yup.object().shape({
+    transactionResult: Yup.string().required("Transaction result is required"),
+  });
+
+  const handleSubmit = async (
+    values: FormikValues,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  ) => {
+    setTransactionResult(values.transactionResult);
+    onFormSubmit();
+    setSubmitting(false);
+  };
+
+  return (
+    <Formik
+      innerRef={formRef}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {() => (
+        <Form>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2">Name</Typography>
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  {destinationAddress.name}
+                </Typography>
+              </Box>
+            </Grid>
+            {network === NetworkType.US_DOMESTIC_WIRE && (
+              <>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">Street address</Typography>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {destinationAddress.address1}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle2">City</Typography>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {destinationAddress.city}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle2">State</Typography>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {destinationAddress.state}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle2">ZIP / Postal code</Typography>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {destinationAddress.postalCode}
+                    </Typography>
+                  </Box>
+                </Grid>
+              </>
+            )}
+            <Grid item xs={12} md={6}>
+              <Typography variant="subtitle2">Routing Number</Typography>
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  {destinationAddress.routingNumber}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="subtitle2">Account Number</Typography>
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  {destinationAddress.accountNumber}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2">Amount</Typography>
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  {destinationAddress.amount}
+                </Typography>
+              </Box>
+            </Grid>
+            {destinationAddress.accountNotes != "" && (
+              <Grid item xs={12}>
+                <Typography variant="subtitle2">Account Notes</Typography>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {destinationAddress.accountNotes}
+                  </Typography>
+                </Box>
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="transactionResult">
+                  Transaction Result
+                </InputLabel>
+                <Field
+                  as={Select}
+                  name="transactionResult"
+                  label="Transaction Result"
+                  labelId="transactionResult"
+                >
+                  {(
+                    Object.keys(TransactionResult) as Array<
+                      keyof typeof TransactionResult
+                    >
+                  ).map((option) => (
+                    <MenuItem key={option} value={TransactionResult[option]}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Field>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <Alert color="primary" severity="info">
+                  Setting the transaction result is for demo purposes only
+                </Alert>
+              </Box>
+            </Grid>
+          </Grid>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
 const SendMoneyWizardDialog = () => {
   const [showModal, setShowModal] = React.useState(false);
@@ -480,6 +509,7 @@ const SendMoneyWizardDialog = () => {
   const [network, setNetwork] = useState("");
   const [destinationAddress, setDestinationAddress] =
     useState<DestinationAddress | null>(null);
+  const [transactionResult, setTransactionResult] = useState("");
 
   const selectingNetworkFormRef = useRef<FormikProps<FormikValues>>(null);
   const handleSubmitSelectingNetworkForm = () => {
@@ -491,7 +521,7 @@ const SendMoneyWizardDialog = () => {
 
   const collectingDestinationAddressFormRef =
     useRef<FormikProps<FormikValues>>(null);
-  const handleSubmitCollectingDestinationAddressForm = async () => {
+  const handleSubmitCollectingDestinationAddressForm = () => {
     const form = collectingDestinationAddressFormRef.current;
     if (form) {
       form.submitForm();
@@ -504,6 +534,12 @@ const SendMoneyWizardDialog = () => {
     if (form) {
       form.submitForm();
     }
+  };
+
+  const handleSendTransfer = () => {
+    console.log(network);
+    console.log(destinationAddress);
+    console.log(transactionResult);
   };
 
   return (
@@ -530,21 +566,20 @@ const SendMoneyWizardDialog = () => {
               setDestinationAddress={setDestinationAddress}
             />
           )}
-          {/* {current.matches("confirmingTransfer") && (
+          {current.matches("confirmingTransfer") && (
             <ConfirmingTransferForm
               formRef={confirmingTransferFormRef}
-              onFormSubmit={() => {
-                console.log("HANDLE END OF FORM SUBMISSION");
-              }}
+              onFormSubmit={handleSendTransfer}
               network={network}
               destinationAddress={destinationAddress}
+              setTransactionResult={setTransactionResult}
             />
-          )} */}
+          )}
         </DialogContent>
         <Divider />
         <DialogActions>
           {current.matches("selectingNetwork") && (
-            <div>
+            <>
               <Button
                 onClick={handleSubmitSelectingNetworkForm}
                 variant="contained"
@@ -552,11 +587,11 @@ const SendMoneyWizardDialog = () => {
               >
                 Next
               </Button>
-            </div>
+            </>
           )}
           {current.matches("collectingDestinationAddress") && (
-            <div>
-              <Button onClick={handleBack} variant="contained">
+            <>
+              <Button onClick={handleBack} color="inherit">
                 Back
               </Button>
               <Button
@@ -566,11 +601,11 @@ const SendMoneyWizardDialog = () => {
               >
                 Next
               </Button>
-            </div>
+            </>
           )}
-          {/* {current.matches("confirmingTransfer") && (
-            <div>
-              <Button onClick={handleBack} variant="contained">
+          {current.matches("confirmingTransfer") && (
+            <>
+              <Button onClick={handleBack} color="inherit">
                 Back
               </Button>
               <Button
@@ -580,8 +615,8 @@ const SendMoneyWizardDialog = () => {
               >
                 Send
               </Button>
-            </div>
-          )} */}
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </>
