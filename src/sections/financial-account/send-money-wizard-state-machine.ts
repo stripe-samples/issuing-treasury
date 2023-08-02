@@ -4,13 +4,17 @@ const stateMachine = createMachine({
   initial: "selectingNetwork",
   states: {
     selectingNetwork: {
-      on: { NEXT: "collectingDestinationAddress" },
+      on: { NEXT: "collectingDestinationAddress", RESET: "selectingNetwork" },
     },
     collectingDestinationAddress: {
-      on: { NEXT: "confirmingTransfer", BACK: "selectingNetwork" },
+      on: {
+        NEXT: "confirmingTransfer",
+        BACK: "selectingNetwork",
+        RESET: "selectingNetwork",
+      },
     },
     confirmingTransfer: {
-      on: { BACK: "collectingDestinationAddress" },
+      on: { BACK: "collectingDestinationAddress", RESET: "selectingNetwork" },
     },
   },
 });

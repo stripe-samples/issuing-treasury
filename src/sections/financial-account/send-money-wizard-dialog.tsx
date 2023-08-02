@@ -504,7 +504,18 @@ const SendMoneyWizardDialog = () => {
   const [showModal, setShowModal] = React.useState(false);
   const [current, send] = useMachine(stateMachine);
 
-  const handleOpen = () => setShowModal(true);
+  const [network, setNetwork] = useState("");
+  const [destinationAddress, setDestinationAddress] =
+    useState<DestinationAddress | null>(null);
+  const [transactionResult, setTransactionResult] = useState("");
+
+  const handleOpen = () => {
+    setNetwork("");
+    setDestinationAddress(null);
+    setTransactionResult("");
+    send("RESET");
+    setShowModal(true);
+  };
   const handleClose = () => setShowModal(false);
 
   const handleNext = () => {
@@ -514,11 +525,6 @@ const SendMoneyWizardDialog = () => {
   const handleBack = () => {
     send("BACK");
   };
-
-  const [network, setNetwork] = useState("");
-  const [destinationAddress, setDestinationAddress] =
-    useState<DestinationAddress | null>(null);
-  const [transactionResult, setTransactionResult] = useState("");
 
   const selectingNetworkFormRef = useRef<FormikProps<FormikValues>>(null);
   const handleSubmitSelectingNetworkForm = () => {
