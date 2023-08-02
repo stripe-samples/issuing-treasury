@@ -505,11 +505,15 @@ const SendMoneyWizardDialog = () => {
     TransactionResult.PENDING,
   );
 
-  const handleOpen = () => {
+  const handleReset = () => {
     setNetwork("");
     setDestinationAddress(null);
     setTransactionResult(TransactionResult.PENDING);
     send("RESET");
+  };
+
+  const handleOpen = () => {
+    handleReset();
     setShowModal(true);
   };
   const handleClose = () => setShowModal(false);
@@ -591,46 +595,51 @@ const SendMoneyWizardDialog = () => {
           )}
         </DialogContent>
         <Divider />
-        <DialogActions>
-          {current.matches("selectingNetwork") && (
-            <>
-              <Button
-                onClick={handleSubmitSelectingNetworkForm}
-                variant="contained"
-                color="primary"
-              >
-                Next
-              </Button>
-            </>
-          )}
-          {current.matches("collectingDestinationAddress") && (
-            <>
-              <Button onClick={handleBack} color="inherit">
-                Back
-              </Button>
-              <Button
-                onClick={handleSubmitCollectingDestinationAddressForm}
-                variant="contained"
-                color="primary"
-              >
-                Next
-              </Button>
-            </>
-          )}
-          {current.matches("confirmingTransfer") && (
-            <>
-              <Button onClick={handleBack} color="inherit">
-                Back
-              </Button>
-              <Button
-                onClick={handleSubmitConfirmingTransferForm}
-                variant="contained"
-                color="primary"
-              >
-                Send
-              </Button>
-            </>
-          )}
+        <DialogActions style={{ justifyContent: "space-between" }}>
+          <Button onClick={handleReset} color="inherit">
+            Reset
+          </Button>
+          <div>
+            {current.matches("selectingNetwork") && (
+              <>
+                <Button
+                  onClick={handleSubmitSelectingNetworkForm}
+                  variant="contained"
+                  color="primary"
+                >
+                  Next
+                </Button>
+              </>
+            )}
+            {current.matches("collectingDestinationAddress") && (
+              <>
+                <Button onClick={handleBack} color="inherit">
+                  Back
+                </Button>
+                <Button
+                  onClick={handleSubmitCollectingDestinationAddressForm}
+                  variant="contained"
+                  color="primary"
+                >
+                  Next
+                </Button>
+              </>
+            )}
+            {current.matches("confirmingTransfer") && (
+              <>
+                <Button onClick={handleBack} color="inherit">
+                  Back
+                </Button>
+                <Button
+                  onClick={handleSubmitConfirmingTransferForm}
+                  variant="contained"
+                  color="primary"
+                >
+                  Send
+                </Button>
+              </>
+            )}
+          </div>
         </DialogActions>
       </Dialog>
     </>
