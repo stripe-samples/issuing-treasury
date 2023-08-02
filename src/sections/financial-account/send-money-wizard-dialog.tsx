@@ -15,7 +15,6 @@ import {
   Grid,
   Box,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Alert,
@@ -40,9 +39,9 @@ enum NetworkType {
 }
 
 enum TransactionResult {
-  Pending = "pending",
-  Posted = "post",
-  Failed = "fail",
+  PENDING = "pending",
+  POSTED = "post",
+  FAILED = "fail",
 }
 
 type DestinationAddress = {
@@ -340,13 +339,15 @@ const ConfirmingTransferForm = ({
   onFormSubmit,
   network,
   destinationAddress,
+  transactionResult,
   setTransactionResult,
 }: {
   formRef: RefObject<FormikProps<FormikValues>>;
   onFormSubmit: () => void;
   network: string;
   destinationAddress: DestinationAddress | null;
-  setTransactionResult: (transactionResult: string) => void;
+  transactionResult: TransactionResult;
+  setTransactionResult: (transactionResult: TransactionResult) => void;
 }) => {
   if (!destinationAddress) {
     throw new Error("Destination address is required");
@@ -358,12 +359,12 @@ const ConfirmingTransferForm = ({
     transactionResultOptions[key] = value;
   }
 
-  const initialValues = {
-    transactionResult: TransactionResult.Pending,
-  };
+  const initialValues = { transactionResult };
 
   const validationSchema = Yup.object().shape({
-    transactionResult: Yup.string().required("Transaction result is required"),
+    transactionResult: Yup.string()
+      .oneOf(Object.values(TransactionResult))
+      .required("Transaction result is required"),
   });
 
   const handleSubmit = async (
@@ -465,15 +466,8 @@ const ConfirmingTransferForm = ({
             )}
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="transactionResult">
-                  Transaction Result
-                </InputLabel>
-                <Field
-                  as={Select}
-                  name="transactionResult"
-                  label="Transaction Result"
-                  labelId="transactionResult"
-                >
+                <Typography variant="subtitle2">Transaction Result</Typography>
+                <Field as={Select} name="transactionResult" sx={{ mt: 1 }}>
                   {(
                     Object.keys(TransactionResult) as Array<
                       keyof typeof TransactionResult
@@ -507,12 +501,14 @@ const SendMoneyWizardDialog = () => {
   const [network, setNetwork] = useState("");
   const [destinationAddress, setDestinationAddress] =
     useState<DestinationAddress | null>(null);
-  const [transactionResult, setTransactionResult] = useState("");
+  const [transactionResult, setTransactionResult] = useState<TransactionResult>(
+    TransactionResult.PENDING,
+  );
 
   const handleOpen = () => {
     setNetwork("");
     setDestinationAddress(null);
-    setTransactionResult("");
+    setTransactionResult(TransactionResult.PENDING);
     send("RESET");
     setShowModal(true);
   };
@@ -589,6 +585,7 @@ const SendMoneyWizardDialog = () => {
               onFormSubmit={handleSendTransfer}
               network={network}
               destinationAddress={destinationAddress}
+              transactionResult={transactionResult}
               setTransactionResult={setTransactionResult}
             />
           )}
