@@ -60,15 +60,15 @@ type DestinationAddress = {
 const SelectingNetworkForm = ({
   formRef,
   onFormSubmit,
+  network,
   setNetwork,
 }: {
   formRef: RefObject<FormikProps<FormikValues>>;
   onFormSubmit: () => void;
+  network: string;
   setNetwork: (network: NetworkType) => void;
 }) => {
-  const initialValues = {
-    network: "",
-  };
+  const initialValues = { network };
   const validationSchema = Yup.object().shape({
     network: Yup.string()
       .oneOf(Object.values(NetworkType))
@@ -136,14 +136,16 @@ const CollectingDestinationAddressForm = ({
   formRef,
   onFormSubmit,
   network,
+  destinationAddress,
   setDestinationAddress,
 }: {
   formRef: RefObject<FormikProps<FormikValues>>;
   onFormSubmit: () => void;
   network: string;
+  destinationAddress: DestinationAddress | null;
   setDestinationAddress: (destinationAddress: DestinationAddress) => void;
 }) => {
-  let initialValues = {
+  let initialValues = destinationAddress || {
     name: "",
     routingNumber: "",
     accountNumber: "",
@@ -161,12 +163,19 @@ const CollectingDestinationAddressForm = ({
   let validationSchema = Yup.object().shape(requiredFieldsValidationSchema);
 
   if (network === NetworkType.US_DOMESTIC_WIRE) {
-    const conditionalInitialValues = {
-      address1: "",
-      city: "",
-      state: "",
-      postalCode: "",
-    };
+    const conditionalInitialValues = destinationAddress
+      ? {
+          address1: destinationAddress.address1,
+          city: destinationAddress.city,
+          state: destinationAddress.state,
+          postalCode: destinationAddress.postalCode,
+        }
+      : {
+          address1: "",
+          city: "",
+          state: "",
+          postalCode: "",
+        };
 
     initialValues = { ...initialValues, ...conditionalInitialValues };
 
@@ -555,6 +564,7 @@ const SendMoneyWizardDialog = () => {
             <SelectingNetworkForm
               formRef={selectingNetworkFormRef}
               onFormSubmit={handleNext}
+              network={network}
               setNetwork={setNetwork}
             />
           )}
@@ -563,6 +573,7 @@ const SendMoneyWizardDialog = () => {
               formRef={collectingDestinationAddressFormRef}
               onFormSubmit={handleNext}
               network={network}
+              destinationAddress={destinationAddress}
               setDestinationAddress={setDestinationAddress}
             />
           )}
