@@ -53,7 +53,7 @@ const handler = async (
       city = req.body.city;
       state = req.body.state;
       postal_code = req.body.postalCode;
-      line1 = req.body.address1;
+      line1 = req.body.line1;
     } else {
       city = "Alvin";
       state = "TX";
@@ -102,12 +102,7 @@ const handler = async (
         { stripeAccount: StripeAccountId },
       );
     }
-    if (req.body.transaction_result == TransactionResult.RETURNED) {
-      await stripe.testHelpers.treasury.outboundPayments.returnOutboundPayment(
-        outboundPayment.id,
-        { stripeAccount: StripeAccountId },
-      );
-    }
+    // TODO: Handle the return status of the transaction result
     if (req.body.transaction_result == TransactionResult.FAILED) {
       await stripe.testHelpers.treasury.outboundPayments.fail(
         outboundPayment.id,

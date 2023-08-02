@@ -21,7 +21,7 @@ const stateMachine = createMachine({
       },
     },
     notifyingCompletion: {
-      on: { SEND_ANOTHER: "selectingNetwork" },
+      on: { RESET: "selectingNetwork" },
     },
   },
 });

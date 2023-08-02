@@ -1,6 +1,8 @@
 enum TransactionResult {
   POSTED = "posted",
-  RETURNED = "return",
+  PROCESSING = "processing",
+  // TODO: Handle the return status of the transaction result
+  // RETURNED = "return",
   FAILED = "fail",
 }
 

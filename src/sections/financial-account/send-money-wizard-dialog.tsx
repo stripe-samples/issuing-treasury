@@ -1,3 +1,4 @@
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import {
   Dialog,
   DialogTitle,
@@ -18,6 +19,7 @@ import {
   MenuItem,
   Select,
   Alert,
+  SvgIcon,
 } from "@mui/material";
 import { useMachine } from "@xstate/react";
 import {
@@ -28,6 +30,7 @@ import {
   FormikValues,
   ErrorMessage,
 } from "formik";
+import Link from "next/link";
 import React, { ChangeEvent, RefObject, useRef, useState } from "react";
 import * as Yup from "yup";
 
@@ -519,7 +522,17 @@ const ConfirmingTransferForm = ({
             <Grid item xs={12}>
               <Box display="flex" alignItems="center" justifyContent="center">
                 <Alert color="primary" severity="info">
-                  Setting the transaction result is for demo purposes only
+                  Setting the transaction result is for demo purposes only (See{" "}
+                  <Link
+                    target="_blank"
+                    href="https://stripe.com/docs/api/treasury/outbound_payments/test_mode_fail"
+                  >
+                    docs
+                  </Link>{" "}
+                  <SvgIcon fontSize="small" sx={{ color: "neutral.500" }}>
+                    <ArrowTopRightOnSquareIcon />
+                  </SvgIcon>
+                  )
                 </Alert>
               </Box>
             </Grid>
@@ -527,6 +540,119 @@ const ConfirmingTransferForm = ({
         </Form>
       )}
     </Formik>
+  );
+};
+
+const NotifyingCompletionForm = ({
+  network,
+  destinationAddress,
+  transactionResult,
+}: {
+  network: string;
+  destinationAddress: DestinationAddress | null;
+  transactionResult: TransactionResult;
+}) => {
+  if (!destinationAddress) {
+    throw new Error("Destination address is required");
+  }
+
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Alert severity="success">
+            Successfully sent an outbound payment to {destinationAddress.name}{" "}
+            with an expected result of {transactionResult}.
+          </Alert>
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="subtitle2">Name</Typography>
+        <Box>
+          <Typography variant="body2" color="text.secondary">
+            {destinationAddress.name}
+          </Typography>
+        </Box>
+      </Grid>
+      {network === NetworkType.US_DOMESTIC_WIRE && (
+        <>
+          <Grid item xs={12}>
+            <Typography variant="subtitle2">Street address</Typography>
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                {destinationAddress.address1}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Typography variant="subtitle2">City</Typography>
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                {destinationAddress.city}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Typography variant="subtitle2">State</Typography>
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                {destinationAddress.state}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Typography variant="subtitle2">ZIP / Postal code</Typography>
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                {destinationAddress.postalCode}
+              </Typography>
+            </Box>
+          </Grid>
+        </>
+      )}
+      <Grid item xs={12} md={6}>
+        <Typography variant="subtitle2">Routing Number</Typography>
+        <Box>
+          <Typography variant="body2" color="text.secondary">
+            {destinationAddress.routingNumber}
+          </Typography>
+        </Box>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Typography variant="subtitle2">Account Number</Typography>
+        <Box>
+          <Typography variant="body2" color="text.secondary">
+            {destinationAddress.accountNumber}
+          </Typography>
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="subtitle2">Amount</Typography>
+        <Box>
+          <Typography variant="body2" color="text.secondary">
+            {destinationAddress.amount}
+          </Typography>
+        </Box>
+      </Grid>
+      {destinationAddress.accountNotes != "" && (
+        <Grid item xs={12}>
+          <Typography variant="subtitle2">Account Notes</Typography>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              {destinationAddress.accountNotes}
+            </Typography>
+          </Box>
+        </Grid>
+      )}
+      <Grid item xs={12}>
+        <Typography variant="subtitle2">Transaction Result</Typography>
+        <Box>
+          <Typography variant="body2" color="text.secondary">
+            {transactionResult}
+          </Typography>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 
@@ -617,9 +743,7 @@ const SendMoneyWizardDialog = () => {
       const response = await fetchApi("/api/send_money", body);
 
       if (response.ok) {
-        console.log("COMPLETE");
-
-        // send("COMPLETE");
+        send("COMPLETE");
       } else {
         const result = await response.json();
         setSendingErrorText(`An error occurred: ${result.error}`);
@@ -670,54 +794,67 @@ const SendMoneyWizardDialog = () => {
               sendingErrorText={sendingErrorText}
             />
           )}
+          {current.matches("notifyingCompletion") && (
+            <NotifyingCompletionForm
+              network={network}
+              destinationAddress={destinationAddress}
+              transactionResult={transactionResult}
+            />
+          )}
         </DialogContent>
         <Divider />
-        <DialogActions style={{ justifyContent: "space-between" }}>
-          <Button onClick={handleReset} color="inherit">
-            Reset
-          </Button>
-          <div>
-            {current.matches("selectingNetwork") && (
-              <>
-                <Button
-                  onClick={handleSubmitSelectingNetworkForm}
-                  variant="contained"
-                  color="primary"
-                >
-                  Next
-                </Button>
-              </>
-            )}
-            {current.matches("collectingDestinationAddress") && (
-              <>
-                <Button onClick={handleBack} color="inherit">
-                  Back
-                </Button>
-                <Button
-                  onClick={handleSubmitCollectingDestinationAddressForm}
-                  variant="contained"
-                  color="primary"
-                >
-                  Next
-                </Button>
-              </>
-            )}
-            {current.matches("confirmingTransfer") && (
-              <>
-                <Button onClick={handleBack} color="inherit">
-                  Back
-                </Button>
-                <Button
-                  onClick={handleSubmitConfirmingTransferForm}
-                  variant="contained"
-                  color="primary"
-                  disabled={isSending}
-                >
-                  {isSending ? "Sending..." : "Send"}
-                </Button>
-              </>
-            )}
-          </div>
+        <DialogActions>
+          {current.matches("selectingNetwork") && (
+            <>
+              <Button
+                onClick={handleSubmitSelectingNetworkForm}
+                variant="contained"
+                color="primary"
+              >
+                Next
+              </Button>
+            </>
+          )}
+          {current.matches("collectingDestinationAddress") && (
+            <>
+              <Button onClick={handleBack} color="inherit">
+                Back
+              </Button>
+              <Button
+                onClick={handleSubmitCollectingDestinationAddressForm}
+                variant="contained"
+                color="primary"
+              >
+                Next
+              </Button>
+            </>
+          )}
+          {current.matches("confirmingTransfer") && (
+            <>
+              <Button onClick={handleBack} color="inherit">
+                Back
+              </Button>
+              <Button
+                onClick={handleSubmitConfirmingTransferForm}
+                variant="contained"
+                color="primary"
+                disabled={isSending}
+              >
+                {isSending ? "Sending..." : "Send"}
+              </Button>
+            </>
+          )}
+          {current.matches("notifyingCompletion") && (
+            <>
+              <Button
+                onClick={handleReset}
+                variant="contained"
+                color="secondary"
+              >
+                Send Another
+              </Button>
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </>
