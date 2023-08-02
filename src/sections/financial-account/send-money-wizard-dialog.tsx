@@ -83,12 +83,12 @@ const SelectingNetworkForm = ({
       innerRef={formRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={async (values, { setSubmitting }) => {
+      onSubmit={async (values) => {
         setNetwork(values.network);
         onFormSubmit();
       }}
     >
-      {({ errors, touched, isSubmitting, setFieldValue }) => (
+      {({ errors, setFieldValue }) => (
         <Form>
           <Grid container spacing={3}>
             <Grid item xs={12}>
