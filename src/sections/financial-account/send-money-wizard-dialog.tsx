@@ -32,17 +32,11 @@ import React, { ChangeEvent, RefObject, useRef, useState } from "react";
 import * as Yup from "yup";
 
 import stateMachine from "src/sections/financial-account/send-money-wizard-state-machine";
+import NetworkType from "src/types/network-type";
+import TransactionResult from "src/types/transaction-result";
+import { fetchApi } from "src/utils/api-helpers";
 
-enum NetworkType {
-  ACH = "ach",
-  US_DOMESTIC_WIRE = "us_domestic_wire",
-}
-
-enum TransactionResult {
-  PENDING = "pending",
-  POSTED = "post",
-  FAILED = "fail",
-}
+const DEFAULT_TRANSACTION_RESULT = TransactionResult.POSTED;
 
 type DestinationAddress = {
   name: string;
@@ -343,6 +337,7 @@ const CollectingDestinationAddressForm = ({
                 name="amount"
                 type="number"
                 required
+                step="0.01"
                 label="Amount"
                 fullWidth
                 error={touched.amount && Boolean(errors.amount)}
@@ -373,6 +368,7 @@ const ConfirmingTransferForm = ({
   destinationAddress,
   transactionResult,
   setTransactionResult,
+  sendingErrorText,
 }: {
   formRef: RefObject<FormikProps<FormikValues>>;
   onFormSubmit: () => void;
@@ -380,6 +376,7 @@ const ConfirmingTransferForm = ({
   destinationAddress: DestinationAddress | null;
   transactionResult: TransactionResult;
   setTransactionResult: (transactionResult: TransactionResult) => void;
+  sendingErrorText: string;
 }) => {
   if (!destinationAddress) {
     throw new Error("Destination address is required");
@@ -418,6 +415,13 @@ const ConfirmingTransferForm = ({
       {() => (
         <Form>
           <Grid container spacing={3}>
+            {sendingErrorText !== "" && (
+              <Grid item xs={12}>
+                <Typography variant="body2" color="error">
+                  {sendingErrorText}
+                </Typography>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Typography variant="subtitle2">Name</Typography>
               <Box>
@@ -534,13 +538,14 @@ const SendMoneyWizardDialog = () => {
   const [destinationAddress, setDestinationAddress] =
     useState<DestinationAddress | null>(null);
   const [transactionResult, setTransactionResult] = useState<TransactionResult>(
-    TransactionResult.PENDING,
+    DEFAULT_TRANSACTION_RESULT,
   );
 
   const handleReset = () => {
     setNetwork("");
     setDestinationAddress(null);
-    setTransactionResult(TransactionResult.PENDING);
+    setTransactionResult(DEFAULT_TRANSACTION_RESULT);
+    setSendingErrorText("");
     send("RESET");
   };
 
@@ -583,10 +588,47 @@ const SendMoneyWizardDialog = () => {
     }
   };
 
-  const handleSendTransfer = () => {
-    console.log(network);
-    console.log(destinationAddress);
-    console.log(transactionResult);
+  const [isSending, setIsSending] = useState(false);
+  const [sendingErrorText, setSendingErrorText] = useState("");
+  const handleSendTransfer = async () => {
+    try {
+      setSendingErrorText("");
+      setIsSending(true);
+      if (destinationAddress === null) {
+        throw new Error(
+          "Destination address is null. Check to make sure it's set before submitting.",
+        );
+      }
+
+      const body = {
+        name: destinationAddress.name,
+        routing_number: destinationAddress.routingNumber,
+        account_number: destinationAddress.accountNumber,
+        network: network,
+        amount: destinationAddress.amount,
+        line1: destinationAddress.address1,
+        city: destinationAddress.city,
+        state: destinationAddress.state,
+        postalCode: destinationAddress.postalCode,
+        notes: destinationAddress.accountNotes,
+        transaction_result: transactionResult,
+      };
+
+      const response = await fetchApi("/api/send_money", body);
+
+      if (response.ok) {
+        console.log("COMPLETE");
+
+        // send("COMPLETE");
+      } else {
+        const result = await response.json();
+        setSendingErrorText(`An error occurred: ${result.error}`);
+      }
+    } catch (error) {
+      setSendingErrorText((error as Error).message);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -625,6 +667,7 @@ const SendMoneyWizardDialog = () => {
               destinationAddress={destinationAddress}
               transactionResult={transactionResult}
               setTransactionResult={setTransactionResult}
+              sendingErrorText={sendingErrorText}
             />
           )}
         </DialogContent>
@@ -668,8 +711,9 @@ const SendMoneyWizardDialog = () => {
                   onClick={handleSubmitConfirmingTransferForm}
                   variant="contained"
                   color="primary"
+                  disabled={isSending}
                 >
-                  Send
+                  {isSending ? "Sending..." : "Send"}
                 </Button>
               </>
             )}

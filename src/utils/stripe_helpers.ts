@@ -12,7 +12,7 @@ export async function getFinancialAccountTransactions(StripeAccountID: string) {
   const fa_transactions = await stripe.treasury.transactions.list(
     {
       financial_account: financialAccount.id,
-      limit: 30,
+      limit: 10,
     },
     { stripeAccount: StripeAccountID },
   );
@@ -31,7 +31,7 @@ export async function getFinancialAccountTransactionsExpanded(
   const fa_transactions = await stripe.treasury.transactions.list(
     {
       financial_account: financialAccount.id,
-      limit: 30,
+      limit: 10,
       expand: ["data.flow_details"],
     },
     { stripeAccount: StripeAccountID },

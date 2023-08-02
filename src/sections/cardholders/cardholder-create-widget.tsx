@@ -75,7 +75,7 @@ const CreateCardholderForm = ({
             setErrorText(result.error);
           }
         } catch (error) {
-          setErrorText("An error occurred. Please try again later.");
+          setErrorText((error as Error).message);
         } finally {
           setSubmitting(false);
         }

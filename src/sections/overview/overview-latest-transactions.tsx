@@ -11,6 +11,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import Stripe from "stripe";
 
@@ -50,9 +51,15 @@ export const OverviewLatestTransactions = (props: {
               {faTransactions.map((transaction) => {
                 return (
                   <TableRow hover key={transaction.id}>
-                    <TableCell>{formatDateTime(transaction.created)}</TableCell>
                     <TableCell>
-                      {`${formatUSD(transaction.amount / 100)} USD`}
+                      <Typography noWrap>
+                        {formatDateTime(transaction.created)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography noWrap>{`${formatUSD(
+                        transaction.amount / 100,
+                      )} USD`}</Typography>
                     </TableCell>
                     <TableCell sx={{ textTransform: "uppercase" }}>
                       <TransactionFlowDetails transaction={transaction} />
@@ -62,7 +69,9 @@ export const OverviewLatestTransactions = (props: {
                         {transaction.status}
                       </SeverityPill>
                     </TableCell>
-                    <TableCell>{transaction.description}</TableCell>
+                    <TableCell>
+                      <Typography noWrap>{transaction.description}</Typography>
+                    </TableCell>
                   </TableRow>
                 );
               })}

@@ -1,7 +1,9 @@
 import { NextApiResponse } from "next";
 
 import withAuth from "src/middleware/api/auth-middleware";
+import NetworkType from "src/types/network-type";
 import NextApiRequestWithSession from "src/types/next-api-request-with-session";
+import TransactionResult from "src/types/transaction-result";
 import stripe from "src/utils/stripe-loader";
 
 const handler = async (
@@ -20,15 +22,13 @@ const handler = async (
       stripeAccount: StripeAccountId,
     });
 
-    // fields from req
-    let amount = req.body.amount;
-    // clean up amount
-    if (req.body.amount.includes(".")) {
-      amount = amount.replace(".", "");
+    let amountString = req.body.amount.toString();
+    if (amountString.includes(".")) {
+      amountString = amountString.replace(".", "");
     } else {
-      // convert to cents
-      amount = amount * 100;
+      amountString = (parseFloat(amountString) * 100).toString();
     }
+    const amount = parseInt(amountString);
 
     // Get financial accounts for the Connected Account
     const financialAccounts = await stripe.treasury.financialAccounts.list(
@@ -38,7 +38,7 @@ const handler = async (
     const financialAccount = financialAccounts.data[0];
 
     {
-      /* The following exmaple uses a hardcoded values for test mode
+      /* The following example uses a hardcoded values for test mode
        */
     }
 
@@ -49,11 +49,11 @@ const handler = async (
        */
     }
 
-    if (req.body.network == "us_domestic_wire") {
+    if (req.body.network == NetworkType.US_DOMESTIC_WIRE) {
       city = req.body.city;
       state = req.body.state;
       postal_code = req.body.postalCode;
-      line1 = req.body.line1;
+      line1 = req.body.address1;
     } else {
       city = "Alvin";
       state = "TX";
@@ -66,7 +66,7 @@ const handler = async (
         financial_account: financialAccount.id,
         amount: amount,
         currency: "usd",
-        statement_descriptor: req.body.descriptor,
+        statement_descriptor: "Descriptor",
         destination_payment_method_data: {
           type: "us_bank_account",
           us_bank_account: {
@@ -96,27 +96,23 @@ const handler = async (
       { stripeAccount: StripeAccountId },
     );
 
-    if (req.body.transaction_result == "post") {
-      const outboundPaymentresult =
-        await stripe.testHelpers.treasury.outboundPayments.post(
-          outboundPayment.id,
-          { stripeAccount: StripeAccountId },
-        );
+    if (req.body.transaction_result == TransactionResult.POSTED) {
+      await stripe.testHelpers.treasury.outboundPayments.post(
+        outboundPayment.id,
+        { stripeAccount: StripeAccountId },
+      );
     }
-    if (req.body.transaction_result == "return") {
-      const outboundPaymentresult =
-        // @ts-expect-error Remove after deployment succeeds
-        await stripe.testHelpers.treasury.returnOutboundPayments(
-          outboundPayment.id,
-          { stripeAccount: StripeAccountId },
-        );
+    if (req.body.transaction_result == TransactionResult.RETURNED) {
+      await stripe.testHelpers.treasury.outboundPayments.returnOutboundPayment(
+        outboundPayment.id,
+        { stripeAccount: StripeAccountId },
+      );
     }
-    if (req.body.transaction_result == "fail") {
-      const outboundPaymentresult =
-        await stripe.testHelpers.treasury.outboundPayments.fail(
-          outboundPayment.id,
-          { stripeAccount: StripeAccountId },
-        );
+    if (req.body.transaction_result == TransactionResult.FAILED) {
+      await stripe.testHelpers.treasury.outboundPayments.fail(
+        outboundPayment.id,
+        { stripeAccount: StripeAccountId },
+      );
     }
 
     /* Call test helper and set new status
@@ -124,10 +120,10 @@ const handler = async (
           Outbound payment status will be set using the test helper, unless it is processing, in that case nothing will change.
         */
 
-    return res.json({ success: true });
+    return res.json({ ok: true });
   } catch (err) {
     return res
-      .status(401)
+      .status(400)
       .json({ urlCreated: false, error: (err as Error).message });
   }
 };

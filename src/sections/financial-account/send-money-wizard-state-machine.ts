@@ -14,7 +14,14 @@ const stateMachine = createMachine({
       },
     },
     confirmingTransfer: {
-      on: { BACK: "collectingDestinationAddress", RESET: "selectingNetwork" },
+      on: {
+        BACK: "collectingDestinationAddress",
+        RESET: "selectingNetwork",
+        COMPLETE: "notifyingCompletion",
+      },
+    },
+    notifyingCompletion: {
+      on: { SEND_ANOTHER: "selectingNetwork" },
     },
   },
 });
