@@ -28,7 +28,7 @@ import {
   FormikValues,
   ErrorMessage,
 } from "formik";
-import React, { RefObject, useRef, useState } from "react";
+import React, { ChangeEvent, RefObject, useRef, useState } from "react";
 import * as Yup from "yup";
 
 import stateMachine from "src/sections/financial-account/send-money-wizard-state-machine";
@@ -61,11 +61,15 @@ const SelectingNetworkForm = ({
   onFormSubmit,
   network,
   setNetwork,
+  destinationAddress,
+  setDestinationAddress,
 }: {
   formRef: RefObject<FormikProps<FormikValues>>;
   onFormSubmit: () => void;
   network: string;
   setNetwork: (network: NetworkType) => void;
+  destinationAddress: DestinationAddress | null;
+  setDestinationAddress: (destinationAddress: DestinationAddress) => void;
 }) => {
   const initialValues = { network };
   const validationSchema = Yup.object().shape({
@@ -84,7 +88,7 @@ const SelectingNetworkForm = ({
         onFormSubmit();
       }}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting, setFieldValue }) => (
         <Form>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -104,7 +108,31 @@ const SelectingNetworkForm = ({
             </Grid>
             <Grid item xs={12}>
               <FormLabel htmlFor="network">Network</FormLabel>
-              <Field as={RadioGroup} aria-label="network" name="network">
+              <Field
+                as={RadioGroup}
+                aria-label="network"
+                name="network"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  const selectedNetwork = e.target.value;
+                  if (
+                    destinationAddress != null &&
+                    selectedNetwork != network
+                  ) {
+                    // The selection was changed by the user so clear any previous destination address that's not
+                    // applicable
+                    if (selectedNetwork == NetworkType.ACH) {
+                      setDestinationAddress({
+                        ...destinationAddress,
+                        address1: "",
+                        city: "",
+                        state: "",
+                        postalCode: "",
+                      });
+                    }
+                  }
+                  setFieldValue("network", selectedNetwork);
+                }}
+              >
                 <FormControlLabel
                   value={NetworkType.ACH}
                   control={<Radio />}
@@ -572,6 +600,8 @@ const SendMoneyWizardDialog = () => {
               onFormSubmit={handleNext}
               network={network}
               setNetwork={setNetwork}
+              destinationAddress={destinationAddress}
+              setDestinationAddress={setDestinationAddress}
             />
           )}
           {current.matches("collectingDestinationAddress") && (
