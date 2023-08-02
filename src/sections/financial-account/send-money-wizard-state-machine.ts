@@ -24,6 +24,7 @@ const stateMachine = createMachine({
       on: { RESET: "selectingNetwork" },
     },
   },
+  predictableActionArguments: true,
 });
 
 export default stateMachine;
