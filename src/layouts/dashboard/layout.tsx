@@ -46,7 +46,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
     <>
       <Head>
         <title>Issuing & Treasury</title>
-        <link rel="icon" href="/favicon.svg" />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <TopNav onNavOpen={() => setOpenNav(true)} />
