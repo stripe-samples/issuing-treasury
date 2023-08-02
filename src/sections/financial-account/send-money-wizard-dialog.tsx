@@ -78,6 +78,27 @@ const SelectingNetworkForm = ({
       .required("Please select a network"),
   });
 
+  const handleNetworkChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    setFieldValue: (field: string, value: string) => void,
+  ) => {
+    const selectedNetwork = e.target.value;
+    if (destinationAddress != null && selectedNetwork != network) {
+      // The selection was changed by the user so clear any previous destination address that's not
+      // applicable
+      if (selectedNetwork == NetworkType.ACH) {
+        setDestinationAddress({
+          ...destinationAddress,
+          address1: "",
+          city: "",
+          state: "",
+          postalCode: "",
+        });
+      }
+    }
+    setFieldValue("network", selectedNetwork);
+  };
+
   return (
     <Formik
       innerRef={formRef}
@@ -112,26 +133,9 @@ const SelectingNetworkForm = ({
                 as={RadioGroup}
                 aria-label="network"
                 name="network"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  const selectedNetwork = e.target.value;
-                  if (
-                    destinationAddress != null &&
-                    selectedNetwork != network
-                  ) {
-                    // The selection was changed by the user so clear any previous destination address that's not
-                    // applicable
-                    if (selectedNetwork == NetworkType.ACH) {
-                      setDestinationAddress({
-                        ...destinationAddress,
-                        address1: "",
-                        city: "",
-                        state: "",
-                        postalCode: "",
-                      });
-                    }
-                  }
-                  setFieldValue("network", selectedNetwork);
-                }}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleNetworkChange(e, setFieldValue)
+                }
               >
                 <FormControlLabel
                   value={NetworkType.ACH}
