@@ -1,10 +1,10 @@
-import { parse } from "cookie";
-import { decode } from "jsonwebtoken";
 import { NextApiResponse } from "next";
+import { getServerSession } from "next-auth/next";
 
-import JwtPayload from "src/types/jwt-payload";
+import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import NextApiRequestWithSession from "src/types/next-api-request-with-session";
 
+// Used to protect API routes that require having been onboarded
 const withAuth = (
   handler: (
     req: NextApiRequestWithSession,
@@ -12,14 +12,13 @@ const withAuth = (
   ) => Promise<void>,
 ) => {
   return async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const { app_auth } = parse(req.headers.cookie || "");
-    const rawSession = decode(app_auth);
+    const session = await getServerSession(req, res, authOptions);
 
-    if (typeof rawSession === "string") {
-      return res.status(400).json({ error: "Bad Request" });
+    if (!session) {
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
-    req.session = rawSession as JwtPayload;
+    req.session = session;
 
     await handler(req, res);
   };

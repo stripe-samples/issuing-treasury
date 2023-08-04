@@ -1,9 +1,9 @@
-// import "../styles/globals.css";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NextComponentType, NextPageContext } from "next";
 import { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
 import React, { ReactNode } from "react";
 
 import { AuthConsumer, AuthProvider } from "src/contexts/auth-context";
@@ -27,7 +27,7 @@ interface SampleAppProps extends AppProps {
 export default function App({
   Component,
   emotionCache = clientSideEmotionCache,
-  pageProps,
+  pageProps: { session, ...pageProps },
 }: SampleAppProps) {
   useNProgress();
 
@@ -37,20 +37,22 @@ export default function App({
 
   return (
     <CacheProvider value={emotionCache}>
-      <AuthProvider>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <AuthConsumer>
-            {(auth) =>
-              auth.isLoading ? (
-                <SplashScreen />
-              ) : (
-                getLayout(<Component {...pageProps} />)
-              )
-            }
-          </AuthConsumer>
-        </ThemeProvider>
-      </AuthProvider>
+      <SessionProvider session={session}>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <AuthConsumer>
+              {(auth) =>
+                auth.isLoading ? (
+                  <SplashScreen />
+                ) : (
+                  getLayout(<Component {...pageProps} />)
+                )
+              }
+            </AuthConsumer>
+          </ThemeProvider>
+        </AuthProvider>
+      </SessionProvider>
     </CacheProvider>
   );
 }

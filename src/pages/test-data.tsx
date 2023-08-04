@@ -1,5 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
+import { Session } from "next-auth/core/types";
 import React, { ReactNode } from "react";
 
 import DashboardLayout from "src/layouts/dashboard/layout";
@@ -7,11 +8,10 @@ import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
 import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
 import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
 import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
-import JwtPayload from "src/types/jwt-payload";
 import stripe from "src/utils/stripe-loader";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
-  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+  async (context: GetServerSidePropsContext, session: Session) => {
     const StripeAccountID = session.accountId;
 
     const responseAccount = await stripe.accounts.retrieve(StripeAccountID);

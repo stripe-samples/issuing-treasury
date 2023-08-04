@@ -1,9 +1,8 @@
 import { NextApiRequest } from "next";
-
-import JwtPayload from "src/types/jwt-payload";
+import { Session } from "next-auth/core/types";
 
 interface NextApiRequestWithSession extends NextApiRequest {
-  session: JwtPayload;
+  session: Session;
 }
 
 export default NextApiRequestWithSession;

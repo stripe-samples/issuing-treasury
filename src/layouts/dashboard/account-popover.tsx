@@ -6,6 +6,7 @@ import {
   Popover,
   Typography,
 } from "@mui/material";
+import { signOut } from "next-auth/react";
 import { useCallback } from "react";
 
 import { useAuthContext } from "src/contexts/auth-context";
@@ -25,7 +26,7 @@ export const AccountPopover = ({
 
   const handleLogout = useCallback(() => {
     onClose?.();
-    auth.logout();
+    signOut();
   }, [onClose, auth]);
 
   return (

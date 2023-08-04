@@ -11,6 +11,7 @@ import {
   SvgIcon,
 } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
+import { Session } from "next-auth/core/types";
 import React, {
   ChangeEvent,
   ReactNode,
@@ -25,12 +26,11 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
 import { CardsSearch } from "src/sections/cards/cards-search";
 import CardsTable from "src/sections/cards/cards-table";
-import JwtPayload from "src/types/jwt-payload";
 import { applyPagination } from "src/utils/apply-pagination";
 import { getCards } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
-  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+  async (context: GetServerSidePropsContext, session: Session) => {
     const StripeAccountID = session.accountId;
     const responseCards = await getCards(StripeAccountID);
     return {

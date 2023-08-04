@@ -1,18 +1,18 @@
 import { Box, Stack, Typography, Button, Alert } from "@mui/material";
 import { serialize } from "cookie";
 import { GetServerSidePropsContext } from "next";
+import { Session } from "next-auth/core/types";
 import React, { ReactNode, useState } from "react";
 
 import { useAuth } from "src/hooks/use-auth";
 import AuthLayout from "src/layouts/auth/layout";
 import { withAuth } from "src/middleware/auth-middleware";
-import JwtPayload from "src/types/jwt-payload";
 import { encode } from "src/utils/jwt_encode_decode";
 import stripe from "src/utils/stripe-loader";
 import { createAccountOnboardingUrl } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+  async (context: GetServerSidePropsContext, session: Session) => {
     const account = await stripe.accounts.retrieve(session.accountId);
 
     if (account?.requirements?.currently_due?.length ?? 0 > 1) {

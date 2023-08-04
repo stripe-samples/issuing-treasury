@@ -27,6 +27,7 @@
     "formik": "^2.4.2",
     "jsonwebtoken": "^9.0.1",
     "next": "^13.4.10",
+    "next-auth": "^4.22.3",
     "nprogress": "^0.2.0",
     "qs": "^6.11.2",
     "react": "^18.2.0",

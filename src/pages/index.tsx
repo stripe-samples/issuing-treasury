@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import { JwtPayload } from "jsonwebtoken";
 import { GetServerSidePropsContext } from "next";
+import { Session } from "next-auth/core/types";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
@@ -20,7 +20,7 @@ import {
 } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = withAuthRequiringOnboarded(
-  async (context: GetServerSidePropsContext, session: JwtPayload) => {
+  async (context: GetServerSidePropsContext, session: Session) => {
     const StripeAccountID = session.accountId;
 
     const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);

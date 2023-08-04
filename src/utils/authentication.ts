@@ -1,9 +1,6 @@
-import JwtPayload from "src/types/jwt-payload";
-import { encode } from "src/utils/jwt_encode_decode";
 import stripe from "src/utils/stripe-loader";
 
-// We don't need the password for this method since it is only collected for demonstration purposes.
-export async function authenticateUser(email: string) {
+export const authenticateUser = async (email: string, password: string) => {
   const { data: users } = await stripe.customers.list({ email });
   const user = users[0];
 
@@ -19,20 +16,14 @@ export async function authenticateUser(email: string) {
       requiresOnboarding = true;
     }
 
-    const cookie: JwtPayload = {
-      accountId: user.metadata.accountId,
-      requiresOnboarding: requiresOnboarding,
-      userEmail: email,
-      userId: user.id,
-    };
-
     return {
-      cookie: encode(JSON.stringify(cookie)),
-      isAuthenticated: true,
-      ...cookie,
+      id: user.id,
+      email: user.email,
+      accountId: user.metadata.accountId,
       businessName: user.name || "",
+      requiresOnboarding: requiresOnboarding,
     };
   }
 
   return null;
-}
+};
