@@ -1,6 +1,7 @@
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import NextLink from "next/link";
+import router from "next/router";
 import { signIn } from "next-auth/react";
 import { ReactNode } from "react";
 import * as Yup from "yup";
@@ -59,19 +60,24 @@ const Page = () => {
                 { setStatus, setErrors, setSubmitting },
               ) => {
                 try {
-                  const response = await fetchApi("/api/register", {
+                  const registrationResponse = await fetchApi("/api/register", {
                     name: values.name,
                     email: values.email,
                     password: values.password,
                   });
-                  const data = await response.json();
+                  const data = await registrationResponse.json();
 
-                  if (response.ok) {
-                    await signIn("credentials", {
+                  if (registrationResponse.ok) {
+                    const response = await signIn("credentials", {
                       email: values.email,
                       password: values.password,
-                      callbackUrl: "http://localhost:3000/",
+                      redirect: false,
                     });
+                    if (response?.ok) {
+                      router.push("/");
+                    } else {
+                      throw new Error("Something went wrong");
+                    }
                   } else {
                     throw new Error(`Registration failed: ${data.error}`);
                   }

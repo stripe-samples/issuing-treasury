@@ -1,6 +1,15 @@
-import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import NextLink from "next/link";
+import router from "next/router";
 import { signIn } from "next-auth/react";
 import { ReactNode } from "react";
 import * as Yup from "yup";
@@ -64,11 +73,18 @@ const Page = () => {
                 { setStatus, setErrors, setSubmitting },
               ) => {
                 try {
-                  await signIn("credentials", {
+                  const response = await signIn("credentials", {
                     email: values.email,
                     password: values.password,
-                    callbackUrl: "http://localhost:3000/",
+                    redirect: false,
                   });
+                  if (response?.ok) {
+                    router.push("/");
+                  } else if (response?.error === "CredentialsSignin") {
+                    throw new Error("Invalid credentials");
+                  } else {
+                    throw new Error("Something went wrong");
+                  }
                 } catch (err) {
                   setStatus({ success: false });
                   setErrors({ submit: (err as Error).message });
@@ -99,9 +115,14 @@ const Page = () => {
                     />
                   </Stack>
                   {errors.submit && (
-                    <Typography color="error" sx={{ mt: 3 }} variant="body2">
-                      {errors.submit}
-                    </Typography>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      mt={3}
+                    >
+                      <Alert severity="error">{errors.submit}</Alert>
+                    </Box>
                   )}
                   <Button
                     fullWidth
