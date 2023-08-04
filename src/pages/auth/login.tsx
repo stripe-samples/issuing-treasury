@@ -1,18 +1,8 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Link,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
@@ -123,16 +113,6 @@ const Page = () => {
                   >
                     Continue
                   </Button>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    mt={3}
-                  >
-                    <Alert color="primary" severity="info">
-                      Password field is illustrative and not verified
-                    </Alert>
-                  </Box>
                 </Form>
               )}
             </Formik>

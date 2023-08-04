@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, Button, Alert } from "@mui/material";
+import { Box, Stack, Typography, Button } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
 import { Session } from "next-auth/core/types";
 import { signOut } from "next-auth/react";
@@ -89,16 +89,6 @@ const Page = ({ url }: { url: string }) => {
               Log out
             </Button>
           </Stack>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            mt={3}
-          >
-            <Alert color="primary" severity="info">
-              Password field is illustrative and not verified
-            </Alert>
-          </Box>
         </Box>
       </Box>
     </>
