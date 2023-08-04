@@ -133,7 +133,7 @@ const Page = () => {
                     variant="contained"
                     disabled={isSubmitting}
                   >
-                    Continue
+                    {isSubmitting ? "Registering..." : "Continue"}
                   </Button>
                   <Box
                     display="flex"

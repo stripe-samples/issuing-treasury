@@ -19,25 +19,25 @@ export const withAuth =
       authOptions,
     );
 
-    if (session === null) {
-      throw new Error("Session is null");
-    }
-
-    if (!session.accountId) {
-      throw new Error("Stripe account ID is missing in the session");
-    }
-
-    if (!session.requiresOnboarding) {
-      throw new Error("requiresOnboarding field is missing in the session");
-    }
-
-    if (!session) {
+    if (session == null) {
       return {
         redirect: {
           destination: "/auth/login",
           permanent: false,
         },
       };
+    }
+
+    if (session.accountId == undefined) {
+      throw new Error(
+        "Pre-onboarding auth check: Stripe account ID is missing in the session",
+      );
+    }
+
+    if (session.requiresOnboarding == undefined) {
+      throw new Error(
+        "Pre-onboarding auth check: requiresOnboarding field is missing in the session",
+      );
     }
 
     return handler(context, session);
@@ -58,7 +58,7 @@ export const withAuthRequiringOnboarded =
       authOptions,
     );
 
-    if (!session) {
+    if (session == null) {
       return {
         redirect: {
           destination: "/auth/login",

@@ -5,6 +5,7 @@ import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { authenticateUser } from "src/utils/authentication";
+import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -48,8 +49,17 @@ export const authOptions: NextAuthOptions = {
       }
 
       session.accountId = token.accountId;
-      session.requiresOnboarding = token.requiresOnboarding;
       session.businessName = token.businessName;
+
+      if (token.requiresOnboarding === true) {
+        if ((await hasOutstandingRequirements(token.accountId)) === true) {
+          session.requiresOnboarding = true;
+        } else {
+          session.requiresOnboarding = false;
+        }
+      } else {
+        session.requiresOnboarding = false;
+      }
 
       return session;
     },
