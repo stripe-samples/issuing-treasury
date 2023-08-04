@@ -6,11 +6,7 @@ import {
   Popover,
   Typography,
 } from "@mui/material";
-import { signOut } from "next-auth/react";
-import { useCallback } from "react";
-
-import { useAuthContext } from "src/contexts/auth-context";
-import { useAuth } from "src/hooks/use-auth";
+import { signOut, useSession } from "next-auth/react";
 
 export const AccountPopover = ({
   anchorEl,
@@ -21,13 +17,12 @@ export const AccountPopover = ({
   onClose: () => void;
   open: boolean;
 }) => {
-  const auth = useAuth();
-  const { user } = useAuthContext();
+  const { data: session } = useSession();
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = async () => {
     onClose?.();
-    signOut();
-  }, [onClose, auth]);
+    await signOut();
+  };
 
   return (
     <Popover
@@ -48,7 +43,7 @@ export const AccountPopover = ({
       >
         <Typography variant="overline">Account</Typography>
         <Typography color="text.secondary" variant="body2">
-          {user?.name}
+          {session?.businessName}
         </Typography>
       </Box>
       <Divider />

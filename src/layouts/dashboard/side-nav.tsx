@@ -11,10 +11,10 @@ import {
 } from "@mui/material";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import { Logo } from "src/components/logo";
 import { Scrollbar } from "src/components/scrollbar";
-import { useAuthContext } from "src/contexts/auth-context";
 import { items } from "src/layouts/dashboard/config";
 import { SideNavItem } from "src/layouts/dashboard/side-nav-item";
 
@@ -22,7 +22,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   const { open, onClose } = props;
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
-  const { user } = useAuthContext();
+  const { data: session } = useSession();
 
   const content = (
     <Scrollbar
@@ -72,7 +72,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           >
             <div>
               <Typography color="inherit" variant="subtitle1">
-                {user?.name}
+                {session?.businessName}
               </Typography>
               <Typography color="neutral.400" variant="body2">
                 Production

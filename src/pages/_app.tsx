@@ -6,7 +6,6 @@ import { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import React, { ReactNode } from "react";
 
-import { AuthConsumer, AuthProvider } from "src/contexts/auth-context";
 import { useNProgress } from "src/hooks/use-nprogress";
 import { createTheme } from "src/theme";
 import createEmotionCache from "src/utils/create-emotion-cache";
@@ -38,20 +37,10 @@ export default function App({
   return (
     <CacheProvider value={emotionCache}>
       <SessionProvider session={session}>
-        <AuthProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <AuthConsumer>
-              {(auth) =>
-                auth.isLoading ? (
-                  <SplashScreen />
-                ) : (
-                  getLayout(<Component {...pageProps} />)
-                )
-              }
-            </AuthConsumer>
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {getLayout(<Component {...pageProps} />)}
+        </ThemeProvider>
       </SessionProvider>
     </CacheProvider>
   );

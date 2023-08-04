@@ -15,7 +15,6 @@ import { signIn } from "next-auth/react";
 import { ReactNode, useCallback, useState } from "react";
 import * as Yup from "yup";
 
-import { useAuth } from "src/hooks/use-auth";
 import AuthLayout from "src/layouts/auth/layout";
 
 const validationSchema = Yup.object({
@@ -33,7 +32,6 @@ const initialValues = {
 };
 
 const Page = () => {
-  const auth = useAuth();
   const [method, setMethod] = useState<"email" | "phoneNumber">("email");
 
   const handleMethodChange = useCallback(

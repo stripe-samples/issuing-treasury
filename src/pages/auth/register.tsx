@@ -13,7 +13,6 @@ import { signIn } from "next-auth/react";
 import { ReactNode } from "react";
 import * as Yup from "yup";
 
-import { useAuth } from "src/hooks/use-auth";
 import AuthLayout from "src/layouts/auth/layout";
 import { fetchApi } from "src/utils/api-helpers";
 
@@ -34,8 +33,6 @@ const initialValues = {
 };
 
 const Page = () => {
-  const auth = useAuth();
-
   return (
     <>
       <Box
