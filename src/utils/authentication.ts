@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
+import { prisma } from "src/db";
 import stripe from "src/utils/stripe-loader";
-
-const prisma = new PrismaClient();
 
 export const authenticateUser = async (email: string, password: string) => {
   const user = await prisma.user.findFirst({

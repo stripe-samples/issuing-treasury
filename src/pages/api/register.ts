@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
+import { prisma } from "src/db";
 import stripe from "src/utils/stripe-loader";
-
-const prisma = new PrismaClient();
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().max(255).required("Business name is required"),
