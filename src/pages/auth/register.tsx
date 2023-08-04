@@ -9,11 +9,13 @@ import {
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import NextLink from "next/link";
+import { signIn } from "next-auth/react";
 import { ReactNode } from "react";
 import * as Yup from "yup";
 
 import { useAuth } from "src/hooks/use-auth";
 import AuthLayout from "src/layouts/auth/layout";
+import { fetchApi } from "src/utils/api-helpers";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -68,11 +70,22 @@ const Page = () => {
                 { setStatus, setErrors, setSubmitting },
               ) => {
                 try {
-                  await auth.register(
-                    values.name,
-                    values.email,
-                    values.password,
-                  );
+                  const response = await fetchApi("/api/register", {
+                    name: values.name,
+                    email: values.email,
+                    password: values.password,
+                  });
+                  const data = await response.json();
+
+                  if (response.ok) {
+                    await signIn("credentials", {
+                      email: values.email,
+                      password: values.password,
+                      callbackUrl: "http://localhost:3000/",
+                    });
+                  } else {
+                    throw new Error(`Registration failed: ${data.error}`);
+                  }
                 } catch (err) {
                   setStatus({ success: false });
                   setErrors({ submit: (err as Error).message });

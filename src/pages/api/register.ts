@@ -85,36 +85,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  const authenticationResult = await authenticateUser(email);
+  // TODO: Don't need this
+  const authenticationResult = await authenticateUser(email, password);
 
   if (!authenticationResult) {
-    return res.status(500).json({
-      isAuthenticated: false,
-      error: "Unknown error occurred",
-    });
+    return res.status(500).json({ error: "Unknown error occurred" });
   }
 
-  const url = await createAccountOnboardingUrl(
+  const onboardingUrl = await createAccountOnboardingUrl(
     account.id,
     process.env.DEMO_HOST,
   );
 
-  res.setHeader(
-    "Set-Cookie",
-    serialize("app_auth", authenticationResult.cookie, {
-      path: "/",
-      httpOnly: true,
-    }),
-  );
-
   return res.json({
-    isAuthenticated: true,
     requiresOnboarding: authenticationResult.requiresOnboarding,
     businessName: authenticationResult.businessName,
     accountId: authenticationResult.accountId,
-    userEmail: authenticationResult.userEmail,
-    userId: authenticationResult.userId,
-    url: url,
+    email: authenticationResult.email,
+    id: authenticationResult.id,
+    onboardingUrl: onboardingUrl,
   });
 };
 
