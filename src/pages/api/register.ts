@@ -1,7 +1,11 @@
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
 import stripe from "src/utils/stripe-loader";
+
+const prisma = new PrismaClient();
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().max(255).required("Business name is required"),
@@ -31,13 +35,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Check if user exists
-  const { data: customers } = await stripe.customers.list({ email });
-  if (customers.length) {
+  const user = await prisma.user.findFirst({ where: { email } });
+  if (user) {
     return res.status(400).json({
       error: "Account already exists.",
     });
   }
 
+  // Create a Connected Account
   const account = await stripe.accounts.create({
     type: "custom",
     country: "US",
@@ -50,7 +55,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  // Create FA
+  // Create the user
+  const hashedPassword = await bcrypt.hash(password, 8);
+  const newUser = await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      accountId: account.id,
+    },
+  });
+
+  // Create Financial Account
   await stripe.treasury.financialAccounts.create(
     {
       supported_currencies: ["usd"],
@@ -73,16 +88,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     { stripeAccount: account.id },
   );
 
-  // Create user
-  await stripe.customers.create({
-    name,
-    email,
-    metadata: {
-      accountId: account.id,
-    },
-  });
-
-  return res.json({ email: email });
+  return res.json({ id: newUser.id, email: newUser.email });
 };
 
 export default handler;

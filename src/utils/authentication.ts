@@ -1,12 +1,20 @@
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
+
 import stripe from "src/utils/stripe-loader";
 
-export const authenticateUser = async (email: string, password: string) => {
-  const { data: users } = await stripe.customers.list({ email });
-  const user = users[0];
+const prisma = new PrismaClient();
 
-  if (user && user.metadata.accountId) {
+export const authenticateUser = async (email: string, password: string) => {
+  const user = await prisma.user.findFirst({
+    where: { email },
+  });
+
+  const passwordMatch = await bcrypt.compare(password, user?.password || "");
+
+  if (user && passwordMatch) {
     // Check if there are missing requirements
-    const account = await stripe.accounts.retrieve(user.metadata.accountId);
+    const account = await stripe.accounts.retrieve(user.accountId);
 
     const currently_due = account.requirements?.currently_due || null;
 
@@ -17,10 +25,10 @@ export const authenticateUser = async (email: string, password: string) => {
     }
 
     return {
-      id: user.id,
+      id: user.id.toString(),
       email: user.email,
-      accountId: user.metadata.accountId,
-      businessName: user.name || "",
+      accountId: user.accountId,
+      businessName: "Test Business Name",
       requiresOnboarding: requiresOnboarding,
     };
   }
