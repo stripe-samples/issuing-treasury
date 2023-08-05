@@ -1,5 +1,5 @@
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 import NextLink from "next/link";
 import router from "next/router";
 import { signIn } from "next-auth/react";
@@ -23,6 +23,39 @@ const initialValues = {
   name: "ACME Corp.",
   password: "",
   submit: null,
+};
+
+const handleSubmit = async (
+  values: typeof initialValues,
+  { setStatus, setErrors, setSubmitting }: FormikHelpers<typeof initialValues>,
+) => {
+  try {
+    const registrationResponse = await fetchApi("/api/register", {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+    });
+    const data = await registrationResponse.json();
+
+    if (registrationResponse.ok) {
+      const response = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
+      if (response?.ok) {
+        router.push("/");
+      } else {
+        throw new Error("Something went wrong");
+      }
+    } else {
+      throw new Error(`Registration failed: ${data.error}`);
+    }
+  } catch (err) {
+    setStatus({ success: false });
+    setErrors({ submit: (err as Error).message });
+    setSubmitting(false);
+  }
 };
 
 const Page = () => {
@@ -55,38 +88,7 @@ const Page = () => {
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
-              onSubmit={async (
-                values,
-                { setStatus, setErrors, setSubmitting },
-              ) => {
-                try {
-                  const registrationResponse = await fetchApi("/api/register", {
-                    name: values.name,
-                    email: values.email,
-                    password: values.password,
-                  });
-                  const data = await registrationResponse.json();
-
-                  if (registrationResponse.ok) {
-                    const response = await signIn("credentials", {
-                      email: values.email,
-                      password: values.password,
-                      redirect: false,
-                    });
-                    if (response?.ok) {
-                      router.push("/");
-                    } else {
-                      throw new Error("Something went wrong");
-                    }
-                  } else {
-                    throw new Error(`Registration failed: ${data.error}`);
-                  }
-                } catch (err) {
-                  setStatus({ success: false });
-                  setErrors({ submit: (err as Error).message });
-                  setSubmitting(false);
-                }
-              }}
+              onSubmit={handleSubmit}
             >
               {({ errors, touched, isSubmitting }) => (
                 <Form>
