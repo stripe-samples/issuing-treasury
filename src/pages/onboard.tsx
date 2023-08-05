@@ -1,38 +1,38 @@
 import { Box, Stack, Typography, Button } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
-import { Session } from "next-auth/core/types";
 import { signOut } from "next-auth/react";
 import React, { ReactNode, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
-import { withAuth } from "src/middleware/auth-middleware";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
+import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import stripe from "src/utils/stripe-loader";
 import { createAccountOnboardingUrl } from "src/utils/stripe_helpers";
 
-export const getServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext, session: Session) => {
-    const account = await stripe.accounts.retrieve(session.accountId);
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const session = await getSessionForServerSideProps(context);
+  const account = await stripe.accounts.retrieve(session.accountId);
 
-    if (await hasOutstandingRequirements(session.accountId)) {
-      // Create the onboarding link and redirect
-      const url = await createAccountOnboardingUrl(
-        account.id,
-        process.env.DEMO_HOST,
-      );
+  if (await hasOutstandingRequirements(session.accountId)) {
+    // Create the onboarding link and redirect
+    const url = await createAccountOnboardingUrl(
+      account.id,
+      process.env.DEMO_HOST,
+    );
 
-      return {
-        props: {
-          url: url,
-        },
-      };
-    } else {
-      return {
-        redirect: { destination: "/", permanent: false },
-      };
-    }
-  },
-);
+    return {
+      props: {
+        url: url,
+      },
+    };
+  } else {
+    return {
+      redirect: { destination: "/", permanent: false },
+    };
+  }
+};
 
 const Page = ({ url }: { url: string }) => {
   const [isContinuingOnboarding, setIsContinuingOnboarding] = useState(false);

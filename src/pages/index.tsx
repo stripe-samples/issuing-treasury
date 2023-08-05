@@ -2,45 +2,44 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { GetServerSidePropsContext } from "next";
-import { Session } from "next-auth/core/types";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
 import DashboardLayout from "src/layouts/dashboard/layout";
-import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
 import { OverviewFinancialAccountBalance } from "src/sections/overview/overview-fa-balance";
 import { OverviewFinancialAccountFundsFlowChart } from "src/sections/overview/overview-fa-funds-flow-chart";
 import { OverviewFinancialAccountOutboundPending } from "src/sections/overview/overview-fa-outbound-pending";
 import { OverviewLatestTransactions } from "src/sections/overview/overview-latest-transactions";
 import { ChartData } from "src/types/chart-data";
+import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   getFinancialAccountDetails,
   getFinancialAccountTransactionDetails,
   getFinancialAccountTransactionsExpanded,
 } from "src/utils/stripe_helpers";
 
-export const getServerSideProps = withAuthRequiringOnboarded(
-  async (context: GetServerSidePropsContext, session: Session) => {
-    const StripeAccountID = session.accountId;
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const session = await getSessionForServerSideProps(context);
+  const StripeAccountID = session.accountId;
 
-    const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
-    const financialAccount = responseFaDetails.financialaccount;
+  const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
+  const financialAccount = responseFaDetails.financialaccount;
 
-    const faFundsFlowChartDataResult =
-      await getFinancialAccountTransactionDetails(StripeAccountID);
-    const faFundsFlowChartData =
-      faFundsFlowChartDataResult.faFundsFlowChartData;
+  const faFundsFlowChartDataResult =
+    await getFinancialAccountTransactionDetails(StripeAccountID);
+  const faFundsFlowChartData = faFundsFlowChartDataResult.faFundsFlowChartData;
 
-    const responseFaTransations = await getFinancialAccountTransactionsExpanded(
-      StripeAccountID,
-    );
-    const faTransactions = responseFaTransations.fa_transactions;
+  const responseFaTransations = await getFinancialAccountTransactionsExpanded(
+    StripeAccountID,
+  );
+  const faTransactions = responseFaTransations.fa_transactions;
 
-    return {
-      props: { financialAccount, faFundsFlowChartData, faTransactions },
-    };
-  },
-);
+  return {
+    props: { financialAccount, faFundsFlowChartData, faTransactions },
+  };
+};
 
 const Page = ({
   financialAccount,

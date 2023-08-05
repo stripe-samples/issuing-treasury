@@ -1,32 +1,32 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { GetServerSidePropsContext } from "next";
-import { Session } from "next-auth/core/types";
 import React from "react";
 
 import CardDetailsWidget from "src/components/Stripe/CardDetailsWidget";
 import CardStatusSwitchWidget from "src/components/Stripe/CardStatusSwitchWidget";
 import IssuingAuthorizationsWidget from "src/components/Stripe/IssuingAuthorizationsWidget";
-import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
+import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import { getCardTransactions } from "src/utils/stripe_helpers";
 
-export const getServerSideProps = withAuthRequiringOnboarded(
-  async (context: GetServerSidePropsContext, session: Session) => {
-    const cardId = context?.params?.cardId;
-    const StripeAccountID = session.accountId;
-    const cardTransactions = await getCardTransactions(StripeAccountID, cardId);
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const session = await getSessionForServerSideProps(context);
+  const cardId = context?.params?.cardId;
+  const StripeAccountID = session.accountId;
+  const cardTransactions = await getCardTransactions(StripeAccountID, cardId);
 
-    return {
-      props: {
-        cardAuthorizations: cardTransactions.card_authorizations,
-        CurrentSpend: cardTransactions.current_spend,
-        account: StripeAccountID,
-        cardId: context?.params?.cardId,
-        cardDetails: cardTransactions.card_details,
-      },
-    };
-  },
-);
+  return {
+    props: {
+      cardAuthorizations: cardTransactions.card_authorizations,
+      CurrentSpend: cardTransactions.current_spend,
+      account: StripeAccountID,
+      cardId: context?.params?.cardId,
+      cardDetails: cardTransactions.card_details,
+    },
+  };
+};
 
 const CardDetails = (props: any) => {
   const stripePromise = loadStripe(

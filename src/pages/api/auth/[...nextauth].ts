@@ -32,6 +32,16 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     jwt: async ({ token, user }: { token: JWT; user?: User }) => {
+      if (token.requiresOnboarding === true) {
+        if ((await hasOutstandingRequirements(token.accountId)) === true) {
+          token.requiresOnboarding = true;
+        } else {
+          token.requiresOnboarding = false;
+        }
+      } else {
+        token.requiresOnboarding = false;
+      }
+
       if (user?.email) {
         return { ...token, ...user };
       }
@@ -53,16 +63,7 @@ export const authOptions: NextAuthOptions = {
 
       session.accountId = token.accountId;
       session.businessName = token.businessName;
-
-      if (token.requiresOnboarding === true) {
-        if ((await hasOutstandingRequirements(token.accountId)) === true) {
-          session.requiresOnboarding = true;
-        } else {
-          session.requiresOnboarding = false;
-        }
-      } else {
-        session.requiresOnboarding = false;
-      }
+      session.requiresOnboarding = token.requiresOnboarding;
 
       return session;
     },

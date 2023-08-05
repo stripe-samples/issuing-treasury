@@ -1,38 +1,38 @@
 import { Box, Container, Grid } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
-import { Session } from "next-auth/core/types";
 import React, { ReactNode } from "react";
 
 import DashboardLayout from "src/layouts/dashboard/layout";
-import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
 import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
 import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
 import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
+import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import stripe from "src/utils/stripe-loader";
 
-export const getServerSideProps = withAuthRequiringOnboarded(
-  async (context: GetServerSidePropsContext, session: Session) => {
-    const StripeAccountID = session.accountId;
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const session = await getSessionForServerSideProps(context);
+  const StripeAccountID = session.accountId;
 
-    const responseAccount = await stripe.accounts.retrieve(StripeAccountID);
-    // @ts-expect-error Remove after deployment succeeds
-    const accountExternalAccount = responseAccount.external_accounts.data[0];
+  const responseAccount = await stripe.accounts.retrieve(StripeAccountID);
+  // @ts-expect-error Remove after deployment succeeds
+  const accountExternalAccount = responseAccount.external_accounts.data[0];
 
-    const responseBalance = await stripe.balance.retrieve({
-      stripeAccount: StripeAccountID,
-    });
-    const availableBalance = responseBalance.available[0].amount;
+  const responseBalance = await stripe.balance.retrieve({
+    stripeAccount: StripeAccountID,
+  });
+  const availableBalance = responseBalance.available[0].amount;
 
-    let hasExternalAccount = false;
+  let hasExternalAccount = false;
 
-    if (accountExternalAccount) {
-      hasExternalAccount = true;
-    }
-    return {
-      props: { hasExternalAccount, availableBalance }, // will be passed to the page component as props
-    };
-  },
-);
+  if (accountExternalAccount) {
+    hasExternalAccount = true;
+  }
+  return {
+    props: { hasExternalAccount, availableBalance }, // will be passed to the page component as props
+  };
+};
 
 const Page = ({
   hasExternalAccount,

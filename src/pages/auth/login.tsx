@@ -24,37 +24,41 @@ const validationSchema = Yup.object({
   password: Yup.string().max(255).required("Password is required"),
 });
 
-const initialValues = {
-  email: "",
-  password: "",
-  submit: null,
-};
-
-const handleSubmit = async (
-  values: typeof initialValues,
-  { setStatus, setErrors, setSubmitting }: FormikHelpers<typeof initialValues>,
-) => {
-  try {
-    const response = await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirect: false,
-    });
-    if (response?.ok) {
-      router.push("/");
-    } else if (response?.error === "CredentialsSignin") {
-      throw new Error("Invalid credentials");
-    } else {
-      throw new Error("Something went wrong");
-    }
-  } catch (err) {
-    setStatus({ success: false });
-    setErrors({ submit: (err as Error).message });
-    setSubmitting(false);
-  }
-};
-
 const Page = () => {
+  const { callbackUrl } = router.query;
+
+  const initialValues = {
+    email: "",
+    password: "",
+    submit: null,
+  };
+
+  const handleSubmit = async (
+    values: typeof initialValues,
+    {
+      setStatus,
+      setErrors,
+      setSubmitting,
+    }: FormikHelpers<typeof initialValues>,
+  ) => {
+    try {
+      const response = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        callbackUrl: (callbackUrl || "/") as string,
+      });
+      if (response?.error === "CredentialsSignin") {
+        throw new Error("Invalid credentials");
+      } else if (response?.error) {
+        throw new Error("Something went wrong");
+      }
+    } catch (err) {
+      setStatus({ success: false });
+      setErrors({ submit: (err as Error).message });
+      setSubmitting(false);
+    }
+  };
+
   return (
     <>
       <Box

@@ -11,7 +11,6 @@ import {
   SvgIcon,
 } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
-import { Session } from "next-auth/core/types";
 import React, {
   ChangeEvent,
   ReactNode,
@@ -23,21 +22,22 @@ import Stripe from "stripe";
 
 import { useSelection } from "src/hooks/use-selection";
 import DashboardLayout from "src/layouts/dashboard/layout";
-import { withAuthRequiringOnboarded } from "src/middleware/auth-middleware";
 import { CardsSearch } from "src/sections/cards/cards-search";
 import CardsTable from "src/sections/cards/cards-table";
 import { applyPagination } from "src/utils/apply-pagination";
+import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import { getCards } from "src/utils/stripe_helpers";
 
-export const getServerSideProps = withAuthRequiringOnboarded(
-  async (context: GetServerSidePropsContext, session: Session) => {
-    const StripeAccountID = session.accountId;
-    const responseCards = await getCards(StripeAccountID);
-    return {
-      props: { cards: responseCards.cards.data, account: StripeAccountID },
-    };
-  },
-);
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const session = await getSessionForServerSideProps(context);
+  const StripeAccountID = session.accountId;
+  const responseCards = await getCards(StripeAccountID);
+  return {
+    props: { cards: responseCards.cards.data, account: StripeAccountID },
+  };
+};
 
 function useCards(
   cards: Stripe.Issuing.Card[],

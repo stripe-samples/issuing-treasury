@@ -1,18 +1,16 @@
-import { NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
-import withAuth from "src/middleware/api/auth-middleware";
-import NextApiRequestWithSession from "src/types/next-api-request-with-session";
+import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripe from "src/utils/stripe-loader";
 
-const handler = async (
-  req: NextApiRequestWithSession,
-  res: NextApiResponse,
-) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(400).json({ error: "Bad Request" });
   }
 
-  const accountId = req.body.accountId;
+  const session = await getSessionForServerSide(req, res);
+
+  const accountId = session.accountId;
   const cardId = req.body.cardId;
   const nonce = req.body.nonce;
   const apiVersion = "2022-08-01";
@@ -37,4 +35,4 @@ const handler = async (
   }
 };
 
-export default withAuth(handler);
+export default handler;
