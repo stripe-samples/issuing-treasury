@@ -19,6 +19,14 @@ export const getSessionForServerSideProps = async (
   return session;
 };
 
+export const getSessionForLoginOrRegisterServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  return session;
+};
+
 export const getSessionForServerSide = async (
   req: NextApiRequest,
   res: NextApiResponse,

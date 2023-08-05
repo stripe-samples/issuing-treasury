@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
+import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import router from "next/router";
 import { signIn } from "next-auth/react";
@@ -15,6 +16,19 @@ import { ReactNode } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
+import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const session = await getSessionForLoginOrRegisterServerSideProps(context);
+
+  if (session != null) {
+    return { redirect: { destination: "/", permanent: false } };
+  }
+
+  return { props: {} };
+};
 
 const validationSchema = Yup.object({
   email: Yup.string()
