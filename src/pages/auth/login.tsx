@@ -134,7 +134,7 @@ const Page = () => {
                     variant="contained"
                     disabled={isSubmitting}
                   >
-                    Continue
+                    {isSubmitting ? "Logging in..." : "Continue"}
                   </Button>
                 </Form>
               )}

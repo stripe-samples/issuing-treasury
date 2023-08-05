@@ -3,8 +3,8 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NextComponentType, NextPageContext } from "next";
 import { AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
-import React, { ReactNode } from "react";
+import { SessionProvider, useSession } from "next-auth/react";
+import React, { ReactElement } from "react";
 
 import { useNProgress } from "src/hooks/use-nprogress";
 import { createTheme } from "src/theme";
@@ -17,8 +17,8 @@ const clientSideEmotionCache = createEmotionCache();
 const SplashScreen = () => null;
 
 interface SampleAppProps extends AppProps {
-  Component: NextComponentType<NextPageContext, ReactNode, EmotionCache> & {
-    getLayout?: (page: React.ReactNode) => React.ReactNode;
+  Component: NextComponentType<NextPageContext, ReactElement, EmotionCache> & {
+    getLayout?: (page: ReactElement) => ReactElement;
   };
   emotionCache?: EmotionCache;
 }
@@ -39,9 +39,15 @@ export default function App({
       <SessionProvider session={session}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          {getLayout(<Component {...pageProps} />)}
+          <AppContent>{getLayout(<Component {...pageProps} />)}</AppContent>
         </ThemeProvider>
       </SessionProvider>
     </CacheProvider>
   );
 }
+
+const AppContent = ({ children }: { children: ReactElement }) => {
+  const { status } = useSession();
+
+  return status === "loading" ? <SplashScreen /> : children;
+};
