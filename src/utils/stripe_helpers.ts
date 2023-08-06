@@ -218,10 +218,13 @@ export async function getCardDetails(StripeAccountID: string, cardId: string) {
   return cardTransactions;
 }
 
-export async function createAccountOnboardingUrl(
-  accountId: string,
-  host: string,
-) {
+export async function createAccountOnboardingUrl(accountId: string) {
+  if (process.env.DEMO_HOST == undefined) {
+    throw new Error("DEMO_HOST is not set");
+  }
+
+  const host = process.env.DEMO_HOST;
+
   const { url } = await stripe.accountLinks.create({
     type: "account_onboarding",
     account: accountId,

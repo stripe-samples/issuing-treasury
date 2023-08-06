@@ -6,27 +6,19 @@ import React, { ReactNode, useState } from "react";
 import AuthLayout from "src/layouts/auth/layout";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
 import { createAccountOnboardingUrl } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const account = await stripe.accounts.retrieve(session.accountId);
+  const accountId = session.accountId;
 
   if (await hasOutstandingRequirements(session.accountId)) {
-    // Create the onboarding link and redirect
-    const url = await createAccountOnboardingUrl(
-      account.id,
-      process.env.DEMO_HOST,
-    );
+    // Create the onboarding link to surface as a link/button in the frontend
+    const url = await createAccountOnboardingUrl(accountId);
 
-    return {
-      props: {
-        url: url,
-      },
-    };
+    return { props: { url: url } };
   } else {
     return {
       redirect: { destination: "/", permanent: false },
