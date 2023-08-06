@@ -45,10 +45,10 @@ const CardsTable = ({
   onDeselectAll: () => void;
   onDeselectOne: (item: string) => void;
   onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement> | null,
+    e: React.MouseEvent<HTMLButtonElement> | null,
     page: number,
   ) => void;
-  onRowsPerPageChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onRowsPerPageChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onSelectAll: () => void;
   onSelectOne: (item: string) => void;
   page?: number;

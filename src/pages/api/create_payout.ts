@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       stripeAccount: StripeAccountId,
     });
 
-    const payout = await stripe.payouts.create(
+    await stripe.payouts.create(
       {
         amount: balance.available[0].amount,
         currency: "usd",

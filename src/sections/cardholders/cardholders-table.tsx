@@ -39,10 +39,10 @@ const CardholdersTable = ({
   onDeselectAll: () => void;
   onDeselectOne: (item: string) => void;
   onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement> | null,
+    e: React.MouseEvent<HTMLButtonElement> | null,
     page: number,
   ) => void;
-  onRowsPerPageChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onRowsPerPageChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onSelectAll: () => void;
   onSelectOne: (item: string) => void;
   page?: number;
@@ -63,8 +63,8 @@ const CardholdersTable = ({
                   <Checkbox
                     checked={selectedAll}
                     indeterminate={selectedSome}
-                    onChange={(event) => {
-                      if (event.target.checked) {
+                    onChange={(e) => {
+                      if (e.target.checked) {
                         onSelectAll?.();
                       } else {
                         onDeselectAll?.();
@@ -86,8 +86,8 @@ const CardholdersTable = ({
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
-                        onChange={(event) => {
-                          if (event.target.checked) {
+                        onChange={(e) => {
+                          if (e.target.checked) {
                             onSelectOne?.(cardholder.id);
                           } else {
                             onDeselectOne?.(cardholder.id);

@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const ip =
       req.headers["x-real-ip"]?.toString() || req.connection.remoteAddress;
-    const cardholder = await stripe.issuing.cardholders.create(
+    await stripe.issuing.cardholders.create(
       {
         type: "individual",
         name: req.body.firstName + " " + req.body.lastName,

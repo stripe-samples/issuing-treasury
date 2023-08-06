@@ -7,10 +7,14 @@ import {
   tableCellClasses,
 } from "@mui/material";
 
+import createPalette from "src/theme/create-palette";
+
 // Used only to create transitions
 const muiTheme = createTheme();
 
-export function createComponents(config: any) {
+export function createComponents(config: {
+  palette: ReturnType<typeof createPalette>;
+}) {
   const { palette } = config;
 
   return {

@@ -63,15 +63,15 @@ const Page = ({ cards: allCards }: { cards: Stripe.Issuing.Card[] }) => {
   const cardsSelection = useSelection<string>(cardsIds);
 
   const handlePageChange = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+    (e: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
       setPage(page);
     },
     [],
   );
 
   const handleRowsPerPageChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const rows = parseInt(event.target.value);
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const rows = parseInt(e.target.value);
       setRowsPerPage(rows);
     },
     [],

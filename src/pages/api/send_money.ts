@@ -14,9 +14,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getSessionForServerSide(req, res);
     const StripeAccountId = session.accountId;
 
-    const balance = await stripe.balance.retrieve({
-      stripeAccount: StripeAccountId,
-    });
+    // TODO: Check if we can use the following in some way
+    // const balance = await stripe.balance.retrieve({
+    //   stripeAccount: StripeAccountId,
+    // });
 
     let amountString = req.body.amount.toString();
     if (amountString.includes(".")) {

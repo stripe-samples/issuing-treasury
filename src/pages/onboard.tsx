@@ -30,13 +30,15 @@ const Page = ({ url }: { url: string }) => {
   const [isContinuingOnboarding, setIsContinuingOnboarding] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleContinueOnboarding = async (e: any) => {
+  const handleContinueOnboarding = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     e.preventDefault();
     window.location.replace(url);
     setIsContinuingOnboarding(true);
   };
 
-  const handleLogout = async (e: any) => {
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await signOut();
     setIsLoggingOut(true);

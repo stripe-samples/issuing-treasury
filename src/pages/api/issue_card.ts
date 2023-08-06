@@ -23,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (card_type == "physical") {
-      const card = await stripe.issuing.cards.create(
+      await stripe.issuing.cards.create(
         {
           cardholder: cardholderid,
           financial_account: financialAccount.id,
@@ -41,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         { stripeAccount: StripeAccountId },
       );
     } else {
-      const card = await stripe.issuing.cards.create(
+      await stripe.issuing.cards.create(
         {
           cardholder: cardholderid,
           financial_account: financialAccount.id,
