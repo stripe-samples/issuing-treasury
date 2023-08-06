@@ -1,32 +1,50 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import * as Yup from "yup";
 
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripe from "src/utils/stripe-loader";
+
+const validationSchema = Yup.object().shape({
+  cardId: Yup.string().required("Card ID is required"),
+  newStatus: Yup.string()
+    .oneOf(["active", "inactive"])
+    .required("New status to switch to is required"),
+});
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(400).json({ error: "Bad Request" });
   }
 
-  try {
-    const session = await getSessionForServerSide(req, res);
-    const StripeAccountId = session.accountId;
+  const session = await getSessionForServerSide(req, res);
+  const StripeAccountId = session.accountId;
 
-    const cardId = req.body.card_id;
-    const { new_status } = req.body;
-    const status = new_status == "active" ? "active" : "inactive";
+  const { cardId, newStatus } = req.body;
+  try {
+    await validationSchema.validate(
+      { cardId, newStatus },
+      { abortEarly: false },
+    );
+  } catch (error) {
+    return res.status(400).json({ error: (error as Error).message });
+  }
+
+  try {
     const result = await stripe.issuing.cards.update(
       cardId,
-      { status: status },
+      { status: newStatus },
       { stripeAccount: StripeAccountId },
     );
-    return res.status(200).json({
-      success: true,
-    });
+
+    if (result.lastResponse.statusCode === 200) {
+      return res.status(200).json({
+        success: true,
+      });
+    } else {
+      throw new Error("Something went wrong");
+    }
   } catch (err) {
-    return res
-      .status(401)
-      .json({ success: false, error: (err as Error).message });
+    return res.status(500).json({ error: (err as Error).message });
   }
 };
 

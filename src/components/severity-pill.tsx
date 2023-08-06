@@ -1,10 +1,12 @@
 import { styled } from "@mui/material/styles";
 
+import { SeverityColor } from "src/types/severity-color";
+
 const SeverityPillRoot = styled("span", {
   shouldForwardProp: (prop) => prop !== "ownerState",
 })<{
   ownerState: {
-    color: "primary" | "secondary" | "error" | "info" | "warning" | "success";
+    color: SeverityColor;
   };
 }>(({ theme, ownerState }) => {
   // @ts-expect-error missing `alpha12` in PaletteColorOptions
@@ -38,7 +40,7 @@ const SeverityPillRoot = styled("span", {
 });
 
 export const SeverityPill = (props: {
-  color?: "primary" | "secondary" | "error" | "info" | "warning" | "success";
+  color?: SeverityColor;
   children: React.ReactNode;
 }) => {
   const { color = "primary", children, ...other } = props;

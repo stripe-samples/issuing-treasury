@@ -157,7 +157,7 @@ export async function getFinancialAccountTransactionDetails(
 
 export async function getCardholders(StripeAccountID: string) {
   const cardholders = await stripe.issuing.cardholders.list(
-    { limit: 10 },
+    { limit: 100 },
     { stripeAccount: StripeAccountID },
   );
 
@@ -168,7 +168,7 @@ export async function getCardholders(StripeAccountID: string) {
 
 export async function getCards(StripeAccountID: string) {
   const cards = await stripe.issuing.cards.list(
-    { limit: 10 },
+    { limit: 100 },
     { stripeAccount: StripeAccountID },
   );
 
@@ -177,12 +177,7 @@ export async function getCards(StripeAccountID: string) {
   };
 }
 
-export async function getCardTransactions(
-  StripeAccountID: string,
-  cardId: any,
-) {
-  const today = Math.trunc(new Date().setHours(0, 0) / 1000);
-
+export async function getCardDetails(StripeAccountID: string, cardId: string) {
   // Retrieve last 10 authorizations
   const card_authorizations = await stripe.issuing.authorizations.list(
     {
@@ -193,27 +188,15 @@ export async function getCardTransactions(
   );
 
   // Calculate current spend
-  let current_spend_amount = 0;
-  let current_spend = "";
-
-  card_authorizations.data.forEach(function (authorization: any) {
+  let current_spend = 0;
+  card_authorizations.data.forEach(function (
+    authorization: Stripe.Issuing.Authorization,
+  ) {
     // Validate the authorization was approved before adding it to the total spend
     if (authorization.approved == true) {
-      current_spend_amount = current_spend_amount + authorization.amount;
+      current_spend = current_spend + authorization.amount;
     }
   });
-
-  if (current_spend_amount > 0) {
-    current_spend = (current_spend_amount / 100).toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-  } else {
-    current_spend = current_spend_amount.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-  }
 
   const card_details = await stripe.issuing.cards.retrieve(
     cardId,
@@ -223,13 +206,9 @@ export async function getCardTransactions(
     },
   );
 
-  const cardTransactions: {
-    card_authorizations: Stripe.Issuing.Authorization[];
-    current_spend: string;
-    card_details: Stripe.Issuing.Card;
-  } = {
-    card_authorizations: [],
-    current_spend: "",
+  const cardTransactions = {
+    card_authorizations: [] as Stripe.Issuing.Authorization[],
+    current_spend: 0,
     card_details: {} as Stripe.Issuing.Card,
   };
   cardTransactions["card_authorizations"] = card_authorizations.data;
@@ -239,7 +218,10 @@ export async function getCardTransactions(
   return cardTransactions;
 }
 
-export async function createAccountOnboardingUrl(accountId: any, host: any) {
+export async function createAccountOnboardingUrl(
+  accountId: string,
+  host: string,
+) {
   const { url } = await stripe.accountLinks.create({
     type: "account_onboarding",
     account: accountId,

@@ -19,9 +19,10 @@ import Stripe from "stripe";
 
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
+import { SeverityColor } from "src/types/severity-color";
 import { formatDateTime } from "src/utils/format";
 
-const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
+const statusMap: Record<Stripe.Issuing.Card.Type, SeverityColor> = {
   virtual: "info",
   physical: "warning",
 };
