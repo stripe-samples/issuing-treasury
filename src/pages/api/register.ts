@@ -54,7 +54,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   // Create the user
-  const hashedPassword = await bcrypt.hash(password, 8);
+  const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = await prisma.user.create({
     data: {
       email,
