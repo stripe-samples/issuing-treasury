@@ -22,9 +22,6 @@ const validationSchema = Yup.object().shape({
     .matches(/[0-9]/, getCharacterValidationError("digit"))
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-  confirmPassword: Yup.string()
-    .required("Password confirmation is required")
-    .oneOf([Yup.ref("password")], "Passwords do not match"),
 });
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -32,13 +29,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "Bad Request" });
   }
 
-  const { email, password, confirmPassword } = req.body;
+  const { email, password } = req.body;
 
   try {
-    await validationSchema.validate(
-      { email, password, confirmPassword },
-      { abortEarly: false },
-    );
+    await validationSchema.validate({ email, password }, { abortEarly: false });
   } catch (error) {
     return res.status(400).json({ error: (error as Error).message });
   }

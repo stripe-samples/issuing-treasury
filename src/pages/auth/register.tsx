@@ -47,16 +47,12 @@ const validationSchema = Yup.object().shape({
     .matches(/[0-9]/, getCharacterValidationError("digit"))
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-  confirmPassword: Yup.string()
-    .required("Password confirmation is required")
-    .oneOf([Yup.ref("password")], "Passwords do not match"),
 });
 
 const Page = () => {
   const initialValues = {
     email: "",
     password: "",
-    confirmPassword: "",
     submit: null,
   };
 
@@ -72,7 +68,6 @@ const Page = () => {
       const registrationResponse = await fetchApi("/api/register", {
         email: values.email,
         password: values.password,
-        confirmPassword: values.confirmPassword,
       });
       const data = await registrationResponse.json();
 
@@ -145,19 +140,6 @@ const Page = () => {
                       helperText={touched.password && errors.password}
                       label="Password"
                       name="password"
-                      type="password"
-                    />
-                    <Field
-                      as={TextField}
-                      error={
-                        !!(touched.confirmPassword && errors.confirmPassword)
-                      }
-                      fullWidth
-                      helperText={
-                        touched.confirmPassword && errors.confirmPassword
-                      }
-                      label="Confirm Password"
-                      name="confirmPassword"
                       type="password"
                     />
                     <Alert severity="info">
