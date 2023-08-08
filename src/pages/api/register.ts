@@ -5,13 +5,26 @@ import * as Yup from "yup";
 import { prisma } from "src/db";
 import stripe from "src/utils/stripe-loader";
 
+const getCharacterValidationError = (str: string) => {
+  return `Your password must have at least 1 ${str} character`;
+};
 const validationSchema = Yup.object().shape({
-  name: Yup.string().max(255).required("Business name is required"),
   email: Yup.string()
     .email("Must be a valid email")
     .max(255)
     .required("Email is required"),
-  password: Yup.string().max(255).required("Password is required"),
+  password: Yup.string()
+    .max(255)
+    .required("Password is required")
+    // check minimum characters
+    .min(8, "Password must have at least 8 characters")
+    // different error messages for different requirements
+    .matches(/[0-9]/, getCharacterValidationError("digit"))
+    .matches(/[a-z]/, getCharacterValidationError("lowercase"))
+    .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
+  confirmPassword: Yup.string()
+    .required("Password confirmation is required")
+    .oneOf([Yup.ref("password")], "Passwords do not match"),
 });
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -19,13 +32,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "Bad Request" });
   }
 
-  const {
-    body: { name, email, password },
-  } = req;
+  const { email, password, confirmPassword } = req.body;
 
   try {
     await validationSchema.validate(
-      { name, email, password },
+      { email, password, confirmPassword },
       { abortEarly: false },
     );
   } catch (error) {

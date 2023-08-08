@@ -1,4 +1,12 @@
-import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
@@ -22,20 +30,33 @@ export const getServerSideProps = async (
   return { props: {} };
 };
 
-const validationSchema = Yup.object({
+const getCharacterValidationError = (str: string) => {
+  return `Your password must have at least 1 ${str} character`;
+};
+const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("Must be a valid email")
     .max(255)
     .required("Email is required"),
-  name: Yup.string().max(255).required("Name is required"),
-  password: Yup.string().max(255).required("Password is required"),
+  password: Yup.string()
+    .max(255)
+    .required("Password is required")
+    // check minimum characters
+    .min(8, "Password must have at least 8 characters")
+    // different error messages for different requirements
+    .matches(/[0-9]/, getCharacterValidationError("digit"))
+    .matches(/[a-z]/, getCharacterValidationError("lowercase"))
+    .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
+  confirmPassword: Yup.string()
+    .required("Password confirmation is required")
+    .oneOf([Yup.ref("password")], "Passwords do not match"),
 });
 
 const Page = () => {
   const initialValues = {
     email: "",
-    name: "ACME Corp.",
     password: "",
+    confirmPassword: "",
     submit: null,
   };
 
@@ -49,9 +70,9 @@ const Page = () => {
   ) => {
     try {
       const registrationResponse = await fetchApi("/api/register", {
-        name: values.name,
         email: values.email,
         password: values.password,
+        confirmPassword: values.confirmPassword,
       });
       const data = await registrationResponse.json();
 
@@ -110,14 +131,6 @@ const Page = () => {
                   <Stack spacing={3}>
                     <Field
                       as={TextField}
-                      error={!!(touched.name && errors.name)}
-                      fullWidth
-                      helperText={touched.name && errors.name}
-                      label="Business Name"
-                      name="name"
-                    />
-                    <Field
-                      as={TextField}
                       error={!!(touched.email && errors.email)}
                       fullWidth
                       helperText={touched.email && errors.email}
@@ -134,6 +147,23 @@ const Page = () => {
                       name="password"
                       type="password"
                     />
+                    <Field
+                      as={TextField}
+                      error={
+                        !!(touched.confirmPassword && errors.confirmPassword)
+                      }
+                      fullWidth
+                      helperText={
+                        touched.confirmPassword && errors.confirmPassword
+                      }
+                      label="Confirm Password"
+                      name="confirmPassword"
+                      type="password"
+                    />
+                    <Alert severity="info">
+                      Password must be at least 8 characters with a number, a
+                      lowercase character, and an uppercase character.
+                    </Alert>
                   </Stack>
                   {errors.submit && (
                     <Typography color="error" sx={{ mt: 3 }} variant="body2">
