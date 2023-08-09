@@ -12,15 +12,18 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        if (!credentials?.email || !credentials?.password) {
+        if (!credentials?.username || !credentials?.password) {
           return null;
         }
 
-        return await authenticateUser(credentials.email, credentials.password);
+        return await authenticateUser(
+          credentials.username,
+          credentials.password,
+        );
       },
     }),
   ],
@@ -32,35 +35,39 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     jwt: async ({ token, user }: { token: JWT; user?: User }) => {
-      if (token.requiresOnboarding === true) {
-        if ((await hasOutstandingRequirements(token.accountId)) === true) {
-          token.requiresOnboarding = true;
-        } else {
-          token.requiresOnboarding = false;
-        }
-      } else {
-        token.requiresOnboarding = false;
+      if (token.requiresOnboarding != undefined) {
+        token.requiresOnboarding =
+          token.requiresOnboarding &&
+          (await hasOutstandingRequirements(token.accountId));
       }
 
-      if (user?.email) {
+      if (user?.username) {
         return { ...token, ...user };
       }
 
       return token;
     },
     session: async ({ session, token }: { session: Session; token: JWT }) => {
-      if (!token.accountId) {
+      if (token.username == undefined) {
+        throw new Error("Session callback: username is missing in the token");
+      }
+
+      if (token.email == undefined) {
+        throw new Error("Session callback: email is missing in the token");
+      }
+
+      if (token.accountId == undefined) {
+        throw new Error("Session callback: account ID is missing in the token");
+      }
+
+      if (token.requiresOnboarding == undefined) {
         throw new Error(
-          "Session callback: Stripe account ID is missing in the token",
+          "Session callback: requiresOnboarding is missing in the token",
         );
       }
 
-      if (!token.requiresOnboarding === undefined) {
-        throw new Error(
-          "Session callback: requiresOnboarding field is missing in the token",
-        );
-      }
-
+      session.username = token.username;
+      session.email = token.email;
       session.accountId = token.accountId;
       session.businessName = token.businessName;
       session.requiresOnboarding = token.requiresOnboarding;

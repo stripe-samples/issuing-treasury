@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
 
+import { hasOutstandingRequirements } from "./utils/onboarding-helpers";
+
 export default withAuth(
   // This will only be called once the user is authorized
-  function middleware(req) {
+  async function middleware(req) {
     const token = req.nextauth.token;
 
     if (token == null) {
@@ -16,16 +18,30 @@ export default withAuth(
       );
     }
 
+    if (token.email == undefined) {
+      throw new Error(
+        "Pre-onboarding auth check: email field is missing in the token",
+      );
+    }
+
     if (token.requiresOnboarding == undefined) {
       throw new Error(
         "Pre-onboarding auth check: requiresOnboarding field is missing in the token",
       );
     }
 
-    const isOnOnboardingPage = req.nextUrl.pathname === "/onboard";
-    if (token.requiresOnboarding && !isOnOnboardingPage) {
+    const accessingOnboarding =
+      req.nextUrl.pathname === "/onboard" ||
+      req.nextUrl.pathname === "/api/onboard";
+    const requiresOnboarding =
+      token.requiresOnboarding &&
+      (await hasOutstandingRequirements(token.accountId));
+    // If the user needs to onboard but they are trying to access other pages, redirect them to the onboarding page
+    if (requiresOnboarding && !accessingOnboarding) {
       return NextResponse.redirect(new URL("/onboard", req.url));
-    } else if (!token.requiresOnboarding && isOnOnboardingPage) {
+    }
+    // If the user doesn't need to onboard but they are trying to access the onboarding page, redirect them to the home page
+    else if (!requiresOnboarding && accessingOnboarding) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 

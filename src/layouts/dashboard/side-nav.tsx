@@ -43,46 +43,16 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           height: "100%",
         }}
       >
-        <Box sx={{ p: 3 }}>
-          <Stack direction="row" spacing={2}>
-            <Box
-              component={NextLink}
-              href="/"
-              sx={{
-                display: "inline-flex",
-                height: 32,
-                width: 32,
-              }}
-            >
-              <Logo />
-            </Box>
-            {/* <Typography>Issuing & Treasury</Typography> */}
-          </Stack>
-          <Box
-            sx={{
-              alignItems: "center",
-              backgroundColor: "rgba(255, 255, 255, 0.04)",
-              borderRadius: 1,
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "space-between",
-              mt: 2,
-              p: "12px",
-            }}
-          >
-            <div>
-              <Typography color="inherit" variant="subtitle1">
-                {session?.businessName}
-              </Typography>
-              <Typography color="neutral.400" variant="body2">
-                Production
-              </Typography>
-            </div>
-            <SvgIcon fontSize="small" sx={{ color: "neutral.500" }}>
-              <ChevronUpDownIcon />
-            </SvgIcon>
+        <Stack direction="row" alignItems="center" sx={{ p: 3 }} spacing={3}>
+          <Box component={NextLink} href="/" height={40} width={40}>
+            <Logo />
           </Box>
-        </Box>
+          <Box width="100%">
+            <Typography color="inherit" variant="subtitle1">
+              {session?.businessName}
+            </Typography>
+          </Box>
+        </Stack>
         <Divider sx={{ borderColor: "neutral.700" }} />
         <Box
           component="nav"

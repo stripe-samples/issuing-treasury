@@ -31,10 +31,7 @@ export const getServerSideProps = async (
 };
 
 const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Must be a valid email")
-    .max(255)
-    .required("Email is required"),
+  username: Yup.string().max(255).required("Username is required"),
   password: Yup.string().max(255).required("Password is required"),
 });
 
@@ -42,7 +39,7 @@ const Page = () => {
   const { callbackUrl } = router.query;
 
   const initialValues = {
-    email: "",
+    username: "",
     password: "",
     submit: null,
   };
@@ -57,7 +54,7 @@ const Page = () => {
   ) => {
     try {
       const response = await signIn("credentials", {
-        email: values.email,
+        username: values.username,
         password: values.password,
         callbackUrl: (callbackUrl || "/") as string,
       });
@@ -117,12 +114,11 @@ const Page = () => {
                   <Stack spacing={3}>
                     <Field
                       as={TextField}
-                      error={!!(touched.email && errors.email)}
+                      error={!!(touched.username && errors.username)}
                       fullWidth
-                      helperText={touched.email && errors.email}
-                      label="Email Address"
-                      name="email"
-                      type="email"
+                      helperText={touched.username && errors.username}
+                      label="Username"
+                      name="username"
                     />
                     <Field
                       as={TextField}

@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import {
   Alert,
   Box,
@@ -16,6 +17,7 @@ import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
 import { fetchApi } from "src/utils/api-helpers";
+import { capitalize } from "src/utils/format";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
 export const getServerSideProps = async (
@@ -34,10 +36,7 @@ const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
 };
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Must be a valid email")
-    .max(255)
-    .required("Email is required"),
+  username: Yup.string().max(255).required("Username is required"),
   password: Yup.string()
     .max(255)
     .required("Password is required")
@@ -47,12 +46,23 @@ const validationSchema = Yup.object().shape({
     .matches(/[0-9]/, getCharacterValidationError("digit"))
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
+  email: Yup.string()
+    .email("Must be a valid email")
+    .max(255)
+    .required("Email is required"),
+  businessName: Yup.string().max(255).required("Business name is required"),
 });
 
 const Page = () => {
   const initialValues = {
-    email: "",
+    username: "",
     password: "",
+    // FOR-DEMO-ONLY: We're using a fake email here but you should modify this line and collect a real email from the
+    // user
+    email: `demo-user${faker.number.int({ max: 1000 })}@some-company.com`,
+    // FOR-DEMO-ONLY: We're using a fake business name here but you should modify this line and collect a real business
+    //  name from the user
+    businessName: `Demo Innovative Inc.`,
     submit: null,
   };
 
@@ -66,14 +76,15 @@ const Page = () => {
   ) => {
     try {
       const registrationResponse = await fetchApi("/api/register", {
-        email: values.email,
+        username: values.username,
         password: values.password,
+        email: values.email,
+        businessName: values.businessName,
       });
-      const data = await registrationResponse.json();
 
       if (registrationResponse.ok) {
         const signInResponse = await signIn("credentials", {
-          email: values.email,
+          username: values.username,
           password: values.password,
           callbackUrl: "/",
         });
@@ -81,7 +92,7 @@ const Page = () => {
           throw new Error("Something went wrong");
         }
       } else {
-        throw new Error(`Registration failed: ${data.error}`);
+        throw new Error("Something went wrong");
       }
     } catch (err) {
       setStatus({ success: false });
@@ -126,12 +137,11 @@ const Page = () => {
                   <Stack spacing={3}>
                     <Field
                       as={TextField}
-                      error={!!(touched.email && errors.email)}
+                      error={!!(touched.username && errors.username)}
                       fullWidth
-                      helperText={touched.email && errors.email}
-                      label="Email Address"
-                      name="email"
-                      type="email"
+                      helperText={touched.username && errors.username}
+                      label="Username"
+                      name="username"
                     />
                     <Field
                       as={TextField}
@@ -142,15 +152,35 @@ const Page = () => {
                       name="password"
                       type="password"
                     />
-                    <Alert severity="info">
+                    <Alert severity="info" color="primary" icon={false}>
                       Password must be at least 8 characters with a number, a
                       lowercase character, and an uppercase character.
                     </Alert>
+                    <Field
+                      as={TextField}
+                      error={!!(touched.email && errors.email)}
+                      fullWidth
+                      helperText={touched.email && errors.email}
+                      label="Email Address"
+                      name="email"
+                      disabled={true}
+                    />
+                    <Field
+                      as={TextField}
+                      error={!!(touched.businessName && errors.businessName)}
+                      fullWidth
+                      helperText={touched.businessName && errors.businessName}
+                      label="Business Name"
+                      name="businessName"
+                      disabled={true}
+                    />
+                    <Alert severity="info" color="primary">
+                      Email address and business name are automatically
+                      generated as part of the demo.
+                    </Alert>
                   </Stack>
                   {errors.submit && (
-                    <Typography color="error" sx={{ mt: 3 }} variant="body2">
-                      {errors.submit}
-                    </Typography>
+                    <Alert severity="error">{errors.submit}</Alert>
                   )}
                   <Button
                     fullWidth
