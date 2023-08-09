@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import {
   Button,
   Checkbox,
@@ -221,6 +222,23 @@ const CardholderCreateWidget = () => {
   const [showModal, setShowModal] = React.useState(false);
 
   const formRef = useRef<FormikProps<FormikValues>>(null);
+
+  const handleAutofill = () => {
+    const form = formRef.current;
+    if (form) {
+      form.setValues({
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email().toLowerCase(),
+        address1: faker.location.streetAddress(),
+        city: faker.location.city(),
+        state: faker.location.state(),
+        postalCode: faker.location.zipCode("#####"),
+        country: "US",
+      });
+    }
+  };
+
   const handleSubmit = async () => {
     const form = formRef.current;
     if (form) {
@@ -247,7 +265,7 @@ const CardholderCreateWidget = () => {
         </DialogContent>
         <Divider />
         <DialogActions>
-          <Button>Autofill with test data</Button>
+          <Button onClick={handleAutofill}>Autofill with test data</Button>
           <Button
             disabled={formRef.current?.isSubmitting}
             variant="contained"
