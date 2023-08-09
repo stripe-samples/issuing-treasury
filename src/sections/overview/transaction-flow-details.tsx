@@ -20,10 +20,14 @@ const TransactionFlowDetails = ({
   const flowTypeFormatted = flowType.replace(/_/g, " ");
 
   return flowDetails && flowDetails.hosted_regulatory_receipt_url ? (
-    <div>
-      <span>{flowTypeFormatted}</span>
-      <a href={flowDetails.hosted_regulatory_receipt_url} target="_blank">Link</a>
-    </div>
+    <Stack direction="row" spacing={1}>
+      <Typography noWrap>{flowTypeFormatted}</Typography>
+      <Link href={flowDetails.hosted_regulatory_receipt_url} target="_blank">
+        <SvgIcon>
+          <DocumentArrowDownIcon />
+        </SvgIcon>
+      </Link>
+    </Stack>
   ) : (
     <Typography>{flowTypeFormatted}</Typography>
   );
