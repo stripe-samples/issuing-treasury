@@ -111,7 +111,7 @@ const CardholdersTable = ({
                       }}
                     >
                       {cardholder.individual ? (
-                        <form action="/api/issue_card" method="POST">
+                        <form action="/api/cards" method="POST">
                           <input
                             type="hidden"
                             id="cardholderid"

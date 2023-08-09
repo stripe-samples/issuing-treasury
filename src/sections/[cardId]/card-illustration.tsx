@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Stripe from "stripe";
 
+import { fetchApi } from "src/utils/api-helpers";
+
 const brandIcon: Record<string, string> = {
   Mastercard: "/assets/logos/logo-mastercard.svg",
   VISA: "/assets/logos/logo-visa.svg",
@@ -29,11 +31,19 @@ const CardIllustration = ({
 
   useEffect(
     () => {
-      if (!stripe || !elements || card.type === "physical") {
-        return;
-      }
-
       const renderCard = async () => {
+        if (
+          !stripe ||
+          !elements ||
+          // Only retrieve the card details it's a virtual card. Sensitive physical card details are accessible using
+          // Issuing Elements only in testmode for development use which would work here for this demo but not in
+          // production. In order to be as close as possible to the production experience, we're only retrieving the card
+          // details for virtual cards.
+          card.type === "physical"
+        ) {
+          return;
+        }
+
         const elementsStyle = {
           base: {
             color: "white",
@@ -47,20 +57,13 @@ const CardIllustration = ({
           issuingCard: cardId,
         });
 
-        const ephemeralKeyResult = await fetch("/api/get_card", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cardId: cardId,
-            nonce: nonceResult.nonce,
-            accountId: accountId,
-          }),
+        const response = await fetchApi("/api/cards/card-key", {
+          cardId: cardId,
+          nonce: nonceResult.nonce,
+          accountId: accountId,
         });
 
-        const ephemeralKeyResponse = await ephemeralKeyResult.json();
+        const { ephemeralKey: ephemeralKeyResult } = await response.json();
 
         // Populate the raw card details
         const cardNumberStyle = {
@@ -77,7 +80,7 @@ const CardIllustration = ({
         elements
           .create("issuingCardNumberDisplay", {
             issuingCard: cardId,
-            ephemeralKeySecret: ephemeralKeyResponse.secret,
+            ephemeralKeySecret: ephemeralKeyResult.secret,
             nonce: nonceResult.nonce,
             style: cardNumberStyle,
           })
@@ -86,7 +89,7 @@ const CardIllustration = ({
         elements
           .create("issuingCardExpiryDisplay", {
             issuingCard: cardId,
-            ephemeralKeySecret: ephemeralKeyResponse.secret,
+            ephemeralKeySecret: ephemeralKeyResult.secret,
             nonce: nonceResult.nonce,
             style: elementsStyle,
           })
@@ -95,7 +98,7 @@ const CardIllustration = ({
         elements
           .create("issuingCardCvcDisplay", {
             issuingCard: cardId,
-            ephemeralKeySecret: ephemeralKeyResponse.secret,
+            ephemeralKeySecret: ephemeralKeyResult.secret,
             nonce: nonceResult.nonce,
             style: elementsStyle,
           })
@@ -163,22 +166,26 @@ const CardIllustration = ({
               {card.cardholder.name}
             </Typography>
           </Box>
-          <Box>
-            <Typography color="white" variant="body2">
-              Expiry date
-            </Typography>
-            <Typography color="white" mt={1} id="card-expiry"></Typography>
-          </Box>
-          <Box>
-            <Typography color="white" variant="body2">
-              CVC
-            </Typography>
-            <Typography color="white" mt={1} id="card-cvc"></Typography>
-          </Box>
+          {card.type === "virtual" && (
+            <>
+              <Box>
+                <Typography color="white" variant="body2">
+                  Expiry date
+                </Typography>
+                <Typography color="white" mt={1} id="card-expiry"></Typography>
+              </Box>
+              <Box>
+                <Typography color="white" variant="body2">
+                  CVC
+                </Typography>
+                <Typography color="white" mt={1} id="card-cvc"></Typography>
+              </Box>
+            </>
+          )}
           <Box>
             <Image
-              src="/assets/cards/sim.svg"
-              alt="SIM Logo"
+              src="/assets/cards/chip.svg"
+              alt="Chip Logo"
               height={45}
               width={58}
             />
