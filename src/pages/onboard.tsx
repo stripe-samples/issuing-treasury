@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, Button, Alert, List } from "@mui/material";
+import { Box, Stack, Typography, Button, Alert, Chip } from "@mui/material";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import React, { ReactNode, useState } from "react";
@@ -70,31 +70,55 @@ const Page = () => {
                 </Typography>
                 <ol>
                   <li>
-                    Click "Continue onboarding" to initiate the simulation.
-                    You'll be guided through the verification steps.
+                    Click &quot;Continue onboarding&quot; to initiate the
+                    simulation. You&apos;ll be guided through the verification
+                    steps.
                   </li>
                   <li>
                     When prompted, use the following test details:
                     <ul>
-                      <li>Test Phone Number: 000 000 0000</li>
-                      <li>Test Email: (enter any fake email)</li>
                       <li>
-                        Corresponding Test SMS Verification Code: Click "Use
-                        test code"
+                        Test Phone Number:{" "}
+                        <Chip
+                          variant="outlined"
+                          label="000 000 0000"
+                          size="small"
+                        />
+                      </li>
+                      <li>
+                        Test Email:{" "}
+                        <Chip
+                          variant="outlined"
+                          label="enter any fake email"
+                          size="small"
+                        />
+                      </li>
+                      <li>
+                        Test SMS Verification Code: Click{" "}
+                        <Chip
+                          variant="outlined"
+                          label="Use test code"
+                          size="small"
+                        />
                       </li>
                     </ul>
                   </li>
                   <li>
-                    Finally click "Skip this step" to skip the "Verifying your
-                    identity" step.
+                    Finally click{" "}
+                    <Chip
+                      variant="outlined"
+                      label="Skip this step"
+                      size="small"
+                    />{" "}
+                    to skip &quot;Verifying your identity&quot;.
                   </li>
                 </ol>
                 <Typography variant="body2">
-                  It's important to know that all the required fields have been
-                  automatically generated for this simulation. Any attempt to
-                  use genuine personal information will result in a mismatch,
-                  preventing successful onboarding. We're thrilled to offer you
-                  a seamless onboarding experience through this interactive
+                  It&apos;s important to know that all the required fields have
+                  been automatically generated for this simulation. Any attempt
+                  to use genuine personal information will result in a mismatch,
+                  preventing successful onboarding. We&apos;re thrilled to offer
+                  you a seamless onboarding experience through this interactive
                   simulation!
                 </Typography>
               </Stack>

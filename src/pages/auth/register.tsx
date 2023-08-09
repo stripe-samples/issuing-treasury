@@ -17,7 +17,6 @@ import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
 import { fetchApi } from "src/utils/api-helpers";
-import { capitalize } from "src/utils/format";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
 export const getServerSideProps = async (

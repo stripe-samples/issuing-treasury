@@ -1,10 +1,8 @@
-import ChevronUpDownIcon from "@heroicons/react/24/solid/ChevronUpDownIcon";
 import {
   Box,
   Divider,
   Drawer,
   Stack,
-  SvgIcon,
   Theme,
   Typography,
   useMediaQuery,
