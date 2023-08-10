@@ -25,9 +25,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       address: {
         // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
         line1: "address_full_match",
-        city: "New York",
-        state: "NY",
-        postal_code: "10001",
+        city: "South San Francisco",
+        state: "CA",
+        postal_code: "94080",
         country: "US",
       },
       // These values together cause the DOB to be verified in testmode: https://stripe.com/docs/connect/testing#test-dobs
@@ -41,8 +41,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       last_name: "Smith",
       // Fake phone number: https://stripe.com/docs/connect/testing
       phone: "0000000000",
+      // Fake SSN: https://stripe.com/docs/connect/testing#test-personal-id-numbers
+      ssn_last_4: "0000",
     },
-    // Faking ToS acceptances
+    // Faking Terms of Service acceptances
     settings: {
       card_issuing: {
         tos_acceptance: {
