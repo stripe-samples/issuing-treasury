@@ -178,10 +178,12 @@ const Page = () => {
                       name="businessName"
                       disabled={isDemoMode()}
                     />
-                    <Alert severity="info" color="primary">
-                      Email address and business name are automatically
-                      generated as part of the demo.
-                    </Alert>
+                    {isDemoMode() && (
+                      <Alert severity="info" color="primary">
+                        Email address and business name are automatically
+                        generated as part of the demo.
+                      </Alert>
+                    )}
                   </Stack>
                   {errors.submit && (
                     <Alert severity="error">{errors.submit}</Alert>

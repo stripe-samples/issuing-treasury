@@ -4,5 +4,5 @@
 // app will start to behave like a real production app. For example, the Stripe Connect Onboarding forms will require
 // filling out by your users.
 export const isDemoMode = () => {
-  return process.env.DEMO_MODE === "true";
+  return process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 };
