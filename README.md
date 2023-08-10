@@ -23,11 +23,11 @@ In addition to these functions, there is also a *Test Data* section that will he
 
 ## Requirements
 
-**A Stripe account**: You can sign up for a Stripe account here: https://dashboard.stripe.com/register
-**Onboard to Issuing and Treasury**:
+* **A Stripe account**: You can sign up for a Stripe account here: https://dashboard.stripe.com/register
+* **Onboard onto Issuing and Treasury**:
   * Issuing: [Instant Testmode](https://dashboard.stripe.com/setup/issuing/activate)
   * Treasury: [Please contact sales](https://go.stripe.global/treasury-inquiry)
-**Stripe API keys**: Available in your Stripe dashboard here: https://dashboard.stripe.com/test/apikeys
+* **Stripe API keys**: Available in your Stripe dashboard here: https://dashboard.stripe.com/test/apikeys
 
 ## Installation instructions
 
