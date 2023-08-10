@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Card,
   CardActions,
@@ -54,11 +55,7 @@ const TestDataCreateReceivedCredit = () => {
           Your Financial Account will receive $ 500.00 each time you press the
           button.
         </Typography>
-        {error && (
-          <Typography variant="body2" color="error" align="center">
-            {errorText}
-          </Typography>
-        )}
+        {error && <Alert severity="error">{errorText}</Alert>}
       </CardContent>
       <Divider />
       <CardActions sx={{ justifyContent: "center" }}>
