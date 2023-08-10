@@ -89,7 +89,7 @@ const Page = () => {
                         Test Email:{" "}
                         <Chip
                           variant="outlined"
-                          label="enter any fake email"
+                          label="Enter any fake email"
                           size="small"
                         />
                       </li>

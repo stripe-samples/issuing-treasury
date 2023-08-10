@@ -59,10 +59,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     company: {
       name: businessName,
     },
+    // FOR-DEMO-ONLY: We're hardcoding the business type to individual. You should either remove this line or modify it
+    // to collect the real business type from the user.
+    business_type: "individual",
     ...(isDemoMode() && {
-      // FOR-DEMO-ONLY: We're hardcoding the business type to individual. You should either remove this line or modify it
-      // to collect the real business type from the user.
-      business_type: "individual",
       // FOR-DEMO-ONLY: We're hardcoding the SSN to 000-00-0000 (Test SSN docs: https://stripe.com/docs/connect/testing#test-personal-id-numbers).
       // You should either remove this line or modify it to collect the actual SSN from the user in a real application.
       individual: {

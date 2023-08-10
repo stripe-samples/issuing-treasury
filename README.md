@@ -1,5 +1,4 @@
-
-## Example Stripe Issuing and Treasury integration demonstrating Embedded Finance
+# Example Stripe Issuing and Treasury integration demonstrating Embedded Finance
 
 This demo is an application that allows you to quickly experiment with an Embedded Finance experience using Stripe Issuing & Treasury APIs.
 
@@ -23,49 +22,67 @@ In addition to these functions, there is also a *Test Data* section that will he
 
 ## Requirements
 
-* **A Stripe account**: You can sign up for a Stripe account here: https://dashboard.stripe.com/register
-* **Onboard onto Issuing and Treasury**:
-  * Issuing: [Instant Testmode](https://dashboard.stripe.com/setup/issuing/activate)
-  * Treasury: [Please contact sales](https://go.stripe.global/treasury-inquiry)
-* **Stripe API keys**: Available in your Stripe dashboard here: https://dashboard.stripe.com/test/apikeys
+- **A Stripe account**: You can sign up for a Stripe account here: <https://dashboard.stripe.com/register>
+- **Onboard onto Issuing and Treasury**:
+  - Issuing: [Instant Testmode](https://dashboard.stripe.com/setup/issuing/activate)
+  - Treasury: [Please contact sales](https://go.stripe.global/treasury-inquiry)
+- **Stripe API keys**: Available in your Stripe dashboard here: <https://dashboard.stripe.com/test/apikeys>
 
-## Installation instructions
+## No-code deploy demo to Render.com
+
+You can deploy this sample app directly to Render.com using the button below. This way you can try it out for yourself 
+quickly and without any coding. The button below will create a free database and web service instance.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/stripe-samples/issuing-treasury)
+
+When prompted, enter:
+
+* **Blueprint Name**: This can be anything (e.g. "Demo")
+* **Under Key / Value**:
+  * **STRIPE_SECRET_KEY**: Your Stripe account's testmode API key
+  * **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your Stripe account's testmode publishable key
+
+Once you click "Apply", the infrastructure will begin spinning up. After approximately 5 minutes, click on the link to
+"issuing-treasury" on the page to go to the web service. There, you'll see a link at the top to the URL. It'll look
+something like "https://issuing-treasury-12gj.onrender.com".
+
+## Local installation instructions
 
 ### Installing the dependencies
 
 After cloning this repo, install the dependencies.
 
-    $ npm install
+    npm install
 
 ### Populating your .env file
 
 Copy the `.env.example` file on the root of your project to `.env`:
 
-    $ cp .env.example .env
+    cp .env.example .env
 
 Edit your new `.env` file and update the required information:
 
 - **STRIPE_SECRET_KEY**: Your Stripe private key.
 - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your Stripe publishable key.
 - **NEXTAUTH_SECRET**: Used to encrypt the NextAuth.js JWT ([learn more](https://next-auth.js.org/configuration/options#nextauth_secret)). You can use `openssl rand -base64 32` to generate a new one.
-- **DEMO_HOST**: The host where your application will run (if local you can use `"http://localhost:3000"`)
+- **CONNECT_ONBOARDING_REDIRECT_URL**: The host where your application will run (if local you can use `"http://localhost:3000"`)
 
 ### Setting up the database
 
 On a Mac, follow these instructions to install Postgres:
 
-    $ brew install postgresql@14
-    $ createuser -s postgres
+    brew install postgresql@14
+    createuser -s postgres
 
 You can learn more about the `createuser` step [here](https://stackoverflow.com/a/15309551).
 
 Now you need to create the database:
 
-    $ npx prisma db push
+    npx prisma db push
 
 If this fails for any reasons such as permissions being denied, there's an included idempotent script you can run:
 
-    $ ./db/setup-database.postgres.sh
+    ./db/setup-database.postgres.sh
 
 This will create a `issuing_treasury` database in your local Postgres instance.
 
@@ -73,8 +90,6 @@ This will create a `issuing_treasury` database in your local Postgres instance.
 
 In order to run the application, after you installed the dependencies and created the `.env` file run the following command:
 
-```bash
-npm run dev
-```
+    npm run dev
 
 *Notice: This application is intended to be an example, and it should not be run in production as is.*
