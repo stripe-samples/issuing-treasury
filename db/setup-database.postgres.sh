@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Ideally you should be able to use `npx prisma db push` to migrate your postgres database but if that fails for any
-# reason due to permissions issues running locally, you can use this script to get started quickly.
+# Ideally you should be able to use `npx prisma db push` to migrate your SQLite database but if that fails for any
+# reason, you can use this script to get started quickly.
 
 DB_NAME="issuing_treasury"
 
