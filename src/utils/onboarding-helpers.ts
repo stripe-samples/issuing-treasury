@@ -14,17 +14,18 @@ export const hasOutstandingRequirements = async (accountId: string) => {
 };
 
 export async function createAccountOnboardingUrl(accountId: string) {
-  if (process.env.DEMO_HOST == undefined) {
-    throw new Error("DEMO_HOST is not set");
+  if (process.env.CONNECT_ONBOARDING_REDIRECT_URL == undefined) {
+    throw new Error("CONNECT_ONBOARDING_REDIRECT_URL is not set");
   }
 
-  const host = process.env.DEMO_HOST;
+  const connectOnboardingRedirectUrl =
+    process.env.CONNECT_ONBOARDING_REDIRECT_URL;
 
   const { url } = await stripe.accountLinks.create({
     type: "account_onboarding",
     account: accountId,
-    refresh_url: host + "/onboard",
-    return_url: host + "/",
+    refresh_url: connectOnboardingRedirectUrl + "/onboard",
+    return_url: connectOnboardingRedirectUrl + "/",
   });
   return url;
 }

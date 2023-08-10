@@ -48,7 +48,7 @@ Edit your new `.env` file and update the required information:
 - **STRIPE_SECRET_KEY**: Your Stripe private key.
 - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your Stripe publishable key.
 - **NEXTAUTH_SECRET**: Used to encrypt the NextAuth.js JWT ([learn more](https://next-auth.js.org/configuration/options#nextauth_secret)). You can use `openssl rand -base64 32` to generate a new one.
-- **DEMO_HOST**: The host where your application will run (if local you can use `"http://localhost:3000"`)
+- **CONNECT_ONBOARDING_REDIRECT_URL**: The host where your application will run (if local you can use `"http://localhost:3000"`)
 
 ### Setting up the database
 
