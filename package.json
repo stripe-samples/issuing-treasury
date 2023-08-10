@@ -1,6 +1,6 @@
 {
-  "name": "homemade-ham",
-  "version": "0.3.0",
+  "name": "issuing-treasury",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
