@@ -5,6 +5,7 @@ import {
   Card,
   CardActions,
   CardHeader,
+  Divider,
   SvgIcon,
   Table,
   TableBody,
@@ -37,62 +38,77 @@ export const OverviewLatestTransactions = (props: {
       <CardHeader title="Latest Transactions" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sortDirection="desc">Date</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Description</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {faTransactions.map((transaction) => {
-                return (
-                  <TableRow hover key={transaction.id}>
-                    <TableCell>
-                      <Typography noWrap>
-                        {formatDateTime(transaction.created)}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography noWrap>{`${formatUSD(
-                        transaction.amount / 100,
-                      )} USD`}</Typography>
-                    </TableCell>
-                    <TableCell sx={{ textTransform: "uppercase" }}>
-                      <TransactionFlowDetails transaction={transaction} />
-                    </TableCell>
-                    <TableCell>
-                      <SeverityPill color={statusMap[transaction.status]}>
-                        {transaction.status}
-                      </SeverityPill>
-                    </TableCell>
-                    <TableCell>
-                      <Typography noWrap>{transaction.description}</Typography>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+          {faTransactions.length > 0 ? (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sortDirection="desc">Date</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Description</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {faTransactions.map((transaction) => {
+                  return (
+                    <TableRow hover key={transaction.id}>
+                      <TableCell>
+                        <Typography noWrap>
+                          {formatDateTime(transaction.created)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography noWrap>{`${formatUSD(
+                          transaction.amount / 100,
+                        )} USD`}</Typography>
+                      </TableCell>
+                      <TableCell sx={{ textTransform: "uppercase" }}>
+                        <TransactionFlowDetails transaction={transaction} />
+                      </TableCell>
+                      <TableCell>
+                        <SeverityPill color={statusMap[transaction.status]}>
+                          {transaction.status}
+                        </SeverityPill>
+                      </TableCell>
+                      <TableCell>
+                        <Typography noWrap>
+                          {transaction.description}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          ) : (
+            <>
+              <Divider />
+              <Box p={3} color="neutral.400">
+                <Typography variant="body1">
+                  There are no transactions to show yet.
+                </Typography>
+              </Box>
+            </>
+          )}
         </Box>
       </Scrollbar>
-      <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button
-          color="inherit"
-          endIcon={
-            <SvgIcon fontSize="small">
-              <ArrowRightIcon />
-            </SvgIcon>
-          }
-          size="small"
-          variant="text"
-        >
-          View all
-        </Button>
-      </CardActions>
+      {faTransactions.length > 0 && (
+        <CardActions sx={{ justifyContent: "flex-end" }}>
+          <Button
+            color="inherit"
+            endIcon={
+              <SvgIcon fontSize="small">
+                <ArrowRightIcon />
+              </SvgIcon>
+            }
+            size="small"
+            variant="text"
+          >
+            View all
+          </Button>
+        </CardActions>
+      )}
     </Card>
   );
 };
