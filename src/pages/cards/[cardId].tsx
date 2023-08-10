@@ -59,13 +59,14 @@ const Page = ({
   cardId: string;
   card: Stripe.Issuing.Card;
 }) => {
-  const stripePromise = loadStripe(
-    // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    {
-      stripeAccount: accountId,
-    },
-  );
+  const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+  if (stripePublishableKey === undefined) {
+    throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY must be defined");
+  }
+
+  const stripePromise = loadStripe(stripePublishableKey, {
+    stripeAccount: accountId,
+  });
 
   const spendingLimit = card.spending_controls.spending_limits?.[0];
   const spendingLimitDisplay =

@@ -17,6 +17,7 @@ import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
 import { fetchApi } from "src/utils/api-helpers";
+import { isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
 export const getServerSideProps = async (
@@ -56,12 +57,16 @@ const Page = () => {
   const initialValues = {
     username: "",
     password: "",
-    // FOR-DEMO-ONLY: We're using a fake email here but you should modify this line and collect a real email from the
-    // user
-    email: `demo-user${faker.number.int({ max: 1000 })}@some-company.com`,
-    // FOR-DEMO-ONLY: We're using a fake business name here but you should modify this line and collect a real business
-    //  name from the user
-    businessName: `Demo Innovative Inc.`,
+    email: "",
+    businessName: "",
+    ...(isDemoMode() && {
+      // FOR-DEMO-ONLY: We're using a fake email here but you should modify this line and collect a real email from the
+      // user
+      email: `demo-user${faker.number.int({ max: 1000 })}@some-company.com`,
+      // FOR-DEMO-ONLY: We're using a fake business name here but you should modify this line and collect a real business
+      //  name from the user
+      businessName: `Demo Innovative Inc.`,
+    }),
     submit: null,
   };
 
@@ -162,7 +167,7 @@ const Page = () => {
                       helperText={touched.email && errors.email}
                       label="Email Address"
                       name="email"
-                      disabled={true}
+                      disabled={isDemoMode()}
                     />
                     <Field
                       as={TextField}
@@ -171,7 +176,7 @@ const Page = () => {
                       helperText={touched.businessName && errors.businessName}
                       label="Business Name"
                       name="businessName"
-                      disabled={true}
+                      disabled={isDemoMode()}
                     />
                     <Alert severity="info" color="primary">
                       Email address and business name are automatically
