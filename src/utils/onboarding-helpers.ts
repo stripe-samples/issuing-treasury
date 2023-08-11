@@ -5,10 +5,13 @@ const IGNORE_REQUIREMENTS = ["external_account"];
 export const hasOutstandingRequirements = async (accountId: string) => {
   const account = await stripe.accounts.retrieve(accountId);
 
-  const result =
-    (account?.requirements?.currently_due?.filter(
-      (requirement) => !IGNORE_REQUIREMENTS.includes(requirement),
-    ).length ?? 0) > 0;
+  const outstandingRequirements = account?.requirements?.currently_due?.filter(
+    (requirement) => !IGNORE_REQUIREMENTS.includes(requirement),
+  );
+
+  console.log("outstandingRequirements", outstandingRequirements);
+
+  const result = outstandingRequirements?.length ?? 0 > 0;
 
   return result;
 };
