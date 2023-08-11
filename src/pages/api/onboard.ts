@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import Stripe from "stripe";
 
 import { isDemoMode } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
@@ -15,8 +16,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const accountId = session.accountId;
 
   if (isDemoMode()) {
+    const skipOnboarding = req.body.skipOnboarding === true;
+    console.log("skipOnboarding", skipOnboarding);
+
+    const tosAcceptance = { date: 1691518261, ip: "127.0.0.1" };
     // TODO: Only update the fields during the demo that are outstanding to speed things up
-    const fakeOnboardingData = {
+    const fakeOnboardingData: Stripe.AccountUpdateParams = {
       business_profile: {
         // Merchant category code for "computer software stores" (https://fs.fldfs.com/iwpapps/pcard/docs/MCCs.pdf)
         mcc: "5734",
@@ -43,36 +48,33 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         last_name: "Smith",
         // Fake phone number: https://stripe.com/docs/connect/testing
         phone: "0000000000",
-        // Fake SSN: https://stripe.com/docs/connect/testing#test-personal-id-numbers
-        ssn_last_4: "0000",
       },
       // Faking Terms of Service acceptances
       settings: {
         card_issuing: {
-          tos_acceptance: {
-            date: 1691518261,
-            ip: "127.0.0.1",
-          },
+          tos_acceptance: tosAcceptance,
         },
         treasury: {
-          tos_acceptance: {
-            date: 1691518261,
-            ip: "127.0.0.1",
-          },
+          tos_acceptance: tosAcceptance,
         },
       },
+      ...(skipOnboarding && { tos_acceptance: tosAcceptance }),
     };
 
     // FOR-DEMO-ONLY: We're using fake data for illustrative purposes in this demo. The fake data will be used to bypass
     // showing the Stripe Connect Onboarding forms. In a real application, you would not do this so that you can collect
     // the real KYC data from your users.
     await stripe.accounts.update(accountId, fakeOnboardingData);
+
+    if (skipOnboarding) {
+      return res.status(200).json({ redirectUrl: "/" });
+    }
   }
 
   // This is the Connect Onboarding URL that will be used to collect KYC information from the user
   const onboardingUrl = await createAccountOnboardingUrl(accountId);
 
-  return res.status(200).json({ onboardingUrl });
+  return res.status(200).json({ redirectUrl: onboardingUrl });
 };
 
 export default handler;
