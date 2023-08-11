@@ -48,6 +48,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // Fake phone number: https://stripe.com/docs/connect/testing
         phone: "0000000000",
       },
+      ...(skipOnboarding && { tos_acceptance: tosAcceptance }),
       // Faking Terms of Service acceptances
       settings: {
         card_issuing: {
@@ -57,7 +58,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           tos_acceptance: tosAcceptance,
         },
       },
-      ...(skipOnboarding && { tos_acceptance: tosAcceptance }),
     };
 
     // FOR-DEMO-ONLY: We're using fake data for illustrative purposes in this demo. The fake data will be used to bypass
