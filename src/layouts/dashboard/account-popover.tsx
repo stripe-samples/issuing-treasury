@@ -1,9 +1,13 @@
+import { ClipboardIcon } from "@heroicons/react/20/solid";
 import {
   Box,
   Divider,
+  IconButton,
   MenuItem,
   MenuList,
   Popover,
+  Stack,
+  SvgIcon,
   Typography,
 } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
@@ -33,17 +37,37 @@ export const AccountPopover = ({
       }}
       onClose={onClose}
       open={open}
-      PaperProps={{ sx: { width: 200 } }}
+      PaperProps={{ sx: { minWidth: 200 } }}
     >
       <Box
         sx={{
-          py: 1.5,
-          px: 2,
+          py: 2,
+          px: 3,
+        }}
+      >
+        <Typography variant="overline">Business Name</Typography>
+        <Typography color="text.secondary" variant="body2">
+          {session?.businessName}
+        </Typography>
+      </Box>
+      <Divider />
+      <Box
+        sx={{
+          py: 2,
+          px: 3,
         }}
       >
         <Typography variant="overline">Account</Typography>
-        <Typography color="text.secondary" variant="body2">
-          {session?.businessName}
+        <Typography color="text.secondary" variant="body2" noWrap>
+          {session?.email}
+          <IconButton
+            onClick={() => navigator.clipboard.writeText(session?.email || "")}
+            sx={{ p: 0, ml: 1.5 }}
+          >
+            <SvgIcon sx={{ width: "20px", height: "20px" }}>
+              <ClipboardIcon />
+            </SvgIcon>
+          </IconButton>
         </Typography>
       </Box>
       <Divider />

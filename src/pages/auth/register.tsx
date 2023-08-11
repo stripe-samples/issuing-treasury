@@ -165,7 +165,7 @@ const Page = () => {
                                 navigator.clipboard.writeText(values.email)
                               }
                             >
-                              <SvgIcon>
+                              <SvgIcon sx={{ width: "20px", height: "20px" }}>
                                 <ClipboardIcon />
                               </SvgIcon>
                             </IconButton>
