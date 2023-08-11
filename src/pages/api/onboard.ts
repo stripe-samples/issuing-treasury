@@ -17,7 +17,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (isDemoMode()) {
     const skipOnboarding = req.body.skipOnboarding === true;
-    console.log("skipOnboarding", skipOnboarding);
 
     const tosAcceptance = { date: 1691518261, ip: "127.0.0.1" };
     // TODO: Only update the fields during the demo that are outstanding to speed things up
