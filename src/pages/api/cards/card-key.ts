@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const ephemeralKey = await stripe.ephemeralKeys.create(
       {
-        // @ts-expect-error Investigate why nonce is not part of this API anymore once the card details page is revamped
+        // @ts-expect-error Fix the defect upstream in Issuing Elements causing `nonce` to not be accepted
         nonce: nonce,
         issuing_card: cardId,
       },
