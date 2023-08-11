@@ -5,9 +5,9 @@ import stripe from "./stripe-loader";
 
 import { prisma } from "src/db";
 
-export const authenticateUser = async (username: string, password: string) => {
+export const authenticateUser = async (email: string, password: string) => {
   const user = await prisma.user.findFirst({
-    where: { username },
+    where: { email },
   });
 
   const passwordMatch = await bcrypt.compare(password, user?.password || "");
@@ -20,7 +20,6 @@ export const authenticateUser = async (username: string, password: string) => {
 
     return {
       id: user.id.toString(),
-      username: user.username,
       email: user.email,
       accountId: user.accountId,
       businessName: businessName,

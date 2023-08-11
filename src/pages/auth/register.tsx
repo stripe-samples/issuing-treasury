@@ -36,7 +36,11 @@ const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
 };
 const validationSchema = Yup.object().shape({
-  username: Yup.string().max(255).required("Username is required"),
+  businessName: Yup.string().max(255).required("Business name is required"),
+  email: Yup.string()
+    .email("Must be a valid email")
+    .max(255)
+    .required("Email is required"),
   password: Yup.string()
     .max(255)
     .required("Password is required")
@@ -46,27 +50,21 @@ const validationSchema = Yup.object().shape({
     .matches(/[0-9]/, getCharacterValidationError("digit"))
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-  email: Yup.string()
-    .email("Must be a valid email")
-    .max(255)
-    .required("Email is required"),
-  businessName: Yup.string().max(255).required("Business name is required"),
 });
 
 const Page = () => {
   const initialValues = {
-    username: "",
-    password: "",
-    email: "",
     businessName: "",
+    email: "",
     ...(isDemoMode() && {
-      // FOR-DEMO-ONLY: We're using a fake email here but you should modify this line and collect a real email from the
-      // user
-      email: `demo-user${faker.number.int({ max: 1000 })}@some-company.com`,
       // FOR-DEMO-ONLY: We're using a fake business name here but you should modify this line and collect a real business
       //  name from the user
       businessName: `Demo Innovative Inc.`,
+      // FOR-DEMO-ONLY: We're using a fake email here but you should modify this line and collect a real email from the
+      // user
+      email: `demo-user${faker.number.int({ max: 1000 })}@some-company.com`,
     }),
+    password: "",
     submit: null,
   };
 
@@ -80,15 +78,14 @@ const Page = () => {
   ) => {
     try {
       const registrationResponse = await fetchApi("/api/register", {
-        username: values.username,
-        password: values.password,
-        email: values.email,
         businessName: values.businessName,
+        email: values.email,
+        password: values.password,
       });
 
       if (registrationResponse.ok) {
         const signInResponse = await signIn("credentials", {
-          username: values.username,
+          email: values.email,
           password: values.password,
           callbackUrl: "/",
         });
@@ -141,11 +138,21 @@ const Page = () => {
                   <Stack spacing={3}>
                     <Field
                       as={TextField}
-                      error={!!(touched.username && errors.username)}
+                      error={!!(touched.businessName && errors.businessName)}
                       fullWidth
-                      helperText={touched.username && errors.username}
-                      label="Username"
-                      name="username"
+                      helperText={touched.businessName && errors.businessName}
+                      label="Business Name"
+                      name="businessName"
+                      disabled={isDemoMode()}
+                    />
+                    <Field
+                      as={TextField}
+                      error={!!(touched.email && errors.email)}
+                      fullWidth
+                      helperText={touched.email && errors.email}
+                      label="Email Address"
+                      name="email"
+                      disabled={isDemoMode()}
                     />
                     <Field
                       as={TextField}
@@ -160,24 +167,6 @@ const Page = () => {
                       Password must be at least 8 characters with a number, a
                       lowercase character, and an uppercase character.
                     </Alert>
-                    <Field
-                      as={TextField}
-                      error={!!(touched.email && errors.email)}
-                      fullWidth
-                      helperText={touched.email && errors.email}
-                      label="Email Address"
-                      name="email"
-                      disabled={isDemoMode()}
-                    />
-                    <Field
-                      as={TextField}
-                      error={!!(touched.businessName && errors.businessName)}
-                      fullWidth
-                      helperText={touched.businessName && errors.businessName}
-                      label="Business Name"
-                      name="businessName"
-                      disabled={isDemoMode()}
-                    />
                     {isDemoMode() && (
                       <Alert severity="info" color="primary">
                         Email address and business name are automatically
