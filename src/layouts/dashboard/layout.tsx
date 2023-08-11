@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Head from "next/head";
 import { usePathname } from "next/navigation";
@@ -51,7 +52,20 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <TopNav onNavOpen={() => setOpenNav(true)} />
       <SideNav onClose={() => setOpenNav(false)} open={openNav} />
       <LayoutRoot>
-        <LayoutContainer>{children}</LayoutContainer>
+        <LayoutContainer>
+          {children}
+          <Box px={3} py={5} sx={{ backgroundColor: "neutral.50" }}>
+            <Box mx="auto" maxWidth={800} textAlign="center">
+              <Typography variant="body2" color="neutral.400">
+                Stripe Issuing & Treasury Platform Demo partners with Stripe
+                Payments Company for money transmission services and account
+                services with funds held at Evolve Bank & Trust, Member FDIC.
+                Stripe Issuing & Treasury Platform Demo Visa® Commercial Credit
+                cards are issued by Celtic Bank.
+              </Typography>
+            </Box>
+          </Box>
+        </LayoutContainer>
       </LayoutRoot>
     </>
   );

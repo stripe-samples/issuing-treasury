@@ -6,7 +6,6 @@ import {
   MenuItem,
   MenuList,
   Popover,
-  Stack,
   SvgIcon,
   Typography,
 } from "@mui/material";

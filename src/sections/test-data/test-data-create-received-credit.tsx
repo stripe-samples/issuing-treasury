@@ -10,30 +10,22 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
+import { fetchApi } from "src/utils/api-helpers";
+
 const TestDataCreateReceivedCredit = () => {
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
 
   const simulateReceivedCredit = async () => {
     try {
       setSubmitted(true);
-      const response = await fetch("api/create_receivedcredit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
-      const responseData = await response.json();
-      if (responseData.urlCreated === true) {
-        console.log("success");
-      } else {
-        setError(true);
-        setErrorText(responseData.error);
+      const response = await fetchApi("api/create_receivedcredit");
+      if (!response.ok) {
+        const data = await response.json();
+        setErrorText(data.error);
       }
     } catch (error) {
-      setError(true);
-      setErrorText("An error occurred while simulating received credit.");
+      setErrorText("Something went wrong");
     } finally {
       setSubmitted(false);
     }
@@ -55,7 +47,7 @@ const TestDataCreateReceivedCredit = () => {
           Your Financial Account will receive $ 500.00 each time you press the
           button.
         </Typography>
-        {error && <Alert severity="error">{errorText}</Alert>}
+        {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
       </CardContent>
       <Divider />
       <CardActions sx={{ justifyContent: "center" }}>
