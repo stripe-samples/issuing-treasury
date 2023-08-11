@@ -15,6 +15,7 @@
       "alphabetize": {
         "order": "asc"
       }
-    }]
+    }],
+    "no-console": "warn"
   }
 }

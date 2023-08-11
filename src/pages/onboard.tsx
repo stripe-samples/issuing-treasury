@@ -29,8 +29,9 @@ const Page = () => {
     e.preventDefault();
     setIsSkippingOnboarding(true);
     const response = await fetchApi("/api/onboard", { skipOnboarding: true });
+
     if (response.ok) {
-      router.push("/");
+      window.location.replace("/");
     } else {
       setIsSkippingOnboarding(false);
       throw new Error("Something went wrong");
