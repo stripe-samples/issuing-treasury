@@ -9,9 +9,7 @@ export const hasOutstandingRequirements = async (accountId: string) => {
     (requirement) => !IGNORE_REQUIREMENTS.includes(requirement),
   );
 
-  console.log("outstandingRequirements", outstandingRequirements);
-
-  const result = outstandingRequirements?.length ?? 0 > 0;
+  const result = (outstandingRequirements?.length ?? 0) > 0;
 
   return result;
 };
