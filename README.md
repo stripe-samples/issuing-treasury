@@ -29,19 +29,19 @@ Additionally, a *Test Data* section helps to understand different mechanisms for
 
 ## No-code deploy demo on Render.com
 
-To deploy this sample application directly in Render, click on the button below. It automatically logs into Render and
-initiates setup with a free database and web service instance. No coding required.
+To deploy this sample application directly in Render, click on the button below. Once you log in or sign up, it will
+initiate setup with a free database and web service instance. No coding required.
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/stripe-samples/issuing-treasury)
 
-Upon prompt, please provide:
+When prompted, please provide:
 
 - **Blueprint Name**: Enter any name (e.g., "Demo")
 - **Under Key / Value**:
   - **STRIPE_SECRET_KEY**: Enter your Stripe testmode API key
   - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Enter your Stripe testmode publishable key
 
-After around 5 minutes, click on the "issuing-treasury" link to access your deployed web service.
+After around 5 minutes, click on the "issuing-treasury" link to access your deployed web service's URL.
 
 ## Local Installation
 
