@@ -21,8 +21,7 @@ echo "Creating users table..."
 psql -d $DB_NAME -c "
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
-  username TEXT UNIQUE NOT NULL,
-  email TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   account_id TEXT NOT NULL
 );

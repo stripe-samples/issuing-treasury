@@ -6,3 +6,14 @@
 export const isDemoMode = () => {
   return process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 };
+
+export const generateDemoEmail = () => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const alphanumericPart = Array.from(
+    { length: 6 },
+    () => characters[Math.floor(Math.random() * characters.length)],
+  ).join("");
+
+  return `demo-user-${alphanumericPart}@stripe.dev`;
+};

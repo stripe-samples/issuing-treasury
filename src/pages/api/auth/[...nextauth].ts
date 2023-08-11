@@ -12,18 +12,15 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        if (!credentials?.username || !credentials?.password) {
+        if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
-        return await authenticateUser(
-          credentials.username,
-          credentials.password,
-        );
+        return await authenticateUser(credentials.email, credentials.password);
       },
     }),
   ],
@@ -41,17 +38,13 @@ export const authOptions: NextAuthOptions = {
           (await hasOutstandingRequirements(token.accountId));
       }
 
-      if (user?.username) {
+      if (user?.email) {
         return { ...token, ...user };
       }
 
       return token;
     },
     session: async ({ session, token }: { session: Session; token: JWT }) => {
-      if (token.username == undefined) {
-        throw new Error("Session callback: username is missing in the token");
-      }
-
       if (token.email == undefined) {
         throw new Error("Session callback: email is missing in the token");
       }
@@ -66,7 +59,6 @@ export const authOptions: NextAuthOptions = {
         );
       }
 
-      session.username = token.username;
       session.email = token.email;
       session.accountId = token.accountId;
       session.businessName = token.businessName;

@@ -10,7 +10,11 @@ const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
 };
 const validationSchema = Yup.object().shape({
-  username: Yup.string().max(255).required("Username is required"),
+  businessName: Yup.string().max(255).required("Business name is required"),
+  email: Yup.string()
+    .email("Must be a valid email")
+    .max(255)
+    .required("Email is required"),
   password: Yup.string()
     .max(255)
     .required("Password is required")
@@ -20,11 +24,6 @@ const validationSchema = Yup.object().shape({
     .matches(/[0-9]/, getCharacterValidationError("digit"))
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-  email: Yup.string()
-    .email("Must be a valid email")
-    .max(255)
-    .required("Email is required"),
-  businessName: Yup.string().max(255).required("Business name is required"),
 });
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -32,11 +31,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "Bad Request" });
   }
 
-  const { username, password, email, businessName } = req.body;
+  const { businessName, email, password } = req.body;
 
   try {
     await validationSchema.validate(
-      { username, password, email, businessName },
+      { businessName, email, password },
       { abortEarly: false },
     );
   } catch (error) {
@@ -44,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Check if user exists
-  const user = await prisma.user.findFirst({ where: { username } });
+  const user = await prisma.user.findFirst({ where: { email } });
   if (user) {
     return res.status(400).json({
       error: "Account already exists.",
@@ -81,7 +80,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   await prisma.user.create({
     data: {
-      username: username,
       email: email,
       password: hashedPassword,
       accountId: account.id,

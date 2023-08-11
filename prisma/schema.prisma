@@ -12,8 +12,7 @@ datasource db {
 
 model User {
   id        Int    @id @default(autoincrement())
-  username  String @unique
-  email     String
+  email     String @unique
   password  String
   accountId String @map("account_id")
 
