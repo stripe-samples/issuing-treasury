@@ -1,10 +1,13 @@
-import { faker } from "@faker-js/faker";
+import { ClipboardIcon } from "@heroicons/react/20/solid";
 import {
   Alert,
   Box,
   Button,
+  IconButton,
+  InputAdornment,
   Link,
   Stack,
+  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,7 +20,7 @@ import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
 import { fetchApi } from "src/utils/api-helpers";
-import { isDemoMode } from "src/utils/demo-helpers";
+import { generateDemoEmail, isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
 export const getServerSideProps = async (
@@ -62,7 +65,7 @@ const Page = () => {
       businessName: `Demo Innovative Inc.`,
       // FOR-DEMO-ONLY: We're using a fake email here but you should modify this line and collect a real email from the
       // user
-      email: `demo-user${faker.number.int({ max: 1000 })}@some-company.com`,
+      email: generateDemoEmail(),
     }),
     password: "",
     submit: null,
@@ -133,7 +136,7 @@ const Page = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({ errors, touched, isSubmitting }) => (
+              {({ errors, touched, isSubmitting, values }) => (
                 <Form>
                   <Stack spacing={3}>
                     <Field
@@ -153,7 +156,35 @@ const Page = () => {
                       label="Email Address"
                       name="email"
                       disabled={isDemoMode()}
+                      InputProps={{
+                        endAdornment: isDemoMode() ? (
+                          <InputAdornment position="end">
+                            <IconButton
+                              color="primary"
+                              onClick={() =>
+                                navigator.clipboard.writeText(values.email)
+                              }
+                            >
+                              <SvgIcon>
+                                <ClipboardIcon />
+                              </SvgIcon>
+                            </IconButton>
+                          </InputAdornment>
+                        ) : null,
+                      }}
                     />
+                    {isDemoMode() && (
+                      <>
+                        <Alert severity="info" color="primary">
+                          Email address and business name are automatically
+                          generated as part of the demo.
+                        </Alert>
+                        <Alert severity="warning">
+                          Copy your generated email address so that you
+                          don&apos;t lose access to your test account.
+                        </Alert>
+                      </>
+                    )}
                     <Field
                       as={TextField}
                       error={!!(touched.password && errors.password)}
@@ -167,12 +198,6 @@ const Page = () => {
                       Password must be at least 8 characters with a number, a
                       lowercase character, and an uppercase character.
                     </Alert>
-                    {isDemoMode() && (
-                      <Alert severity="info" color="primary">
-                        Email address and business name are automatically
-                        generated as part of the demo.
-                      </Alert>
-                    )}
                   </Stack>
                   {errors.submit && (
                     <Alert severity="error">{errors.submit}</Alert>
