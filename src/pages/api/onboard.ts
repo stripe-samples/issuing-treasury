@@ -66,14 +66,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await stripe.accounts.update(accountId, fakeOnboardingData);
 
     if (skipOnboarding) {
-      return res.status(200).json({ redirectUrl: "/" });
+      return res.status(200).json({ accountId });
     }
   }
 
   // This is the Connect Onboarding URL that will be used to collect KYC information from the user
   const onboardingUrl = await createAccountOnboardingUrl(accountId);
 
-  return res.status(200).json({ redirectUrl: onboardingUrl });
+  return res.status(200).json({ accountId, redirectUrl: onboardingUrl });
 };
 
 export default handler;

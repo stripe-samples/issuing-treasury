@@ -30,8 +30,7 @@ const Page = () => {
     setIsSkippingOnboarding(true);
     const response = await fetchApi("/api/onboard", { skipOnboarding: true });
     if (response.ok) {
-      const data = await response.json();
-      router.push(data.redirectUrl);
+      router.push("/");
     } else {
       setIsSkippingOnboarding(false);
       throw new Error("Something went wrong");
