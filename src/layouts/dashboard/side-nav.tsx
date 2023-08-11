@@ -10,6 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import Image from "next/image";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -112,7 +113,12 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
               },
             }}
           >
-            <img alt="Go to pro" src="/assets/issuing-credit-cards.png" />
+            <Image
+              alt="Issuing Credit Cards"
+              src="/assets/issuing-credit-cards.png"
+              width="160"
+              height="134"
+            />
           </Box>
           <Button
             component="a"
