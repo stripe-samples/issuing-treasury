@@ -57,11 +57,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <Box px={3} py={5} sx={{ backgroundColor: "neutral.50" }}>
             <Box mx="auto" maxWidth={800} textAlign="center">
               <Typography variant="body2" color="neutral.400">
-                Stripe Issuing and Treasury Platform Demo partners with Stripe
+                Stripe Issuing & Treasury Platform Demo partners with Stripe
                 Payments Company for money transmission services and account
                 services with funds held at Evolve Bank & Trust, Member FDIC.
-                Stripe Issuing and Treasury Platform Demo Visa® Commercial
-                Credit cards are issued by Celtic Bank.
+                Stripe Issuing & Treasury Platform Demo Visa® Commercial Credit
+                cards are issued by Celtic Bank.
               </Typography>
             </Box>
           </Box>

@@ -1,8 +1,11 @@
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import {
   Box,
+  Button,
   Divider,
   Drawer,
   Stack,
+  SvgIcon,
   Theme,
   Typography,
   useMediaQuery,
@@ -85,6 +88,48 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           </Stack>
         </Box>
         <Divider sx={{ borderColor: "neutral.700" }} />
+        <Box
+          sx={{
+            px: 2,
+            py: 3,
+          }}
+          textAlign="center"
+        >
+          <Typography color="neutral.100" variant="subtitle2">
+            This is an embedded finance demo
+          </Typography>
+          <Typography color="neutral.500" variant="body2">
+            Check out our docs to learn more
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              mt: 2,
+              mx: "auto",
+              width: "160px",
+              "& img": {
+                width: "100%",
+              },
+            }}
+          >
+            <img alt="Go to pro" src="/assets/issuing-credit-cards.png" />
+          </Box>
+          <Button
+            component="a"
+            endIcon={
+              <SvgIcon fontSize="small">
+                <ArrowTopRightOnSquareIcon />
+              </SvgIcon>
+            }
+            fullWidth
+            href="https://github.com/stripe-samples/issuing-treasury/"
+            sx={{ mt: 2 }}
+            target="_blank"
+            variant="contained"
+          >
+            Issuing and Treasury Docs
+          </Button>
+        </Box>
       </Box>
     </Scrollbar>
   );
