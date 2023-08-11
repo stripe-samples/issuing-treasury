@@ -27,7 +27,7 @@ Additionally, a *Test Data* section helps to understand different mechanisms for
   - Treasury: [Contact sales](https://go.stripe.global/treasury-inquiry)
 - **Stripe API keys**: Obtain your keys via <https://dashboard.stripe.com/test/apikeys>
 
-## Deploy demo on Render.com
+## No-code deploy demo on Render.com
 
 To deploy this sample application directly in Render, click on the button below. It automatically logs into Render and
 initiates setup with a free database and web service instance. No coding required.
@@ -93,7 +93,7 @@ After necessary setups, launch the application with `npm run dev`.
 
 The Devias theme significantly contributed to the swift construction of this sample app. Besides providing an elegant display, Devias offers a streamlined integration with Material UI. The effective utilization of this free theme allowed us to deliver a high-quality and engaging sample app.
 
-## Accelerating Development with Devias Pro
+### Accelerating Development with Devias Pro
 
 Although the free Devias theme was instrumental in building this sample application, for developers who are aiming for a full-featured, production-ready application, we recommend the Devias Pro version.
 
