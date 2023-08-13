@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Stripe from "stripe";
 
-import { fetchApi } from "src/utils/api-helpers";
+import { extractJsonFromResponse, postApi } from "src/utils/api-helpers";
 
 const brandIcon: Record<string, string> = {
   Mastercard: "/assets/logos/logo-mastercard.svg",
@@ -17,12 +17,10 @@ const CardIllustration = ({
   cardId,
   card,
   brand,
-  accountId,
 }: {
   cardId: string;
   card: Stripe.Issuing.Card;
   brand: string;
-  accountId: string;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -57,13 +55,18 @@ const CardIllustration = ({
           issuingCard: cardId,
         });
 
-        const response = await fetchApi("/api/cards/card-key", {
-          cardId: cardId,
+        const response = await postApi(`/api/cards/${cardId}/card-keys`, {
           nonce: nonceResult.nonce,
-          accountId: accountId,
         });
+        const result = await extractJsonFromResponse<{
+          ephemeralKey: string;
+          secret: string;
+        }>(response);
+        if (result.data == undefined) {
+          throw new Error("Something went wrong");
+        }
 
-        const { ephemeralKey: ephemeralKeyResult } = await response.json();
+        const ephemeralKeyResult = result.data;
 
         // Populate the raw card details
         const cardNumberStyle = {

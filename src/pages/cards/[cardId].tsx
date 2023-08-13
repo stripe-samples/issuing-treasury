@@ -88,12 +88,7 @@ const Page = ({
             <Grid item sx={{ width: "100%", maxWidth: 500 }}>
               <Box sx={{ borderRadius: 2, boxShadow: 12 }}>
                 <Elements stripe={stripePromise}>
-                  <CardIllustration
-                    cardId={cardId}
-                    card={card}
-                    brand="VISA"
-                    accountId={accountId}
-                  />
+                  <CardIllustration cardId={cardId} card={card} brand="VISA" />
                 </Elements>
               </Box>
             </Grid>

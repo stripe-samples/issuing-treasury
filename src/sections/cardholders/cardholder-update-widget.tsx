@@ -11,9 +11,16 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, FormikValues } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
 import * as Yup from "yup";
+
+import {
+  extractJsonFromResponse,
+  handleResult,
+  putApi,
+} from "src/utils/api-helpers";
 
 const validationSchema = Yup.object({
   accept: Yup.boolean().oneOf(
@@ -27,8 +34,32 @@ const initialValues = {
 };
 
 const CardholderUpdateWidget = ({ cardholderId }: { cardholderId: string }) => {
+  const router = useRouter();
+
   const [showModal, setShowModal] = React.useState(false);
   const [errorText, setErrorText] = React.useState("");
+
+  const handleSubmit = async (
+    values: FormikValues,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  ) => {
+    const response = await putApi("api/cardholders", {
+      cardholderId: cardholderId,
+    });
+    const result = await extractJsonFromResponse(response);
+    handleResult({
+      result,
+      onSuccess: () => {
+        router.push("/cardholders");
+      },
+      onError: (error) => {
+        setErrorText(`Error: ${error.message}`);
+      },
+      onFinally: () => {
+        setSubmitting(false);
+      },
+    });
+  };
 
   return (
     <div>
@@ -46,33 +77,7 @@ const CardholderUpdateWidget = ({ cardholderId }: { cardholderId: string }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            try {
-              const body = {
-                cardholderId: cardholderId,
-              };
-              const response = await fetch("api/update_cardholder", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify(body),
-              });
-
-              if (response.ok) {
-                window.location.replace("/cardholders");
-              } else {
-                setSubmitting(false);
-                const result = await response.json();
-
-                setErrorText(result.error);
-              }
-            } catch (error) {
-              setErrorText("An error occurred. Please try again later.");
-            } finally {
-              setSubmitting(false);
-            }
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
             <Form>

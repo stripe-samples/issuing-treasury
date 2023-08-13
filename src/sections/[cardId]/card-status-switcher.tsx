@@ -10,7 +10,11 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Stripe from "stripe";
 
-import { fetchApi } from "src/utils/api-helpers";
+import {
+  extractJsonFromResponse,
+  handleResult,
+  putApi,
+} from "src/utils/api-helpers";
 
 function CardStatusSwitcher({
   cardId,
@@ -19,7 +23,7 @@ function CardStatusSwitcher({
   cardId: string;
   cardStatus: Stripe.Issuing.Card.Status;
 }) {
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorAlertText, setErrorAlertText] = useState("");
   const router = useRouter();
@@ -27,29 +31,26 @@ function CardStatusSwitcher({
   const handleSwitchCardStatus = async (
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    try {
-      e.preventDefault();
-      setSubmitted(true);
-      const newStatus = cardStatus === "active" ? "inactive" : "active";
-      const body = {
-        cardId: cardId,
-        newStatus: newStatus,
-      };
-      const response = await fetchApi("/api/switch_card_status", body);
-      const data = await response.json();
-      if (response.ok) {
-        router.reload();
-      } else if (data.error) {
-        setErrorAlertText(data.error);
+    e.preventDefault();
+    setSubmitting(true);
+    const newStatus = cardStatus === "active" ? "inactive" : "active";
+    const response = await putApi(`/api/cards/${cardId}/switch-card-status`, {
+      newStatus: newStatus,
+    });
+    const result = await extractJsonFromResponse(response);
+    handleResult({
+      result,
+      onSuccess: () => {
+        router.push(`/cards/${cardId}`);
+      },
+      onError: (error) => {
+        setErrorAlertText(`Error: ${error.message}`);
         setShowErrorAlert(true);
-      } else {
-        throw new Error("Something went wrong");
-      }
-      setSubmitted(false);
-    } catch (error) {
-      setErrorAlertText((error as Error).message);
-      setShowErrorAlert(true);
-    }
+      },
+      onFinally: () => {
+        setSubmitting(false);
+      },
+    });
   };
 
   const handleErrorAlertClose = async (
@@ -57,7 +58,7 @@ function CardStatusSwitcher({
   ) => {
     e.preventDefault();
     setShowErrorAlert(false);
-    setSubmitted(false);
+    setSubmitting(false);
   };
 
   return (
@@ -68,13 +69,13 @@ function CardStatusSwitcher({
             variant="contained"
             sx={{ whiteSpace: "nowrap" }}
             onClick={handleSwitchCardStatus}
-            disabled={submitted}
+            disabled={submitting}
           >
             {cardStatus == "inactive"
-              ? submitted
+              ? submitting
                 ? "Activating Card..."
                 : "Activate Card"
-              : submitted
+              : submitting
               ? "Deactivating Card..."
               : "Deactivate Card"}
           </Button>
