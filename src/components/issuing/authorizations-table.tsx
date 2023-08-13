@@ -16,7 +16,7 @@ import {
 import React, { ChangeEvent } from "react";
 import Stripe from "stripe";
 
-import { SeverityPill } from "./severity-pill";
+import { SeverityPill } from "../severity-pill";
 
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityColor } from "src/types/severity-color";

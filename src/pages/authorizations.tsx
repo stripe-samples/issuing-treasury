@@ -24,7 +24,7 @@ import React, {
 } from "react";
 import Stripe from "stripe";
 
-import AuthorizationsTable from "src/components/authorizations-table";
+import AuthorizationsTable from "src/components/issuing/authorizations-table";
 import { useSelection } from "src/hooks/use-selection";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
