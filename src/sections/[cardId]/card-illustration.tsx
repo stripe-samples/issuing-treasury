@@ -2,16 +2,11 @@ import { Slide, Stack, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
-import { EphemeralKeyNonceResult } from "@stripe/stripe-js";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Stripe from "stripe";
 
-import {
-  extractJsonFromResponse,
-  fetchApi,
-  postApi,
-} from "src/utils/api-helpers";
+import { extractJsonFromResponse, postApi } from "src/utils/api-helpers";
 
 const brandIcon: Record<string, string> = {
   Mastercard: "/assets/logos/logo-mastercard.svg",
@@ -22,12 +17,10 @@ const CardIllustration = ({
   cardId,
   card,
   brand,
-  accountId,
 }: {
   cardId: string;
   card: Stripe.Issuing.Card;
   brand: string;
-  accountId: string;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
