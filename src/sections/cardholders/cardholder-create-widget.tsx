@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import {
+  Alert,
   Button,
   Checkbox,
   Dialog,
@@ -15,14 +16,25 @@ import {
   Typography,
 } from "@mui/material";
 import { Formik, Form, Field, FormikProps, FormikValues } from "formik";
+import { useRouter } from "next/router";
 import React, { RefObject, useRef } from "react";
 import * as Yup from "yup";
 
+import {
+  extractJsonFromResponse,
+  handleResult,
+  postApi,
+} from "src/utils/api-helpers";
+
 const CreateCardholderForm = ({
   formRef,
+  onCreate,
 }: {
   formRef: RefObject<FormikProps<FormikValues>>;
+  onCreate: () => void;
 }) => {
+  const router = useRouter();
+
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
@@ -54,45 +66,37 @@ const CreateCardholderForm = ({
 
   const [errorText, setErrorText] = React.useState("");
 
+  const handleSubmit = async (
+    values: FormikValues,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  ) => {
+    const response = await postApi("api/cardholders", values);
+    const result = await extractJsonFromResponse(response);
+    handleResult({
+      result,
+      onSuccess: () => {
+        router.push("/cardholders");
+        onCreate();
+      },
+      onError: (error) => {
+        setErrorText(`Error: ${error.message}`);
+      },
+      onFinally: () => {
+        setSubmitting(false);
+      },
+    });
+  };
+
   return (
     <Formik
       innerRef={formRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={async (values, { setSubmitting }) => {
-        try {
-          const response = await fetch("api/add_cardholder", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(values),
-          });
-
-          if (response.ok) {
-            window.location.replace("/cardholders");
-          } else {
-            const result = await response.json();
-            setErrorText(result.error);
-          }
-        } catch (error) {
-          setErrorText((error as Error).message);
-        } finally {
-          setSubmitting(false);
-        }
-      }}
+      onSubmit={handleSubmit}
     >
       {({ errors, touched }) => (
         <Form>
           <Grid container spacing={3}>
-            {errorText != "" && (
-              <Grid item xs={12}>
-                <Typography variant="body2" color="error">
-                  {errorText}
-                </Typography>
-              </Grid>
-            )}
-
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
@@ -104,7 +108,6 @@ const CreateCardholderForm = ({
                 helperText={touched.firstName && errors.firstName}
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
@@ -116,7 +119,6 @@ const CreateCardholderForm = ({
                 helperText={touched.lastName && errors.lastName}
               />
             </Grid>
-
             <Grid item xs={12}>
               <Field
                 as={TextField}
@@ -128,7 +130,6 @@ const CreateCardholderForm = ({
                 helperText={touched.email && errors.email}
               />
             </Grid>
-
             <Grid item xs={12}>
               <Field
                 as={TextField}
@@ -140,7 +141,6 @@ const CreateCardholderForm = ({
                 helperText={touched.address1 && errors.address1}
               />
             </Grid>
-
             <Grid item xs={12} md={4}>
               <Field
                 as={TextField}
@@ -152,7 +152,6 @@ const CreateCardholderForm = ({
                 helperText={touched.city && errors.city}
               />
             </Grid>
-
             <Grid item xs={12} md={4}>
               <Field
                 as={TextField}
@@ -164,7 +163,6 @@ const CreateCardholderForm = ({
                 helperText={touched.state && errors.state}
               />
             </Grid>
-
             <Grid item xs={12} md={4}>
               <Field
                 as={TextField}
@@ -176,7 +174,6 @@ const CreateCardholderForm = ({
                 helperText={touched.postalCode && errors.postalCode}
               />
             </Grid>
-
             <Grid item xs={12}>
               <Field
                 as={TextField}
@@ -191,7 +188,11 @@ const CreateCardholderForm = ({
                 <MenuItem value="US">United States</MenuItem>
               </Field>
             </Grid>
-
+            {errorText !== "" && (
+              <Grid item xs={12}>
+                <Alert severity="error">{errorText}</Alert>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <FormControlLabel
                 control={
@@ -246,6 +247,10 @@ const CardholderCreateWidget = () => {
     }
   };
 
+  const handleCreate = () => {
+    setShowModal(false);
+  };
+
   return (
     <div>
       <Button onClick={() => setShowModal(true)} variant="contained">
@@ -261,7 +266,7 @@ const CardholderCreateWidget = () => {
         <DialogTitle>Add New Cardholder</DialogTitle>
         <Divider />
         <DialogContent>
-          <CreateCardholderForm formRef={formRef} />
+          <CreateCardholderForm formRef={formRef} onCreate={handleCreate} />
         </DialogContent>
         <Divider />
         <DialogActions>
