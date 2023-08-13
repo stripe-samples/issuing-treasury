@@ -33,11 +33,13 @@ export const fetchApi = async (path: string, body?: object) => {
   });
 };
 
-export const extractJsonFromResponse = async (response: Response) => {
+export const extractJsonFromResponse = async <TData = object>(
+  response: Response,
+): Promise<ApiResponse<TData>> => {
   const contentType = response.headers.get("content-type");
   if (contentType && contentType.includes("application/json")) {
     const data = await response.json();
-    return data as ApiResponse;
+    return data as ApiResponse<TData>;
   } else {
     throw new Error("Something went wrong");
   }
