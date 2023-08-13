@@ -5,6 +5,7 @@ import {
   ChartBarIcon,
   UsersIcon,
   WrenchScrewdriverIcon,
+  ShoppingBagIcon,
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
@@ -33,6 +34,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <CreditCardIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Authorizations",
+    path: "/authorizations",
+    icon: (
+      <SvgIcon fontSize="small">
+        <ShoppingBagIcon />
       </SvgIcon>
     ),
   },
