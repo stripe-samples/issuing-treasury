@@ -1,4 +1,7 @@
-import { ClipboardIcon } from "@heroicons/react/20/solid";
+import {
+  ArrowTopRightOnSquareIcon,
+  ClipboardIcon,
+} from "@heroicons/react/20/solid";
 import {
   Box,
   Divider,
@@ -9,6 +12,7 @@ import {
   SvgIcon,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
 export const AccountPopover = ({
@@ -67,6 +71,17 @@ export const AccountPopover = ({
               <ClipboardIcon />
             </SvgIcon>
           </IconButton>
+        </Typography>
+        <Typography color="text.secondary" variant="body2" mt={1}>
+          <Link
+            href={`https://dashboard.stripe.com/${session?.accountId}/test/issuing/overview`}
+            target="_blank"
+          >
+            {session?.accountId}
+            <SvgIcon sx={{ ml: 1, width: "20px", height: "20px" }}>
+              <ArrowTopRightOnSquareIcon />
+            </SvgIcon>
+          </Link>
         </Typography>
       </Box>
       <Divider />
