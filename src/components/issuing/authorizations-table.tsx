@@ -80,9 +80,9 @@ const AuthorizationsTable = ({
                   />
                 </TableCell>
                 <TableCell sortDirection="desc">Date</TableCell>
-                <TableCell>Amount</TableCell>
+                <TableCell align="right">Amount</TableCell>
                 <TableCell>Name On Card</TableCell>
-                <TableCell>Card Last 4</TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>Card Last 4</TableCell>
                 <TableCell>{/* Approved? */}</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Merchant</TableCell>
@@ -111,21 +111,17 @@ const AuthorizationsTable = ({
                         }}
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ whiteSpace: "nowrap" }}>
                       {formatDateTime(authorization.created)}
                     </TableCell>
                     <TableCell
                       align="right"
-                      sx={{ textTransform: "uppercase" }}
+                      sx={{ textTransform: "uppercase", whiteSpace: "nowrap" }}
                     >
-                      <Typography noWrap>{`${formatUSD(
-                        authorization.amount / 100,
-                      )} USD`}</Typography>
+                      {`${formatUSD(authorization.amount / 100)} USD`}
                     </TableCell>
-                    <TableCell>
-                      <Typography noWrap>
-                        {authorization.card.cardholder.name}
-                      </Typography>
+                    <TableCell sx={{ whiteSpace: "nowrap" }}>
+                      {authorization.card.cardholder.name}
                     </TableCell>
                     <TableCell>•••• {authorization.card.last4}</TableCell>
                     <TableCell>
@@ -140,13 +136,15 @@ const AuthorizationsTable = ({
                         {capitalize(authorization.status)}
                       </SeverityPill>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ whiteSpace: "nowrap" }}>
                       <Typography noWrap>
                         {authorization.merchant_data.name}
                       </Typography>
                     </TableCell>
-                    <TableCell sx={{ textTransform: "uppercase" }}>
-                      <Typography noWrap>{category}</Typography>
+                    <TableCell
+                      sx={{ textTransform: "uppercase", whiteSpace: "nowrap" }}
+                    >
+                      {category}
                     </TableCell>
                     <TableCell
                       sx={{

@@ -225,6 +225,20 @@ export async function getAuthorizations(StripeAccountID: string) {
   );
 
   return {
-    authorizations: authorizations,
+    authorizations,
+  };
+}
+
+export async function getAuthorizationDetails(
+  StripeAccountID: string,
+  authorizationId: string,
+) {
+  const authorization = await stripe.issuing.authorizations.retrieve(
+    authorizationId,
+    { stripeAccount: StripeAccountID },
+  );
+
+  return {
+    authorization,
   };
 }

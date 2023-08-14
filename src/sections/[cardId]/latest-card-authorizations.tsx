@@ -1,3 +1,4 @@
+import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import {
   Card,
   CardHeader,
@@ -9,21 +10,30 @@ import {
   TableBody,
   Typography,
   Divider,
+  Button,
+  SvgIcon,
 } from "@mui/material";
 import React from "react";
 import Stripe from "stripe";
 
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
-import { formatDateTime, formatUSD } from "src/utils/format";
+import { SeverityColor } from "src/types/severity-color";
+import { capitalize, formatDateTime, formatUSD } from "src/utils/format";
 
-function LatestCardAuthorizations({
+const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
+  closed: "primary",
+  pending: "warning",
+  reversed: "error",
+};
+
+const LatestCardAuthorizations = ({
   authorizations,
   sx,
 }: {
   authorizations: Stripe.Issuing.Authorization[];
   sx?: object;
-}) {
+}) => {
   return (
     <>
       <Card sx={sx}>
@@ -35,11 +45,12 @@ function LatestCardAuthorizations({
                 <TableHead>
                   <TableRow>
                     <TableCell sortDirection="desc">Date</TableCell>
-                    <TableCell>Merchant</TableCell>
-                    <TableCell>Amount</TableCell>
+                    <TableCell align="right">Amount</TableCell>
+                    <TableCell>{/* Approved? */}</TableCell>
                     <TableCell>Status</TableCell>
+                    <TableCell>Merchant</TableCell>
                     <TableCell>Merchant Category</TableCell>
-                    <TableCell>ID</TableCell>
+                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -48,21 +59,17 @@ function LatestCardAuthorizations({
                       authorization.merchant_data.category.replace(/_/g, " ");
                     return (
                       <TableRow hover key={authorization.id}>
-                        <TableCell>
-                          <Typography noWrap>
-                            {formatDateTime(authorization.created)}
-                          </Typography>
+                        <TableCell sx={{ whiteSpace: "nowrap" }}>
+                          {formatDateTime(authorization.created)}
                         </TableCell>
-                        <TableCell>
-                          <Typography noWrap>
-                            {authorization.merchant_data.name}{" "}
-                          </Typography>
-                        </TableCell>
-                        <TableCell sx={{ textTransform: "uppercase" }}>
-                          <Typography noWrap>
-                            {formatUSD(authorization.amount / 100)}{" "}
-                            {authorization.currency}
-                          </Typography>
+                        <TableCell
+                          align="right"
+                          sx={{
+                            textTransform: "uppercase",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {`${formatUSD(authorization.amount / 100)} USD`}
                         </TableCell>
                         <TableCell>
                           <SeverityPill
@@ -71,10 +78,42 @@ function LatestCardAuthorizations({
                             {authorization.approved ? "Approved" : "Declined"}
                           </SeverityPill>
                         </TableCell>
-                        <TableCell sx={{ textTransform: "uppercase" }}>
-                          <Typography noWrap>{category}</Typography>
+                        <TableCell>
+                          <SeverityPill color={statusMap[authorization.status]}>
+                            {capitalize(authorization.status)}
+                          </SeverityPill>
                         </TableCell>
-                        <TableCell>{authorization.id}</TableCell>
+                        <TableCell sx={{ whiteSpace: "nowrap" }}>
+                          <Typography noWrap>
+                            {authorization.merchant_data.name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            textTransform: "uppercase",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {category}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            width: "1px",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          <Button
+                            color="inherit"
+                            endIcon={
+                              <SvgIcon fontSize="small">
+                                <ArrowRightIcon />
+                              </SvgIcon>
+                            }
+                            href={`/authorizations/${authorization.id}`}
+                          >
+                            Details
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -95,6 +134,6 @@ function LatestCardAuthorizations({
       </Card>
     </>
   );
-}
+};
 
 export default LatestCardAuthorizations;
