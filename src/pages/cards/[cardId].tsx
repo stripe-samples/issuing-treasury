@@ -1,3 +1,4 @@
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
@@ -13,9 +14,12 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { GetServerSidePropsContext } from "next";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
+import FloatingTestPanel from "src/components/floating-test-panel";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import CardDetails from "src/sections/[cardId]/card-details";
 import CardIllustration from "src/sections/[cardId]/card-illustration";
@@ -143,7 +147,39 @@ const Page = ({
           </Grid>
         </Container>
       </Box>
+      <GenerateTestDataDrawer cardId={cardId} />
     </>
+  );
+};
+
+// FOR-DEMO-ONLY: This component is only useful for generating test data for demonstration purposes and can be removed
+// for a real application.
+const GenerateTestDataDrawer = ({ cardId }: { cardId: string }) => {
+  const { data: session } = useSession();
+
+  return (
+    <FloatingTestPanel title="Create a test authorization">
+      <Typography variant="body2">
+        You can create a test authorization by{" "}
+        <Link
+          href={`https://dashboard.stripe.com/${session?.accountId}/test/issuing/cards/${cardId}`}
+          target="_blank"
+        >
+          going to this card&apos;s overview in the Stripe dashboard
+          <SvgIcon
+            sx={{
+              ml: 0.5,
+              width: "20px",
+              height: "20px",
+              verticalAlign: "middle",
+            }}
+          >
+            <ArrowTopRightOnSquareIcon />
+          </SvgIcon>
+        </Link>{" "}
+        and clicking on the &quot;Create test authorization&quot; button.
+      </Typography>
+    </FloatingTestPanel>
   );
 };
 
