@@ -21,7 +21,7 @@ const Page = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
 
-  const [skipOnboarding, setSkipOnboarding] = useState(false);
+  const [skipOnboarding, setSkipOnboarding] = useState(true);
 
   const handleSkipOnboarding = async (
     e: React.MouseEvent<HTMLButtonElement>,
