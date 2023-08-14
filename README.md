@@ -89,20 +89,12 @@ After necessary setups, launch the application with `npm run dev`.
 
 *Note: This application serves as an example and should not proceed to production deployment as it is.*
 
-## Acknowledgment to Devias Theme
+## Elevate Your Development with Devias Pro
 
-The Devias theme significantly contributed to the swift construction of this sample app. Besides providing an elegant display, Devias offers a streamlined integration with Material UI. The effective utilization of this free theme allowed us to deliver a high-quality and engaging sample app.
+The free Devias theme, licensed under MIT, played a vital role in the swift rewrite of this sample app. Beyond delivering an elegant UX, this theme seamlessly integrated with Material UI and React, enabling us to create a compelling and high-quality sample app.
 
-### Accelerating Development with Devias Pro
+While the free Devias theme was instrumental in the creation of this sample app, we recommend the Devias Pro version for developers aiming to build full-featured, production-ready applications.
 
-Although the free Devias theme was instrumental in building this sample application, for developers who are aiming for a full-featured, production-ready application, we recommend the Devias Pro version.
+Devias Pro goes above and beyond the capabilities of the free version, offering an extensive array of advanced components and features carefully crafted to expedite and enhance your development process. By upgrading to Devias Pro, you'll gain access to additional layouts, advanced React components, pre-built dashboards, and essential TypeScript support that ensures your code remains clean, robust, and scalable.
 
-Devias Pro extends beyond the capacity of the free version, providing an extensive array of advanced components and features designed to expedite and enrich your development process. With Devias Pro, you gain access to additional layouts, advanced React components, and pre-built dashboards, not to mention TypeScript support that underpins clean, robust, and scalable code.
-
-One of the key advantages of Devias Pro is its inclusion of Figma design files. These files empower developers to efficiently build complex user experiences with precision and consistency. The design resources and components available in Devias Pro are patterned after modern UX/UI best practices, providing a smooth, optimized user experience out of the box.
-
-By choosing Devias Pro, you're not just getting a theme; you're getting a robust toolset designed to help you turn your ideas into fully fledged, industrial-strength applications faster. It's a springboard that propels your project from its inception to a production-ready state in less time.
-
-We appreciate the pivotal role Devias themes have played in the development of this sample app, and wholeheartedly recommend a step up to Devias Pro for developers keen on accelerating their development cycles, improving the overall quality of their products, and delivering a top-tier user experience.
-
-You can explore and experience the prodigious benefits of Devias Pro [here](https://material-kit-pro-react.devias.io/).
+Explore and experience the benefits of Devias Pro [here](https://material-kit-pro-react.devias.io/).
