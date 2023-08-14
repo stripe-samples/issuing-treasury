@@ -217,3 +217,28 @@ export async function getCardDetails(StripeAccountID: string, cardId: string) {
 
   return cardTransactions;
 }
+
+export async function getAuthorizations(StripeAccountID: string) {
+  const authorizations = await stripe.issuing.authorizations.list(
+    { limit: 10 },
+    { stripeAccount: StripeAccountID },
+  );
+
+  return {
+    authorizations,
+  };
+}
+
+export async function getAuthorizationDetails(
+  StripeAccountID: string,
+  authorizationId: string,
+) {
+  const authorization = await stripe.issuing.authorizations.retrieve(
+    authorizationId,
+    { stripeAccount: StripeAccountID },
+  );
+
+  return {
+    authorization,
+  };
+}
