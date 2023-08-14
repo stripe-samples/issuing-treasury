@@ -13,7 +13,10 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
+
+import { isDemoMode } from "src/utils/demo-helpers";
 
 export const AccountPopover = ({
   anchorEl,
@@ -25,6 +28,7 @@ export const AccountPopover = ({
   open: boolean;
 }) => {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const handleLogout = async () => {
     onClose?.();
@@ -72,17 +76,19 @@ export const AccountPopover = ({
             </SvgIcon>
           </IconButton>
         </Typography>
-        <Typography color="text.secondary" variant="body2" mt={1}>
-          <Link
-            href={`https://dashboard.stripe.com/${session?.accountId}/test/issuing/overview`}
-            target="_blank"
-          >
-            {session?.accountId}
-            <SvgIcon sx={{ ml: 1, width: "20px", height: "20px" }}>
-              <ArrowTopRightOnSquareIcon />
-            </SvgIcon>
-          </Link>
-        </Typography>
+        {(!isDemoMode() || router.query.debug) && (
+          <Typography color="text.secondary" variant="body2" mt={1}>
+            <Link
+              href={`https://dashboard.stripe.com/${session?.accountId}/test/issuing/overview`}
+              target="_blank"
+            >
+              {session?.accountId}
+              <SvgIcon sx={{ ml: 1, width: "20px", height: "20px" }}>
+                <ArrowTopRightOnSquareIcon />
+              </SvgIcon>
+            </Link>
+          </Typography>
+        )}
       </Box>
       <Divider />
       <MenuList

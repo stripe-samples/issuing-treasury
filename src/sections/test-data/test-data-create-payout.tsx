@@ -6,6 +6,7 @@ import {
   CardHeader,
   Divider,
   Link,
+  Stack,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -81,42 +82,44 @@ function TestDataCreatePayout(props: {
     <Card>
       <CardHeader title="Create Payout" />
       <CardContent sx={{ pt: 0 }}>
-        <Typography>
-          In order to enable payouts, you need to set your Financial Account as
-          the external account for your Connected Account.
-        </Typography>
-        <Typography>
-          {`If you haven't done it yet, by pressing the "Add Financial
+        <Stack spacing={1}>
+          <Typography>
+            In order to enable payouts, you need to set your Financial Account
+            as the external account for your Connected Account.
+          </Typography>
+          <Typography>
+            {`If you haven't done it yet, by pressing the "Add Financial
           Account as External Account" button, the Financial Account will be set
           as an external account, and manual payouts will be enabled.`}
-        </Typography>
-        <Typography>
-          Platforms have the ability to set up automatic payouts with different
-          schedules. You can dive deep into this topic on{" "}
-          <Link
-            href="https://stripe.com/docs/treasury/moving-money/payouts"
-            target="_blank"
-          >
-            this page
-          </Link>
-          .
-        </Typography>
-        <Typography>
-          Currently, your connected account has an{" "}
-          <Link
-            href="https://stripe.com/docs/connect/account-balances"
-            target="_blank"
-          >
-            Available Balance
-          </Link>{" "}
-          of <strong>{formatter.format(availableBalance / 100)}</strong>.
-        </Typography>
-
-        {error && (
-          <Typography variant="body2" color="error" align="center">
-            {errorText}
           </Typography>
-        )}
+          <Typography>
+            Platforms have the ability to set up automatic payouts with
+            different schedules. You can dive deep into this topic on{" "}
+            <Link
+              href="https://stripe.com/docs/treasury/moving-money/payouts"
+              target="_blank"
+            >
+              this page
+            </Link>
+            .
+          </Typography>
+          <Typography>
+            Currently, your connected account has an{" "}
+            <Link
+              href="https://stripe.com/docs/connect/account-balances"
+              target="_blank"
+            >
+              Available Balance
+            </Link>{" "}
+            of <strong>{formatter.format(availableBalance / 100)}</strong>.
+          </Typography>
+
+          {error && (
+            <Typography variant="body2" color="error" align="center">
+              {errorText}
+            </Typography>
+          )}
+        </Stack>
       </CardContent>
       <Divider />
       <CardActions sx={{ justifyContent: "center" }}>

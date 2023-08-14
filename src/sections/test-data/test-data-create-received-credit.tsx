@@ -6,6 +6,7 @@ import {
   CardContent,
   CardHeader,
   Divider,
+  Stack,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -35,19 +36,21 @@ const TestDataCreateReceivedCredit = () => {
     <Card>
       <CardHeader title="Simulate Received Credit"></CardHeader>
       <CardContent sx={{ pt: 0 }}>
-        <Typography>
-          By pressing the Create Received Credit button, you will simulate
-          receiving a transfer into your Financial Account.
-        </Typography>
-        <Typography>
-          You can send funds directly to your Financial Account via ACH or Wire
-          Transfers by using its Account and Routing numbers.
-        </Typography>
-        <Typography>
-          Your Financial Account will receive $ 500.00 each time you press the
-          button.
-        </Typography>
-        {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
+        <Stack spacing={1}>
+          <Typography>
+            By pressing the Create Received Credit button, you will simulate
+            receiving a transfer into your Financial Account.
+          </Typography>
+          <Typography>
+            You can send funds directly to your Financial Account via ACH or
+            Wire Transfers by using its Account and Routing numbers.
+          </Typography>
+          <Typography>
+            Your Financial Account will receive $ 500.00 each time you press the
+            button.
+          </Typography>
+          {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
+        </Stack>
       </CardContent>
       <Divider />
       <CardActions sx={{ justifyContent: "center" }}>

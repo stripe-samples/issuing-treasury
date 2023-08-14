@@ -15,6 +15,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
@@ -24,6 +25,7 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 import CardDetails from "src/sections/[cardId]/card-details";
 import CardIllustration from "src/sections/[cardId]/card-illustration";
 import LatestCardAuthorizations from "src/sections/[cardId]/latest-card-authorizations";
+import { isDemoMode } from "src/utils/demo-helpers";
 import { formatUSD } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import { getCardDetails } from "src/utils/stripe_helpers";
@@ -63,6 +65,8 @@ const Page = ({
   cardId: string;
   card: Stripe.Issuing.Card;
 }) => {
+  const router = useRouter();
+
   const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   if (stripePublishableKey === undefined) {
     throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY must be defined");
@@ -147,7 +151,10 @@ const Page = ({
           </Grid>
         </Container>
       </Box>
-      <GenerateTestDataDrawer cardId={cardId} />
+      {/* The demo mode flag can be removed from here once the Issuing spend card test helpers are GA-ed */}
+      {(!isDemoMode() || router.query.debug) && (
+        <GenerateTestDataDrawer cardId={cardId} />
+      )}
     </>
   );
 };
