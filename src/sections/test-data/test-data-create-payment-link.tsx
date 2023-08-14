@@ -6,11 +6,19 @@ import {
   CardHeader,
   Divider,
   Link,
+  Stack,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
+import { isDemoMode } from "src/utils/demo-helpers";
+
 function TestDataCreatePaymentLink() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -46,22 +54,42 @@ function TestDataCreatePaymentLink() {
     <Card>
       <CardHeader title="Create PaymentLink" />
       <CardContent sx={{ pt: 0 }}>
-        <Typography>
-          By pressing the Create PaymentLink button you will generate a{" "}
-          <Link
-            href="https://stripe.com/docs/payments/payment-links"
-            target="_blank"
-          >
-            PaymentLink
-          </Link>{" "}
-          that you can use to receive a payment into your Connected
-          Account&apos;s Stripe Balance.
-        </Typography>
-        {error && (
-          <Typography variant="body2" color="error" align="center">
-            {errorText}
+        <Stack spacing={1}>
+          <Typography>
+            By pressing the Create PaymentLink button you will generate a{" "}
+            <Link
+              href="https://stripe.com/docs/payments/payment-links"
+              target="_blank"
+            >
+              PaymentLink
+            </Link>{" "}
+            that you can use to receive a payment into your Connected
+            Account&apos;s Stripe Balance.
           </Typography>
-        )}
+          <Typography>
+            Use the test card number{" "}
+            <Typography variant="button">4000 0000 0000 0077</Typography> which
+            will cause the charge to succeed. Funds are added directly to your
+            available balance, bypassing your pending balance.
+          </Typography>
+          {(!isDemoMode() || router.query.debug) && (
+            <Typography>
+              You can view the payments{" "}
+              <Link
+                href={`https://dashboard.stripe.com/${session?.accountId}/test/payments`}
+                target="_blank"
+              >
+                here
+              </Link>{" "}
+              in the Stripe dashboard.
+            </Typography>
+          )}
+          {error && (
+            <Typography variant="body2" color="error" align="center">
+              {errorText}
+            </Typography>
+          )}
+        </Stack>
       </CardContent>
       <Divider />
       <CardActions sx={{ justifyContent: "center" }}>
