@@ -135,8 +135,9 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             sx={{ mt: 2 }}
             target="_blank"
             variant="contained"
+            color="secondary"
           >
-            Issuing and Treasury Docs
+            View on GitHub
           </Button>
         </Box>
       </Box>
