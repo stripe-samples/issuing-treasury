@@ -18,7 +18,11 @@ import { ReactNode } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
-import { fetchApi } from "src/utils/api-helpers";
+import {
+  extractJsonFromResponse,
+  handleResult,
+  postApi,
+} from "src/utils/api-helpers";
 import { generateDemoEmail, isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
@@ -38,7 +42,6 @@ const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
 };
 const validationSchema = Yup.object().shape({
-  businessName: Yup.string().max(255).required("Business name is required"),
   email: Yup.string()
     .email("Must be a valid email")
     .max(255)
@@ -56,36 +59,29 @@ const validationSchema = Yup.object().shape({
 
 const Page = () => {
   const initialValues = {
-    businessName: "",
     email: "",
     ...(isDemoMode() && {
       // FOR-DEMO-ONLY: We're using a fake business name here but you should modify this line and collect a real business
       //  name from the user
-      businessName: `Demo Innovative Inc.`,
-      // FOR-DEMO-ONLY: We're using a fake email here but you should modify this line and collect a real email from the
-      // user
       email: generateDemoEmail(),
     }),
     password: "",
+    // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
   };
 
   const handleSubmit = async (
     values: typeof initialValues,
-    {
-      setStatus,
-      setErrors,
-      setSubmitting,
-    }: FormikHelpers<typeof initialValues>,
+    { setErrors, setSubmitting }: FormikHelpers<typeof initialValues>,
   ) => {
-    try {
-      const registrationResponse = await fetchApi("/api/register", {
-        businessName: values.businessName,
-        email: values.email,
-        password: values.password,
-      });
-
-      if (registrationResponse.ok) {
+    const response = await postApi("/api/register", {
+      email: values.email,
+      password: values.password,
+    });
+    const result = await extractJsonFromResponse(response);
+    handleResult({
+      result,
+      onSuccess: async () => {
         const signInResponse = await signIn("credentials", {
           email: values.email,
           password: values.password,
@@ -94,14 +90,14 @@ const Page = () => {
         if (signInResponse?.error) {
           throw new Error("Something went wrong");
         }
-      } else {
-        throw new Error("Something went wrong");
-      }
-    } catch (err) {
-      setStatus({ success: false });
-      setErrors({ submit: (err as Error).message });
-      setSubmitting(false);
-    }
+      },
+      onError: (error) => {
+        setErrors({ submit: (error as Error).message });
+      },
+      onFinally: () => {
+        setSubmitting(false);
+      },
+    });
   };
 
   return (
@@ -125,18 +121,9 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isSubmitting, values }) => (
+        {({ errors, touched, isSubmitting, values, isValid, dirty }) => (
           <Form>
-            <Stack spacing={3}>
-              <Field
-                as={TextField}
-                error={!!(touched.businessName && errors.businessName)}
-                fullWidth
-                helperText={touched.businessName && errors.businessName}
-                label="Business Name"
-                name="businessName"
-                disabled={isDemoMode()}
-              />
+            <Stack spacing={2}>
               {isDemoMode() && (
                 <>
                   <Alert
@@ -144,8 +131,8 @@ const Page = () => {
                     variant="outlined"
                     sx={{ borderColor: "info.main" }}
                   >
-                    Email address and business name are automatically generated
-                    as part of the demo.
+                    Email address is automatically generated as part of the
+                    demo.
                   </Alert>
                 </>
               )}
@@ -186,18 +173,18 @@ const Page = () => {
                 name="password"
                 type="password"
               />
+              {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
+              <Button
+                fullWidth
+                size="large"
+                sx={{ mt: 3 }}
+                type="submit"
+                variant="contained"
+                disabled={!dirty || isSubmitting || !isValid}
+              >
+                {isSubmitting ? "Continuing..." : "Continue"}
+              </Button>
             </Stack>
-            {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
-            <Button
-              fullWidth
-              size="large"
-              sx={{ mt: 3 }}
-              type="submit"
-              variant="contained"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Registering..." : "Continue"}
-            </Button>
           </Form>
         )}
       </Formik>
