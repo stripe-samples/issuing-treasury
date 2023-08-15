@@ -1,14 +1,18 @@
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import {
   Box,
   Card,
   CardContent,
+  Fade,
+  IconButton,
   Link,
   Stack,
+  SvgIcon,
   Typography,
   useTheme,
 } from "@mui/material";
 import NextLink from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 import { Logo } from "src/components/logo";
 
@@ -60,6 +64,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </Box>
         </Box>
       </Box>
+      <CookieBanner />
     </Box>
   );
 };
@@ -121,5 +126,52 @@ const WelcomeMessage = () => (
     </Typography>
   </Stack>
 );
+
+const CookieBanner = () => {
+  const [acknowledgedCookieNotice, setAcknowledgedCookieNotice] = useState(
+    localStorage.getItem("acknowledgedCookieNotice") === "true" || false,
+  );
+
+  const handleAcknowledgingCookieNotice = () => {
+    setAcknowledgedCookieNotice(true);
+    localStorage.setItem("acknowledgedCookieNotice", "true");
+  };
+
+  return (
+    <>
+      {!acknowledgedCookieNotice && (
+        <Fade in={!acknowledgedCookieNotice}>
+          <Box
+            component="footer"
+            sx={{
+              backgroundColor: "neutral.100",
+              left: 0,
+              bottom: 0,
+              p: 3,
+              position: "fixed",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Stack spacing={1} direction="row">
+              <Box display="flex" alignItems="center">
+                <Typography color="neutral.500">
+                  This site uses cookies to enable the necessary functions and
+                  features such as login and account management services.
+                </Typography>
+              </Box>
+              <IconButton onClick={handleAcknowledgingCookieNotice}>
+                <SvgIcon>
+                  <XMarkIcon />
+                </SvgIcon>
+              </IconButton>
+            </Stack>
+          </Box>
+        </Fade>
+      )}
+    </>
+  );
+};
 
 export default Layout;
