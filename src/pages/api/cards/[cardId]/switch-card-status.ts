@@ -18,7 +18,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       case "PUT":
         return await switchCardStatus(req, res);
       default:
-        return res.status(400).json({ error: "Bad Request" });
+        return res
+          .status(400)
+          .json(
+            apiResponse({ success: false, error: { message: "Bad Request" } }),
+          );
     }
   } catch (error) {
     return res.status(500).json(
@@ -59,7 +63,7 @@ const switchCardStatus = async (req: NextApiRequest, res: NextApiResponse) => {
     { stripeAccount: StripeAccountId },
   );
 
-  return res.status(200).json({ success: true });
+  return res.status(200).json(apiResponse({ success: true }));
 };
 
 export default handler;
