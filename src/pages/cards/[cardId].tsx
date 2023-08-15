@@ -163,13 +163,16 @@ const Page = ({
 // for a real application.
 const GenerateTestDataDrawer = ({ cardId }: { cardId: string }) => {
   const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
 
   return (
     <FloatingTestPanel title="Create a test authorization">
       <Typography variant="body2">
         You can create a test authorization by{" "}
         <Link
-          href={`https://dashboard.stripe.com/${session?.accountId}/test/issuing/cards/${cardId}`}
+          href={`https://dashboard.stripe.com/${session.accountId}/test/issuing/cards/${cardId}`}
           target="_blank"
         >
           going to this card&apos;s overview in the Stripe dashboard

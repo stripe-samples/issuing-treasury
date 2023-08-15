@@ -17,6 +17,9 @@ import { isDemoMode } from "src/utils/demo-helpers";
 
 function TestDataCreatePaymentLink() {
   const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
   const router = useRouter();
 
   const [submitted, setSubmitted] = useState(false);
@@ -76,7 +79,7 @@ function TestDataCreatePaymentLink() {
             <Typography>
               You can view the payments{" "}
               <Link
-                href={`https://dashboard.stripe.com/${session?.accountId}/test/payments`}
+                href={`https://dashboard.stripe.com/${session.accountId}/test/payments`}
                 target="_blank"
               >
                 here
