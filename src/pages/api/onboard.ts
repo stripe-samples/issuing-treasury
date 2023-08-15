@@ -73,6 +73,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     ...(isDemoMode() && {
       business_type: "individual",
       business_profile: {
+        name: businessName,
         // Merchant category code for "computer software stores" (https://fs.fldfs.com/iwpapps/pcard/docs/MCCs.pdf)
         mcc: "5734",
         product_description: "Some demo product",
