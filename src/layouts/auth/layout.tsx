@@ -1,100 +1,125 @@
-import { Box, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Link,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import NextLink from "next/link";
 import { ReactNode } from "react";
 
 import { Logo } from "src/components/logo";
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const theme = useTheme();
+
   return (
     <Box
       component="main"
+      display="flex"
+      flex="auto"
+      flexDirection="column"
+      alignItems="center"
+      pt={20}
       sx={{
-        display: "flex",
-        flex: "1 1 auto",
+        backgroundColor: "neutral.50",
       }}
     >
-      <Grid container sx={{ flex: "1 1 auto" }}>
-        <Grid
-          item
-          xs={12}
-          lg={6}
-          sx={{
-            backgroundColor: "background.paper",
-            display: "flex",
-            flexDirection: "column",
-            position: "relative",
-          }}
+      <TopLogoBar />
+      <Box
+        display="flex"
+        width="100%"
+        flexWrap="wrap"
+        justifyContent="space-evenly"
+        maxWidth={theme.spacing(169)}
+      >
+        <Box
+          width="100%"
+          display="flex"
+          maxWidth={theme.spacing(65)}
+          px={4}
+          mb={4}
         >
-          <Box
-            component="header"
-            sx={{
-              left: 0,
-              p: 3,
-              position: "fixed",
-              top: 0,
-              width: "100%",
-            }}
-          >
-            <Box
-              component={NextLink}
-              href="/"
-              sx={{
-                display: "inline-flex",
-                height: 32,
-                width: 32,
-              }}
-            >
-              <Logo />
-            </Box>
+          <Box flexGrow={1}>
+            <WelcomeMessage />
           </Box>
-          {children}
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          lg={6}
-          sx={{
-            alignItems: "center",
-            background:
-              "radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)",
-            color: "white",
-            display: "flex",
-            justifyContent: "center",
-            "& img": {
-              maxWidth: "100%",
-            },
-          }}
+        </Box>
+        <Box
+          width="100%"
+          display="flex"
+          maxWidth={theme.spacing(65)}
+          px={4}
+          mb={4}
         >
-          <Box sx={{ p: 3 }}>
-            <Typography
-              align="center"
-              color="inherit"
-              sx={{
-                fontSize: "24px",
-                lineHeight: "32px",
-                mb: 1,
-              }}
-              variant="h1"
-            >
-              Welcome to{" "}
-              <Box component="a" sx={{ color: "#15B79E" }} target="_blank">
-                Stripe Issuing & Treasury Platform Demo
-              </Box>
-            </Typography>
-            <Typography align="center" sx={{ mb: 3 }} variant="subtitle1">
-              Try embedded finance features and examine our open source GitHub
-            </Typography>
-            <Box>
-              <img
-                alt="Issuing credit cards"
-                src="/assets/issuing-credit-cards.png"
-              />
-            </Box>
+          <Box flexGrow={1}>
+            <Card>
+              <CardContent>{children}</CardContent>
+            </Card>
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   );
 };
+
+const TopLogoBar = () => (
+  <Box
+    component="header"
+    sx={{
+      backgroundColor: "neutral.50",
+      left: 0,
+      p: 3,
+      position: "fixed",
+      top: 0,
+      width: "100%",
+    }}
+  >
+    <Box
+      component={NextLink}
+      href="/"
+      sx={{
+        display: "inline-flex",
+        height: 32,
+        width: 32,
+      }}
+    >
+      <Logo />
+    </Box>
+  </Box>
+);
+
+const WelcomeMessage = () => (
+  <Stack spacing={3}>
+    <Typography variant="h4">
+      Welcome to Stripe Issuing & Treasury Platform Demo
+    </Typography>
+    <Typography color="neutral.500">
+      Experience the power of Stripe&apos;s Issuing and Treasury APIs with our
+      interactive demo app. Discover how easy it is to create virtual cards,
+      manage funds, and streamline financial operations.
+    </Typography>
+    <Typography>
+      Visit our{" "}
+      <Link
+        href="https://stripe.com/docs/financial-services"
+        target="_blank"
+        underline="hover"
+      >
+        docs
+      </Link>{" "}
+      and view{" "}
+      <Link
+        href="https://github.com/stripe-samples/issuing-treasury"
+        target="_blank"
+        underline="hover"
+      >
+        source code
+      </Link>{" "}
+      on GitHub
+    </Typography>
+  </Stack>
+);
 
 export default Layout;

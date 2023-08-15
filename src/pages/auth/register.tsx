@@ -1,7 +1,6 @@
 import { ClipboardIcon } from "@heroicons/react/20/solid";
 import {
   Alert,
-  Box,
   Button,
   IconButton,
   InputAdornment,
@@ -107,117 +106,101 @@ const Page = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          flex: "1 1 auto",
-          alignItems: "center",
-          display: "flex",
-          justifyContent: "center",
-        }}
+      <Stack spacing={1} sx={{ mb: 3 }}>
+        <Typography variant="h5">Create an account</Typography>
+        <Typography color="text.secondary" variant="body2">
+          Already have an account?&nbsp;
+          <Link
+            component={NextLink}
+            href="/auth/login"
+            underline="hover"
+            variant="subtitle2"
+          >
+            Log in
+          </Link>
+        </Typography>
+      </Stack>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
-        <Box sx={{ maxWidth: 550, px: 3, py: "100px", width: "100%" }}>
-          <div>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="h4">Register</Typography>
-              <Typography color="text.secondary" variant="body2">
-                Already have an account?&nbsp;
-                <Link
-                  component={NextLink}
-                  href="/auth/login"
-                  underline="hover"
-                  variant="subtitle2"
-                >
-                  Log in
-                </Link>
-              </Typography>
-            </Stack>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
-            >
-              {({ errors, touched, isSubmitting, values }) => (
-                <Form>
-                  <Stack spacing={3}>
-                    <Field
-                      as={TextField}
-                      error={!!(touched.businessName && errors.businessName)}
-                      fullWidth
-                      helperText={touched.businessName && errors.businessName}
-                      label="Business Name"
-                      name="businessName"
-                      disabled={isDemoMode()}
-                    />
-                    <Field
-                      as={TextField}
-                      error={!!(touched.email && errors.email)}
-                      fullWidth
-                      helperText={touched.email && errors.email}
-                      label="Email Address"
-                      name="email"
-                      disabled={isDemoMode()}
-                      InputProps={{
-                        endAdornment: isDemoMode() ? (
-                          <InputAdornment position="end">
-                            <IconButton
-                              color="primary"
-                              onClick={() =>
-                                navigator.clipboard.writeText(values.email)
-                              }
-                            >
-                              <SvgIcon sx={{ width: "20px", height: "20px" }}>
-                                <ClipboardIcon />
-                              </SvgIcon>
-                            </IconButton>
-                          </InputAdornment>
-                        ) : null,
-                      }}
-                    />
-                    {isDemoMode() && (
-                      <>
-                        <Alert severity="info" color="primary">
-                          Email address and business name are automatically
-                          generated as part of the demo.
-                        </Alert>
-                        <Alert severity="warning">
-                          Copy your generated email address so that you
-                          don&apos;t lose access to your test account.
-                        </Alert>
-                      </>
-                    )}
-                    <Field
-                      as={TextField}
-                      error={!!(touched.password && errors.password)}
-                      fullWidth
-                      helperText={touched.password && errors.password}
-                      label="Password"
-                      name="password"
-                      type="password"
-                    />
-                    <Alert severity="info" color="primary" icon={false}>
-                      Password must be at least 8 characters with a number, a
-                      lowercase character, and an uppercase character.
-                    </Alert>
-                  </Stack>
-                  {errors.submit && (
-                    <Alert severity="error">{errors.submit}</Alert>
-                  )}
-                  <Button
-                    fullWidth
-                    size="large"
-                    sx={{ mt: 3 }}
-                    type="submit"
-                    variant="contained"
-                    disabled={isSubmitting}
+        {({ errors, touched, isSubmitting, values }) => (
+          <Form>
+            <Stack spacing={3}>
+              <Field
+                as={TextField}
+                error={!!(touched.businessName && errors.businessName)}
+                fullWidth
+                helperText={touched.businessName && errors.businessName}
+                label="Business Name"
+                name="businessName"
+                disabled={isDemoMode()}
+              />
+              {isDemoMode() && (
+                <>
+                  <Alert
+                    severity="info"
+                    variant="outlined"
+                    sx={{ borderColor: "info.main" }}
                   >
-                    {isSubmitting ? "Registering..." : "Continue"}
-                  </Button>
-                </Form>
+                    Email address and business name are automatically generated
+                    as part of the demo.
+                  </Alert>
+                </>
               )}
-            </Formik>
-          </div>
-        </Box>
-      </Box>
+              <Field
+                as={TextField}
+                error={!!(touched.email && errors.email)}
+                fullWidth
+                helperText={touched.email && errors.email}
+                label="Email Address"
+                name="email"
+                disabled={isDemoMode()}
+                InputProps={{
+                  endAdornment: isDemoMode() ? (
+                    <InputAdornment position="end">
+                      <IconButton
+                        color="primary"
+                        onClick={() =>
+                          navigator.clipboard.writeText(values.email)
+                        }
+                      >
+                        <SvgIcon sx={{ width: "20px", height: "20px" }}>
+                          <ClipboardIcon />
+                        </SvgIcon>
+                      </IconButton>
+                    </InputAdornment>
+                  ) : null,
+                }}
+              />
+              <Field
+                as={TextField}
+                error={!!(touched.password && errors.password)}
+                fullWidth
+                helperText={
+                  (touched.password && errors.password) ||
+                  "Password must be at least 8 characters with a number, a lowercase character, and an uppercase character."
+                }
+                label="Password"
+                name="password"
+                type="password"
+              />
+            </Stack>
+            {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
+            <Button
+              fullWidth
+              size="large"
+              sx={{ mt: 3 }}
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Registering..." : "Continue"}
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };

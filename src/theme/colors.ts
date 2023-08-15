@@ -40,6 +40,15 @@ export const indigo = withAlphas({
   contrastText: "#FFFFFF",
 });
 
+export const secondary = withAlphas({
+  lightest: "#F8F9FA",
+  light: "#F3F4F6",
+  main: "#384250",
+  dark: "#1C2536",
+  darkest: "#111927",
+  contrastText: "#FFFFFF",
+});
+
 export const success = withAlphas({
   lightest: "#F0FDF9",
   light: "#3FC79A",

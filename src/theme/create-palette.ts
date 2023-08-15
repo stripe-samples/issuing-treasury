@@ -8,6 +8,7 @@ import {
   neutral,
   success,
   warning,
+  secondary,
 } from "src/theme/colors";
 
 export default function createPalette() {
@@ -29,6 +30,7 @@ export default function createPalette() {
     info,
     neutral,
     primary: indigo,
+    secondary,
     success,
     text: {
       primary: neutral[900],
