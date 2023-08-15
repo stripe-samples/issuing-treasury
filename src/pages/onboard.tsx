@@ -102,7 +102,15 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isSubmitting, values, setFieldValue }) => {
+        {({
+          errors,
+          touched,
+          isSubmitting,
+          values,
+          dirty,
+          isValid,
+          setFieldValue,
+        }) => {
           const submitButtonText = values.skipOnboarding
             ? isSubmitting
               ? "Entering demo..."
@@ -160,7 +168,7 @@ const Page = () => {
                   sx={{ mt: 3 }}
                   type="submit"
                   variant="contained"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !isValid}
                 >
                   {submitButtonText}
                 </Button>
