@@ -107,7 +107,6 @@ const Page = () => {
           touched,
           isSubmitting,
           values,
-          dirty,
           isValid,
           setFieldValue,
         }) => {
@@ -290,7 +289,7 @@ const ConnectOnboardingGuideDialog = ({
       <Button
         autoFocus
         variant="contained"
-        onClick={(e) => {
+        onClick={() => {
           setShowConnectOnboardingGuide(false);
         }}
       >
