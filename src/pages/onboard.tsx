@@ -1,10 +1,7 @@
 import {
-  Box,
   Stack,
   Typography,
   Button,
-  Alert,
-  Chip,
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
@@ -112,65 +109,6 @@ const Page = () => {
                 ? "Continuing onboarding..."
                 : "Continue onboarding"}
             </Button>
-            <Alert severity="info" color="primary">
-              <Stack spacing={2}>
-                <Typography variant="body2">
-                  Welcome to our interactive onboarding simulation! To complete
-                  the process, simply follow these steps:
-                </Typography>
-                <ol>
-                  <li>
-                    Click &quot;Continue onboarding&quot; to initiate the
-                    simulation. You&apos;ll be guided through the verification
-                    steps.
-                  </li>
-                  <li>
-                    When prompted, use the following test details:
-                    <ul>
-                      <li>
-                        Test Phone Number:{" "}
-                        <Chip
-                          variant="outlined"
-                          label="000 000 0000"
-                          size="small"
-                        />
-                      </li>
-                      <li>
-                        Test Email:{" "}
-                        <Chip
-                          variant="outlined"
-                          label="Enter any fake email"
-                          size="small"
-                        />
-                      </li>
-                      <li>
-                        Test SMS Verification Code: Click{" "}
-                        <Chip
-                          variant="outlined"
-                          label="Use test code"
-                          size="small"
-                        />
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    Finally click{" "}
-                    <Chip
-                      variant="outlined"
-                      label="Skip this step"
-                      size="small"
-                    />{" "}
-                    to skip &quot;Verifying your identity&quot;.
-                  </li>
-                </ol>
-                <Typography variant="body2">
-                  It&apos;s important to know that all your required account
-                  information has been automatically generated for this
-                  simulation. Any attempt to use genuine personal information
-                  will result in a mismatch, preventing successful onboarding.
-                </Typography>
-              </Stack>
-            </Alert>
           </>
         )}
         <Button
