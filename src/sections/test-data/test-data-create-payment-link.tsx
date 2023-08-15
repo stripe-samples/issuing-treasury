@@ -63,6 +63,7 @@ function TestDataCreatePaymentLink() {
             <Link
               href="https://stripe.com/docs/payments/payment-links"
               target="_blank"
+              underline="none"
             >
               PaymentLink
             </Link>{" "}
@@ -81,6 +82,7 @@ function TestDataCreatePaymentLink() {
               <Link
                 href={`https://dashboard.stripe.com/${session.accountId}/test/payments`}
                 target="_blank"
+                underline="none"
               >
                 here
               </Link>{" "}

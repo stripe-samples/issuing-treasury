@@ -8,11 +8,11 @@ import {
   IconButton,
   MenuItem,
   MenuList,
+  Link,
   Popover,
   SvgIcon,
   Typography,
 } from "@mui/material";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 
@@ -84,6 +84,7 @@ export const AccountPopover = ({
             <Link
               href={`https://dashboard.stripe.com/${session.accountId}/test/issuing/overview`}
               target="_blank"
+              underline="none"
             >
               {session.accountId}
               <SvgIcon sx={{ ml: 1, width: "20px", height: "20px" }}>

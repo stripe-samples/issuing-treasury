@@ -1,6 +1,5 @@
 import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { Stack, Typography, SvgIcon } from "@mui/material";
-import Link from "next/link";
+import { Stack, Typography, SvgIcon, Link } from "@mui/material";
 import Stripe from "stripe";
 
 type FlowDetailsWithRegulatoryReceiptUrl<T extends string> = T extends
