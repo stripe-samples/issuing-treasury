@@ -61,145 +61,129 @@ const Page = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          flex: "1 1 auto",
-          alignItems: "center",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <Box sx={{ maxWidth: 550, px: 3, py: "100px", width: "100%" }}>
-          <Stack spacing={1} sx={{ mb: 3 }}>
-            <Typography variant="h4">Finish onboarding</Typography>
-          </Stack>
-          <Stack spacing={3}>
-            <Typography color="text.secondary" variant="body2">
-              To have access to all features, please complete onboarding.
-            </Typography>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="skipOnboarding"
-                  id="accept-terms"
-                  checked={skipOnboarding}
-                  onChange={(e) => {
-                    setSkipOnboarding(e.target.checked);
-                  }}
-                />
-              }
-              label={
-                <Typography variant="body2">
-                  Skip onboarding and enter the demo
-                </Typography>
-              }
+      <Stack spacing={1} sx={{ mb: 3 }}>
+        <Typography variant="h5">Complete your profile</Typography>
+      </Stack>
+      <Stack spacing={3}>
+        <Typography color="text.secondary" variant="body2">
+          To have access to all features, please complete onboarding.
+        </Typography>
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="skipOnboarding"
+              id="accept-terms"
+              checked={skipOnboarding}
+              onChange={(e) => {
+                setSkipOnboarding(e.target.checked);
+              }}
             />
-            {skipOnboarding ? (
-              <>
-                <Button
-                  fullWidth
-                  size="large"
-                  sx={{ mt: 3 }}
-                  variant="contained"
-                  onClick={handleSkipOnboarding}
-                  disabled={isSkippingOnboarding}
-                >
-                  {isSkippingOnboarding ? "Entering demo..." : "Enter demo"}
-                </Button>
-                <Alert severity="info" color="primary">
-                  We will automatically generate your account information with
-                  demo data. You will not be prompted to onboard again.
-                </Alert>
-              </>
-            ) : (
-              <>
-                <Button
-                  fullWidth
-                  size="large"
-                  sx={{ mt: 3 }}
-                  variant="contained"
-                  onClick={handleContinueOnboarding}
-                  disabled={isContinuingOnboarding}
-                >
-                  {isContinuingOnboarding
-                    ? "Continuing onboarding..."
-                    : "Continue onboarding"}
-                </Button>
-                <Alert severity="info" color="primary">
-                  <Stack spacing={2}>
-                    <Typography variant="body2">
-                      Welcome to our interactive onboarding simulation! To
-                      complete the process, simply follow these steps:
-                    </Typography>
-                    <ol>
-                      <li>
-                        Click &quot;Continue onboarding&quot; to initiate the
-                        simulation. You&apos;ll be guided through the
-                        verification steps.
-                      </li>
-                      <li>
-                        When prompted, use the following test details:
-                        <ul>
-                          <li>
-                            Test Phone Number:{" "}
-                            <Chip
-                              variant="outlined"
-                              label="000 000 0000"
-                              size="small"
-                            />
-                          </li>
-                          <li>
-                            Test Email:{" "}
-                            <Chip
-                              variant="outlined"
-                              label="Enter any fake email"
-                              size="small"
-                            />
-                          </li>
-                          <li>
-                            Test SMS Verification Code: Click{" "}
-                            <Chip
-                              variant="outlined"
-                              label="Use test code"
-                              size="small"
-                            />
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        Finally click{" "}
-                        <Chip
-                          variant="outlined"
-                          label="Skip this step"
-                          size="small"
-                        />{" "}
-                        to skip &quot;Verifying your identity&quot;.
-                      </li>
-                    </ol>
-                    <Typography variant="body2">
-                      It&apos;s important to know that all your required account
-                      information has been automatically generated for this
-                      simulation. Any attempt to use genuine personal
-                      information will result in a mismatch, preventing
-                      successful onboarding.
-                    </Typography>
-                  </Stack>
-                </Alert>
-              </>
-            )}
+          }
+          label={
+            <Typography variant="body2">
+              Skip onboarding and enter the demo
+            </Typography>
+          }
+        />
+        {skipOnboarding ? (
+          <>
             <Button
               fullWidth
               size="large"
               sx={{ mt: 3 }}
               variant="contained"
-              onClick={handleLogout}
-              disabled={isLoggingOut}
+              onClick={handleSkipOnboarding}
+              disabled={isSkippingOnboarding}
             >
-              Log out
+              {isSkippingOnboarding ? "Entering demo..." : "Enter demo"}
             </Button>
-          </Stack>
-        </Box>
-      </Box>
+          </>
+        ) : (
+          <>
+            <Button
+              fullWidth
+              size="large"
+              sx={{ mt: 3 }}
+              variant="contained"
+              onClick={handleContinueOnboarding}
+              disabled={isContinuingOnboarding}
+            >
+              {isContinuingOnboarding
+                ? "Continuing onboarding..."
+                : "Continue onboarding"}
+            </Button>
+            <Alert severity="info" color="primary">
+              <Stack spacing={2}>
+                <Typography variant="body2">
+                  Welcome to our interactive onboarding simulation! To complete
+                  the process, simply follow these steps:
+                </Typography>
+                <ol>
+                  <li>
+                    Click &quot;Continue onboarding&quot; to initiate the
+                    simulation. You&apos;ll be guided through the verification
+                    steps.
+                  </li>
+                  <li>
+                    When prompted, use the following test details:
+                    <ul>
+                      <li>
+                        Test Phone Number:{" "}
+                        <Chip
+                          variant="outlined"
+                          label="000 000 0000"
+                          size="small"
+                        />
+                      </li>
+                      <li>
+                        Test Email:{" "}
+                        <Chip
+                          variant="outlined"
+                          label="Enter any fake email"
+                          size="small"
+                        />
+                      </li>
+                      <li>
+                        Test SMS Verification Code: Click{" "}
+                        <Chip
+                          variant="outlined"
+                          label="Use test code"
+                          size="small"
+                        />
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    Finally click{" "}
+                    <Chip
+                      variant="outlined"
+                      label="Skip this step"
+                      size="small"
+                    />{" "}
+                    to skip &quot;Verifying your identity&quot;.
+                  </li>
+                </ol>
+                <Typography variant="body2">
+                  It&apos;s important to know that all your required account
+                  information has been automatically generated for this
+                  simulation. Any attempt to use genuine personal information
+                  will result in a mismatch, preventing successful onboarding.
+                </Typography>
+              </Stack>
+            </Alert>
+          </>
+        )}
+        <Button
+          fullWidth
+          size="large"
+          variant="contained"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          sx={{ mt: 3 }}
+        >
+          Log out
+        </Button>
+      </Stack>
     </>
   );
 };

@@ -72,90 +72,69 @@ const Page = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          backgroundColor: "background.paper",
-          flex: "1 1 auto",
-          alignItems: "center",
-          display: "flex",
-          justifyContent: "center",
-        }}
+      <Stack spacing={1} sx={{ mb: 3 }}>
+        <Typography variant="h5">Login</Typography>
+        <Typography color="text.secondary" variant="body2">
+          Don&apos;t have an account? &nbsp;
+          <Link
+            component={NextLink}
+            href="/auth/register"
+            underline="hover"
+            variant="subtitle2"
+          >
+            Register
+          </Link>
+        </Typography>
+      </Stack>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
-        <Box
-          sx={{
-            maxWidth: 550,
-            px: 3,
-            py: "100px",
-            width: "100%",
-          }}
-        >
-          <div>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="h4">Login</Typography>
-              <Typography color="text.secondary" variant="body2">
-                Don&apos;t have an account? &nbsp;
-                <Link
-                  component={NextLink}
-                  href="/auth/register"
-                  underline="hover"
-                  variant="subtitle2"
-                >
-                  Register
-                </Link>
-              </Typography>
+        {({ errors, touched, isSubmitting }) => (
+          <Form>
+            <Stack spacing={3}>
+              <Field
+                as={TextField}
+                error={!!(touched.email && errors.email)}
+                fullWidth
+                helperText={touched.email && errors.email}
+                label="Email"
+                name="email"
+              />
+              <Field
+                as={TextField}
+                error={!!(touched.password && errors.password)}
+                fullWidth
+                helperText={touched.password && errors.password}
+                label="Password"
+                name="password"
+                type="password"
+              />
             </Stack>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
+            {errors.submit && (
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                mt={3}
+              >
+                <Alert severity="error">{errors.submit}</Alert>
+              </Box>
+            )}
+            <Button
+              fullWidth
+              size="large"
+              sx={{ mt: 3 }}
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
             >
-              {({ errors, touched, isSubmitting }) => (
-                <Form>
-                  <Stack spacing={3}>
-                    <Field
-                      as={TextField}
-                      error={!!(touched.email && errors.email)}
-                      fullWidth
-                      helperText={touched.email && errors.email}
-                      label="Email"
-                      name="email"
-                    />
-                    <Field
-                      as={TextField}
-                      error={!!(touched.password && errors.password)}
-                      fullWidth
-                      helperText={touched.password && errors.password}
-                      label="Password"
-                      name="password"
-                      type="password"
-                    />
-                  </Stack>
-                  {errors.submit && (
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      mt={3}
-                    >
-                      <Alert severity="error">{errors.submit}</Alert>
-                    </Box>
-                  )}
-                  <Button
-                    fullWidth
-                    size="large"
-                    sx={{ mt: 3 }}
-                    type="submit"
-                    variant="contained"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Logging in..." : "Continue"}
-                  </Button>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </Box>
-      </Box>
+              {isSubmitting ? "Logging in..." : "Continue"}
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };
