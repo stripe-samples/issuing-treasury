@@ -89,6 +89,25 @@ After necessary setups, launch the application with `npm run dev`.
 
 *Note: This application serves as an example and should not proceed to production deployment as it is.*
 
+## Demo Mode
+
+### Entering Connect Onboarding Test Data
+
+This section applies to you if:
+* You're running the sample app in demo mode (using the `NEXT_PUBLIC_DEMO_MODE="true"` environment variable) or are trying out the onboarding process through our [baas.stripe.dev](https://baas.stripe.dev) deployment
+* You've selected to not "Skip onboarding using prefilled info" in the "Complete your profile" page (`/onboard`)
+
+You will need to enter the following test data to successfully complete the onboarding process. Here are the steps:
+
+1. Click "Continue" to initiate the simulation. You'll be guided through the verification steps.
+2. When prompted, use the following test details:
+  * Test Phone Number: `000 000 0000`
+  * Test Email: `Enter any fake email`
+  * Test SMS Verification Code: Click `Use test code`
+3. Finally click `Skip this step` to skip "Verifying your identity".
+
+It's important to know that in demo mode, all your required account information is automatically generated and submitted when you click "Continue". Any attempt to use genuine personal information will result in a mismatch, preventing successful onboarding.
+
 ## Elevate Your Development with Devias Pro
 
 The free Devias theme, licensed under MIT, played a vital role in the swift rewrite of this sample app. Beyond delivering an elegant UX, this theme seamlessly integrated with Material UI and React, enabling us to create a compelling and high-quality sample app.
