@@ -179,6 +179,7 @@ const Page = () => {
           variant="contained"
           onClick={handleLogout}
           disabled={isLoggingOut}
+          color="secondary"
           sx={{ mt: 3 }}
         >
           Log out
