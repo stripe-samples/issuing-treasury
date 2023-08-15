@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
 import { prisma } from "src/db";
+import { apiResponse } from "src/types/api-response";
 import { isDemoMode } from "src/utils/demo-helpers";
 import stripe from "src/utils/stripe-loader";
 
@@ -10,7 +11,6 @@ const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
 };
 const validationSchema = Yup.object().shape({
-  businessName: Yup.string().max(255).required("Business name is required"),
   email: Yup.string()
     .email("Must be a valid email")
     .max(255)
@@ -27,27 +27,53 @@ const validationSchema = Yup.object().shape({
 });
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") {
-    return res.status(400).json({ error: "Bad Request" });
+  try {
+    switch (req.method) {
+      case "POST":
+        return await register(req, res);
+      default:
+        return res
+          .status(400)
+          .json(
+            apiResponse({ success: false, error: { message: "Bad Request" } }),
+          );
+    }
+  } catch (error) {
+    return res.status(500).json(
+      apiResponse({
+        success: false,
+        error: {
+          message: (error as Error).message,
+          details: (error as Error).stack,
+        },
+      }),
+    );
   }
+};
 
-  const { businessName, email, password } = req.body;
+const register = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { email, password } = req.body;
 
   try {
-    await validationSchema.validate(
-      { businessName, email, password },
-      { abortEarly: false },
-    );
+    await validationSchema.validate({ email, password }, { abortEarly: false });
   } catch (error) {
-    return res.status(400).json({ error: (error as Error).message });
+    return res.status(400).json(
+      apiResponse({
+        success: false,
+        error: { message: (error as Error).message },
+      }),
+    );
   }
 
   // Check if user exists
   const user = await prisma.user.findFirst({ where: { email } });
   if (user) {
-    return res.status(400).json({
-      error: "Account already exists.",
-    });
+    return res.status(400).json(
+      apiResponse({
+        success: false,
+        error: { message: "Account already exists" },
+      }),
+    );
   }
 
   // Create a Connected Account
@@ -55,13 +81,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     type: "custom",
     country: "US",
     email: email,
-    company: {
-      name: businessName,
-    },
-    // FOR-DEMO-ONLY: We're hardcoding the business type to individual. You should either remove this line or modify it
-    // to collect the real business type from the user.
-    business_type: "individual",
     ...(isDemoMode() && {
+      // FOR-DEMO-ONLY: We're hardcoding the business type to individual. You should either remove this line or modify it
+      // to collect the real business type from the user.
+      business_type: "individual",
       // FOR-DEMO-ONLY: We're hardcoding the SSN to 000-00-0000 (Test SSN docs: https://stripe.com/docs/connect/testing#test-personal-id-numbers).
       // You should either remove this line or modify it to collect the actual SSN from the user in a real application.
       individual: {
@@ -109,7 +132,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     { stripeAccount: account.id },
   );
 
-  return res.status(200).json({ message: "Account created successfully" });
+  return res.status(200).json(apiResponse({ success: true }));
 };
 
 export default handler;

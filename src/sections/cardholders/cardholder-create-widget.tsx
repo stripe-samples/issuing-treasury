@@ -195,9 +195,7 @@ const CreateCardholderForm = ({
             )}
             <Grid item xs={12}>
               <FormControlLabel
-                control={
-                  <Field as={Checkbox} name="accept" id="accept-terms" />
-                }
+                control={<Field as={Checkbox} name="accept" />}
                 label={
                   <Typography variant="body2">
                     This cardholder has agreed to the{" "}

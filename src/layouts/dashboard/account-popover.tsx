@@ -8,11 +8,11 @@ import {
   IconButton,
   MenuItem,
   MenuList,
+  Link,
   Popover,
   SvgIcon,
   Typography,
 } from "@mui/material";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 
@@ -28,6 +28,9 @@ export const AccountPopover = ({
   open: boolean;
 }) => {
   const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -54,7 +57,7 @@ export const AccountPopover = ({
       >
         <Typography variant="overline">Business Name</Typography>
         <Typography color="text.secondary" variant="body2">
-          {session?.businessName}
+          {session.businessName}
         </Typography>
       </Box>
       <Divider />
@@ -66,9 +69,9 @@ export const AccountPopover = ({
       >
         <Typography variant="overline">Account</Typography>
         <Typography color="text.secondary" variant="body2" noWrap>
-          {session?.email}
+          {session.email}
           <IconButton
-            onClick={() => navigator.clipboard.writeText(session?.email || "")}
+            onClick={() => navigator.clipboard.writeText(session.email || "")}
             sx={{ p: 0, ml: 1.5 }}
           >
             <SvgIcon sx={{ width: "20px", height: "20px" }}>
@@ -79,10 +82,11 @@ export const AccountPopover = ({
         {(!isDemoMode() || router.query.debug) && (
           <Typography color="text.secondary" variant="body2" mt={1}>
             <Link
-              href={`https://dashboard.stripe.com/${session?.accountId}/test/issuing/overview`}
+              href={`https://dashboard.stripe.com/${session.accountId}/test/issuing/overview`}
               target="_blank"
+              underline="none"
             >
-              {session?.accountId}
+              {session.accountId}
               <SvgIcon sx={{ ml: 1, width: "20px", height: "20px" }}>
                 <ArrowTopRightOnSquareIcon />
               </SvgIcon>

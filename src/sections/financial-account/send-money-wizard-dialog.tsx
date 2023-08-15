@@ -18,6 +18,7 @@ import {
   FormControl,
   MenuItem,
   Select,
+  Link,
   Alert,
   SvgIcon,
 } from "@mui/material";
@@ -30,7 +31,6 @@ import {
   FormikValues,
   ErrorMessage,
 } from "formik";
-import Link from "next/link";
 import React, { ChangeEvent, RefObject, useRef, useState } from "react";
 import * as Yup from "yup";
 
@@ -526,6 +526,7 @@ const ConfirmingTransferForm = ({
                   <Link
                     target="_blank"
                     href="https://stripe.com/docs/api/treasury/outbound_payments/test_mode_fail"
+                    underline="none"
                   >
                     docs
                   </Link>{" "}

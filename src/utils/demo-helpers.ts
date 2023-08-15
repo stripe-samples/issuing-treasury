@@ -17,3 +17,5 @@ export const generateDemoEmail = () => {
 
   return `demo-user-${alphanumericPart}@stripe.dev`;
 };
+
+export const TOS_ACCEPTANCE = { date: 1691518261, ip: "127.0.0.1" };

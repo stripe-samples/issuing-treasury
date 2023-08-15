@@ -25,6 +25,9 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
 
   const content = (
     <Scrollbar
@@ -51,7 +54,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           </Box>
           <Box width="100%">
             <Typography color="inherit" variant="subtitle1">
-              {session?.businessName}
+              {session.businessName}
             </Typography>
           </Box>
         </Stack>
@@ -132,8 +135,9 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             sx={{ mt: 2 }}
             target="_blank"
             variant="contained"
+            color="secondary"
           >
-            Issuing and Treasury Docs
+            View on GitHub
           </Button>
         </Box>
       </Box>

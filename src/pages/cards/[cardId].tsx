@@ -7,6 +7,7 @@ import {
   CardContent,
   Container,
   Grid,
+  Link,
   Stack,
   SvgIcon,
   Typography,
@@ -14,7 +15,6 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { GetServerSidePropsContext } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import React, { ReactNode } from "react";
@@ -163,14 +163,18 @@ const Page = ({
 // for a real application.
 const GenerateTestDataDrawer = ({ cardId }: { cardId: string }) => {
   const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
 
   return (
     <FloatingTestPanel title="Create a test authorization">
       <Typography variant="body2">
         You can create a test authorization by{" "}
         <Link
-          href={`https://dashboard.stripe.com/${session?.accountId}/test/issuing/cards/${cardId}`}
+          href={`https://dashboard.stripe.com/${session.accountId}/test/issuing/cards/${cardId}`}
           target="_blank"
+          underline="none"
         >
           going to this card&apos;s overview in the Stripe dashboard
           <SvgIcon

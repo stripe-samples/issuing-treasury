@@ -1,26 +1,77 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
+import * as Yup from "yup";
 
-import { isDemoMode } from "src/utils/demo-helpers";
+import { apiResponse } from "src/types/api-response";
+import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripe from "src/utils/stripe-loader";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") {
-    return res.status(400).json({ error: "Bad Request" });
-  }
+const validationSchema = Yup.object().shape({
+  businessName: Yup.string().max(255).required("Business name is required"),
+  ...(isDemoMode() && {
+    skipOnboarding: Yup.boolean().required("Skip onboarding choice required"),
+  }),
+});
 
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    switch (req.method) {
+      case "POST":
+        return await onboard(req, res);
+      default:
+        return res
+          .status(400)
+          .json(
+            apiResponse({ success: false, error: { message: "Bad Request" } }),
+          );
+    }
+  } catch (error) {
+    return res.status(500).json(
+      apiResponse({
+        success: false,
+        error: {
+          message: (error as Error).message,
+          details: (error as Error).stack,
+        },
+      }),
+    );
+  }
+};
+
+const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
   const email = session.email;
   const accountId = session.accountId;
 
-  if (isDemoMode()) {
-    const skipOnboarding = req.body.skipOnboarding === true;
+  const {
+    businessName,
+    skipOnboarding,
+  }: { businessName: string; skipOnboarding?: boolean } = req.body;
 
-    const tosAcceptance = { date: 1691518261, ip: "127.0.0.1" };
+  try {
+    await validationSchema.validate(
+      { businessName, skipOnboarding },
+      { abortEarly: false },
+    );
+  } catch (error) {
+    return res.status(400).json(
+      apiResponse({
+        success: false,
+        error: { message: (error as Error).message },
+      }),
+    );
+  }
+
+  const onboardingData: Stripe.AccountUpdateParams = {
+    business_profile: { name: businessName },
     // TODO: Only update the fields during the demo that are outstanding to speed things up
-    const fakeOnboardingData: Stripe.AccountUpdateParams = {
+    // FOR-DEMO-ONLY: We're using fake data for illustrative purposes in this demo. The fake data will be used to bypass
+    // showing the Stripe Connect Onboarding forms. In a real application, you would not do this so that you can collect
+    // the real KYC data from your users.
+    ...(isDemoMode() && {
+      business_type: "individual",
       business_profile: {
         // Merchant category code for "computer software stores" (https://fs.fldfs.com/iwpapps/pcard/docs/MCCs.pdf)
         mcc: "5734",
@@ -48,32 +99,36 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // Fake phone number: https://stripe.com/docs/connect/testing
         phone: "0000000000",
       },
-      ...(skipOnboarding && { tos_acceptance: tosAcceptance }),
+      ...(skipOnboarding && { tos_acceptance: TOS_ACCEPTANCE }),
       // Faking Terms of Service acceptances
       settings: {
         card_issuing: {
-          tos_acceptance: tosAcceptance,
+          tos_acceptance: TOS_ACCEPTANCE,
         },
         treasury: {
-          tos_acceptance: tosAcceptance,
+          tos_acceptance: TOS_ACCEPTANCE,
         },
       },
-    };
+    }),
+  };
 
-    // FOR-DEMO-ONLY: We're using fake data for illustrative purposes in this demo. The fake data will be used to bypass
-    // showing the Stripe Connect Onboarding forms. In a real application, you would not do this so that you can collect
-    // the real KYC data from your users.
-    await stripe.accounts.update(accountId, fakeOnboardingData);
+  await stripe.accounts.update(accountId, onboardingData);
 
-    if (skipOnboarding) {
-      return res.status(200).json({ accountId });
-    }
+  // FOR-DEMO-ONLY: We're going to check if the user wants to skip the onboarding process. If they do, we'll redirect to
+  // the home page. In a real application, you would not allow this bypass so that you can collect the real KYC data
+  // from your users.
+  if (isDemoMode() && skipOnboarding) {
+    return res
+      .status(200)
+      .json(apiResponse({ success: true, data: { redirectUrl: "/" } }));
   }
 
   // This is the Connect Onboarding URL that will be used to collect KYC information from the user
   const onboardingUrl = await createAccountOnboardingUrl(accountId);
 
-  return res.status(200).json({ accountId, redirectUrl: onboardingUrl });
+  return res
+    .status(200)
+    .json(apiResponse({ success: true, data: { redirectUrl: onboardingUrl } }));
 };
 
 export default handler;

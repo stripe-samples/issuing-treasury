@@ -98,6 +98,7 @@ function TestDataCreatePayout(props: {
             <Link
               href="https://stripe.com/docs/treasury/moving-money/payouts"
               target="_blank"
+              underline="none"
             >
               this page
             </Link>
@@ -108,6 +109,7 @@ function TestDataCreatePayout(props: {
             <Link
               href="https://stripe.com/docs/connect/account-balances"
               target="_blank"
+              underline="none"
             >
               Available Balance
             </Link>{" "}

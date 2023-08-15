@@ -105,7 +105,7 @@ const WelcomeMessage = () => (
       <Link
         href="https://stripe.com/docs/financial-services"
         target="_blank"
-        underline="hover"
+        underline="none"
       >
         docs
       </Link>{" "}
@@ -113,7 +113,7 @@ const WelcomeMessage = () => (
       <Link
         href="https://github.com/stripe-samples/issuing-treasury"
         target="_blank"
-        underline="hover"
+        underline="none"
       >
         source code
       </Link>{" "}
