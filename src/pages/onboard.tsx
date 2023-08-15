@@ -1,3 +1,4 @@
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import {
   Stack,
   Typography,
@@ -6,10 +7,18 @@ import {
   FormControlLabel,
   Alert,
   TextField,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  Chip,
+  Link,
+  Divider,
+  SvgIcon,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { signOut } from "next-auth/react";
-import React, { ReactNode, useState } from "react";
+import React, { ChangeEvent, ReactNode, useState } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
@@ -25,6 +34,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const Page = () => {
+  const [showConnectOnboardingGuide, setShowConnectOnboardingGuide] =
+    useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const initialValues = {
@@ -91,7 +102,15 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isSubmitting, values }) => {
+        {({
+          errors,
+          touched,
+          isSubmitting,
+          values,
+          dirty,
+          isValid,
+          setFieldValue,
+        }) => {
           const submitButtonText = values.skipOnboarding
             ? isSubmitting
               ? "Entering demo..."
@@ -112,17 +131,33 @@ const Page = () => {
                   name="businessName"
                 />
                 {isDemoMode() && (
-                  <Field
-                    type="checkbox"
-                    as={FormControlLabel}
-                    name="skipOnboarding"
-                    control={<Checkbox />}
-                    label={
-                      <Typography variant="body2">
-                        Skip onboarding using prefilled info
-                      </Typography>
-                    }
-                  />
+                  <>
+                    <Field
+                      type="checkbox"
+                      as={FormControlLabel}
+                      name="skipOnboarding"
+                      control={<Checkbox />}
+                      onChange={(e: ChangeEvent) => {
+                        const target = e.target as HTMLInputElement;
+                        const checked = target.checked;
+                        if (!checked) {
+                          setShowConnectOnboardingGuide(true);
+                        }
+                        setFieldValue("skipOnboarding", checked);
+                      }}
+                      label={
+                        <Typography variant="body2">
+                          Skip onboarding using prefilled info
+                        </Typography>
+                      }
+                    />
+                    <ConnectOnboardingGuideDialog
+                      showConnectOnboardingGuide={showConnectOnboardingGuide}
+                      setShowConnectOnboardingGuide={
+                        setShowConnectOnboardingGuide
+                      }
+                    />
+                  </>
                 )}
                 {errors.submit && (
                   <Alert severity="error">{errors.submit}</Alert>
@@ -133,7 +168,7 @@ const Page = () => {
                   sx={{ mt: 3 }}
                   type="submit"
                   variant="contained"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !isValid}
                 >
                   {submitButtonText}
                 </Button>
@@ -156,6 +191,114 @@ const Page = () => {
     </>
   );
 };
+
+const ConnectOnboardingGuideDialog = ({
+  showConnectOnboardingGuide,
+  setShowConnectOnboardingGuide,
+}: {
+  showConnectOnboardingGuide: boolean;
+  setShowConnectOnboardingGuide: (show: boolean) => void;
+}) => (
+  <Dialog
+    open={showConnectOnboardingGuide}
+    onClose={() => setShowConnectOnboardingGuide(false)}
+  >
+    <DialogTitle>Enter Onboarding Test Data</DialogTitle>
+    <Divider />
+    <DialogContent>
+      {/* <DialogContentText>Hello World</DialogContentText> */}
+      <Stack spacing={2}>
+        <Typography variant="body2">
+          You&apos;ve selected to onboard using our interactive onboarding
+          simulation. To complete the process, simply follow these steps:
+        </Typography>
+        <Typography variant="body2">
+          These steps are also available{" "}
+          <Link
+            href="https://github.com/stripe-samples/issuing-treasury/tree/main#entering-connect-onboarding-test-data"
+            target="_blank"
+            underline="none"
+          >
+            here
+            <SvgIcon
+              sx={{
+                ml: 0.5,
+                width: "20px",
+                height: "20px",
+                verticalAlign: "top",
+              }}
+            >
+              <ArrowTopRightOnSquareIcon />
+            </SvgIcon>
+          </Link>
+          .
+        </Typography>
+        <ol>
+          <li>
+            <Typography variant="body2">
+              Click &quot;Continue&quot; to initiate the simulation. You&apos;ll
+              be guided through the verification steps.
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="body2">
+              When prompted, use the following test details:
+            </Typography>
+            <ul>
+              <li>
+                <Typography variant="body2">
+                  Test Phone Number:{" "}
+                  <Chip variant="outlined" label="000 000 0000" size="small" />
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body2">
+                  Test Email:{" "}
+                  <Chip
+                    variant="outlined"
+                    label="Enter any fake email"
+                    size="small"
+                  />
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body2">
+                  Test SMS Verification Code: Click{" "}
+                  <Chip variant="outlined" label="Use test code" size="small" />
+                </Typography>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <Typography variant="body2">
+              Finally click{" "}
+              <Chip variant="outlined" label="Skip this step" size="small" /> to
+              skip &quot;Verifying your identity&quot;.
+            </Typography>
+          </li>
+        </ol>
+        <Typography variant="body2">
+          It&apos;s important to know that all your required account information
+          has been automatically generated for this simulation. Any attempt to
+          use genuine personal information will result in a mismatch, preventing
+          successful onboarding.
+        </Typography>
+      </Stack>
+    </DialogContent>
+    <Divider />
+    <DialogActions>
+      <Button
+        autoFocus
+        variant="contained"
+        onClick={(e) => {
+          setShowConnectOnboardingGuide(false);
+        }}
+      >
+        Confirm
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
 
 Page.getLayout = (page: ReactNode) => <AuthLayout>{page}</AuthLayout>;
 
