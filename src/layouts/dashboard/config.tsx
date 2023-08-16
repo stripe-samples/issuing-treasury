@@ -1,7 +1,6 @@
 import {
   CreditCardIcon,
   BanknotesIcon,
-  CogIcon,
   ChartBarIcon,
   UsersIcon,
   WrenchScrewdriverIcon,

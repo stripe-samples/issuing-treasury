@@ -5,7 +5,6 @@ import React, { ReactNode } from "react";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
 import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
-import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import stripe from "src/utils/stripe-loader";
 

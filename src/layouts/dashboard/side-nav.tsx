@@ -10,7 +10,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import Image from "next/image";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
