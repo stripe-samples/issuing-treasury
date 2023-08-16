@@ -27,7 +27,7 @@ Additionally, a *Test Data* section helps to understand different mechanisms for
   - Treasury: [Contact sales](https://go.stripe.global/treasury-inquiry)
 - **Stripe API keys**: Obtain your keys via <https://dashboard.stripe.com/test/apikeys>
 
-## Deploy Demo on Render.com
+## Deploy Demo on Render
 
 You can get started using this app without any coding experience. It can be deployed directly to Render. Just click the button below.
 
