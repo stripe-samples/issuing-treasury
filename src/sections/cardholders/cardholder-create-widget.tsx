@@ -46,10 +46,12 @@ const CreateCardholderForm = ({
     state: Yup.string().required("State / Province is required"),
     postalCode: Yup.string().required("ZIP / Postal code is required"),
     country: Yup.string().required("Country is required"),
-    accept: Yup.boolean().oneOf(
-      [true],
-      "You must accept the terms and privacy policy",
-    ),
+    accept: Yup.boolean()
+      .required("The terms of service and privacy policy must be accepted.")
+      .oneOf(
+        [true],
+        "The terms of service and privacy policy must be accepted.",
+      ),
   });
 
   const initialValues = {
@@ -188,14 +190,11 @@ const CreateCardholderForm = ({
                 <MenuItem value="US">United States</MenuItem>
               </Field>
             </Grid>
-            {errorText !== "" && (
-              <Grid item xs={12}>
-                <Alert severity="error">{errorText}</Alert>
-              </Grid>
-            )}
             <Grid item xs={12}>
-              <FormControlLabel
-                control={<Field as={Checkbox} name="accept" />}
+              <Field
+                type="checkbox"
+                as={FormControlLabel}
+                control={<Checkbox />}
                 label={
                   <Typography variant="body2">
                     This cardholder has agreed to the{" "}
@@ -208,8 +207,16 @@ const CreateCardholderForm = ({
                     </Link>
                   </Typography>
                 }
+                name="accept"
+                error={touched.accept && Boolean(errors.accept)}
+                helperText={touched.accept && errors.accept}
               />
             </Grid>
+            {errorText !== "" && (
+              <Grid item xs={12}>
+                <Alert severity="error">{errorText}</Alert>
+              </Grid>
+            )}
           </Grid>
         </Form>
       )}
@@ -234,6 +241,7 @@ const CardholderCreateWidget = () => {
         state: faker.location.state(),
         postalCode: faker.location.zipCode("#####"),
         country: "US",
+        accept: true,
       });
     }
   };

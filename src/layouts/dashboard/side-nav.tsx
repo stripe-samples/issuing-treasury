@@ -100,29 +100,8 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           textAlign="center"
         >
           <Typography color="neutral.100" variant="subtitle2">
-            This is an embedded finance demo
+            Stripe Issuing & Treasury Demo
           </Typography>
-          <Typography color="neutral.500" variant="body2">
-            Check out our docs to learn more
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              mt: 2,
-              mx: "auto",
-              width: "160px",
-              "& img": {
-                width: "100%",
-              },
-            }}
-          >
-            <Image
-              alt="Issuing Credit Cards"
-              src="/assets/issuing-credit-cards.png"
-              width="160"
-              height="134"
-            />
-          </Box>
           <Button
             component="a"
             endIcon={

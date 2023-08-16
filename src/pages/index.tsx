@@ -17,6 +17,8 @@ import {
   getFinancialAccountTransactionDetails,
   getFinancialAccountTransactionsExpanded,
 } from "src/utils/stripe_helpers";
+import FloatingTestPanel from "src/components/floating-test-panel";
+import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -84,6 +86,9 @@ const Page = ({
           </Grid>
         </Container>
       </Box>
+      <FloatingTestPanel title="Simulate a received credit">
+        <TestDataCreateReceivedCredit />
+      </FloatingTestPanel>
     </>
   );
 };
