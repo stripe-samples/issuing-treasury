@@ -3,6 +3,7 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NextComponentType, NextPageContext } from "next";
 import { AppProps } from "next/app";
+import Head from "next/head";
 import { SessionProvider, useSession } from "next-auth/react";
 import React, { ReactElement } from "react";
 
@@ -36,6 +37,13 @@ export default function App({
 
   return (
     <CacheProvider value={emotionCache}>
+      <Head>
+        <title>Stripe Issuing & Treasury Demo</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
+      </Head>
       <SessionProvider session={session}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
