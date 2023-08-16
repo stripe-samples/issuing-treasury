@@ -27,10 +27,11 @@ Additionally, a *Test Data* section helps to understand different mechanisms for
   - Treasury: [Contact sales](https://go.stripe.global/treasury-inquiry)
 - **Stripe API keys**: Obtain your keys via <https://dashboard.stripe.com/test/apikeys>
 
-## No-code deploy demo on Render.com
+## Deploy Demo on Render.com
 
-To deploy this sample application directly in Render, click on the button below. Once you log in or sign up, it will
-initiate setup with a free database and web service instance. No coding required.
+You can get started using this app without any coding experience. It can be deployed directly to Render. Just click the button below.
+
+Once you log in or sign up on Render, it will initiate setup with a free database and a web service instance.
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/stripe-samples/issuing-treasury)
 
@@ -43,7 +44,9 @@ When prompted, please provide:
 
 After around 5 minutes, click on the "issuing-treasury" link to access your deployed web service's URL.
 
-## Local Installation
+## Local Development
+
+You can also clone this repo and run it locally.
 
 ### Dependency Installation
 
