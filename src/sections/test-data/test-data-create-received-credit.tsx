@@ -1,70 +1,66 @@
-import {
-  Alert,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Stack, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import { fetchApi } from "src/utils/api-helpers";
+import {
+  extractJsonFromResponse,
+  handleResult,
+  postApi,
+} from "src/utils/api-helpers";
 
 const TestDataCreateReceivedCredit = () => {
-  const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
+
+  const [submitting, setSubmitting] = useState(false);
   const [errorText, setErrorText] = useState("");
 
   const simulateReceivedCredit = async () => {
-    try {
-      setSubmitted(true);
-      const response = await fetchApi("api/create_receivedcredit");
-      if (!response.ok) {
-        const data = await response.json();
-        setErrorText(data.error);
-      }
-    } catch (error) {
-      setErrorText("Something went wrong");
-    } finally {
-      setSubmitted(false);
-    }
+    setSubmitting(true);
+    const response = await postApi("api/create_receivedcredit");
+    const result = await extractJsonFromResponse(response);
+    handleResult({
+      result,
+      onSuccess: () => {
+        router.reload();
+      },
+      onError: (error) => {
+        setErrorText(`Error: ${error.message}`);
+      },
+      onFinally: () => {
+        setSubmitting(false);
+      },
+    });
   };
 
   return (
-    <Card>
-      <CardHeader title="Simulate Received Credit"></CardHeader>
-      <CardContent sx={{ pt: 0 }}>
-        <Stack spacing={1}>
-          <Typography>
-            By pressing the Create Received Credit button, you will simulate
-            receiving a transfer into your Financial Account.
-          </Typography>
-          <Typography>
-            You can send funds directly to your Financial Account via ACH or
-            Wire Transfers by using its Account and Routing numbers.
-          </Typography>
-          <Typography>
-            Your Financial Account will receive $ 500.00 each time you press the
-            button.
-          </Typography>
-          {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
-        </Stack>
-      </CardContent>
-      <Divider />
-      <CardActions sx={{ justifyContent: "center" }}>
+    <Stack spacing={1}>
+      <Typography variant="body2">
+        By pressing the &quot;Simulate Received Credit&quot; button, you will
+        simulate receiving a transfer into your Financial Account by creating a
+        testmode received credit.
+      </Typography>
+      <Typography variant="body2">
+        You can send funds directly to your Financial Account via ACH or Wire
+        Transfers by using its Account and Routing numbers.
+      </Typography>
+      <Typography variant="body2">
+        Your Financial Account will receive $500.00 each time you press the
+        button.
+      </Typography>
+      {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
+      <Box pt={1}>
         <Button
           variant="contained"
           color="primary"
           size="large"
-          disabled={submitted}
+          disabled={submitting}
           onClick={simulateReceivedCredit}
+          fullWidth
         >
-          {submitted ? "Simulating..." : "Simulate Received Credit"}
+          {submitting ? "Simulating..." : "Simulate Received Credit"}
         </Button>
-      </CardActions>
-    </Card>
+      </Box>
+    </Stack>
   );
 };
 

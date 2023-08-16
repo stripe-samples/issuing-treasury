@@ -16,11 +16,13 @@ import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
+import FloatingTestPanel from "src/components/floating-test-panel";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import SendMoneyWizardDialog from "src/sections/financial-account/send-money-wizard-dialog";
 import { OverviewFinancialAccountBalance } from "src/sections/overview/overview-fa-balance";
 import { OverviewFinancialAccountOutboundPending } from "src/sections/overview/overview-fa-outbound-pending";
 import { OverviewLatestTransactions } from "src/sections/overview/overview-latest-transactions";
+import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   getFinancialAccountDetailsExp,
@@ -196,18 +198,22 @@ const Page = ({
                     <Typography color="text.secondary" variant="overline">
                       Supported Networks
                     </Typography>
-                    {financialAccount.financial_addresses[0].supported_networks?.map(
-                      (network, i) => (
-                        <Chip
-                          key={i}
-                          sx={{ ml: 1 }}
-                          label={network.toUpperCase().replace(/_/g, " ")}
-                          color="primary"
-                          variant="outlined"
-                        />
-                      ),
-                    )}
-                    <SendMoneyWizardDialog />
+                    <Box>
+                      {financialAccount.financial_addresses[0].supported_networks?.map(
+                        (network, i) => (
+                          <Chip
+                            key={i}
+                            sx={{ ml: 1 }}
+                            label={network.toUpperCase().replace(/_/g, " ")}
+                            color="primary"
+                            variant="outlined"
+                          />
+                        ),
+                      )}
+                    </Box>
+                    <Box pt={1}>
+                      <SendMoneyWizardDialog />
+                    </Box>
                   </Stack>
                 </CardContent>
               </Card>
@@ -218,6 +224,9 @@ const Page = ({
           </Grid>
         </Container>
       </Box>
+      <FloatingTestPanel title="Simulate a received credit">
+        <TestDataCreateReceivedCredit />
+      </FloatingTestPanel>
     </>
   );
 };

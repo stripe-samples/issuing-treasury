@@ -53,9 +53,6 @@ const Page = ({
         <Container maxWidth="xl">
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} sm={10} md={8}>
-              <TestDataCreateReceivedCredit />
-            </Grid>
-            <Grid item xs={12} sm={10} md={8}>
               <TestDataCreatePaymentLink />
             </Grid>
             <Grid item xs={12} sm={10} md={8}>
