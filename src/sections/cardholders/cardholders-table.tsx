@@ -114,17 +114,14 @@ const CardholdersTable = ({
                         <form action="/api/cards" method="POST">
                           <input
                             type="hidden"
-                            id="cardholderid"
                             name="cardholderid"
                             value={cardholder.id}
                           ></input>
                           <Stack direction="row" spacing={1.5}>
                             <Select
                               labelId="card-type-label"
-                              id="card_type"
                               name="card_type"
                               defaultValue="virtual"
-                              label="Card Type"
                               sx={{ minWidth: 200, height: 40 }}
                             >
                               <MenuItem value="virtual">Virtual</MenuItem>
