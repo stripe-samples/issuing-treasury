@@ -158,8 +158,8 @@ const CookieBanner = () => {
             <Stack spacing={1} direction="row">
               <Box display="flex" alignItems="center" pl={1}>
                 <Typography color="neutral.500">
-                  This site uses cookies to enable the necessary functions and
-                  features such as login and account management services.
+                  This site uses necessary cookies to enable required functions
+                  and features, such as login and account management services.
                 </Typography>
               </Box>
               <IconButton onClick={handleAcknowledgingCookieNotice}>
