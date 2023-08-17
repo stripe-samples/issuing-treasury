@@ -35,14 +35,12 @@ export const getServerSideProps = async (
   const session = await getSessionForServerSideProps(context);
   const StripeAccountID = session.accountId;
 
-  const responseFaDetails = await getFinancialAccountDetailsExp(
-    StripeAccountID,
-  );
+  const responseFaDetails =
+    await getFinancialAccountDetailsExp(StripeAccountID);
   const financialAccount = responseFaDetails.financialaccount;
 
-  const responseFaTransations = await getFinancialAccountTransactionsExpanded(
-    StripeAccountID,
-  );
+  const responseFaTransations =
+    await getFinancialAccountTransactionsExpanded(StripeAccountID);
   const faTransactions = responseFaTransations.fa_transactions;
 
   return {
