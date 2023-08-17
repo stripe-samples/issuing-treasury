@@ -528,11 +528,11 @@ const ConfirmingTransferForm = ({
                     href="https://stripe.com/docs/api/treasury/outbound_payments/test_mode_fail"
                     underline="none"
                   >
-                    docs
-                  </Link>{" "}
-                  <SvgIcon fontSize="small" sx={{ color: "neutral.500" }}>
-                    <ArrowTopRightOnSquareIcon />
-                  </SvgIcon>
+                    docs{" "}
+                    <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
+                      <ArrowTopRightOnSquareIcon />
+                    </SvgIcon>
+                  </Link>
                   )
                 </Alert>
               </Box>
