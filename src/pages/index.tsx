@@ -33,9 +33,8 @@ export const getServerSideProps = async (
     await getFinancialAccountTransactionDetails(StripeAccountID);
   const faFundsFlowChartData = faFundsFlowChartDataResult.faFundsFlowChartData;
 
-  const responseFaTransations = await getFinancialAccountTransactionsExpanded(
-    StripeAccountID,
-  );
+  const responseFaTransations =
+    await getFinancialAccountTransactionsExpanded(StripeAccountID);
   const faTransactions = responseFaTransations.fa_transactions;
 
   return {

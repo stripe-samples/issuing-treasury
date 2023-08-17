@@ -6,7 +6,6 @@ import {
   Drawer,
   IconButton,
   SvgIcon,
-  Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import useTheme from "@mui/system/useTheme";
