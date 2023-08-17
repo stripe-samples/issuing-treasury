@@ -1,55 +1,49 @@
-import { styled } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
+import { Box } from "@mui/system";
 
 import { SeverityColor } from "src/types/severity-color";
 
-const SeverityPillRoot = styled("span", {
-  shouldForwardProp: (prop) => prop !== "ownerState",
-})<{
-  ownerState: {
-    color: SeverityColor;
-  };
-}>(({ theme, ownerState }) => {
-  // @ts-expect-error missing `alpha12` in PaletteColorOptions
-  const backgroundColor = theme.palette[ownerState.color].alpha12;
-  const color =
-    theme.palette.mode === "dark"
-      ? theme.palette[ownerState.color].main
-      : theme.palette[ownerState.color].dark;
-
-  return {
-    alignItems: "center",
-    backgroundColor,
-    borderRadius: 12,
-    color,
-    cursor: "default",
-    display: "inline-flex",
-    flexGrow: 0,
-    flexShrink: 0,
-    fontFamily: theme.typography.fontFamily,
-    fontSize: theme.typography.pxToRem(12),
-    lineHeight: 2,
-    fontWeight: 600,
-    justifyContent: "center",
-    letterSpacing: 0.5,
-    minWidth: 20,
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    textTransform: "uppercase",
-    whiteSpace: "nowrap",
-  };
-});
-
-export const SeverityPill = (props: {
+export const SeverityPill = ({
+  color = "primary",
+  children,
+  ...other
+}: {
   color?: SeverityColor;
   children: React.ReactNode;
 }) => {
-  const { color = "primary", children, ...other } = props;
+  const theme = useTheme();
 
-  const ownerState = { color };
+  const colorValue =
+    theme.palette.mode === "dark"
+      ? theme.palette[color].main
+      : theme.palette[color].dark;
 
   return (
-    <SeverityPillRoot ownerState={ownerState} {...other}>
+    <Box
+      sx={{
+        alignItems: "center",
+        backgroundColor: theme.palette[color].alpha12,
+        borderRadius: 12,
+        color: colorValue,
+        cursor: "default",
+        display: "inline-flex",
+        flexGrow: 0,
+        flexShrink: 0,
+        fontFamily: theme.typography.fontFamily,
+        fontSize: theme.typography.pxToRem(12),
+        lineHeight: 2,
+        fontWeight: 600,
+        justifyContent: "center",
+        letterSpacing: 0.5,
+        minWidth: 20,
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+      }}
+      {...other}
+    >
       {children}
-    </SeverityPillRoot>
+    </Box>
   );
 };

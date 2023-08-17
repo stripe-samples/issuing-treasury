@@ -1,5 +1,5 @@
+import { alpha } from "@mui/material";
 import { common } from "@mui/material/colors";
-import { alpha } from "@mui/material/styles";
 
 import {
   error,

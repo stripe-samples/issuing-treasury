@@ -1,4 +1,6 @@
-export const createShadows = () => {
+import { Shadows } from "@mui/material";
+
+export const createShadows = (): Shadows => {
   return [
     "none",
     "0px 1px 2px rgba(0, 0, 0, 0.08)",
