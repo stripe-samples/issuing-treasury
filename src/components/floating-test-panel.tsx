@@ -1,7 +1,14 @@
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
-import { Button, Drawer, Stack, SvgIcon } from "@mui/material";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import {
+  Button,
+  DialogTitle,
+  Drawer,
+  IconButton,
+  SvgIcon,
+  Typography,
+} from "@mui/material";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import useTheme from "@mui/system/useTheme";
 import React, { ReactNode } from "react";
 
@@ -41,12 +48,23 @@ const FloatingTestPanel = ({
         Generate Test Data
       </Button>
       <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
-        <Stack spacing={3} maxWidth={400} p={3}>
-          <Typography variant="h6" fontWeight={600}>
-            {title}
-          </Typography>
+        <DialogTitle
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          ml={1}
+          mt={1}
+        >
+          {title}
+          <IconButton onClick={() => setOpen(false)}>
+            <SvgIcon>
+              <XMarkIcon />
+            </SvgIcon>
+          </IconButton>
+        </DialogTitle>
+        <Box maxWidth={400} px={4}>
           {children}
-        </Stack>
+        </Box>
       </Drawer>
     </Box>
   );
