@@ -20,7 +20,7 @@ const TransactionFlowDetails = ({
 
   return flowDetails && flowDetails.hosted_regulatory_receipt_url ? (
     <Stack direction="row" spacing={1}>
-      <Typography noWrap>{flowTypeFormatted}</Typography>
+      <Typography variant="body2">{flowTypeFormatted}</Typography>
       <Link href={flowDetails.hosted_regulatory_receipt_url} target="_blank">
         <SvgIcon>
           <DocumentArrowDownIcon />
@@ -28,7 +28,7 @@ const TransactionFlowDetails = ({
       </Link>
     </Stack>
   ) : (
-    <Typography>{flowTypeFormatted}</Typography>
+    <Typography variant="body2">{flowTypeFormatted}</Typography>
   );
 };
 

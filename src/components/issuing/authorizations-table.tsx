@@ -11,7 +11,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
 } from "@mui/material";
 import React, { ChangeEvent } from "react";
 import Stripe from "stripe";
@@ -137,9 +136,7 @@ const AuthorizationsTable = ({
                       </SeverityPill>
                     </TableCell>
                     <TableCell sx={{ whiteSpace: "nowrap" }}>
-                      <Typography noWrap>
-                        {authorization.merchant_data.name}
-                      </Typography>
+                      {authorization.merchant_data.name}
                     </TableCell>
                     <TableCell
                       sx={{ textTransform: "uppercase", whiteSpace: "nowrap" }}
