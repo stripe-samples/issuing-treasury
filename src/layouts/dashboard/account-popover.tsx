@@ -86,8 +86,8 @@ export const AccountPopover = ({
               target="_blank"
               underline="none"
             >
-              {session.accountId}
-              <SvgIcon sx={{ ml: 1, width: "20px", height: "20px" }}>
+              {session.accountId}{" "}
+              <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
                 <ArrowTopRightOnSquareIcon />
               </SvgIcon>
             </Link>

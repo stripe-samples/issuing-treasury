@@ -176,15 +176,8 @@ const GenerateTestDataDrawer = ({ cardId }: { cardId: string }) => {
           target="_blank"
           underline="none"
         >
-          going to this card&apos;s overview in the Stripe dashboard
-          <SvgIcon
-            sx={{
-              ml: 0.5,
-              width: "20px",
-              height: "20px",
-              verticalAlign: "middle",
-            }}
-          >
+          going to this card&apos;s overview in the Stripe dashboard{" "}
+          <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
             <ArrowTopRightOnSquareIcon />
           </SvgIcon>
         </Link>{" "}

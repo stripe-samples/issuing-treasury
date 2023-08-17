@@ -218,15 +218,8 @@ const ConnectOnboardingGuideDialog = ({
             target="_blank"
             underline="none"
           >
-            here
-            <SvgIcon
-              sx={{
-                ml: 0.5,
-                width: "20px",
-                height: "20px",
-                verticalAlign: "top",
-              }}
-            >
+            here{" "}
+            <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
               <ArrowTopRightOnSquareIcon />
             </SvgIcon>
           </Link>
