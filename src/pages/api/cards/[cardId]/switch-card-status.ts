@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 import { apiResponse } from "src/types/api-response";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const validationSchema = Yup.object().shape({
   cardId: Yup.string().required("Card ID is required"),
@@ -57,6 +57,7 @@ const switchCardStatus = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
+  const stripe = stripeClient();
   await stripe.issuing.cards.update(
     cardId,
     { status: newStatus },

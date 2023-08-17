@@ -6,7 +6,7 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
 import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -14,6 +14,7 @@ export const getServerSideProps = async (
   const session = await getSessionForServerSideProps(context);
   const StripeAccountID = session.accountId;
 
+  const stripe = stripeClient();
   const responseAccount = await stripe.accounts.retrieve(StripeAccountID);
   // @ts-expect-error Remove after deployment succeeds
   const accountExternalAccount = responseAccount.external_accounts.data[0];

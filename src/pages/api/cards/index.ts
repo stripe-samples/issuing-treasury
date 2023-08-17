@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const validationSchema = Yup.object().shape({
   line1: Yup.string().required("Cardholder billing address is required"),
@@ -24,6 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const session = await getSessionForServerSide(req, res);
     const StripeAccountId = session.accountId;
+    const stripe = stripeClient();
 
     const financialAccounts = await stripe.treasury.financialAccounts.list({
       stripeAccount: StripeAccountId,

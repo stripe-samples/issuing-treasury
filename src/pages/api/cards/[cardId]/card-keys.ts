@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 import { apiResponse } from "src/types/api-response";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const validationSchema = Yup.object().shape({
   cardId: Yup.string().required("Card ID is required"),
@@ -50,6 +50,7 @@ const createCardKey = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const apiVersion = "2022-08-01";
+  const stripe = stripeClient();
   const ephemeralKey = await stripe.ephemeralKeys.create(
     {
       // @ts-expect-error Fix the defect upstream in Issuing Elements causing `nonce` to not be accepted

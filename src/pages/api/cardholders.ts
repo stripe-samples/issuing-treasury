@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 import { apiResponse } from "src/types/api-response";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -86,6 +86,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const ip =
     req.headers["x-real-ip"]?.toString() || req.connection.remoteAddress;
+  const stripe = stripeClient();
   await stripe.issuing.cardholders.create(
     {
       type: "individual",
@@ -125,6 +126,7 @@ const updateCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const ip =
     req.headers["x-real-ip"]?.toString() || req.connection.remoteAddress;
+  const stripe = stripeClient();
   await stripe.issuing.cardholders.update(
     req.body.cardholderId,
     {

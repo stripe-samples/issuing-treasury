@@ -2,9 +2,10 @@ import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
 import { ChartData } from "src/types/chart-data";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 export async function getFinancialAccountTransactions(StripeAccountID: string) {
+  const stripe = stripeClient();
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
   });
@@ -24,6 +25,7 @@ export async function getFinancialAccountTransactions(StripeAccountID: string) {
 export async function getFinancialAccountTransactionsExpanded(
   StripeAccountID: string,
 ) {
+  const stripe = stripeClient();
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
   });
@@ -42,6 +44,7 @@ export async function getFinancialAccountTransactionsExpanded(
 }
 
 export async function getFinancialAccountDetails(StripeAccountID: string) {
+  const stripe = stripeClient();
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: StripeAccountID,
   });
@@ -52,6 +55,7 @@ export async function getFinancialAccountDetails(StripeAccountID: string) {
 }
 
 export async function getFinancialAccountDetailsExp(StripeAccountID: string) {
+  const stripe = stripeClient();
   const financialAccounts = await stripe.treasury.financialAccounts.list(
     { expand: ["data.financial_addresses.aba.account_number"] },
     {
@@ -76,6 +80,7 @@ const DATE_FORMAT = "MMM dd";
 export async function getFinancialAccountTransactionDetails(
   stripeAccountID: string,
 ) {
+  const stripe = stripeClient();
   const financialAccounts = await stripe.treasury.financialAccounts.list({
     stripeAccount: stripeAccountID,
   });
@@ -156,6 +161,7 @@ export async function getFinancialAccountTransactionDetails(
 }
 
 export async function getCardholders(StripeAccountID: string) {
+  const stripe = stripeClient();
   const cardholders = await stripe.issuing.cardholders.list(
     { limit: 100 },
     { stripeAccount: StripeAccountID },
@@ -167,6 +173,7 @@ export async function getCardholders(StripeAccountID: string) {
 }
 
 export async function getCards(StripeAccountID: string) {
+  const stripe = stripeClient();
   const cards = await stripe.issuing.cards.list(
     { limit: 100 },
     { stripeAccount: StripeAccountID },
@@ -178,6 +185,7 @@ export async function getCards(StripeAccountID: string) {
 }
 
 export async function getCardDetails(StripeAccountID: string, cardId: string) {
+  const stripe = stripeClient();
   // Retrieve last 10 authorizations
   const card_authorizations = await stripe.issuing.authorizations.list(
     {
@@ -219,6 +227,7 @@ export async function getCardDetails(StripeAccountID: string, cardId: string) {
 }
 
 export async function getAuthorizations(StripeAccountID: string) {
+  const stripe = stripeClient();
   const authorizations = await stripe.issuing.authorizations.list(
     { limit: 10 },
     { stripeAccount: StripeAccountID },
@@ -233,6 +242,7 @@ export async function getAuthorizationDetails(
   StripeAccountID: string,
   authorizationId: string,
 ) {
+  const stripe = stripeClient();
   const authorization = await stripe.issuing.authorizations.retrieve(
     authorizationId,
     { stripeAccount: StripeAccountID },

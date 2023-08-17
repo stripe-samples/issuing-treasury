@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
 import { isDemoMode } from "src/utils/demo-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
@@ -77,6 +77,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Create a Connected Account
+  const stripe = stripeClient();
   const account = await stripe.accounts.create({
     type: "custom",
     country: "US",

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -35,6 +35,7 @@ const simulateReceivedCredit = async (
 ) => {
   const session = await getSessionForServerSide(req, res);
   const StripeAccountId = session.accountId;
+  const stripe = stripeClient();
 
   // Get financial accounts for the Connected Account
   const financialAccounts = await stripe.treasury.financialAccounts.list(

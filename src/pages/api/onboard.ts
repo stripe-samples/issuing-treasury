@@ -6,7 +6,7 @@ import { apiResponse } from "src/types/api-response";
 import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const validationSchema = Yup.object().shape({
   businessName: Yup.string().max(255).required("Business name is required"),
@@ -113,6 +113,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     }),
   };
 
+  const stripe = stripeClient();
   await stripe.accounts.update(accountId, onboardingData);
 
   // FOR-DEMO-ONLY: We're going to check if the user wants to skip the onboarding process. If they do, we'll redirect to
