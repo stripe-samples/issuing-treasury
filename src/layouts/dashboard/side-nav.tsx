@@ -91,6 +91,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           </Stack>
         </Box>
         <Divider sx={{ borderColor: "neutral.700" }} />
+        {/* FOR-DEMO-ONLY: You can remove this for an actual application */}
         <Box
           sx={{
             px: 2,
@@ -100,6 +101,10 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
         >
           <Typography color="neutral.100" variant="subtitle2">
             Stripe Issuing & Treasury Demo
+          </Typography>
+          <Typography color="neutral.600" variant="subtitle2">
+            Data shown, including cards and transactions, is for testing
+            purposes only. No content reflects actual financial activity.
           </Typography>
           <Button
             component="a"
