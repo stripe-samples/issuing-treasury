@@ -103,8 +103,8 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             Stripe Issuing & Treasury Demo
           </Typography>
           <Typography color="neutral.600" variant="subtitle2">
-            Data shown, including cards and transactions, is for testing
-            purposes only. No content reflects actual financial activity.
+            Data, financial activity and cards are fictitious and for testing
+            purposes only. You should not input personal information.
           </Typography>
           <Button
             component="a"
