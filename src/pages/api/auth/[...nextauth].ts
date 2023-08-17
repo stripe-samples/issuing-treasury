@@ -6,7 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { authenticateUser } from "src/utils/authentication";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -45,6 +45,7 @@ export const authOptions: NextAuthOptions = {
 
       // If accountId is undefined, that means we're most likely not authenticated yet
       if (token.accountId != undefined && token.businessName == undefined) {
+        const stripe = stripeClient();
         const account = await stripe.accounts.retrieve(token.accountId);
         const businessName = account.business_profile?.name;
         if (businessName != undefined) {

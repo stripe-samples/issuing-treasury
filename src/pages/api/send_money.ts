@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import NetworkType from "src/types/network-type";
 import TransactionResult from "src/types/transaction-result";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
@@ -13,6 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const session = await getSessionForServerSide(req, res);
     const StripeAccountId = session.accountId;
+    const stripe = stripeClient();
 
     // TODO: Check if we can use the following in some way
     // const balance = await stripe.balance.retrieve({

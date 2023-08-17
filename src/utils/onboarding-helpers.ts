@@ -1,8 +1,9 @@
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const IGNORE_REQUIREMENTS = ["external_account"];
 
 export const hasOutstandingRequirements = async (accountId: string) => {
+  const stripe = stripeClient();
   const account = await stripe.accounts.retrieve(accountId);
 
   const outstandingRequirements = account?.requirements?.currently_due?.filter(
@@ -22,6 +23,7 @@ export async function createAccountOnboardingUrl(accountId: string) {
   const connectOnboardingRedirectUrl =
     process.env.CONNECT_ONBOARDING_REDIRECT_URL;
 
+  const stripe = stripeClient();
   const { url } = await stripe.accountLinks.create({
     type: "account_onboarding",
     account: accountId,

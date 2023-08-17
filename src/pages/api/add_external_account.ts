@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import stripe from "src/utils/stripe-loader";
+import stripeClient from "src/utils/stripe-loader";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
@@ -12,6 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getSessionForServerSide(req, res);
     const StripeAccountId = session.accountId;
 
+    const stripe = stripeClient();
     const financialAccounts = await stripe.treasury.financialAccounts.list(
       { expand: ["data.financial_addresses.aba.account_number"] },
       {
