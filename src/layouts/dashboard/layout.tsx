@@ -59,9 +59,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <Typography variant="body2" color="neutral.400">
                 Stripe Issuing & Treasury Platform Demo partners with Stripe
                 Payments Company for money transmission services and account
-                services with funds held at Evolve Bank & Trust, Member FDIC.
-                Stripe Issuing & Treasury Platform Demo Visa® Commercial Credit
-                cards are issued by Celtic Bank.
+                services with funds held at Example Bank, Member FDIC. Stripe
+                Issuing & Treasury Platform Demo Visa® Commercial Credit cards
+                are issued by Example Bank.
               </Typography>
             </Box>
           </Box>

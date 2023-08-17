@@ -199,11 +199,11 @@ const CreateCardholderForm = ({
                   <Typography variant="body2">
                     This cardholder has agreed to the{" "}
                     <Link href="https://stripe.com/legal/issuing/celtic-authorized-user-terms">
-                      Celtic Bank Authorized User Terms
+                      Example Bank Authorized User Terms
                     </Link>{" "}
                     and{" "}
                     <Link href="https://www.celticbank.com/privacy">
-                      Celtic Bank Privacy Policy.
+                      Example Bank Privacy Policy.
                     </Link>
                   </Typography>
                 }
