@@ -131,8 +131,8 @@ const Page = () => {
                     variant="outlined"
                     sx={{ borderColor: "info.main" }}
                   >
-                    Email address is automatically generated as part of the
-                    demo.
+                    Account data in this demo is auto generated. Remember this
+                    email address to log in later.
                   </Alert>
                 </>
               )}

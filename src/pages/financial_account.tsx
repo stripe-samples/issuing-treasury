@@ -8,6 +8,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Alert,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -55,6 +56,9 @@ const Page = ({
   financialAccount: Stripe.Treasury.FinancialAccount;
   faTransactions: Stripe.Treasury.Transaction[];
 }) => {
+  const faAddress = financialAccount.financial_addresses[0];
+  const faAddressCreated = faAddress != undefined;
+
   return (
     <>
       <Box
@@ -78,144 +82,146 @@ const Page = ({
                 value={financialAccount.balance.outbound_pending.usd}
               />
             </Grid>
-            <Grid item xs={12} sm={8}>
-              <Card sx={{ height: "100%" }}>
-                <CardHeader title="Account Information" />
-                <List sx={{ p: 0 }}>
-                  <ListItem divider sx={{ px: 3, py: 1.5 }}>
-                    <Grid container spacing={1}>
-                      <Grid item xs={6}>
-                        <ListItemText
-                          sx={{ m: 0 }}
-                          primary={
-                            <Typography variant="subtitle2">
-                              Account Holder Name
-                            </Typography>
-                          }
-                          secondary={
-                            <Box sx={{ mt: 0.5 }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                {
-                                  financialAccount.financial_addresses[0].aba
-                                    ?.account_holder_name
-                                }
-                              </Typography>
-                            </Box>
-                          }
-                          disableTypography={true}
-                        ></ListItemText>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <ListItemText
-                          sx={{ m: 0 }}
-                          primary={
-                            <Typography variant="subtitle2">
-                              Bank Name
-                            </Typography>
-                          }
-                          secondary={
-                            <Box sx={{ mt: 0.5 }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                {
-                                  financialAccount.financial_addresses[0].aba
-                                    ?.bank_name
-                                }
-                              </Typography>
-                            </Box>
-                          }
-                          disableTypography={true}
-                        ></ListItemText>
-                      </Grid>
-                    </Grid>
-                  </ListItem>
-                  <ListItem sx={{ px: 3, py: 1.5 }}>
-                    <Grid container spacing={1}>
-                      <Grid item xs={6}>
-                        <ListItemText
-                          sx={{ m: 0 }}
-                          primary={
-                            <Typography variant="subtitle2">
-                              Routing Number
-                            </Typography>
-                          }
-                          secondary={
-                            <Box sx={{ mt: 0.5 }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                {
-                                  financialAccount.financial_addresses[0].aba
-                                    ?.routing_number
-                                }
-                              </Typography>
-                            </Box>
-                          }
-                          disableTypography={true}
-                        ></ListItemText>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <ListItemText
-                          sx={{ m: 0 }}
-                          primary={
-                            <Typography variant="subtitle2">
-                              Account Number
-                            </Typography>
-                          }
-                          secondary={
-                            <Box sx={{ mt: 0.5 }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                {
-                                  financialAccount.financial_addresses[0].aba
-                                    ?.account_number
-                                }
-                              </Typography>
-                            </Box>
-                          }
-                          disableTypography={true}
-                        ></ListItemText>
-                      </Grid>
-                    </Grid>
-                  </ListItem>
-                </List>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Card sx={{ height: "100%" }}>
-                <CardContent>
-                  <Stack spacing={1} textAlign="center">
-                    <Typography color="text.secondary" variant="overline">
-                      Supported Networks
-                    </Typography>
-                    <Box>
-                      {financialAccount.financial_addresses[0].supported_networks?.map(
-                        (network, i) => (
-                          <Chip
-                            key={i}
-                            sx={{ ml: 1 }}
-                            label={network.toUpperCase().replace(/_/g, " ")}
-                            color="primary"
-                            variant="outlined"
-                          />
-                        ),
-                      )}
-                    </Box>
-                    <Box pt={1}>
-                      <SendMoneyWizardDialog />
-                    </Box>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
+            {faAddressCreated ? (
+              <>
+                <Grid item xs={12} sm={8}>
+                  <Card sx={{ height: "100%" }}>
+                    <CardHeader title="Account Information" />
+                    <List sx={{ p: 0 }}>
+                      <ListItem divider sx={{ px: 3, py: 1.5 }}>
+                        <Grid container spacing={1}>
+                          <Grid item xs={6}>
+                            <ListItemText
+                              sx={{ m: 0 }}
+                              primary={
+                                <Typography variant="subtitle2">
+                                  Account Holder Name
+                                </Typography>
+                              }
+                              secondary={
+                                <Box sx={{ mt: 0.5 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                  >
+                                    {faAddress.aba?.account_holder_name}
+                                  </Typography>
+                                </Box>
+                              }
+                              disableTypography={true}
+                            ></ListItemText>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <ListItemText
+                              sx={{ m: 0 }}
+                              primary={
+                                <Typography variant="subtitle2">
+                                  Bank Name
+                                </Typography>
+                              }
+                              secondary={
+                                <Box sx={{ mt: 0.5 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                  >
+                                    {faAddress.aba?.bank_name}
+                                  </Typography>
+                                </Box>
+                              }
+                              disableTypography={true}
+                            ></ListItemText>
+                          </Grid>
+                        </Grid>
+                      </ListItem>
+                      <ListItem sx={{ px: 3, py: 1.5 }}>
+                        <Grid container spacing={1}>
+                          <Grid item xs={6}>
+                            <ListItemText
+                              sx={{ m: 0 }}
+                              primary={
+                                <Typography variant="subtitle2">
+                                  Routing Number
+                                </Typography>
+                              }
+                              secondary={
+                                <Box sx={{ mt: 0.5 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                  >
+                                    {faAddress.aba?.routing_number}
+                                  </Typography>
+                                </Box>
+                              }
+                              disableTypography={true}
+                            ></ListItemText>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <ListItemText
+                              sx={{ m: 0 }}
+                              primary={
+                                <Typography variant="subtitle2">
+                                  Account Number
+                                </Typography>
+                              }
+                              secondary={
+                                <Box sx={{ mt: 0.5 }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                  >
+                                    {faAddress.aba?.account_number}
+                                  </Typography>
+                                </Box>
+                              }
+                              disableTypography={true}
+                            ></ListItemText>
+                          </Grid>
+                        </Grid>
+                      </ListItem>
+                    </List>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Card sx={{ height: "100%" }}>
+                    <CardContent>
+                      <Stack spacing={1} textAlign="center">
+                        <Typography color="text.secondary" variant="overline">
+                          Supported Networks
+                        </Typography>
+                        <Box>
+                          {faAddress.supported_networks?.map((network, i) => (
+                            <Chip
+                              key={i}
+                              sx={{ ml: 1 }}
+                              label={network.toUpperCase().replace(/_/g, " ")}
+                              color="primary"
+                              variant="outlined"
+                            />
+                          ))}
+                        </Box>
+                        <Box pt={1}>
+                          <SendMoneyWizardDialog />
+                        </Box>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </>
+            ) : (
+              <Grid item xs={12}>
+                <Card sx={{ height: "100%" }}>
+                  <CardHeader title="Account Information" />
+                  <CardContent>
+                    <Alert severity="info">
+                      Your financial account is being set up. Please check back
+                      later to send or receive money.
+                    </Alert>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <OverviewLatestTransactions faTransactions={faTransactions} />
             </Grid>
