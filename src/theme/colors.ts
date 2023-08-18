@@ -1,4 +1,4 @@
-import { alpha } from "@mui/material/styles";
+import { alpha } from "@mui/material";
 
 const withAlphas = (color: {
   lightest: string;

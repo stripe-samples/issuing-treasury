@@ -1,10 +1,12 @@
 import {
+  Components,
   createTheme,
   filledInputClasses,
   inputLabelClasses,
   outlinedInputClasses,
   paperClasses,
   tableCellClasses,
+  Theme,
 } from "@mui/material";
 
 import createPalette from "src/theme/create-palette";
@@ -12,11 +14,11 @@ import createPalette from "src/theme/create-palette";
 // Used only to create transitions
 const muiTheme = createTheme();
 
-export function createComponents(config: {
+export function createComponents({
+  palette,
+}: {
   palette: ReturnType<typeof createPalette>;
-}) {
-  const { palette } = config;
-
+}): Components<Omit<Theme, "components">> {
   return {
     MuiAvatar: {
       styleOverrides: {

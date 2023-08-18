@@ -24,3 +24,19 @@ declare module "@mui/material/Alert" {
     variant?: keyof AlertPropsVariantOverrides;
   }
 }
+
+declare module "@mui/material/styles" {
+  export interface PaletteColor {
+    lightest: string;
+    light: string;
+    main: string;
+    dark: string;
+    darkest: string;
+    contrastText: string;
+    alpha4: string;
+    alpha8: string;
+    alpha12: string;
+    alpha30: string;
+    alpha50: string;
+  }
+}

@@ -53,17 +53,18 @@ export const OverviewLatestTransactions = (props: {
                 {faTransactions.map((transaction) => {
                   return (
                     <TableRow hover key={transaction.id}>
-                      <TableCell>
-                        <Typography noWrap>
-                          {formatDateTime(transaction.created)}
-                        </Typography>
+                      <TableCell sx={{ whiteSpace: "nowrap" }}>
+                        {formatDateTime(transaction.created)}
                       </TableCell>
-                      <TableCell align="right">
-                        <Typography noWrap>{`${formatUSD(
-                          transaction.amount / 100,
-                        )} USD`}</Typography>
+                      <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
+                        {`${formatUSD(transaction.amount / 100)} USD`}
                       </TableCell>
-                      <TableCell sx={{ textTransform: "uppercase" }}>
+                      <TableCell
+                        sx={{
+                          whiteSpace: "nowrap",
+                          textTransform: "uppercase",
+                        }}
+                      >
                         <TransactionFlowDetails transaction={transaction} />
                       </TableCell>
                       <TableCell>
@@ -71,10 +72,8 @@ export const OverviewLatestTransactions = (props: {
                           {transaction.status}
                         </SeverityPill>
                       </TableCell>
-                      <TableCell>
-                        <Typography noWrap>
-                          {transaction.description}
-                        </Typography>
+                      <TableCell sx={{ whiteSpace: "nowrap" }}>
+                        {transaction.description}
                       </TableCell>
                     </TableRow>
                   );
