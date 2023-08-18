@@ -37,7 +37,7 @@
     "react-dom": "18.2.0",
     "sharp": "^0.32.5",
     "simplebar-react": "^3.2.4",
-    "stripe": "^13.1.0",
+    "stripe": "^13.2.0",
     "xstate": "^4.38.2",
     "yup": "^1.2.0"
   },
