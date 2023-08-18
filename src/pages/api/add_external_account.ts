@@ -21,20 +21,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
 
     const financialAccount = financialAccounts.data[0];
+    const aba = financialAccount.financial_addresses[0]?.aba;
 
-    await stripe.accounts.createExternalAccount(StripeAccountId, {
-      // @ts-expect-error TS(2345): Argument of type '{ object: string; country: string; currency: string; account_number: any; routing_number: any; }' is not assignable to parameter of type 'BankAccountCreateParams'.
-      external_account: {
-        object: "bank_account",
-        country: "US",
-        currency: "usd",
-        account_number:
-          // @ts-expect-error TS(2339): Property 'aba' does not exist on type 'FinancialAccount'.
-          financialAccount.financial_addresses[0].aba.account_number,
-        routing_number:
-          // @ts-expect-error TS(2339): Property 'aba' does not exist on type 'FinancialAccount'.
-          financialAccount.financial_addresses[0].aba.routing_number,
+    if (
+      aba == undefined ||
+      aba.account_number == undefined ||
+      aba.routing_number == undefined
+    ) {
+      throw new Error("Invalid or missing ABA for financial account");
+    }
+
+    const token = await stripe.tokens.create(
+      {
+        bank_account: {
+          account_number: aba.account_number,
+          country: "US",
+          currency: "usd",
+          routing_number: aba.routing_number,
+        },
       },
+      undefined,
+    );
+    await stripe.accounts.createExternalAccount(StripeAccountId, {
+      external_account: token.id,
     });
 
     return res.json({ externalAcctAdded: true });

@@ -16,22 +16,16 @@ export const getServerSideProps = async (
 
   const stripe = stripeClient();
   const responseAccount = await stripe.accounts.retrieve(StripeAccountID);
-  // @ts-expect-error Remove after deployment succeeds
-  const accountExternalAccount = responseAccount.external_accounts.data[0];
+
+  const hasExternalAccount =
+    responseAccount.external_accounts?.data[0] != undefined;
 
   const responseBalance = await stripe.balance.retrieve({
     stripeAccount: StripeAccountID,
   });
   const availableBalance = responseBalance.available[0].amount;
 
-  let hasExternalAccount = false;
-
-  if (accountExternalAccount) {
-    hasExternalAccount = true;
-  }
-  return {
-    props: { hasExternalAccount, availableBalance }, // will be passed to the page component as props
-  };
+  return { props: { hasExternalAccount, availableBalance } };
 };
 
 const Page = ({
