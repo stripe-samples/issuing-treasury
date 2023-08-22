@@ -21,10 +21,9 @@ Additionally, a *Test Data* section helps to understand different mechanisms for
 
 ## Prerequisites
 
-- **A Stripe account**: Register for a Stripe account here: <https://dashboard.stripe.com/register>
-- **Enable Issuing and Treasury in Stripe**:
-  - Issuing: Use [Instant Testmode](https://dashboard.stripe.com/setup/issuing/activate)
-  - Treasury: [Contact sales](https://go.stripe.global/treasury-inquiry)
+- **A Stripe account**:
+  - Register for a Stripe account here: <https://dashboard.stripe.com/register>
+  - Sign up for testmode Issuing + Treasury [here](https://dashboard.stripe.com/setup/treasury/activate?a=1) (a fresh account works best)
 - **Stripe API keys**: Obtain your keys via <https://dashboard.stripe.com/test/apikeys>
 
 ## Deploy Demo on Render
