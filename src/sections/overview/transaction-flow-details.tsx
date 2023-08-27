@@ -22,7 +22,7 @@ const TransactionFlowDetails = ({
     <Stack direction="row" spacing={1}>
       <Typography variant="body2">{flowTypeFormatted}</Typography>
       <Link href={flowDetails.hosted_regulatory_receipt_url} target="_blank">
-        <SvgIcon>
+        <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
           <DocumentArrowDownIcon />
         </SvgIcon>
       </Link>
