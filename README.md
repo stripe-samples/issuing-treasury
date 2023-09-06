@@ -25,7 +25,7 @@ If you choose not to skip onboarding with prefilled info, then follow these step
 - Simulate test payments ⚡
 - Review transactions 📃
 
-For details of more features see the [Issuing and Treasury sample app documentation](https://stripe.com/docs/payments/checkout/subscriptions).
+For details of more features see the [Issuing and Treasury sample app documentation](https://site-admin.stripe.com/docs/treasury/examples/sample-app).
 
 ## Prerequisites
 
@@ -49,10 +49,10 @@ You can immediately deploy this sample app to a unique, public URL (for example:
      - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your publishable test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `pk_test_...`)
      - **STRIPE_SECRET_KEY**: Your secret test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `sk_test_...`))
 4. Click the "Apply" button
-5. Wait for Render to finish creating the services which can take up to 5 minutes and then click "issuing-treasury":
+5. Wait for Render to finish creating the services (this can take up to 5 minutes) and then click "issuing-treasury"
 
    <img width="375" alt="CleanShot 2023-09-06 at 16 30 05@2x" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/9b0c7831-8ebd-4f17-8016-f990828c6978">
-6. On the next page, click your unique URL to open your deployment of the sample app:
+6. On the next page, click your unique URL to open your deployment of the sample app
 
    <img width="395" alt="CleanShot 2023-09-06 at 16 30 45@2x" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/3082fdde-0f45-42d1-b442-7100b239ee11">
 
