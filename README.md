@@ -1,59 +1,72 @@
-# Stripe Issuing and Treasury: An Embedded Finance Example
+# Stripe Issuing and Treasury: An Embedded Finance starter application
 
-This demo application enables users to work with an Embedded Finance experience, utilising Stripe's Issuing and Treasury APIs.
+This sample demonstrates a basic web application with embedded finance features built on Stripe’s Issuing and Treasury APIs.
 
-The application provides the following features:
+<p align="center">
+  <img width="715" alt="CleanShot 2023-09-06 at 16 28 21@2x" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/5acecf09-d65d-499c-9171-eb187656dd2b">
+</p>
 
-- Creation of a Stripe [Custom connect](https://stripe.com/docs/connect/custom-accounts) Account and a Stripe Treasury Financial Account.
-- Use of [Connect Onboarding](https://stripe.com/docs/connect/connect-onboarding) for Custom accounts setup.
-- Financial Account balance display.
-- Visualisation of incoming and outgoing funds via a chart.
-- Transaction report display.
-- Cardholder creation and card issuing, with the Financial Account serving as the funds source.
-- Compliance-maintained card information display using Stripe Elements.
-- Display of Financial Account's Routing and Account numbers.
-- Money transfer from the Financial Account with ACH or Wire Transfers.
+## Demo
 
-Additionally, a *Test Data* section helps to understand different mechanisms for funding Financial Accounts, by simulating the following:
+See the sample app live at <https://baas.stripe.dev>
 
-- Transfer reception from an external account to a Financial Account.
-- Creating a PaymentLink and then, paying out funds from the Connected Account balance to the Financial Account Balance.
+If you choose not to skip onboarding with prefilled info, then follow these steps when redirected to the Stripe Connect Onboarding form:
+
+- Enter “000 000 0000” for phone number and any fake email address
+- Click “Use test code” when prompted for SMS verification
+- Click “Skip this step” when prompted to verify your identity
+
+## Features
+
+- Onboard and verify business customers 🔍
+- Issue cards 💳
+- Display full card numbers with PCI compliance 🔢
+- Create financial accounts 🏦
+- Simulate test payments ⚡
+- Review transactions 📃
+
+For details of more features see the [Issuing and Treasury sample app documentation](https://stripe.com/docs/payments/checkout/subscriptions).
 
 ## Prerequisites
 
-- **A Stripe account**:
-  - Register for a Stripe account here: <https://dashboard.stripe.com/register>
-  - Sign up for testmode Issuing + Treasury [here](https://dashboard.stripe.com/setup/treasury/activate?a=1) (a fresh account works best)
-- **Stripe API keys**: Obtain your keys via <https://dashboard.stripe.com/test/apikeys>
+- Register for a Stripe account here: <https://dashboard.stripe.com/register>
+- Activate Issuing and Treasury in test mode through this link: <https://dashboard.stripe.com/setup/treasury/activate?a=1>
+- Obtain your Stripe API keys at <https://dashboard.stripe.com/test/apikeys>
 
-## Deploy Demo on Render
+## Deploy the web application on Render (no code)
 
-You can get started using this app without any coding experience. It can be deployed directly to Render. Just click the button below.
+You can immediately deploy this sample app to a unique, public URL (for example: `https://issuing-treasury-xyz1.onrender.com`) with no coding required by using Render. Follow these steps:
 
-Once you log in or sign up on Render, it will initiate setup with a free database and a web service instance.
+1. Click the button below to deploy the sample app to Render:
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/stripe-samples/issuing-treasury)
+   [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/stripe-samples/issuing-treasury)
 
-When prompted, please provide:
+2. Create a free Render account when prompted if you don't already have one
+3. On the Blueprints screen, enter the following:
+   - **Blueprint Name**: Enter any name (i.e. "Demo") 
+   - **Branch**: Select `main`
+   - **Under Key / Value**:
+     - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your publishable test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `pk_test_...`)
+     - **STRIPE_SECRET_KEY**: Your secret test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `sk_test_...`))
+4. Click the "Apply" button
+5. Wait for Render to finish creating the services which can take up to 5 minutes and then click "issuing-treasury":
 
-- **Blueprint Name**: Enter any name (e.g., "Demo")
-- **Under Key / Value**:
-  - **STRIPE_SECRET_KEY**: Enter your Stripe testmode API key
-  - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Enter your Stripe testmode publishable key
+   <img width="375" alt="CleanShot 2023-09-06 at 16 30 05@2x" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/9b0c7831-8ebd-4f17-8016-f990828c6978">
+6. On the next page, click your unique URL to open your deployment of the sample app:
 
-After around 5 minutes, click on the "issuing-treasury" link to access your deployed web service's URL.
+   <img width="395" alt="CleanShot 2023-09-06 at 16 30 45@2x" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/3082fdde-0f45-42d1-b442-7100b239ee11">
 
-## Local Development
+## Local development
 
-You can also clone this repo and run it locally.
+You can also clone this repo and run it locally by following these steps:
 
-### Dependency Installation
+### Dependency installation
 
 Post cloning this repo, install the dependencies using:
 
     npm install
 
-### .env File Setup
+### .env File setup
 
 Replicate `.env.example` as `.env` (in project root directory) using:
 
@@ -66,7 +79,7 @@ Update `.env` to reflect:
 - **NEXTAUTH_SECRET**: For JWT encryption by NextAuth.js ([learn more](https://next-auth.js.org/configuration/options#nextauth_secret)). Use `openssl rand -base64 32` to obtain a new one
 - **CONNECT_ONBOARDING_REDIRECT_URL**: Your application host, for local use, use "<http://localhost:3000>"
 
-### Database Setup
+### Database setup
 
 On Mac, follow these instructions to install Postgres:
 
@@ -85,37 +98,17 @@ If it errors out (perhaps due to permission issues), simply run the included scr
 
 This script creates a local Postgres `issuing_treasury` database.
 
-### Application Launch
+### Application launch
 
 After necessary setups, launch the application with `npm run dev`.
 
 *Note: This application serves as an example and should not proceed to production deployment as it is.*
 
-## Demo Mode
+## Customizing your UI with the Devias Material UI theme
 
-### Entering Connect Onboarding Test Data
+This sample uses the [free Devias UI kit](https://github.com/devias-io/material-kit-react) under an MIT license, which seamlessly integrates with Material UI and React.
 
-This section applies to you if:
-* You're running the sample app in demo mode (using the `NEXT_PUBLIC_DEMO_MODE="true"` environment variable) or are trying out the onboarding process through our [baas.stripe.dev](https://baas.stripe.dev) deployment
-* You've selected to not "Skip onboarding using prefilled info" in the "Complete your profile" page (`/onboard`)
+You can easily customize aspects of the theme like the color palette by modifying the code in `/src/theme`.
 
-You will need to enter the following test data to successfully complete the onboarding process. Here are the steps:
+To build a full-featured, production-ready application we recommend the [Devias Pro](https://material-kit-pro-react.devias.io/) version, which offers additional layouts, advanced React components, pre-built dashboards, and essential TypeScript support that ensures your code remains clean, robust, and scalable.
 
-1. Click "Continue" to initiate the simulation. You'll be guided through the verification steps.
-2. When prompted, use the following test details:
-  * Test Phone Number: `000 000 0000`
-  * Test Email: `Enter any fake email`
-  * Test SMS Verification Code: Click `Use test code`
-3. Finally click `Skip this step` to skip "Verifying your identity".
-
-It's important to know that in demo mode, all your required account information is automatically generated and submitted when you click "Continue". Any attempt to use genuine personal information will result in a mismatch, preventing successful onboarding.
-
-## Elevate Your Development with Devias Pro
-
-The free Devias theme, licensed under MIT, played a vital role in the swift rewrite of this sample app. Beyond delivering an elegant UX, this theme seamlessly integrated with Material UI and React, enabling us to create a compelling and high-quality sample app.
-
-While the free Devias theme was instrumental in the creation of this sample app, we recommend the Devias Pro version for developers aiming to build full-featured, production-ready applications.
-
-Devias Pro goes above and beyond the capabilities of the free version, offering an extensive array of advanced components and features carefully crafted to expedite and enhance your development process. By upgrading to Devias Pro, you'll gain access to additional layouts, advanced React components, pre-built dashboards, and essential TypeScript support that ensures your code remains clean, robust, and scalable.
-
-Explore and experience the benefits of Devias Pro [here](https://material-kit-pro-react.devias.io/).
