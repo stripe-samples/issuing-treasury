@@ -216,7 +216,7 @@ const Page = ({
                   <CardContent>
                     <Alert severity="info">
                       Your financial account is being set up. Please check back
-                      later to send or receive money.
+                      in a few minutes to send or receive money.
                     </Alert>
                   </CardContent>
                 </Card>
@@ -229,7 +229,7 @@ const Page = ({
         </Container>
       </Box>
       <FloatingTestPanel title="Simulate a received credit">
-        <TestDataCreateReceivedCredit />
+        <TestDataCreateReceivedCredit financialAccount={financialAccount} />
       </FloatingTestPanel>
     </>
   );
