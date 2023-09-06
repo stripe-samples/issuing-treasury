@@ -25,7 +25,7 @@ If you choose not to skip onboarding with prefilled info, then follow these step
 - Simulate test payments ⚡
 - Review transactions 📃
 
-For details of more features see the [Issuing and Treasury sample app documentation](https://site-admin.stripe.com/docs/treasury/examples/sample-app).
+For details of more features see the [Issuing and Treasury sample app documentation](https://stripe.com/docs/treasury/examples/sample-app).
 
 ## Prerequisites
 
