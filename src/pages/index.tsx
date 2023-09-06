@@ -86,7 +86,7 @@ const Page = ({
         </Container>
       </Box>
       <FloatingTestPanel title="Simulate a received credit">
-        <TestDataCreateReceivedCredit />
+        <TestDataCreateReceivedCredit financialAccount={financialAccount} />
       </FloatingTestPanel>
     </>
   );

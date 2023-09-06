@@ -1,6 +1,7 @@
 import { Alert, Box, Button, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import Stripe from "stripe";
 
 import {
   extractJsonFromResponse,
@@ -8,7 +9,11 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 
-const TestDataCreateReceivedCredit = () => {
+const TestDataCreateReceivedCredit = ({
+  financialAccount,
+}: {
+  financialAccount: Stripe.Treasury.FinancialAccount;
+}) => {
   const router = useRouter();
 
   const [submitting, setSubmitting] = useState(false);
@@ -32,6 +37,9 @@ const TestDataCreateReceivedCredit = () => {
     });
   };
 
+  const faAddress = financialAccount.financial_addresses[0];
+  const faAddressCreated = faAddress != undefined;
+
   return (
     <>
       <Stack spacing={1}>
@@ -49,13 +57,19 @@ const TestDataCreateReceivedCredit = () => {
           button.
         </Typography>
         {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
+        {!faAddressCreated && (
+          <Alert severity="info">
+            Your financial account is being set up. Please check back in a few
+            minutes to send or receive money.
+          </Alert>
+        )}
       </Stack>
       <Box mt={3}>
         <Button
           variant="contained"
           color="primary"
           size="large"
-          disabled={submitting}
+          disabled={!faAddressCreated || submitting}
           onClick={simulateReceivedCredit}
           fullWidth
         >
