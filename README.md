@@ -29,8 +29,7 @@ For details of more features see the [Issuing and Treasury sample app documentat
 
 ## Prerequisites
 
-- Register for a Stripe account here: <https://dashboard.stripe.com/register>
-- Activate Issuing and Treasury in test mode through this link: <https://dashboard.stripe.com/setup/treasury/activate?a=1>
+- Activate Stripe Issuing and Treasury in test mode through this link: <https://dashboard.stripe.com/setup/treasury/activate?a=1>
 - Obtain your Stripe API keys at <https://dashboard.stripe.com/test/apikeys>
 
 ## Deploy the web application on Render (no code)
