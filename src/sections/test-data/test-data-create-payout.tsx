@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
+import { formatUSD } from "src/utils/format";
+
 function TestDataCreatePayout(props: {
   availableBalance: number;
   hasExternalAccount: boolean;
@@ -24,11 +26,6 @@ function TestDataCreatePayout(props: {
   const [hasExternalAccount, setHasExternalAccount] = useState(
     props.hasExternalAccount,
   );
-
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
 
   const createPayout = async () => {
     try {
@@ -113,7 +110,7 @@ function TestDataCreatePayout(props: {
             >
               Available Balance
             </Link>{" "}
-            of <strong>{formatter.format(availableBalance / 100)}</strong>.
+            of <strong>{formatUSD(availableBalance / 100)} USD</strong>.
           </Typography>
 
           {error && (
