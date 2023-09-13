@@ -1,30 +1,20 @@
 import { ApiResponse } from "src/types/api-response";
 
 export const postApi = async (path: string, body?: object) => {
-  return await fetch(path, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  return await fetchApi("POST", path, body);
 };
 
 export const putApi = async (path: string, body?: object) => {
-  return await fetch(path, {
-    method: "PUT",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  return await fetchApi("PUT", path, body);
 };
 
-export const fetchApi = async (path: string, body?: object) => {
+export const patchApi = async (path: string, body?: object) => {
+  return await fetchApi("PATCH", path, body);
+};
+
+const fetchApi = async (method: HttpMethod, path: string, body?: object) => {
   return await fetch(path, {
-    method: "POST",
+    method,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json; charset=utf-8",
