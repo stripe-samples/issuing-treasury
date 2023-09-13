@@ -40,8 +40,8 @@ function CardStatusSwitcher({
     const result = await extractJsonFromResponse(response);
     handleResult({
       result,
-      onSuccess: () => {
-        router.push(`/cards/${cardId}`);
+      onSuccess: async () => {
+        await router.push(`/cards/${cardId}`);
       },
       onError: (error) => {
         setErrorAlertText(`Error: ${error.message}`);

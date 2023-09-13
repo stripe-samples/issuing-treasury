@@ -45,20 +45,20 @@ export const extractJsonFromResponse = async <TData = object>(
   }
 };
 
-export const handleResult = ({
+export const handleResult = async ({
   result,
   onSuccess,
   onError,
   onFinally,
 }: {
   result: ApiResponse;
-  onSuccess: () => void;
+  onSuccess: () => Promise<void> | void;
   onError: (error: { message: string; details?: string | undefined }) => void;
   onFinally?: () => void;
 }) => {
   try {
     if (result.success) {
-      onSuccess();
+      await onSuccess();
     } else {
       if (result.error == undefined) {
         throw new Error("Something went wrong");
