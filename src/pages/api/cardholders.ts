@@ -2,31 +2,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
 import { apiResponse } from "src/types/api-response";
+import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    switch (req.method) {
-      case "POST":
-        return await createCardholder(req, res);
-      case "PUT":
-        return await updateCardholder(req, res);
-      default:
-        return res.status(400).json({ error: "Bad Request" });
-    }
-  } catch (error) {
-    return res.status(500).json(
-      apiResponse({
-        success: false,
-        error: {
-          message: (error as Error).message,
-          details: (error as Error).stack,
-        },
-      }),
-    );
-  }
-};
+const handler = async (req: NextApiRequest, res: NextApiResponse) =>
+  handlerMapping(req, res, {
+    POST: createCardholder,
+    PUT: updateCardholder,
+  });
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First name is required"),
@@ -117,7 +101,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   );
 
-  return res.json(apiResponse({ success: true }));
+  return res.status(200).json(apiResponse({ success: true }));
 };
 
 const updateCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -146,7 +130,7 @@ const updateCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   );
 
-  return res.json(apiResponse({ success: true }));
+  return res.status(200).json(apiResponse({ success: true }));
 };
 
 export default handler;

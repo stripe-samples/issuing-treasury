@@ -1,4 +1,6 @@
-import { ApiResponse } from "src/types/api-response";
+import { NextApiRequest, NextApiResponse } from "next";
+
+import { apiResponse, ApiResponse } from "src/types/api-response";
 
 export const postApi = async (path: string, body?: object) => {
   return await fetchApi("POST", path, body);
@@ -59,5 +61,46 @@ export const handleResult = async ({
     if (onFinally) {
       onFinally();
     }
+  }
+};
+
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+type HandlerMapping = {
+  [key in HttpMethod]?: (req: NextApiRequest, res: NextApiResponse) => void;
+};
+
+export const handlerMapping = (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  mapping: HandlerMapping,
+) => {
+  try {
+    if (req.method == undefined) {
+      return res
+        .status(400)
+        .json(
+          apiResponse({ success: false, error: { message: "Bad Request" } }),
+        );
+    }
+    const handler = mapping[req.method as HttpMethod];
+    if (handler == undefined) {
+      return res
+        .status(400)
+        .json(
+          apiResponse({ success: false, error: { message: "Bad Request" } }),
+        );
+    }
+    return handler(req, res);
+  } catch (error) {
+    return res.status(500).json(
+      apiResponse({
+        success: false,
+        error: {
+          message: (error as Error).message,
+          details: (error as Error).stack,
+        },
+      }),
+    );
   }
 };

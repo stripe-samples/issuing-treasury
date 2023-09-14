@@ -37,7 +37,11 @@ import * as Yup from "yup";
 import stateMachine from "src/sections/financial-account/send-money-wizard-state-machine";
 import NetworkType from "src/types/network-type";
 import TransactionResult from "src/types/transaction-result";
-import { fetchApi } from "src/utils/api-helpers";
+import {
+  extractJsonFromResponse,
+  handleResult,
+  postApi,
+} from "src/utils/api-helpers";
 
 const DEFAULT_TRANSACTION_RESULT = TransactionResult.POSTED;
 
@@ -741,14 +745,17 @@ const SendMoneyWizardDialog = () => {
         transaction_result: transactionResult,
       };
 
-      const response = await fetchApi("/api/send_money", body);
-
-      if (response.ok) {
-        send("COMPLETE");
-      } else {
-        const result = await response.json();
-        setSendingErrorText(`An error occurred: ${result.error}`);
-      }
+      const response = await postApi("/api/send_money", body);
+      const result = await extractJsonFromResponse(response);
+      handleResult({
+        result,
+        onSuccess: () => {
+          send("COMPLETE");
+        },
+        onError: (error) => {
+          setSendingErrorText((error as Error).message);
+        },
+      });
     } catch (error) {
       setSendingErrorText((error as Error).message);
     } finally {
