@@ -76,8 +76,8 @@ const CreateCardholderForm = ({
     const result = await extractJsonFromResponse(response);
     handleResult({
       result,
-      onSuccess: () => {
-        router.push("/cardholders");
+      onSuccess: async () => {
+        await router.push("/cardholders");
         onCreate();
       },
       onError: (error) => {

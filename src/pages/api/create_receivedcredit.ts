@@ -1,33 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
+import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    switch (req.method) {
-      case "POST":
-        return await simulateReceivedCredit(req, res);
-      default:
-        return res
-          .status(400)
-          .json(
-            apiResponse({ success: false, error: { message: "Bad Request" } }),
-          );
-    }
-  } catch (error) {
-    return res.status(500).json(
-      apiResponse({
-        success: false,
-        error: {
-          message: (error as Error).message,
-          details: (error as Error).stack,
-        },
-      }),
-    );
-  }
-};
+const handler = async (req: NextApiRequest, res: NextApiResponse) =>
+  handlerMapping(req, res, {
+    POST: simulateReceivedCredit,
+  });
 
 const simulateReceivedCredit = async (
   req: NextApiRequest,
@@ -54,7 +35,7 @@ const simulateReceivedCredit = async (
     { stripeAccount: StripeAccountId },
   );
 
-  return res.json(apiResponse({ success: true }));
+  return res.status(200).json(apiResponse({ success: true }));
 };
 
 export default handler;

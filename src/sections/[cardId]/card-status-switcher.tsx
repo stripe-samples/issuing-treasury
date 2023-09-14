@@ -13,7 +13,7 @@ import Stripe from "stripe";
 import {
   extractJsonFromResponse,
   handleResult,
-  putApi,
+  patchApi,
 } from "src/utils/api-helpers";
 
 function CardStatusSwitcher({
@@ -34,14 +34,14 @@ function CardStatusSwitcher({
     e.preventDefault();
     setSubmitting(true);
     const newStatus = cardStatus === "active" ? "inactive" : "active";
-    const response = await putApi(`/api/cards/${cardId}/switch-card-status`, {
+    const response = await patchApi(`/api/cards/${cardId}/switch-card-status`, {
       newStatus: newStatus,
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
       result,
-      onSuccess: () => {
-        router.push(`/cards/${cardId}`);
+      onSuccess: async () => {
+        await router.push(`/cards/${cardId}`);
       },
       onError: (error) => {
         setErrorAlertText(`Error: ${error.message}`);
@@ -65,20 +65,25 @@ function CardStatusSwitcher({
     <>
       {cardStatus != "canceled" ? (
         <>
-          <Button
-            variant="contained"
-            sx={{ whiteSpace: "nowrap" }}
-            onClick={handleSwitchCardStatus}
-            disabled={submitting}
-          >
-            {cardStatus == "inactive"
-              ? submitting
-                ? "Activating Card..."
-                : "Activate Card"
-              : submitting
-              ? "Deactivating Card..."
-              : "Deactivate Card"}
-          </Button>
+          {cardStatus == "inactive" ? (
+            <Button
+              variant="contained"
+              sx={{ whiteSpace: "nowrap" }}
+              onClick={handleSwitchCardStatus}
+              disabled={submitting}
+            >
+              {submitting ? "Activating Card..." : "Activate Card"}
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              sx={{ whiteSpace: "nowrap" }}
+              onClick={handleSwitchCardStatus}
+              disabled={submitting}
+            >
+              {submitting ? "Deactivating Card..." : "Deactivate Card"}
+            </Button>
+          )}
           <Dialog
             open={showErrorAlert}
             aria-labelledby="alert-dialog-title"

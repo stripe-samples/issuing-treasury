@@ -1,36 +1,60 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import * as Yup from "yup";
 
+import { apiResponse } from "src/types/api-response";
+import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") {
-    return res.status(400).json({ error: "Bad Request" });
-  }
+const handler = async (req: NextApiRequest, res: NextApiResponse) =>
+  handlerMapping(req, res, {
+    POST: createPayout,
+  });
+
+const createPayout = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getSessionForServerSide(req, res);
+  const StripeAccountId = session.accountId;
+  const stripe = stripeClient();
+
+  const balance = await stripe.balance.retrieve({
+    stripeAccount: StripeAccountId,
+  });
+  const availableBalance = balance.available[0].amount;
+
+  const validationSchema = Yup.object({
+    availableBalance: Yup.number()
+      .required("Available balance is required")
+      .moreThan(
+        0,
+        "Available balance must be greater than $0.00 in order to do a payout",
+      ),
+  });
 
   try {
-    const session = await getSessionForServerSide(req, res);
-    const StripeAccountId = session.accountId;
-    const stripe = stripeClient();
-
-    const balance = await stripe.balance.retrieve({
-      stripeAccount: StripeAccountId,
-    });
-
-    await stripe.payouts.create(
+    await validationSchema.validate(
       {
-        amount: balance.available[0].amount,
-        currency: "usd",
+        availableBalance,
       },
-      { stripeAccount: StripeAccountId },
+      { abortEarly: false },
     );
-
-    return res.json({ success: true });
-  } catch (err) {
-    return res
-      .status(401)
-      .json({ urlCreated: false, error: (err as Error).message });
+  } catch (error) {
+    return res.status(400).json(
+      apiResponse({
+        success: false,
+        error: { message: (error as Error).message },
+      }),
+    );
   }
+
+  await stripe.payouts.create(
+    {
+      amount: availableBalance,
+      currency: "usd",
+    },
+    { stripeAccount: StripeAccountId },
+  );
+
+  return res.status(200).json(apiResponse({ success: true }));
 };
 
 export default handler;

@@ -14,7 +14,7 @@ import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
@@ -58,6 +58,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const Page = () => {
+  const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
+    useState(false);
+
   const initialValues = {
     email: "",
     ...(isDemoMode() && {
@@ -72,8 +75,9 @@ const Page = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setErrors, setSubmitting }: FormikHelpers<typeof initialValues>,
+    { setErrors }: FormikHelpers<typeof initialValues>,
   ) => {
+    setIsContinuingSuccessfully(true);
     const response = await postApi("/api/register", {
       email: values.email,
       password: values.password,
@@ -93,9 +97,7 @@ const Page = () => {
       },
       onError: (error) => {
         setErrors({ submit: (error as Error).message });
-      },
-      onFinally: () => {
-        setSubmitting(false);
+        setIsContinuingSuccessfully(false);
       },
     });
   };
@@ -121,7 +123,7 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isSubmitting, values, isValid, dirty }) => (
+        {({ errors, touched, values, isValid, dirty }) => (
           <Form>
             <Stack spacing={2}>
               {isDemoMode() && (
@@ -180,9 +182,9 @@ const Page = () => {
                 sx={{ mt: 3 }}
                 type="submit"
                 variant="contained"
-                disabled={!dirty || isSubmitting || !isValid}
+                disabled={!dirty || isContinuingSuccessfully || !isValid}
               >
-                {isSubmitting ? "Continuing..." : "Continue"}
+                {isContinuingSuccessfully ? "Continuing..." : "Continue"}
               </Button>
             </Stack>
           </Form>

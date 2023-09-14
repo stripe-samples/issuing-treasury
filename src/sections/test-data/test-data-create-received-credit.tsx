@@ -25,8 +25,8 @@ const TestDataCreateReceivedCredit = ({
     const result = await extractJsonFromResponse(response);
     handleResult({
       result,
-      onSuccess: () => {
-        router.reload();
+      onSuccess: async () => {
+        await router.push("/");
       },
       onError: (error) => {
         setErrorText(`Error: ${error.message}`);

@@ -49,8 +49,8 @@ const CardholderUpdateWidget = ({ cardholderId }: { cardholderId: string }) => {
     const result = await extractJsonFromResponse(response);
     handleResult({
       result,
-      onSuccess: () => {
-        router.push("/cardholders");
+      onSuccess: async () => {
+        await router.push("/cardholders");
       },
       onError: (error) => {
         setErrorText(`Error: ${error.message}`);

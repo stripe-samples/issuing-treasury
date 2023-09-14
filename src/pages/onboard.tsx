@@ -34,6 +34,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const Page = () => {
+  const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
+    useState(false);
   const [showConnectOnboardingGuide, setShowConnectOnboardingGuide] =
     useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -56,8 +58,9 @@ const Page = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setErrors, setSubmitting }: FormikHelpers<typeof initialValues>,
+    { setErrors }: FormikHelpers<typeof initialValues>,
   ) => {
+    setIsContinuingSuccessfully(true);
     const response = await postApi("/api/onboard", {
       businessName: values.businessName,
       ...(isDemoMode() && { skipOnboarding: values.skipOnboarding }),
@@ -76,9 +79,7 @@ const Page = () => {
       },
       onError: (error) => {
         setErrors({ submit: (error as Error).message });
-      },
-      onFinally: () => {
-        setSubmitting(false);
+        setIsContinuingSuccessfully(false);
       },
     });
   };
@@ -102,19 +103,12 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({
-          errors,
-          touched,
-          isSubmitting,
-          values,
-          isValid,
-          setFieldValue,
-        }) => {
+        {({ errors, touched, values, isValid, setFieldValue }) => {
           const submitButtonText = values.skipOnboarding
-            ? isSubmitting
+            ? isContinuingSuccessfully
               ? "Entering demo..."
               : "Enter demo"
-            : isSubmitting
+            : isContinuingSuccessfully
             ? "Continuing..."
             : "Continue";
 
@@ -167,7 +161,7 @@ const Page = () => {
                   sx={{ mt: 3 }}
                   type="submit"
                   variant="contained"
-                  disabled={isSubmitting || !isValid}
+                  disabled={isContinuingSuccessfully || !isValid}
                 >
                   {submitButtonText}
                 </Button>

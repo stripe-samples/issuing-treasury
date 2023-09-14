@@ -12,7 +12,7 @@ import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import router from "next/router";
 import { signIn } from "next-auth/react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
@@ -37,6 +37,8 @@ const validationSchema = Yup.object({
 
 const Page = () => {
   const { callbackUrl } = router.query;
+  const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
+    useState(false);
 
   const initialValues = {
     email: "",
@@ -46,13 +48,10 @@ const Page = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    {
-      setStatus,
-      setErrors,
-      setSubmitting,
-    }: FormikHelpers<typeof initialValues>,
+    { setStatus, setErrors }: FormikHelpers<typeof initialValues>,
   ) => {
     try {
+      setIsContinuingSuccessfully(true);
       const response = await signIn("credentials", {
         email: values.email,
         password: values.password,
@@ -66,7 +65,7 @@ const Page = () => {
     } catch (err) {
       setStatus({ success: false });
       setErrors({ submit: (err as Error).message });
-      setSubmitting(false);
+      setIsContinuingSuccessfully(false);
     }
   };
 
@@ -91,7 +90,7 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isSubmitting }) => (
+        {({ errors, touched }) => (
           <Form>
             <Stack spacing={3}>
               <Field
@@ -128,9 +127,9 @@ const Page = () => {
               sx={{ mt: 3 }}
               type="submit"
               variant="contained"
-              disabled={isSubmitting}
+              disabled={isContinuingSuccessfully}
             >
-              {isSubmitting ? "Logging in..." : "Continue"}
+              {isContinuingSuccessfully ? "Logging in..." : "Continue"}
             </Button>
           </Form>
         )}

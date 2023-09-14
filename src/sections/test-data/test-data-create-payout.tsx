@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Card,
   CardActions,
@@ -11,71 +12,63 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-function TestDataCreatePayout(props: {
+import {
+  extractJsonFromResponse,
+  handleResult,
+  postApi,
+} from "src/utils/api-helpers";
+import { formatUSD } from "src/utils/format";
+
+function TestDataCreatePayout({
+  availableBalance: availableBalanceProp,
+  hasExternalAccount: hasExternalAccountProp,
+}: {
   availableBalance: number;
   hasExternalAccount: boolean;
 }) {
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [errorText, setErrorText] = useState("");
-  const [availableBalance, setAvailableBalance] = useState(
-    props.availableBalance,
-  );
+  const [availableBalance, setAvailableBalance] =
+    useState(availableBalanceProp);
   const [hasExternalAccount, setHasExternalAccount] = useState(
-    props.hasExternalAccount,
+    hasExternalAccountProp,
   );
-
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
 
   const createPayout = async () => {
-    try {
-      setSubmitted(true);
-      const response = await fetch("api/create_payout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
-      const responseData = await response.json();
-      if (responseData.success === true) {
+    setSubmitting(true);
+    const response = await postApi("api/create_payout");
+    const result = await extractJsonFromResponse(response);
+    handleResult({
+      result,
+      onSuccess: async () => {
         setAvailableBalance(0);
-      } else {
-        setError(true);
-        setErrorText(responseData.error);
-      }
-    } catch (error) {
-      setError(true);
-      setErrorText("An error occurred while creating the payout.");
-    } finally {
-      setSubmitted(false);
-    }
+      },
+      onError: (error) => {
+        setErrorText(`Error: ${error.message}`);
+      },
+      onFinally: () => {
+        setSubmitting(false);
+      },
+    });
   };
 
   const addExternalAccount = async () => {
-    try {
-      setSubmitted(true);
-      const response = await fetch("api/add_external_account", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
-      const responseData = await response.json();
-      if (responseData.externalAcctAdded === true) {
+    setSubmitting(true);
+    const response = await postApi("api/add_external_account");
+    const result = await extractJsonFromResponse(response);
+
+    handleResult({
+      result,
+      onSuccess: async () => {
         setHasExternalAccount(true);
-      } else {
-        setError(true);
-        setErrorText(responseData.error);
-      }
-    } catch (error) {
-      setError(true);
-      setErrorText("An error occurred while adding the external account.");
-    } finally {
-      setSubmitted(false);
-    }
+      },
+      onError: (error) => {
+        setErrorText(`Error: ${error.message}`);
+      },
+      onFinally: () => {
+        setSubmitting(false);
+      },
+    });
   };
 
   return (
@@ -113,13 +106,12 @@ function TestDataCreatePayout(props: {
             >
               Available Balance
             </Link>{" "}
-            of <strong>{formatter.format(availableBalance / 100)}</strong>.
+            of <strong>{formatUSD(availableBalance / 100)} USD</strong>.
           </Typography>
-
-          {error && (
-            <Typography variant="body2" color="error" align="center">
+          {errorText !== "" && (
+            <Alert severity="error" sx={{ pt: 2 }}>
               {errorText}
-            </Typography>
+            </Alert>
           )}
         </Stack>
       </CardContent>
@@ -131,9 +123,9 @@ function TestDataCreatePayout(props: {
             color="primary"
             size="large"
             onClick={createPayout}
-            disabled={submitted}
+            disabled={submitting}
           >
-            {submitted ? "Creating..." : "Create Payout"}
+            {submitting ? "Creating..." : "Create Payout"}
           </Button>
         ) : (
           <Button
@@ -141,9 +133,9 @@ function TestDataCreatePayout(props: {
             color="primary"
             size="large"
             onClick={addExternalAccount}
-            disabled={submitted}
+            disabled={submitting}
           >
-            {submitted
+            {submitting
               ? "Adding..."
               : "Add Financial Account as External Account"}
           </Button>

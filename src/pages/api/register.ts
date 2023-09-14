@@ -4,55 +4,36 @@ import * as Yup from "yup";
 
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
+import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
-const getCharacterValidationError = (str: string) => {
-  return `Your password must have at least 1 ${str} character`;
-};
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Must be a valid email")
-    .max(255)
-    .required("Email is required"),
-  password: Yup.string()
-    .max(255)
-    .required("Password is required")
-    // check minimum characters
-    .min(8, "Password must have at least 8 characters")
-    // different error messages for different requirements
-    .matches(/[0-9]/, getCharacterValidationError("digit"))
-    .matches(/[a-z]/, getCharacterValidationError("lowercase"))
-    .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-});
-
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    switch (req.method) {
-      case "POST":
-        return await register(req, res);
-      default:
-        return res
-          .status(400)
-          .json(
-            apiResponse({ success: false, error: { message: "Bad Request" } }),
-          );
-    }
-  } catch (error) {
-    return res.status(500).json(
-      apiResponse({
-        success: false,
-        error: {
-          message: (error as Error).message,
-          details: (error as Error).stack,
-        },
-      }),
-    );
-  }
-};
+const handler = async (req: NextApiRequest, res: NextApiResponse) =>
+  handlerMapping(req, res, {
+    POST: register,
+  });
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, password } = req.body;
+
+  const getCharacterValidationError = (str: string) => {
+    return `Your password must have at least 1 ${str} character`;
+  };
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Must be a valid email")
+      .max(255)
+      .required("Email is required"),
+    password: Yup.string()
+      .max(255)
+      .required("Password is required")
+      // check minimum characters
+      .min(8, "Password must have at least 8 characters")
+      // different error messages for different requirements
+      .matches(/[0-9]/, getCharacterValidationError("digit"))
+      .matches(/[a-z]/, getCharacterValidationError("lowercase"))
+      .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
+  });
 
   try {
     await validationSchema.validate({ email, password }, { abortEarly: false });
