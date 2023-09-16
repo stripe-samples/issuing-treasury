@@ -37,7 +37,7 @@ export const items = [
     ),
   },
   {
-    title: "Authorizations",
+    title: "Card authorizations",
     path: "/authorizations",
     icon: (
       <SvgIcon fontSize="small">
