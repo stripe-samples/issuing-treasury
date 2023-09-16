@@ -46,7 +46,7 @@ export const items = [
     ),
   },
   {
-    title: "Financial Account",
+    title: "Financial account",
     path: "/financial_account",
     icon: (
       <SvgIcon fontSize="small">
@@ -55,7 +55,7 @@ export const items = [
     ),
   },
   {
-    title: "Test Data",
+    title: "Test data",
     path: "/test-data",
     icon: (
       <SvgIcon fontSize="small">

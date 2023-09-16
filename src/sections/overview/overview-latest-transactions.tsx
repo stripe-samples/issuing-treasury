@@ -35,7 +35,7 @@ export const OverviewLatestTransactions = (props: {
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest Transactions" />
+      <CardHeader title="Latest transactions" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
           {faTransactions.length > 0 ? (

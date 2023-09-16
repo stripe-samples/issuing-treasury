@@ -132,7 +132,7 @@ export const OverviewFinancialAccountFundsFlowChart = ({
             Sync
           </Button>
         }
-        title="Account Funds Flow"
+        title="Account funds flow"
       />
       <CardContent>
         <Chart

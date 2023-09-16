@@ -80,12 +80,12 @@ const AuthorizationsTable = ({
                 </TableCell>
                 <TableCell sortDirection="desc">Date</TableCell>
                 <TableCell align="right">Amount</TableCell>
-                <TableCell>Name On Card</TableCell>
-                <TableCell sx={{ whiteSpace: "nowrap" }}>Card Last 4</TableCell>
+                <TableCell>Name on card</TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>Card last 4</TableCell>
                 <TableCell>{/* Approved? */}</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Merchant</TableCell>
-                <TableCell>Merchant Category</TableCell>
+                <TableCell>Merchant category</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
