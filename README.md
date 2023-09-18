@@ -45,7 +45,7 @@ You can immediately deploy this sample app to a unique, public URL (for example:
    - **Blueprint Name**: Enter any name (i.e. "Demo") 
    - **Branch**: Select `main`
    - **Under Key / Value**:
-     - **STRIPE_PUBLISHABLE_KEY**: Your publishable test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `pk_test_...`)
+     - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your publishable test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `pk_test_...`)
      - **STRIPE_SECRET_KEY**: Your secret test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `sk_test_...`))
 4. Click the "Apply" button
 5. Wait for Render to finish creating the services (this can take up to 5 minutes) and then click "issuing-treasury"
@@ -73,10 +73,11 @@ Replicate `.env.local.example` as `.env.local` (in project root directory) using
 
 Update `.env.local` to reflect:
 
+- **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your Stripe publishable key
 - **STRIPE_SECRET_KEY**: Your Stripe private key
-- **STRIPE_PUBLISHABLE_KEY**: Your Stripe publishable key
 - **NEXTAUTH_SECRET**: For JWT encryption by NextAuth.js ([learn more](https://next-auth.js.org/configuration/options#nextauth_secret)). Use `openssl rand -base64 32` to obtain a new one
-- **EXTERNAL_URL**: Your application host, for local use you can keep the default "<http://localhost:3000>"
+- **NEXTAUTH_URL**: Your application URL, for local use you can keep the default "<http://localhost:3000>"
+- **CONNECT_ONBOARDING_REDIRECT_URL**: Your application URL, for local use you can keep the default "<http://localhost:3000>"
 
 ### Database setup
 

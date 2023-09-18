@@ -7,7 +7,6 @@ services:
   # If you plan to have your own custom domain, you can remove these environment variables being assigned here and
   # assign them to your custom domain values through the Render.com dashboard once this web service has been provisioned
   startCommand: >
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$STRIPE_PUBLISHABLE_KEY
     NEXTAUTH_URL=$RENDER_EXTERNAL_URL
     CONNECT_ONBOARDING_REDIRECT_URL=$RENDER_EXTERNAL_URL
     npm run start
@@ -19,7 +18,7 @@ services:
       fromDatabase:
         name: issuing-treasury-db
         property: connectionString
-    - key: STRIPE_PUBLISHABLE_KEY
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
       sync: false
     - key: STRIPE_SECRET_KEY
       sync: false
