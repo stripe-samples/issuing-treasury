@@ -76,7 +76,6 @@ Update `.env.local` to reflect:
 - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your Stripe publishable key
 - **STRIPE_SECRET_KEY**: Your Stripe private key
 - **NEXTAUTH_SECRET**: For JWT encryption by NextAuth.js ([learn more](https://next-auth.js.org/configuration/options#nextauth_secret)). Use `openssl rand -base64 32` to obtain a new one
-- **NEXTAUTH_URL**: Your application URL, for local use you can keep the default "<http://localhost:3000>"
 - **CONNECT_ONBOARDING_REDIRECT_URL**: Your application URL, for local use you can keep the default "<http://localhost:3000>"
 
 ### Database setup
