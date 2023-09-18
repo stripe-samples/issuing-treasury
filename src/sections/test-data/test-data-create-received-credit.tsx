@@ -44,16 +44,16 @@ const TestDataCreateReceivedCredit = ({
     <>
       <Stack spacing={1}>
         <Typography variant="body2">
-          By pressing the &quot;Simulate Received Credit&quot; button, you will
-          simulate receiving a transfer into your Financial Account by creating
+          By pressing the &quot;Simulate received credit&quot; button, you will
+          simulate receiving a transfer into your financial account by creating
           a testmode received credit.
         </Typography>
         <Typography variant="body2">
-          You can send funds directly to your Financial Account via ACH or Wire
-          Transfers by using its Account and Routing numbers.
+          You can send funds directly to your financial account via ACH or Wire
+          Transfers by using its account and routing numbers.
         </Typography>
         <Typography variant="body2">
-          Your Financial Account will receive $500.00 each time you press the
+          Your financial account will receive $500.00 each time you press the
           button.
         </Typography>
         {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
@@ -73,7 +73,7 @@ const TestDataCreateReceivedCredit = ({
           onClick={simulateReceivedCredit}
           fullWidth
         >
-          {submitting ? "Simulating..." : "Simulate Received Credit"}
+          {submitting ? "Simulating..." : "Simulate received credit"}
         </Button>
       </Box>
     </>

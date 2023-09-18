@@ -79,9 +79,9 @@ function TestDataCreatePaymentLink() {
           </Typography>
           <Typography>
             Use the test card number{" "}
-            <Typography variant="button">4000 0000 0000 0077</Typography> which
-            will cause the charge to succeed. Funds are added directly to your
-            available balance, bypassing your pending balance.
+            <Typography variant="button">4000 0000 0000 0077</Typography> to
+            make the charge succeed. Funds are added directly to your available
+            balance, bypassing your pending balance.
           </Typography>
           {(!isDemoMode() || router.query.debug) && (
             <Typography>

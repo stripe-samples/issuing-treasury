@@ -255,7 +255,7 @@ const CardholderCreateWidget = () => {
   return (
     <div>
       <Button onClick={() => setShowModal(true)} variant="contained">
-        Add
+        Create a new cardholder
       </Button>
       <Dialog
         open={showModal}
@@ -264,7 +264,7 @@ const CardholderCreateWidget = () => {
         aria-describedby="modal-modal-description"
         id="new-cardholder-modal"
       >
-        <DialogTitle>Add New Cardholder</DialogTitle>
+        <DialogTitle>Add new cardholder</DialogTitle>
         <Divider />
         <DialogContent>
           <CreateCardholderForm formRef={formRef} onCreate={handleCreate} />

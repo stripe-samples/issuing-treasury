@@ -64,7 +64,7 @@ const Page = ({
       }}
     >
       <Container maxWidth="xl">
-        <Typography variant="h4">Authorization Details</Typography>
+        <Typography variant="h4">Authorization details</Typography>
         <Card sx={{ mt: 4 }}>
           <CardContent>
             <Grid container rowSpacing={3}>
@@ -138,7 +138,7 @@ const Page = ({
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <Typography variant="subtitle2">Merchant Category</Typography>
+                <Typography variant="subtitle2">Merchant category</Typography>
                 <Box sx={{ mt: 0.5 }}>
                   <Typography variant="body2" color="text.secondary">
                     {titleize(

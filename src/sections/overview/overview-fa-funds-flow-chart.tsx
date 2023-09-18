@@ -1,12 +1,9 @@
-import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import {
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
-  Divider,
   SvgIcon,
   useTheme,
 } from "@mui/material";
@@ -132,7 +129,7 @@ export const OverviewFinancialAccountFundsFlowChart = ({
             Sync
           </Button>
         }
-        title="Account Funds Flow"
+        title="Account funds flow"
       />
       <CardContent>
         <Chart
@@ -143,20 +140,6 @@ export const OverviewFinancialAccountFundsFlowChart = ({
           width="100%"
         />
       </CardContent>
-      <Divider />
-      <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button
-          color="inherit"
-          endIcon={
-            <SvgIcon fontSize="small">
-              <ArrowRightIcon />
-            </SvgIcon>
-          }
-          size="small"
-        >
-          Overview
-        </Button>
-      </CardActions>
     </Card>
   );
 };

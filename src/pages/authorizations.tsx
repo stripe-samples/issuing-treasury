@@ -1,14 +1,9 @@
-import {
-  ArrowUpOnSquareIcon,
-  ArrowDownOnSquareIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import {
   Box,
   Container,
   Stack,
   Typography,
-  Button,
   SvgIcon,
   Card,
   InputAdornment,
@@ -104,33 +99,7 @@ const Page = ({
       >
         <Container maxWidth="xl">
           <Stack spacing={3}>
-            <Stack direction="row" justifyContent="space-between" spacing={4}>
-              <Stack spacing={1}>
-                <Typography variant="h4">Authorizations</Typography>
-                <Stack alignItems="center" direction="row" spacing={1}>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Import
-                  </Button>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowDownOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Export
-                  </Button>
-                </Stack>
-              </Stack>
-            </Stack>
+            <Typography variant="h4">Card authorizations</Typography>
             <Card sx={{ p: 2 }}>
               <OutlinedInput
                 defaultValue=""

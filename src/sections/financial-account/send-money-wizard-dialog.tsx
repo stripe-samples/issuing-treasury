@@ -116,7 +116,7 @@ const SelectingNetworkForm = ({
             <Grid item xs={12}>
               <Typography>
                 In this demo you can test an experience for sending funds from a
-                Treasury Financial Account to an external 3rd party US bank
+                Treasury financial account to an external 3rd party US bank
                 account. Depending on the network type, timing for funds to be
                 available may vary.
               </Typography>
@@ -766,10 +766,10 @@ const SendMoneyWizardDialog = () => {
   return (
     <>
       <Button onClick={handleOpen} variant="contained">
-        Send Money
+        Send money
       </Button>
       <Dialog open={showModal} onClose={handleClose}>
-        <DialogTitle>Send Money</DialogTitle>
+        <DialogTitle>Send money</DialogTitle>
         <Divider />
         <DialogContent>
           {current.matches("selectingNetwork") && (

@@ -86,7 +86,7 @@ const Page = ({
               <>
                 <Grid item xs={12} sm={8}>
                   <Card sx={{ height: "100%" }}>
-                    <CardHeader title="Account Information" />
+                    <CardHeader title="Account information" />
                     <List sx={{ p: 0 }}>
                       <ListItem divider sx={{ px: 3, py: 1.5 }}>
                         <Grid container spacing={1}>
@@ -95,7 +95,7 @@ const Page = ({
                               sx={{ m: 0 }}
                               primary={
                                 <Typography variant="subtitle2">
-                                  Account Holder Name
+                                  Account holder name
                                 </Typography>
                               }
                               secondary={
@@ -116,7 +116,7 @@ const Page = ({
                               sx={{ m: 0 }}
                               primary={
                                 <Typography variant="subtitle2">
-                                  Bank Name
+                                  Bank name
                                 </Typography>
                               }
                               secondary={
@@ -141,7 +141,7 @@ const Page = ({
                               sx={{ m: 0 }}
                               primary={
                                 <Typography variant="subtitle2">
-                                  Routing Number
+                                  Routing number
                                 </Typography>
                               }
                               secondary={
@@ -162,7 +162,7 @@ const Page = ({
                               sx={{ m: 0 }}
                               primary={
                                 <Typography variant="subtitle2">
-                                  Account Number
+                                  Account number
                                 </Typography>
                               }
                               secondary={
@@ -188,7 +188,7 @@ const Page = ({
                     <CardContent>
                       <Stack spacing={1} textAlign="center">
                         <Typography color="text.secondary" variant="overline">
-                          Supported Networks
+                          Supported networks
                         </Typography>
                         <Box>
                           {faAddress.supported_networks?.map((network, i) => (
@@ -212,7 +212,7 @@ const Page = ({
             ) : (
               <Grid item xs={12}>
                 <Card sx={{ height: "100%" }}>
-                  <CardHeader title="Account Information" />
+                  <CardHeader title="Account information" />
                   <CardContent>
                     <Alert severity="info">
                       Your financial account is being set up. Please check back

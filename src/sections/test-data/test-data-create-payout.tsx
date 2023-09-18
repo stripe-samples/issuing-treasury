@@ -77,12 +77,12 @@ function TestDataCreatePayout({
       <CardContent sx={{ pt: 0 }}>
         <Stack spacing={1}>
           <Typography>
-            In order to enable payouts, you need to set your Financial Account
-            as the external account for your Connected Account.
+            In order to enable payouts, you need to set your financial account
+            as the external account for your connected account.
           </Typography>
           <Typography>
-            {`If you haven't done it yet, by pressing the "Add Financial
-          Account as External Account" button, the Financial Account will be set
+            {`If you haven't done it yet, by pressing the "Add financial
+          account as external account" button, the financial account will be set
           as an external account, and manual payouts will be enabled.`}
           </Typography>
           <Typography>
@@ -104,7 +104,7 @@ function TestDataCreatePayout({
               target="_blank"
               underline="none"
             >
-              Available Balance
+              available balance
             </Link>{" "}
             of <strong>{formatUSD(availableBalance / 100)} USD</strong>.
           </Typography>
@@ -125,7 +125,7 @@ function TestDataCreatePayout({
             onClick={createPayout}
             disabled={submitting}
           >
-            {submitting ? "Creating..." : "Create Payout"}
+            {submitting ? "Creating..." : "Create payout"}
           </Button>
         ) : (
           <Button
@@ -137,7 +137,7 @@ function TestDataCreatePayout({
           >
             {submitting
               ? "Adding..."
-              : "Add Financial Account as External Account"}
+              : "Add financial account as external account"}
           </Button>
         )}
       </CardActions>
