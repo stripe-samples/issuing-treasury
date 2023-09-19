@@ -32,7 +32,7 @@ const sendMoney = async (req: NextApiRequest, res: NextApiResponse) => {
   );
   const financialAccount = financialAccounts.data[0];
 
-  /* The following example uses a hardcoded values for demo mode */
+  /* The following example uses hardcoded values for demo mode */
 
   let city, state, postal_code, line1;
 
@@ -59,7 +59,7 @@ const sendMoney = async (req: NextApiRequest, res: NextApiResponse) => {
       destination_payment_method_data: {
         type: "us_bank_account",
         us_bank_account: {
-          account_holder_type: "individual",
+          account_holder_type: "company",
           routing_number: "110000000",
           account_number: "000000000009",
         },
