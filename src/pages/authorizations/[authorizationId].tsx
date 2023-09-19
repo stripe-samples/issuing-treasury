@@ -55,6 +55,8 @@ const Page = ({
 }: {
   authorization: Stripe.Issuing.Authorization;
 }) => {
+  const declineReason = authorization.request_history.at(-1)?.reason;
+
   return (
     <Box
       component="main"
@@ -147,6 +149,16 @@ const Page = ({
                   </Typography>
                 </Box>
               </Grid>
+              {!authorization.approved && declineReason && (
+                <Grid item xs={12} sm={6} md={4}>
+                  <Typography variant="subtitle2">Decline reason</Typography>
+                  <Box sx={{ mt: 0.5 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      {titleize(declineReason.replace(/_/g, " "))}
+                    </Typography>
+                  </Box>
+                </Grid>
+              )}
             </Grid>
           </CardContent>
         </Card>
