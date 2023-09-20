@@ -37,9 +37,7 @@ const createCardKey = async (req: NextApiRequest, res: NextApiResponse) => {
   const stripe = stripeClient();
   const ephemeralKey = await stripe.ephemeralKeys.create(
     {
-      // TODO: Fix the defect upstream in Issuing Elements causing `nonce` to not be accepted so that we can uncomment
-      // this line and add `nonce` to the request body for creating the ephemeral key.
-      // nonce: nonce,
+      nonce: nonce,
       issuing_card: cardId,
     },
     {
