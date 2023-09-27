@@ -69,8 +69,8 @@ const TestDataCreateReceivedCredit = ({
         {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
         {!faAddressCreated && (
           <Alert severity="error">
-            Your financial account is being set up. Refresh the page to try
-            again.
+            Your financial account is still being set up (this can take up to
+            two minutes). Refresh this page to try again.
           </Alert>
         )}
       </Stack>
