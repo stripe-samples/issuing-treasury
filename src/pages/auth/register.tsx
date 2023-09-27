@@ -1,12 +1,8 @@
-import { ClipboardIcon } from "@heroicons/react/20/solid";
 import {
   Alert,
   Button,
-  IconButton,
-  InputAdornment,
   Link,
   Stack,
-  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
@@ -23,7 +19,7 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
-import { generateDemoEmail, isDemoMode } from "src/utils/demo-helpers";
+import { isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
 export const getServerSideProps = async (
@@ -63,11 +59,6 @@ const Page = () => {
 
   const initialValues = {
     email: "",
-    ...(isDemoMode() && {
-      // FOR-DEMO-ONLY: We're using a fake business name here but you should modify this line and collect a real business
-      //  name from the user
-      email: generateDemoEmail(),
-    }),
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
@@ -126,45 +117,16 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, values, isValid, dirty }) => (
+        {({ errors, touched, isValid, dirty }) => (
           <Form>
-            <Stack spacing={2}>
-              {isDemoMode() && (
-                <>
-                  <Alert
-                    severity="info"
-                    variant="outlined"
-                    sx={{ borderColor: "info.main" }}
-                  >
-                    Account data in this demo is auto generated. Remember this
-                    email address to log in later.
-                  </Alert>
-                </>
-              )}
+            <Stack spacing={3}>
               <Field
                 as={TextField}
                 error={!!(touched.email && errors.email)}
                 fullWidth
                 helperText={touched.email && errors.email}
-                label="Email Address"
+                label="Email"
                 name="email"
-                disabled={isDemoMode()}
-                InputProps={{
-                  endAdornment: isDemoMode() ? (
-                    <InputAdornment position="end">
-                      <IconButton
-                        color="primary"
-                        onClick={() =>
-                          navigator.clipboard.writeText(values.email)
-                        }
-                      >
-                        <SvgIcon sx={{ width: "20px", height: "20px" }}>
-                          <ClipboardIcon />
-                        </SvgIcon>
-                      </IconButton>
-                    </InputAdornment>
-                  ) : null,
-                }}
               />
               <Field
                 as={TextField}
