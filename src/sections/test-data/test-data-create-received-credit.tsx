@@ -1,4 +1,13 @@
-import { Alert, Box, Button, Stack, Typography } from "@mui/material";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
+import {
+  Alert,
+  Box,
+  Button,
+  Link,
+  Stack,
+  SvgIcon,
+  Typography,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Stripe from "stripe";
@@ -44,23 +53,24 @@ const TestDataCreateReceivedCredit = ({
     <>
       <Stack spacing={1}>
         <Typography variant="body2">
-          By pressing the &quot;Simulate received credit&quot; button, you will
-          simulate receiving a transfer into your financial account by creating
-          a testmode received credit.
-        </Typography>
-        <Typography variant="body2">
-          You can send funds directly to your financial account via ACH or Wire
-          Transfers by using its account and routing numbers.
-        </Typography>
-        <Typography variant="body2">
-          Your financial account will receive $500.00 each time you press the
-          button.
+          Your financial account will receive a $500.00{" "}
+          <Link
+            href="https://stripe.com/docs/treasury/moving-money/financial-accounts/into/received-credits"
+            target="_blank"
+            underline="none"
+          >
+            ReceivedCredit{" "}
+            <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
+              <ArrowTopRightOnSquareIcon />
+            </SvgIcon>
+          </Link>{" "}
+          each time you press the button.
         </Typography>
         {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
         {!faAddressCreated && (
-          <Alert severity="info">
-            Your financial account is being set up. Please check back in a few
-            minutes to send or receive money.
+          <Alert severity="error">
+            Your financial account is being set up. Refresh the page to try
+            again.
           </Alert>
         )}
       </Stack>
