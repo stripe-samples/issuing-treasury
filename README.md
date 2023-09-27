@@ -67,11 +67,11 @@ Post cloning this repo, install the dependencies using:
 
 ### Environment Variables File setup
 
-Replicate `.env.local.example` as `.env.local` (in project root directory) using:
+Replicate `.env.example` as `.env` (in project root directory) using:
 
-    cp .env.local.example .env.local
+    cp .env.example .env
 
-Update `.env.local` to reflect:
+Update `.env` to reflect:
 
 - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your Stripe publishable key
 - **STRIPE_SECRET_KEY**: Your Stripe private key
