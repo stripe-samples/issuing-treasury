@@ -215,8 +215,8 @@ const Page = ({
                   <CardHeader title="Account information" />
                   <CardContent>
                     <Alert severity="info">
-                      Your financial account is being set up. Please check back
-                      in a few minutes to send or receive money.
+                      Your financial account is still being set up (this can
+                      take up to two minutes). Refresh this page to try again.
                     </Alert>
                   </CardContent>
                 </Card>
