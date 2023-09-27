@@ -1,11 +1,7 @@
-import {
-  ArrowTopRightOnSquareIcon,
-  ClipboardIcon,
-} from "@heroicons/react/20/solid";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import {
   Box,
   Divider,
-  IconButton,
   MenuItem,
   MenuList,
   Link,
@@ -70,14 +66,6 @@ export const AccountPopover = ({
         <Typography variant="overline">Account</Typography>
         <Typography color="text.secondary" variant="body2" noWrap>
           {session.email}
-          <IconButton
-            onClick={() => navigator.clipboard.writeText(session.email || "")}
-            sx={{ p: 0, ml: 1.5 }}
-          >
-            <SvgIcon sx={{ width: "20px", height: "20px" }}>
-              <ClipboardIcon />
-            </SvgIcon>
-          </IconButton>
         </Typography>
         {(!isDemoMode() || router.query.debug) && (
           <Typography color="text.secondary" variant="body2" mt={1}>
