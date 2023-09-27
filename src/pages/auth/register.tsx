@@ -105,7 +105,10 @@ const Page = () => {
   return (
     <>
       <Stack spacing={1} sx={{ mb: 3 }}>
-        <Typography variant="h5">Create an account</Typography>
+        <Typography variant="h5">
+          Create
+          {isDemoMode() ? " a demo account" : " an account"}
+        </Typography>
         <Typography color="text.secondary" variant="body2">
           Already have an account?&nbsp;
           <Link

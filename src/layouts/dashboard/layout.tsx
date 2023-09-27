@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Head from "next/head";
 import { usePathname } from "next/navigation";
@@ -61,7 +61,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 Payments Company for money transmission services and account
                 services with funds held at Example Bank, Member FDIC. Stripe
                 Issuing & Treasury Platform Demo Visa® Commercial Credit cards
-                are issued by Example Bank.
+                are issued by Example Bank.{" "}
+                <Link
+                  href="https://stripe.com/privacy"
+                  target="_blank"
+                  underline="none"
+                >
+                  Stripe Privacy Policy & Terms apply
+                </Link>
               </Typography>
             </Box>
           </Box>
