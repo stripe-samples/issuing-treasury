@@ -107,7 +107,7 @@ const WelcomeMessage = () => (
       receive payments with a financial account, and more.
     </Typography>
     <Typography>
-      Visit our{" "}
+      View our{" "}
       <Link
         href="https://stripe.com/docs/financial-services/demo-app"
         target="_blank"
@@ -115,7 +115,7 @@ const WelcomeMessage = () => (
       >
         docs
       </Link>{" "}
-      and view{" "}
+      and{" "}
       <Link
         href="https://github.com/stripe-samples/issuing-treasury"
         target="_blank"
