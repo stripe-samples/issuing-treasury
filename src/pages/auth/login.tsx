@@ -1,6 +1,5 @@
 import {
   Alert,
-  Box,
   Button,
   Link,
   Stack,
@@ -16,6 +15,7 @@ import { ReactNode, useState } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
+import { isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
 export const getServerSideProps = async (
@@ -55,11 +55,20 @@ const Page = () => {
       const response = await signIn("credentials", {
         email: values.email,
         password: values.password,
-        callbackUrl: (callbackUrl || "/") as string,
+        redirect: false,
       });
-      if (response?.error === "CredentialsSignin") {
-        throw new Error("Invalid credentials");
-      } else if (response?.error) {
+
+      if (response?.ok) {
+        router.push((callbackUrl ?? "/") as string);
+      } else if (response?.error === "CredentialsSignin") {
+        if (isDemoMode()) {
+          throw new Error(
+            "Incorrect email or password. Demo accounts inactive for 6 months are deleted.",
+          );
+        } else {
+          throw new Error("Incorrect email or password.");
+        }
+      } else {
         throw new Error("Something went wrong");
       }
     } catch (err) {
@@ -110,27 +119,18 @@ const Page = () => {
                 name="password"
                 type="password"
               />
-            </Stack>
-            {errors.submit && (
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                mt={3}
+              {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
+              <Button
+                fullWidth
+                size="large"
+                sx={{ mt: 3 }}
+                type="submit"
+                variant="contained"
+                disabled={isContinuingSuccessfully}
               >
-                <Alert severity="error">{errors.submit}</Alert>
-              </Box>
-            )}
-            <Button
-              fullWidth
-              size="large"
-              sx={{ mt: 3 }}
-              type="submit"
-              variant="contained"
-              disabled={isContinuingSuccessfully}
-            >
-              {isContinuingSuccessfully ? "Logging in..." : "Continue"}
-            </Button>
+                {isContinuingSuccessfully ? "Logging in..." : "Continue"}
+              </Button>
+            </Stack>
           </Form>
         )}
       </Formik>
