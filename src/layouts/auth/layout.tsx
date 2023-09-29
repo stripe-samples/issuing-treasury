@@ -101,10 +101,10 @@ const WelcomeMessage = () => (
       The Stripe Issuing & Treasury Platform Demo
     </Typography>
     <Typography color="neutral.500">
-      This web application shows how Stripe Issuing and Treasury APIs can be
-      used in an end-to-end integration. Create an account with the demo
-      platform and see how to create cards, test authorizations, make and
-      receive payments with a financial account, and more.
+      This web app demonstrates Stripe Issuing and Treasury APIs in an
+      end-to-end integration. Create an account with the demo platform to create
+      cards, test purchases, and make and receive payments with a financial
+      account.
     </Typography>
     <Typography>
       View our{" "}
