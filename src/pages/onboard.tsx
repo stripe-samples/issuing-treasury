@@ -91,9 +91,14 @@ const Page = () => {
     <>
       <Stack spacing={1} sx={{ mb: 3 }}>
         <Typography variant="h5">Enter your business name</Typography>
-        <Typography color="text.secondary" variant="body2">
-          We&apos;ll create a demo account for this business
-        </Typography>
+        {isDemoMode() && (
+          <Typography color="text.secondary" variant="body2">
+            <>
+              We&apos;ll create a demo account for this business. Accounts are
+              deleted after 6 months of inactivity.
+            </>
+          </Typography>
+        )}
       </Stack>
       <Formik
         initialValues={initialValues}
