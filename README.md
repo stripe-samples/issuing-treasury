@@ -25,59 +25,24 @@ If you choose not to skip onboarding with prefilled info, then follow these step
 - Simulate test payments ⚡
 - Review transactions 📃
 
-For details of more features see the [Issuing and Treasury sample app documentation](https://stripe.com/docs/treasury/examples/sample-app).
+For details of more features see the [Issuing and Treasury sample app documentation](https://stripe.com/docs/financial-services/demo-app).
 
-## Prerequisites
+## Guide
 
-- Activate Stripe Issuing and Treasury in test mode through this link: <https://dashboard.stripe.com/setup/treasury/activate?a=1>
-- Obtain your Stripe API keys at <https://dashboard.stripe.com/test/apikeys>
-
-## Deploy the web application on Render (no code)
-
-You can immediately deploy this sample app to a unique, public URL (for example: `https://issuing-treasury-xyz1.onrender.com`) with no coding required by using Render. Follow these steps:
-
-1. Click the button below to deploy the sample app to Render:
-
-   [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/stripe-samples/issuing-treasury)
-
-2. Create a free Render account when prompted if you don't already have one
-3. On the Blueprints screen, enter the following:
-   - **Blueprint Name**: Enter any name (i.e. "Demo") 
-   - **Branch**: Select `main`
-   - **Under Key / Value**:
-     - **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your publishable test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `pk_test_...`)
-     - **STRIPE_SECRET_KEY**: Your secret test mode [API key](https://dashboard.stripe.com/test/apikeys) (starts with `sk_test_...`))
-4. Click the "Apply" button
-5. Wait for Render to finish creating the services (this can take up to 5 minutes) and then click "issuing-treasury"
-
-   <img width="375" alt="CleanShot 2023-09-06 at 16 30 05@2x" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/9b0c7831-8ebd-4f17-8016-f990828c6978">
-6. On the next page, click your unique URL to open your deployment of the sample app
-
-   <img width="395" alt="CleanShot 2023-09-06 at 16 30 45@2x" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/3082fdde-0f45-42d1-b442-7100b239ee11">
+Check out our detailed Stripe docs [here](https://stripe.com/docs/financial-services/demo-app?ui=make-your-own-copy#create-a-copy-of-the-issuing-and-treasury-demo-app)
+for getting started developing with the demo.
 
 ## Local development
 
 You can also clone this repo and run it locally by following these steps:
 
-### Dependency installation
+### Cloning and setting up secrets
 
-Post cloning this repo, install the dependencies using:
+Follow [these instructions](https://stripe.com/docs/financial-services/demo-app?ui=make-your-own-copy&make-your-own-copy-tabs=demo-app-repo#create-a-copy-of-the-issuing-and-treasury-demo-app)
+for setting up the repo locally, ensuring your Stripe platform account has Issuing and Treasury active, and setting up
+the Stripe test secrets keys.
 
-    npm install
-
-### Environment Variables File setup
-
-Replicate `.env.example` as `.env` (in project root directory) using:
-
-    cp .env.example .env
-
-Update `.env` to reflect:
-
-- **NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY**: Your Stripe publishable key
-- **STRIPE_SECRET_KEY**: Your Stripe private key
-- **NEXTAUTH_SECRET**: For JWT encryption by NextAuth.js ([learn more](https://next-auth.js.org/configuration/options#nextauth_secret)). Use `openssl rand -base64 32` to obtain a new one
-- **NEXTAUTH_URL**: Your application URL, for local use you can keep the default "<http://localhost:3000>"
-- **CONNECT_ONBOARDING_REDIRECT_URL**: Your application URL, for local use you can keep the default "<http://localhost:3000>"
+Once you've set that up, resume following these instructions here.
 
 ### Database setup
 
