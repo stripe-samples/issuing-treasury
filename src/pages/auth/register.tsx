@@ -1,12 +1,8 @@
-import { ClipboardIcon } from "@heroicons/react/20/solid";
 import {
   Alert,
   Button,
-  IconButton,
-  InputAdornment,
   Link,
   Stack,
-  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
@@ -14,7 +10,7 @@ import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
@@ -23,7 +19,7 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
-import { generateDemoEmail, isDemoMode } from "src/utils/demo-helpers";
+import { isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
 export const getServerSideProps = async (
@@ -58,13 +54,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const Page = () => {
+  const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
+    useState(false);
+
   const initialValues = {
     email: "",
-    ...(isDemoMode() && {
-      // FOR-DEMO-ONLY: We're using a fake business name here but you should modify this line and collect a real business
-      //  name from the user
-      email: generateDemoEmail(),
-    }),
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
@@ -72,8 +66,9 @@ const Page = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setErrors, setSubmitting }: FormikHelpers<typeof initialValues>,
+    { setErrors }: FormikHelpers<typeof initialValues>,
   ) => {
+    setIsContinuingSuccessfully(true);
     const response = await postApi("/api/register", {
       email: values.email,
       password: values.password,
@@ -93,9 +88,7 @@ const Page = () => {
       },
       onError: (error) => {
         setErrors({ submit: (error as Error).message });
-      },
-      onFinally: () => {
-        setSubmitting(false);
+        setIsContinuingSuccessfully(false);
       },
     });
   };
@@ -103,7 +96,10 @@ const Page = () => {
   return (
     <>
       <Stack spacing={1} sx={{ mb: 3 }}>
-        <Typography variant="h5">Create an account</Typography>
+        <Typography variant="h5">
+          Create
+          {isDemoMode() ? " a demo account" : " an account"}
+        </Typography>
         <Typography color="text.secondary" variant="body2">
           Already have an account?&nbsp;
           <Link
@@ -121,45 +117,16 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isSubmitting, values, isValid, dirty }) => (
+        {({ errors, touched, isValid, dirty }) => (
           <Form>
-            <Stack spacing={2}>
-              {isDemoMode() && (
-                <>
-                  <Alert
-                    severity="info"
-                    variant="outlined"
-                    sx={{ borderColor: "info.main" }}
-                  >
-                    Account data in this demo is auto generated. Remember this
-                    email address to log in later.
-                  </Alert>
-                </>
-              )}
+            <Stack spacing={3}>
               <Field
                 as={TextField}
                 error={!!(touched.email && errors.email)}
                 fullWidth
                 helperText={touched.email && errors.email}
-                label="Email Address"
+                label="Email"
                 name="email"
-                disabled={isDemoMode()}
-                InputProps={{
-                  endAdornment: isDemoMode() ? (
-                    <InputAdornment position="end">
-                      <IconButton
-                        color="primary"
-                        onClick={() =>
-                          navigator.clipboard.writeText(values.email)
-                        }
-                      >
-                        <SvgIcon sx={{ width: "20px", height: "20px" }}>
-                          <ClipboardIcon />
-                        </SvgIcon>
-                      </IconButton>
-                    </InputAdornment>
-                  ) : null,
-                }}
               />
               <Field
                 as={TextField}
@@ -180,9 +147,9 @@ const Page = () => {
                 sx={{ mt: 3 }}
                 type="submit"
                 variant="contained"
-                disabled={!dirty || isSubmitting || !isValid}
+                disabled={!dirty || isContinuingSuccessfully || !isValid}
               >
-                {isSubmitting ? "Continuing..." : "Continue"}
+                {isContinuingSuccessfully ? "Continuing..." : "Continue"}
               </Button>
             </Stack>
           </Form>

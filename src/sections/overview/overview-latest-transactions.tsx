@@ -1,12 +1,8 @@
-import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
 import {
   Box,
-  Button,
   Card,
-  CardActions,
   CardHeader,
   Divider,
-  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -35,7 +31,7 @@ export const OverviewLatestTransactions = (props: {
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest Transactions" />
+      <CardHeader title="Latest transactions" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
           {faTransactions.length > 0 ? (
@@ -92,22 +88,6 @@ export const OverviewLatestTransactions = (props: {
           )}
         </Box>
       </Scrollbar>
-      {faTransactions.length > 0 && (
-        <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button
-            color="inherit"
-            endIcon={
-              <SvgIcon fontSize="small">
-                <ArrowRightIcon />
-              </SvgIcon>
-            }
-            size="small"
-            variant="text"
-          >
-            View all
-          </Button>
-        </CardActions>
-      )}
     </Card>
   );
 };

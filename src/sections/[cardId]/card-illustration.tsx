@@ -122,7 +122,8 @@ const CardIllustration = ({
         sx={{
           borderRadius: 2,
           boxShadow: 12,
-          backgroundColor: "primary.main",
+          // This is the background color of the card illustration
+          backgroundColor: "#212121",
           backgroundImage: `url("/assets/cards/card-background.png")`,
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

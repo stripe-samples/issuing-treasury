@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Card,
   CardActions,
@@ -13,6 +14,11 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
+import {
+  extractJsonFromResponse,
+  handleResult,
+  postApi,
+} from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 
 function TestDataCreatePaymentLink() {
@@ -23,34 +29,35 @@ function TestDataCreatePaymentLink() {
   const router = useRouter();
 
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [gotUrl, setGotUrl] = useState(false);
   const [url, setUrl] = useState("");
 
   const createPaymentLink = async () => {
-    try {
-      setSubmitted(true);
-      const response = await fetch("api/create_paymentlink", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
-      const responseData = await response.json();
-      if (responseData.urlCreated === true) {
+    setSubmitted(true);
+    const response = await postApi("api/create_paymentlink");
+    const result = await extractJsonFromResponse(response);
+    handleResult({
+      result,
+      onSuccess: async () => {
         setGotUrl(true);
-        setUrl(responseData.paymentLink);
-      } else {
-        setError(true);
-        setErrorText(responseData.error);
-      }
-    } catch (error) {
-      setError(true);
-      setErrorText("An error occurred while creating the PaymentLink.");
-    } finally {
-      setSubmitted(false);
-    }
+        if (result.data && "paymentLink" in result.data) {
+          const data = result.data as {
+            paymentLink: string;
+          };
+          const paymentLink = data.paymentLink;
+          setUrl(paymentLink);
+        } else {
+          throw new Error("Something went wrong");
+        }
+      },
+      onError: (error) => {
+        setErrorText(`Error: ${error.message}`);
+      },
+      onFinally: () => {
+        setSubmitted(false);
+      },
+    });
   };
 
   return (
@@ -72,9 +79,9 @@ function TestDataCreatePaymentLink() {
           </Typography>
           <Typography>
             Use the test card number{" "}
-            <Typography variant="button">4000 0000 0000 0077</Typography> which
-            will cause the charge to succeed. Funds are added directly to your
-            available balance, bypassing your pending balance.
+            <Typography variant="button">4000 0000 0000 0077</Typography> to
+            make the charge succeed. Funds are added directly to your available
+            balance, bypassing your pending balance.
           </Typography>
           {(!isDemoMode() || router.query.debug) && (
             <Typography>
@@ -89,11 +96,7 @@ function TestDataCreatePaymentLink() {
               in the Stripe dashboard.
             </Typography>
           )}
-          {error && (
-            <Typography variant="body2" color="error" align="center">
-              {errorText}
-            </Typography>
-          )}
+          {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
         </Stack>
       </CardContent>
       <Divider />

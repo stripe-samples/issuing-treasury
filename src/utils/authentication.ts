@@ -5,13 +5,21 @@ import { hasOutstandingRequirements } from "./onboarding-helpers";
 import { prisma } from "src/db";
 
 export const authenticateUser = async (email: string, password: string) => {
-  const user = await prisma.user.findFirst({
+  const userToAuthenticate = await prisma.user.findFirst({
     where: { email },
   });
 
-  const passwordMatch = await bcrypt.compare(password, user?.password || "");
+  const passwordMatch = await bcrypt.compare(
+    password,
+    userToAuthenticate?.password || "",
+  );
 
-  if (user && passwordMatch) {
+  if (userToAuthenticate && passwordMatch) {
+    const user = await prisma.user.update({
+      where: { id: userToAuthenticate.id },
+      data: { lastLoginAt: new Date() },
+    });
+
     const requiresOnboarding = await hasOutstandingRequirements(user.accountId);
 
     return {

@@ -44,7 +44,7 @@ const FloatingTestPanel = ({
         }
         onClick={() => setOpen(true)}
       >
-        Generate Test Data
+        Generate test data
       </Button>
       <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
         <DialogTitle

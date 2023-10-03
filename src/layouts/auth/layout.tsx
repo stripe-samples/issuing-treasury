@@ -98,23 +98,24 @@ const TopLogoBar = () => (
 const WelcomeMessage = () => (
   <Stack spacing={3}>
     <Typography variant="h4">
-      Welcome to Stripe Issuing & Treasury Platform Demo
+      The Stripe Issuing & Treasury Platform Demo
     </Typography>
     <Typography color="neutral.500">
-      Experience the power of Stripe&apos;s Issuing and Treasury APIs with our
-      interactive demo app. Discover how easy it is to create virtual cards,
-      manage funds, and streamline financial operations.
+      This web app demonstrates Stripe Issuing and Treasury APIs in an
+      end-to-end integration. Create an account with the demo platform to create
+      cards, test purchases, and make and receive payments with a financial
+      account.
     </Typography>
     <Typography>
-      Visit our{" "}
+      View our{" "}
       <Link
-        href="https://stripe.com/docs/financial-services"
+        href="https://stripe.com/docs/financial-services/demo-app"
         target="_blank"
         underline="none"
       >
         docs
       </Link>{" "}
-      and view{" "}
+      and{" "}
       <Link
         href="https://github.com/stripe-samples/issuing-treasury"
         target="_blank"
@@ -123,6 +124,11 @@ const WelcomeMessage = () => (
         source code
       </Link>{" "}
       on GitHub
+    </Typography>
+    <Typography>
+      <Link href="https://stripe.com/privacy" target="_blank" underline="none">
+        Stripe Privacy Policy & Terms apply
+      </Link>
     </Typography>
   </Stack>
 );

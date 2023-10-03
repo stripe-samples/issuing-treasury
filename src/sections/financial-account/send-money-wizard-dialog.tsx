@@ -37,7 +37,11 @@ import * as Yup from "yup";
 import stateMachine from "src/sections/financial-account/send-money-wizard-state-machine";
 import NetworkType from "src/types/network-type";
 import TransactionResult from "src/types/transaction-result";
-import { fetchApi } from "src/utils/api-helpers";
+import {
+  extractJsonFromResponse,
+  handleResult,
+  postApi,
+} from "src/utils/api-helpers";
 
 const DEFAULT_TRANSACTION_RESULT = TransactionResult.POSTED;
 
@@ -112,7 +116,7 @@ const SelectingNetworkForm = ({
             <Grid item xs={12}>
               <Typography>
                 In this demo you can test an experience for sending funds from a
-                Treasury Financial Account to an external 3rd party US bank
+                Treasury financial account to an external 3rd party US bank
                 account. Depending on the network type, timing for funds to be
                 available may vary.
               </Typography>
@@ -741,14 +745,17 @@ const SendMoneyWizardDialog = () => {
         transaction_result: transactionResult,
       };
 
-      const response = await fetchApi("/api/send_money", body);
-
-      if (response.ok) {
-        send("COMPLETE");
-      } else {
-        const result = await response.json();
-        setSendingErrorText(`An error occurred: ${result.error}`);
-      }
+      const response = await postApi("/api/send_money", body);
+      const result = await extractJsonFromResponse(response);
+      handleResult({
+        result,
+        onSuccess: () => {
+          send("COMPLETE");
+        },
+        onError: (error) => {
+          setSendingErrorText((error as Error).message);
+        },
+      });
     } catch (error) {
       setSendingErrorText((error as Error).message);
     } finally {
@@ -759,10 +766,10 @@ const SendMoneyWizardDialog = () => {
   return (
     <>
       <Button onClick={handleOpen} variant="contained">
-        Send Money
+        Send money
       </Button>
       <Dialog open={showModal} onClose={handleClose}>
-        <DialogTitle>Send Money</DialogTitle>
+        <DialogTitle>Send money</DialogTitle>
         <Divider />
         <DialogContent>
           {current.matches("selectingNetwork") && (

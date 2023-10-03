@@ -181,7 +181,7 @@ const GenerateTestDataDrawer = ({ cardId }: { cardId: string }) => {
             <ArrowTopRightOnSquareIcon />
           </SvgIcon>
         </Link>{" "}
-        and clicking on the &quot;Create test authorization&quot; button.
+        and clicking on the &quot;Create test purchase&quot; button.
       </Typography>
     </FloatingTestPanel>
   );

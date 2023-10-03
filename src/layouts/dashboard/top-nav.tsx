@@ -1,10 +1,7 @@
 import Bars3Icon from "@heroicons/react/24/solid/Bars3Icon";
-import BellIcon from "@heroicons/react/24/solid/BellIcon";
 import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
-import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import {
   Avatar,
-  Badge,
   Box,
   IconButton,
   Stack,
@@ -70,34 +67,16 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
               </IconButton>
             </Tooltip>
           </Stack>
-          <Stack alignItems="center" direction="row" spacing={2}>
-            <Tooltip title="Contacts">
-              <IconButton>
-                <SvgIcon fontSize="small">
-                  <UsersIcon />
-                </SvgIcon>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Notifications">
-              <IconButton>
-                <Badge badgeContent={4} color="success" variant="dot">
-                  <SvgIcon fontSize="small">
-                    <BellIcon />
-                  </SvgIcon>
-                </Badge>
-              </IconButton>
-            </Tooltip>
-            <Avatar
-              onClick={accountPopover.handleOpen}
-              ref={accountPopover.anchorRef}
-              sx={{
-                cursor: "pointer",
-                height: 40,
-                width: 40,
-              }}
-              src="/assets/avatars/avatar-anika-visser.png"
-            />
-          </Stack>
+          <Avatar
+            onClick={accountPopover.handleOpen}
+            ref={accountPopover.anchorRef}
+            sx={{
+              cursor: "pointer",
+              height: 40,
+              width: 40,
+            }}
+            src="/assets/avatars/avatar-anika-visser.png"
+          />
         </Stack>
       </Box>
       <AccountPopover

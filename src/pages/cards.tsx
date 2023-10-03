@@ -1,15 +1,4 @@
-import {
-  ArrowUpOnSquareIcon,
-  ArrowDownOnSquareIcon,
-} from "@heroicons/react/24/solid";
-import {
-  Box,
-  Container,
-  Stack,
-  Typography,
-  Button,
-  SvgIcon,
-} from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
 import React, {
   ChangeEvent,
@@ -89,31 +78,7 @@ const Page = ({ cards: allCards }: { cards: Stripe.Issuing.Card[] }) => {
         <Container maxWidth="xl">
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
-              <Stack spacing={1}>
-                <Typography variant="h4">Cards</Typography>
-                <Stack alignItems="center" direction="row" spacing={1}>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Import
-                  </Button>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowDownOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Export
-                  </Button>
-                </Stack>
-              </Stack>
+              <Typography variant="h4">Cards</Typography>
               {/* <CardCreateWidget /> */}
             </Stack>
             <CardsSearch />

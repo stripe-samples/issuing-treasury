@@ -3,42 +3,16 @@ import Stripe from "stripe";
 import * as Yup from "yup";
 
 import { apiResponse } from "src/types/api-response";
+import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
-const validationSchema = Yup.object().shape({
-  businessName: Yup.string().max(255).required("Business name is required"),
-  ...(isDemoMode() && {
-    skipOnboarding: Yup.boolean().required("Skip onboarding choice required"),
-  }),
-});
-
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    switch (req.method) {
-      case "POST":
-        return await onboard(req, res);
-      default:
-        return res
-          .status(400)
-          .json(
-            apiResponse({ success: false, error: { message: "Bad Request" } }),
-          );
-    }
-  } catch (error) {
-    return res.status(500).json(
-      apiResponse({
-        success: false,
-        error: {
-          message: (error as Error).message,
-          details: (error as Error).stack,
-        },
-      }),
-    );
-  }
-};
+const handler = async (req: NextApiRequest, res: NextApiResponse) =>
+  handlerMapping(req, res, {
+    POST: onboard,
+  });
 
 const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
@@ -49,6 +23,13 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     businessName,
     skipOnboarding,
   }: { businessName: string; skipOnboarding?: boolean } = req.body;
+
+  const validationSchema = Yup.object().shape({
+    businessName: Yup.string().max(255).required("Business name is required"),
+    ...(isDemoMode() && {
+      skipOnboarding: Yup.boolean().required("Skip onboarding choice required"),
+    }),
+  });
 
   try {
     await validationSchema.validate(

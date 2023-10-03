@@ -1,4 +1,3 @@
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import {
   Stack,
   Typography,
@@ -12,9 +11,7 @@ import {
   DialogTitle,
   DialogActions,
   Chip,
-  Link,
   Divider,
-  SvgIcon,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { signOut } from "next-auth/react";
@@ -34,6 +31,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const Page = () => {
+  const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
+    useState(false);
   const [showConnectOnboardingGuide, setShowConnectOnboardingGuide] =
     useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -56,8 +55,9 @@ const Page = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setErrors, setSubmitting }: FormikHelpers<typeof initialValues>,
+    { setErrors }: FormikHelpers<typeof initialValues>,
   ) => {
+    setIsContinuingSuccessfully(true);
     const response = await postApi("/api/onboard", {
       businessName: values.businessName,
       ...(isDemoMode() && { skipOnboarding: values.skipOnboarding }),
@@ -76,9 +76,7 @@ const Page = () => {
       },
       onError: (error) => {
         setErrors({ submit: (error as Error).message });
-      },
-      onFinally: () => {
-        setSubmitting(false);
+        setIsContinuingSuccessfully(false);
       },
     });
   };
@@ -92,29 +90,27 @@ const Page = () => {
   return (
     <>
       <Stack spacing={1} sx={{ mb: 3 }}>
-        <Typography variant="h5">Complete your profile</Typography>
-        <Typography color="text.secondary" variant="body2">
-          To have access to all features, please complete onboarding.
-        </Typography>
+        <Typography variant="h5">Enter your business name</Typography>
+        {isDemoMode() && (
+          <Typography color="text.secondary" variant="body2">
+            <>
+              We&apos;ll create a demo account for this business. Accounts are
+              deleted after 6 months of inactivity.
+            </>
+          </Typography>
+        )}
       </Stack>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({
-          errors,
-          touched,
-          isSubmitting,
-          values,
-          isValid,
-          setFieldValue,
-        }) => {
+        {({ errors, touched, values, isValid, setFieldValue }) => {
           const submitButtonText = values.skipOnboarding
-            ? isSubmitting
+            ? isContinuingSuccessfully
               ? "Entering demo..."
               : "Enter demo"
-            : isSubmitting
+            : isContinuingSuccessfully
             ? "Continuing..."
             : "Continue";
 
@@ -146,7 +142,7 @@ const Page = () => {
                       }}
                       label={
                         <Typography variant="body2">
-                          Skip onboarding using prefilled info
+                          Skip the rest of onboarding
                         </Typography>
                       }
                     />
@@ -167,7 +163,7 @@ const Page = () => {
                   sx={{ mt: 3 }}
                   type="submit"
                   variant="contained"
-                  disabled={isSubmitting || !isValid}
+                  disabled={isContinuingSuccessfully || !isValid}
                 >
                   {submitButtonText}
                 </Button>
@@ -202,79 +198,58 @@ const ConnectOnboardingGuideDialog = ({
     open={showConnectOnboardingGuide}
     onClose={() => setShowConnectOnboardingGuide(false)}
   >
-    <DialogTitle>Enter Onboarding Test Data</DialogTitle>
+    <DialogTitle>
+      Use these test values in Stripe&apos;s hosted onboarding form
+    </DialogTitle>
     <Divider />
     <DialogContent>
       {/* <DialogContentText>Hello World</DialogContentText> */}
       <Stack spacing={2}>
         <Typography variant="body2">
-          You&apos;ve selected to onboard using our interactive onboarding
-          simulation. To complete the process, simply follow these steps:
+          To complete onboarding, you&apos;ll be redirected to Stripe&apos;s
+          hosted onboarding form.
         </Typography>
         <Typography variant="body2">
-          These steps are also available{" "}
-          <Link
-            href="https://github.com/stripe-samples/issuing-treasury/tree/main#entering-connect-onboarding-test-data"
-            target="_blank"
-            underline="none"
-          >
-            here{" "}
-            <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
-              <ArrowTopRightOnSquareIcon />
-            </SvgIcon>
-          </Link>
-          .
+          We&apos;ve prefilled the account data for this demo. If you don&apos;t
+          follow these steps, you&apos;ll get an error.
         </Typography>
         <ol>
           <li>
             <Typography variant="body2">
-              Click &quot;Continue&quot; to initiate the simulation. You&apos;ll
-              be guided through the verification steps.
-            </Typography>
-          </li>
-          <li>
-            <Typography variant="body2">
-              When prompted, use the following test details:
+              On the &quot;Let&apos;s get started&quot; screen, enter:
             </Typography>
             <ul>
               <li>
                 <Typography variant="body2">
-                  Test Phone Number:{" "}
+                  Mobile Number:{" "}
                   <Chip variant="outlined" label="000 000 0000" size="small" />
                 </Typography>
               </li>
               <li>
                 <Typography variant="body2">
-                  Test Email:{" "}
+                  Email:{" "}
                   <Chip
                     variant="outlined"
-                    label="Enter any fake email"
+                    label="Any fake email address"
                     size="small"
                   />
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2">
-                  Test SMS Verification Code: Click{" "}
-                  <Chip variant="outlined" label="Use test code" size="small" />
                 </Typography>
               </li>
             </ul>
           </li>
           <li>
             <Typography variant="body2">
-              Finally click{" "}
-              <Chip variant="outlined" label="Skip this step" size="small" /> to
-              skip &quot;Verifying your identity&quot;.
+              At &quot;Verify your mobile number&quot;, click{" "}
+              <Chip variant="outlined" label="Use test code" size="small" />
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="body2">
+              At &quot;Verify your identity&quot;, click{" "}
+              <Chip variant="outlined" label="Skip this step" size="small" />
             </Typography>
           </li>
         </ol>
-        <Typography variant="body2">
-          It&apos;s important to know that all your required account information
-          has been automatically generated for this simulation. Any attempt to
-          use genuine personal information will result in a mismatch, preventing
-          successful onboarding.
-        </Typography>
       </Stack>
     </DialogContent>
     <Divider />

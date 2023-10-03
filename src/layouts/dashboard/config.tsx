@@ -5,6 +5,7 @@ import {
   UsersIcon,
   WrenchScrewdriverIcon,
   ShoppingBagIcon,
+  CogIcon,
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
@@ -37,7 +38,7 @@ export const items = [
     ),
   },
   {
-    title: "Authorizations",
+    title: "Card authorizations",
     path: "/authorizations",
     icon: (
       <SvgIcon fontSize="small">
@@ -46,7 +47,7 @@ export const items = [
     ),
   },
   {
-    title: "Financial Account",
+    title: "Financial account",
     path: "/financial_account",
     icon: (
       <SvgIcon fontSize="small">
@@ -55,11 +56,20 @@ export const items = [
     ),
   },
   {
-    title: "Test Data",
+    title: "Test data",
     path: "/test-data",
     icon: (
       <SvgIcon fontSize="small">
         <WrenchScrewdriverIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Settings",
+    path: "/settings",
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
       </SvgIcon>
     ),
   },

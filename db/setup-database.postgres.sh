@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ideally you should be able to use `npx prisma db push` to migrate your SQLite database but if that fails for any
+# Ideally you should be able to use `npx prisma db push` to migrate your Postgres database but if that fails for any
 # reason, you can use this script to get started quickly.
 
 DB_NAME="issuing_treasury"
@@ -23,7 +23,10 @@ CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
-  account_id TEXT NOT NULL
+  account_id TEXT NOT NULL,
+  last_login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 "
 

@@ -1,6 +1,16 @@
-import { Alert, Box, Button, Stack, Typography } from "@mui/material";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
+import {
+  Alert,
+  Box,
+  Button,
+  Link,
+  Stack,
+  SvgIcon,
+  Typography,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import Stripe from "stripe";
 
 import {
   extractJsonFromResponse,
@@ -8,7 +18,11 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 
-const TestDataCreateReceivedCredit = () => {
+const TestDataCreateReceivedCredit = ({
+  financialAccount,
+}: {
+  financialAccount: Stripe.Treasury.FinancialAccount;
+}) => {
   const router = useRouter();
 
   const [submitting, setSubmitting] = useState(false);
@@ -20,8 +34,8 @@ const TestDataCreateReceivedCredit = () => {
     const result = await extractJsonFromResponse(response);
     handleResult({
       result,
-      onSuccess: () => {
-        router.reload();
+      onSuccess: async () => {
+        await router.push("/");
       },
       onError: (error) => {
         setErrorText(`Error: ${error.message}`);
@@ -32,34 +46,44 @@ const TestDataCreateReceivedCredit = () => {
     });
   };
 
+  const faAddress = financialAccount.financial_addresses[0];
+  const faAddressCreated = faAddress != undefined;
+
   return (
     <>
       <Stack spacing={1}>
         <Typography variant="body2">
-          By pressing the &quot;Simulate Received Credit&quot; button, you will
-          simulate receiving a transfer into your Financial Account by creating
-          a testmode received credit.
-        </Typography>
-        <Typography variant="body2">
-          You can send funds directly to your Financial Account via ACH or Wire
-          Transfers by using its Account and Routing numbers.
-        </Typography>
-        <Typography variant="body2">
-          Your Financial Account will receive $500.00 each time you press the
-          button.
+          Your financial account will receive a $500.00{" "}
+          <Link
+            href="https://stripe.com/docs/treasury/moving-money/financial-accounts/into/received-credits"
+            target="_blank"
+            underline="none"
+          >
+            ReceivedCredit{" "}
+            <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
+              <ArrowTopRightOnSquareIcon />
+            </SvgIcon>
+          </Link>{" "}
+          each time you press the button.
         </Typography>
         {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
+        {!faAddressCreated && (
+          <Alert severity="error">
+            Your financial account is still being set up (this can take up to
+            two minutes). Refresh this page to try again.
+          </Alert>
+        )}
       </Stack>
       <Box mt={3}>
         <Button
           variant="contained"
           color="primary"
           size="large"
-          disabled={submitting}
+          disabled={!faAddressCreated || submitting}
           onClick={simulateReceivedCredit}
           fullWidth
         >
-          {submitting ? "Simulating..." : "Simulate Received Credit"}
+          {submitting ? "Simulating..." : "Simulate received credit"}
         </Button>
       </Box>
     </>

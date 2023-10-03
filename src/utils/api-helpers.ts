@@ -1,30 +1,22 @@
-import { ApiResponse } from "src/types/api-response";
+import { NextApiRequest, NextApiResponse } from "next";
+
+import { apiResponse, ApiResponse } from "src/types/api-response";
 
 export const postApi = async (path: string, body?: object) => {
-  return await fetch(path, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  return await fetchApi("POST", path, body);
 };
 
 export const putApi = async (path: string, body?: object) => {
-  return await fetch(path, {
-    method: "PUT",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  return await fetchApi("PUT", path, body);
 };
 
-export const fetchApi = async (path: string, body?: object) => {
+export const patchApi = async (path: string, body?: object) => {
+  return await fetchApi("PATCH", path, body);
+};
+
+const fetchApi = async (method: HttpMethod, path: string, body?: object) => {
   return await fetch(path, {
-    method: "POST",
+    method,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json; charset=utf-8",
@@ -45,20 +37,20 @@ export const extractJsonFromResponse = async <TData = object>(
   }
 };
 
-export const handleResult = ({
+export const handleResult = async ({
   result,
   onSuccess,
   onError,
   onFinally,
 }: {
   result: ApiResponse;
-  onSuccess: () => void;
+  onSuccess: () => Promise<void> | void;
   onError: (error: { message: string; details?: string | undefined }) => void;
   onFinally?: () => void;
 }) => {
   try {
     if (result.success) {
-      onSuccess();
+      await onSuccess();
     } else {
       if (result.error == undefined) {
         throw new Error("Something went wrong");
@@ -69,5 +61,46 @@ export const handleResult = ({
     if (onFinally) {
       onFinally();
     }
+  }
+};
+
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+type HandlerMapping = {
+  [key in HttpMethod]?: (req: NextApiRequest, res: NextApiResponse) => void;
+};
+
+export const handlerMapping = (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  mapping: HandlerMapping,
+) => {
+  try {
+    if (req.method == undefined) {
+      return res
+        .status(400)
+        .json(
+          apiResponse({ success: false, error: { message: "Bad Request" } }),
+        );
+    }
+    const handler = mapping[req.method as HttpMethod];
+    if (handler == undefined) {
+      return res
+        .status(400)
+        .json(
+          apiResponse({ success: false, error: { message: "Bad Request" } }),
+        );
+    }
+    return handler(req, res);
+  } catch (error) {
+    return res.status(500).json(
+      apiResponse({
+        success: false,
+        error: {
+          message: (error as Error).message,
+          details: (error as Error).stack,
+        },
+      }),
+    );
   }
 };
