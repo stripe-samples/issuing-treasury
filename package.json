@@ -26,7 +26,7 @@
     "babel-runtime": "^6.26.0",
     "bcrypt": "^5.1.1",
     "date-fns": "2.30.0",
-    "formik": "^2.4.3",
+    "formik": "^2.4.5",
     "jsonwebtoken": "^9.0.1",
     "next": "^13.5.4",
     "next-auth": "^4.23.2",
