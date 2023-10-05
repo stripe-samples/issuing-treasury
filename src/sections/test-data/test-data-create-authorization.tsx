@@ -60,7 +60,22 @@ const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
           </Link>{" "}
           will be created each time you press the button.
         </Typography>
-        {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
+        {errorText !== "" && (
+          <Alert severity="error">
+            {errorText ===
+            "Error: Insufficient funds to create a test purchase." ? (
+              <span>
+                Insufficient funds to create a test purchase.{" "}
+                <Link href="/financial_account" underline="none">
+                  Add funds
+                </Link>{" "}
+                to your financial account first.
+              </span>
+            ) : (
+              errorText
+            )}
+          </Alert>
+        )}
       </Stack>
       <Box mt={3}>
         <Button
