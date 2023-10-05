@@ -13,8 +13,6 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { GetServerSidePropsContext } from "next";
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
@@ -24,7 +22,6 @@ import CardDetails from "src/sections/[cardId]/card-details";
 import CardIllustration from "src/sections/[cardId]/card-illustration";
 import LatestCardAuthorizations from "src/sections/[cardId]/latest-card-authorizations";
 import TestDataCreateAuthorization from "src/sections/test-data/test-data-create-authorization";
-import { isDemoMode } from "src/utils/demo-helpers";
 import { formatUSD } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import { getCardDetails } from "src/utils/stripe_helpers";
@@ -64,8 +61,6 @@ const Page = ({
   cardId: string;
   card: Stripe.Issuing.Card;
 }) => {
-  const router = useRouter();
-
   const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   if (stripePublishableKey === undefined) {
     throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY must be defined");
@@ -150,26 +145,10 @@ const Page = ({
           </Grid>
         </Container>
       </Box>
-      {/* The demo mode flag can be removed from here once the Issuing spend card test helpers are GA-ed */}
-      {(!isDemoMode() || router.query.debug) && (
-        <GenerateTestDataDrawer cardId={cardId} />
-      )}
+      <FloatingTestPanel title="Create a test purchase">
+        <TestDataCreateAuthorization cardId={cardId} />
+      </FloatingTestPanel>
     </>
-  );
-};
-
-// FOR-DEMO-ONLY: This component is only useful for generating test data for demonstration purposes and can be removed
-// for a real application.
-const GenerateTestDataDrawer = ({ cardId }: { cardId: string }) => {
-  const { data: session } = useSession();
-  if (session == undefined) {
-    throw new Error("Session is missing in the request");
-  }
-
-  return (
-    <FloatingTestPanel title="Create a test purchase">
-      <TestDataCreateAuthorization cardId={cardId} />
-    </FloatingTestPanel>
   );
 };
 
