@@ -1,4 +1,3 @@
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
@@ -7,7 +6,6 @@ import {
   CardContent,
   Container,
   Grid,
-  Link,
   Stack,
   SvgIcon,
   Typography,
@@ -25,6 +23,7 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 import CardDetails from "src/sections/[cardId]/card-details";
 import CardIllustration from "src/sections/[cardId]/card-illustration";
 import LatestCardAuthorizations from "src/sections/[cardId]/latest-card-authorizations";
+import TestDataCreateAuthorization from "src/sections/test-data/test-data-create-authorization";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { formatUSD } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
@@ -168,21 +167,8 @@ const GenerateTestDataDrawer = ({ cardId }: { cardId: string }) => {
   }
 
   return (
-    <FloatingTestPanel title="Create a test authorization">
-      <Typography variant="body2">
-        You can create a test authorization by{" "}
-        <Link
-          href={`https://dashboard.stripe.com/${session.accountId}/test/issuing/cards/${cardId}`}
-          target="_blank"
-          underline="none"
-        >
-          going to this card&apos;s overview in the Stripe dashboard{" "}
-          <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
-            <ArrowTopRightOnSquareIcon />
-          </SvgIcon>
-        </Link>{" "}
-        and clicking on the &quot;Create test purchase&quot; button.
-      </Typography>
+    <FloatingTestPanel title="Create a test purchase">
+      <TestDataCreateAuthorization cardId={cardId} />
     </FloatingTestPanel>
   );
 };
