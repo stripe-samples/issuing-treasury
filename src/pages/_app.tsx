@@ -38,7 +38,7 @@ export default function App({
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Stripe Issuing and Treasury Platform Demo</title>
+        <title>Stripe Issuing and Treasury platform demo</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -47,7 +47,7 @@ export default function App({
         <meta property="og:url" content="https://baas.stripe.dev" />
         <meta
           property="og:title"
-          content="Stripe Issuing and Treasury Platform Demo"
+          content="Stripe Issuing and Treasury platform demo"
         />
         <meta
           property="og:description"
@@ -65,7 +65,7 @@ export default function App({
         <meta name="twitter:url" content="https://baas.stripe.dev" />
         <meta
           name="twitter:title"
-          content="Stripe Issuing and Treasury Platform Demo"
+          content="Stripe Issuing and Treasury platform demo"
         />
         <meta
           name="twitter:description"
