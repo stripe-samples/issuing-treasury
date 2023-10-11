@@ -38,7 +38,7 @@ export default function App({
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Stripe Issuing & Treasury Demo</title>
+        <title>Stripe Issuing and Treasury Platform Demo</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"

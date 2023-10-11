@@ -98,7 +98,7 @@ const TopLogoBar = () => (
 const WelcomeMessage = () => (
   <Stack spacing={3}>
     <Typography variant="h4">
-      The Stripe Issuing & Treasury Platform Demo
+      Stripe Issuing and Treasury Platform Demo
     </Typography>
     <Typography color="neutral.500">
       This web app demonstrates Stripe Issuing and Treasury APIs in an
@@ -123,7 +123,7 @@ const WelcomeMessage = () => (
       >
         source code
       </Link>{" "}
-      on GitHub
+      on GitHub.
     </Typography>
     <Typography>
       <Link href="https://stripe.com/privacy" target="_blank" underline="none">
