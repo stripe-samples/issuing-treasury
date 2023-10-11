@@ -55,7 +55,7 @@ export default function App({
         />
         <meta
           property="og:image"
-          content="https://baas.stripe.dev/issuing-treasury-sample-app.png"
+          content="https://baas.stripe.dev/assets/issuing-treasury-sample-app.png"
         />
         <meta
           property="og:image:alt"
@@ -73,7 +73,7 @@ export default function App({
         />
         <meta
           name="twitter:image"
-          content="https://baas.stripe.dev/issuing-treasury-sample-app.png"
+          content="https://baas.stripe.dev/assets/issuing-treasury-sample-app.png"
         />
         <meta
           name="twitter:image:alt"
