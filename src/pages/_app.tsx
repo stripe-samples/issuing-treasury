@@ -43,6 +43,42 @@ export default function App({
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://baas.stripe.dev" />
+        <meta
+          property="og:title"
+          content="Stripe Issuing and Treasury Platform Demo"
+        />
+        <meta
+          property="og:description"
+          content="This web app demonstrates Stripe Issuing and Treasury APIs in an end-to-end integration. Create an account with the demo platform to create cards, test purchases, and make and receive payments with a financial account."
+        />
+        <meta
+          property="og:image"
+          content="https://baas.stripe.dev/issuing-treasury-sample-app.png"
+        />
+        <meta
+          property="og:image:alt"
+          content="Stripe Issuing and Treasury Platform Sample App Screenshot"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://baas.stripe.dev" />
+        <meta
+          name="twitter:title"
+          content="Stripe Issuing and Treasury Platform Demo"
+        />
+        <meta
+          name="twitter:description"
+          content="This web app demonstrates Stripe Issuing and Treasury APIs in an end-to-end integration. Create an account with the demo platform to create cards, test purchases, and make and receive payments with a financial account."
+        />
+        <meta
+          name="twitter:image"
+          content="https://baas.stripe.dev/issuing-treasury-sample-app.png"
+        />
+        <meta
+          name="twitter:image:alt"
+          content="Stripe Issuing and Treasury Platform Sample App Screenshot"
+        />
       </Head>
       <SessionProvider session={session}>
         <ThemeProvider theme={theme}>
