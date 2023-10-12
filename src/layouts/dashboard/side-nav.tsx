@@ -100,7 +100,10 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           textAlign="center"
         >
           <Typography color="neutral.100" variant="subtitle2">
-            Stripe Issuing and Treasury platform demo
+            Stripe Issuing and Treasury
+          </Typography>
+          <Typography color="neutral.100" variant="subtitle2">
+            platform demo
           </Typography>
           <Typography color="neutral.600" variant="subtitle2">
             Data, financial activity and cards are fictitious and for testing
