@@ -60,6 +60,11 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         product_description: "Some demo product",
         url: "https://some-company.com",
       },
+      company: {
+        name: businessName,
+        // Fake business TIN: https://stripe.com/docs/connect/testing#test-business-tax-ids
+        tax_id: "000000000",
+      },
       individual: {
         address: {
           // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
@@ -79,7 +84,9 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         first_name: "John",
         last_name: "Smith",
         // Fake phone number: https://stripe.com/docs/connect/testing
-        phone: "0000000000",
+        // TODO: Normally 000-000-0000 is a valid testmode phone number, but it's currently broken. Once Stripe fixes
+        // it, we can change back to 000-000-0000. For now, this is a fake number that will pass validation.
+        phone: "2015550123",
       },
       ...(skipOnboarding && { tos_acceptance: TOS_ACCEPTANCE }),
       // Faking Terms of Service acceptances
