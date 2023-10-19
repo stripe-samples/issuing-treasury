@@ -109,7 +109,7 @@ const WelcomeMessage = () => (
     <Typography>
       View our{" "}
       <Link
-        href="https://stripe.com/docs/financial-services/demo-app"
+        href="https://stripe.com/docs/baas/start-integration/sample-app"
         target="_blank"
         underline="none"
       >
