@@ -60,6 +60,11 @@ If you're using the `nodenv` Node version manager ([setup instructions for noden
 
     nodenv install
 
+* This demo uses node-version 18.17.0
+
+    ls ~/.nodenv/versions
+    nodenv install 18.17.0 && nodenv global 18.17.0 
+
 If you're using the popular `nvm` Node version manager ([setup instructions for Node Version Manager](https://github.com/nvm-sh/nvm#installing-and-updating)), use:
 
     nvm install
@@ -70,6 +75,10 @@ Once Node.js is installed and activated, install the application's dependencies 
 
     npm install
 
+** If you get next.js error 'sh: next: command not found` 
+
+    npm install next --save -g
+    
 ### Environment variables file setup
 
 Replicate `.env.example` as `.env` using:
