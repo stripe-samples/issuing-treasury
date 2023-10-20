@@ -100,6 +100,7 @@ Update `.env` to reflect:
 On Mac, follow these instructions to install Postgres:
 
     brew install postgresql@14
+    brew services start postgresql@14 //start postgres service
     createuser -s postgres
 
 You'll find more about the why you need the `createuser` step [here](https://stackoverflow.com/a/15309551).
