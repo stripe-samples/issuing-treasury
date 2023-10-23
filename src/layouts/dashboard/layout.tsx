@@ -57,11 +57,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <Box px={3} py={5} sx={{ backgroundColor: "neutral.50" }}>
             <Box mx="auto" maxWidth={800} textAlign="center">
               <Typography variant="body2" color="neutral.400">
-                Stripe Issuing & Treasury Platform Demo partners with Stripe
-                Payments Company for money transmission services and account
-                services with funds held at Example Bank, Member FDIC. Stripe
-                Issuing & Treasury Platform Demo Visa® Commercial Credit cards
-                are issued by Example Bank.{" "}
+                {/* Stripe Issuing & Treasury Platform Demo partners with Stripe */}
+                Stripe Issuing Platform Demo partners with Stripe Payments
+                Company for money transmission services and account services
+                with funds held at Example Bank, Member FDIC. Stripe Issuing
+                Platform Demo Visa® Commercial Credit cards are issued by 
+                Example Bank.{" "}
                 <Link
                   href="https://stripe.com/privacy"
                   target="_blank"

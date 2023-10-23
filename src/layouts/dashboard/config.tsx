@@ -46,15 +46,15 @@ export const items = [
       </SvgIcon>
     ),
   },
-  {
-    title: "Financial account",
-    path: "/financial_account",
-    icon: (
-      <SvgIcon fontSize="small">
-        <BanknotesIcon />
-      </SvgIcon>
-    ),
-  },
+  // {
+  //   title: "Financial account",
+  //   path: "/financial_account",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <BanknotesIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
   {
     title: "Test data",
     path: "/test-data",

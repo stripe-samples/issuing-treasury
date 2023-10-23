@@ -10,29 +10,33 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import Stripe from "stripe";
 
 import {
   extractJsonFromResponse,
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
+import { log } from "console";
 
-const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
+const TestDataTopUpIssuingBalance = ({
+  issuingBalance,
+}: {
+  issuingBalance: Stripe.Balance.Issuing;
+}) => {
   const router = useRouter();
 
   const [submitting, setSubmitting] = useState(false);
   const [errorText, setErrorText] = useState("");
 
-  const simulateAuthorization = async () => {
+  const simulatIssuingBalanceFunding = async () => {
     setSubmitting(true);
-    const response = await postApi("/api/create_authorization", {
-      cardId: cardId,
-    });
+    const response = await postApi("api/create_issuingtopup");
     const result = await extractJsonFromResponse(response);
     handleResult({
       result,
       onSuccess: async () => {
-        await router.push(`/cards/${cardId}`);
+        await router.push("/");
       },
       onError: (error) => {
         setErrorText(`Error: ${error.message}`);
@@ -43,54 +47,48 @@ const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
     });
   };
 
+  // const faAddress = financialAccount.financial_addresses[0];
+  // const faAddressCreated = faAddress != undefined;
+
   return (
     <>
       <Stack spacing={1}>
         <Typography variant="body2">
-          A 10.00{" " + process.env.NEXT_PUBLIC_CURRENCY + " "}
+          Your issuing balance account will receive a £500.00{" "}
           <Link
-            href="https://stripe.com/docs/issuing/purchase/authorizations"
+            href="https://stripe.com/docs/issuing/funding/balance"
             target="_blank"
             underline="none"
           >
-            Authorization{" "}
+            funding{" "}
             <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
               <ArrowTopRightOnSquareIcon />
             </SvgIcon>
           </Link>{" "}
-          will be created each time you press the button.
+          each time you press the button.
         </Typography>
-        {errorText !== "" && (
+        {errorText !== "" && <Alert severity="error">{errorText}</Alert>}
+        {/* {!faAddressCreated && (
           <Alert severity="error">
-            {errorText ===
-            "Error: Insufficient funds to create a test purchase." ? (
-              <span>
-                Insufficient funds to create a test purchase.{" "}
-                <Link href="/financial_account" underline="none">
-                  Add funds
-                </Link>{" "}
-                to your financial account first.
-              </span>
-            ) : (
-              errorText
-            )}
+            Your financial account is still being set up (this can take up to
+            two minutes). Refresh this page to try again.
           </Alert>
-        )}
+        )} */}
       </Stack>
       <Box mt={3}>
         <Button
           variant="contained"
           color="primary"
           size="large"
-          disabled={submitting}
-          onClick={simulateAuthorization}
+          // disabled={!faAddressCreated || submitting}
+          onClick={simulatIssuingBalanceFunding}
           fullWidth
         >
-          {submitting ? "Simulating..." : "Simulate test purchase"}
+          {submitting ? "Simulating..." : "Simulate issuing balance funding"}
         </Button>
       </Box>
     </>
   );
 };
 
-export default TestDataCreateAuthorization;
+export default TestDataTopUpIssuingBalance;

@@ -22,7 +22,7 @@ import CardDetails from "src/sections/[cardId]/card-details";
 import CardIllustration from "src/sections/[cardId]/card-illustration";
 import LatestCardAuthorizations from "src/sections/[cardId]/latest-card-authorizations";
 import TestDataCreateAuthorization from "src/sections/test-data/test-data-create-authorization";
-import { formatUSD } from "src/utils/format";
+import { formatUSD, currencyFormat } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import { getCardDetails } from "src/utils/stripe_helpers";
 
@@ -73,7 +73,7 @@ const Page = ({
   const spendingLimit = card.spending_controls.spending_limits?.[0];
   const spendingLimitDisplay =
     spendingLimit != undefined
-      ? `${formatUSD(spendingLimit.amount / 100)} ${spendingLimit.interval}`
+      ? `${currencyFormat(spendingLimit.amount / 100)} ${spendingLimit.interval}`
       : "No spending limit set";
 
   return (
@@ -108,7 +108,7 @@ const Page = ({
                         Current spend
                       </Typography>
                       <Typography variant="h4">
-                        {formatUSD(currentSpend / 100)}
+                        {currencyFormat(currentSpend / 100)}
                       </Typography>
                       <Typography pt={1} color="text.secondary">
                         Spending limit:

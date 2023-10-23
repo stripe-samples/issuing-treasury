@@ -4,7 +4,7 @@ import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
-import { getFinancialAccountDetails } from "src/utils/stripe_helpers";
+import { getFinancialAccountDetails, getBalance } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -19,9 +19,13 @@ const simulateAuthorization = async (
   const StripeAccountId = session.accountId;
   const stripe = stripeClient();
 
-  const responseFaDetails = await getFinancialAccountDetails(StripeAccountId);
-  const financialAccount = responseFaDetails.financialaccount;
-  const balance = financialAccount.balance.cash.usd;
+  // const responseFaDetails = await getFinancialAccountDetails(StripeAccountId);
+  // const financialAccount = responseFaDetails.financialaccount;
+  // const balance = financialAccount.balance.cash.usd;
+
+  const responseBalance = await getBalance(StripeAccountId);
+  const balance = responseBalance.balance.issuing?.available[0].amount;
+
   if (balance < 1000) {
     return res.status(400).json(
       apiResponse({
@@ -36,7 +40,7 @@ const simulateAuthorization = async (
   const authorization = await stripe.testHelpers.issuing.authorizations.create(
     {
       amount: 1000,
-      currency: "usd",
+      currency: process.env.NEXT_PUBLIC_CURRENCY,
       card: req.body.cardId,
     },
     { stripeAccount: StripeAccountId },

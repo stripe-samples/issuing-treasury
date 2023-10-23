@@ -18,6 +18,7 @@ const validationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email address is required"),
+  phonenumber: Yup.string().required("Phone number is required in UK & EU for 3DS"),
   address1: Yup.string().required("Street address is required"),
   city: Yup.string().required("City is required"),
   state: Yup.string().required("State / Province is required"),
@@ -36,6 +37,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
     firstName,
     lastName,
     email,
+    phonenumber,
     address1,
     city,
     state,
@@ -50,6 +52,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
         firstName,
         lastName,
         email,
+        phonenumber,
         address1,
         city,
         state,
@@ -75,6 +78,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
     {
       type: "individual",
       name: firstName + " " + lastName,
+      phone_number: phonenumber.replace(/^./g, "+44"), //needed phone number for 3DS in UK & EU
       email: email,
       individual: {
         first_name: firstName,
@@ -100,6 +104,8 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
       stripeAccount: StripeAccountId,
     },
   );
+
+  console.log("create cardholder, " +res)
 
   return res.status(200).json(apiResponse({ success: true }));
 };

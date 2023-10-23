@@ -18,31 +18,31 @@ const addExternalAccount = async (
   const StripeAccountId = session.accountId;
 
   const stripe = stripeClient();
-  const financialAccounts = await stripe.treasury.financialAccounts.list(
-    { expand: ["data.financial_addresses.aba.account_number"] },
-    {
-      stripeAccount: StripeAccountId,
-    },
-  );
+  // const financialAccounts = await stripe.treasury.financialAccounts.list(
+  //   { expand: ["data.financial_addresses.aba.account_number"] },
+  //   {
+  //     stripeAccount: StripeAccountId,
+  //   },
+  // );
 
-  const financialAccount = financialAccounts.data[0];
-  const aba = financialAccount.financial_addresses[0]?.aba;
+  // const financialAccount = financialAccounts.data[0];
+  // const aba = financialAccount.financial_addresses[0]?.aba;
 
-  if (
-    aba == undefined ||
-    aba.account_number == undefined ||
-    aba.routing_number == undefined
-  ) {
-    throw new Error("Invalid or missing ABA for financial account");
-  }
+  // if (
+  //   aba == undefined ||
+  //   aba.account_number == undefined ||
+  //   aba.routing_number == undefined
+  // ) {
+  //   throw new Error("Invalid or missing ABA for financial account");
+  // }
 
   const token = await stripe.tokens.create(
     {
       bank_account: {
-        account_number: aba.account_number,
-        country: "US",
-        currency: "usd",
-        routing_number: aba.routing_number,
+        routing_number: process.env.NEXT_PUBLIC_ROUTING_NUMBER,
+        account_number: process.env.NEXT_PUBLIC_ACCOUNT_NUMBER as string,
+        country: process.env.NEXT_PUBLIC_CA_COUNTRY as string,
+        currency: process.env.NEXT_PUBLIC_CURRENCY,
       },
     },
     undefined,
