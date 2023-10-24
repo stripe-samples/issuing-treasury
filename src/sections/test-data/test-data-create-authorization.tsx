@@ -17,6 +17,7 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 
+
 const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
   const router = useRouter();
 
@@ -33,6 +34,24 @@ const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
       result,
       onSuccess: async () => {
         await router.push(`/cards/${cardId}`);
+      },
+      onError: (error) => {
+        setErrorText(`Error: ${error.message}`);
+      },
+      onFinally: () => {
+        setSubmitting(false);
+      },
+    });
+  };
+
+  const simulatIssuingBalanceFunding = async () => {
+    setSubmitting(true);
+    const response = await postApi("api/create_issuingtopup");
+    const result = await extractJsonFromResponse(response);
+    handleResult({
+      result,
+      onSuccess: async () => {
+        await router.push("/");
       },
       onError: (error) => {
         setErrorText(`Error: ${error.message}`);
@@ -66,7 +85,8 @@ const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
             "Error: Insufficient funds to create a test purchase." ? (
               <span>
                 Insufficient funds to create a test purchase.{" "}
-                <Link href="/financial_account" underline="none">
+                {/* <Link href="/financial_account" underline="none">  */}
+                <Link href="/" underline="none">
                   Add funds
                 </Link>{" "}
                 to your financial account first.

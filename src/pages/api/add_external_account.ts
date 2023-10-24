@@ -39,7 +39,7 @@ const addExternalAccount = async (
   const token = await stripe.tokens.create(
     {
       bank_account: {
-        routing_number: process.env.NEXT_PUBLIC_ROUTING_NUMBER,
+        routing_number: process.env.NEXT_PUBLIC_ROUTING_NUMBER as string,        
         account_number: process.env.NEXT_PUBLIC_ACCOUNT_NUMBER as string,
         country: process.env.NEXT_PUBLIC_CA_COUNTRY as string,
         currency: process.env.NEXT_PUBLIC_CURRENCY,
