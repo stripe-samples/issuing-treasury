@@ -69,10 +69,10 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         address: {
           // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
           line1: "address_full_match",
-          city: "South San Francisco",
-          state: "CA",
-          postal_code: "94080",
-          country: "US",
+          city:  process.env.NEXT_PUBLIC_CA_CITY,
+          // state: "CA",
+          postal_code: process.env.NEXT_PUBLIC_CA_POSTCODE,
+          country: process.env.NEXT_PUBLIC_CA_COUNTRY,
         },
         // These values together cause the DOB to be verified in testmode: https://stripe.com/docs/connect/testing#test-dobs
         dob: {
@@ -94,9 +94,9 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         card_issuing: {
           tos_acceptance: TOS_ACCEPTANCE,
         },
-        treasury: {
-          tos_acceptance: TOS_ACCEPTANCE,
-        },
+        // treasury: {
+        //   tos_acceptance: TOS_ACCEPTANCE,
+        // },
       },
     }),
   };

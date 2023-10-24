@@ -1,4 +1,4 @@
-import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
+import { CurrencyDollarIcon, CurrencyPoundIcon, CurrencyEuroIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
   Card,
@@ -7,13 +7,15 @@ import {
   SvgIcon,
   Typography,
 } from "@mui/material";
+import { log } from "console";
 
-import { formatUSD } from "src/utils/format";
+import { formatUSD, currencyFormat } from "src/utils/format";
 
-export const OverviewFinancialAccountBalance = (props: {
+export const OverviewIssuingBalance = (props: {
   sx: object;
   value: number;
 }) => {
+
   const { sx, value } = props;
 
   return (
@@ -27,10 +29,10 @@ export const OverviewFinancialAccountBalance = (props: {
         >
           <Stack spacing={1}>
             <Typography color="text.secondary" variant="overline">
-              Account Balance
+              Issuing Balance
             </Typography>
-            <Typography variant="h4">{formatUSD(value / 100)}</Typography>
-            <Typography color="text.secondary">Current balance</Typography>
+            <Typography variant="h4">{currencyFormat(value / 100)}</Typography>
+            <Typography color="text.secondary">Available Issuing balance</Typography>
           </Stack>
           <Avatar
             sx={{
@@ -40,7 +42,8 @@ export const OverviewFinancialAccountBalance = (props: {
             }}
           >
             <SvgIcon>
-              <CurrencyDollarIcon />
+              {/* <CurrencyDollarIcon /> */}
+              <CurrencyPoundIcon /> 
             </SvgIcon>
           </Avatar>
         </Stack>

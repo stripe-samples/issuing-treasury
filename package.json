@@ -44,8 +44,9 @@
   "devDependencies": {
     "@types/bcrypt": "5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/node": "20.8.7",
     "@types/nprogress": "^0.2.0",
-    "@types/react": "^18.2.25",
+    "@types/react": "18.2.30",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "autoprefixer": "^10.4.15",
@@ -58,7 +59,7 @@
     "eslint-plugin-react": "^7.33.2",
     "prettier": "^3.0.3",
     "prisma": "^5.4.1",
-    "typescript": "^5.2.2"
+    "typescript": "5.2.2"
   },
   "engines": {
     "node": "18"

@@ -31,10 +31,11 @@ const createPaymentLink = async (req: NextApiRequest, res: NextApiResponse) => {
       ? await stripe.prices.create(
           {
             unit_amount: 1000,
-            currency: "usd",
+            currency: process.env.NEXT_PUBLIC_CURRENCY as string,
             product_data: {
               name: "Some Product",
             },
+           
           },
           {
             stripeAccount: StripeAccountId,
@@ -42,20 +43,29 @@ const createPaymentLink = async (req: NextApiRequest, res: NextApiResponse) => {
         )
       : prices.data[0];
 
-  const paymentLink = await stripe.paymentLinks.create(
-    {
-      line_items: [
-        {
-          price: price.id,
-          quantity: 1,
-          adjustable_quantity: { enabled: true },
-        },
-      ],
-    },
-    {
-      stripeAccount: StripeAccountId,
-    },
+
+  const paymentLinks = await stripe.paymentLinks.list(
+    { limit: 1 }, 
+    { stripeAccount: StripeAccountId }
   );
+  
+  const paymentLink = 
+    paymentLinks.data.length < 1
+      ? await stripe.paymentLinks.create(
+        {
+          line_items: [
+            {
+              price: price.id,
+              quantity: 1,
+              adjustable_quantity: { enabled: true },
+            },
+          ],
+        },
+        {
+          stripeAccount: StripeAccountId,
+        },
+      )
+    : paymentLinks.data[0];
 
   return res
     .status(200)

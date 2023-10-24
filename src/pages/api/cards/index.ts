@@ -16,11 +16,11 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const StripeAccountId = session.accountId;
   const stripe = stripeClient();
 
-  const financialAccounts = await stripe.treasury.financialAccounts.list({
-    stripeAccount: StripeAccountId,
-  });
+  // const financialAccounts = await stripe.treasury.financialAccounts.list({
+  //   stripeAccount: StripeAccountId,
+  // });
 
-  const financialAccount = financialAccounts.data[0];
+  // const financialAccount = financialAccounts.data[0];
   const { cardholderid, card_type } = req.body;
   const cardholder = await stripe.issuing.cardholders.retrieve(cardholderid, {
     stripeAccount: StripeAccountId,
@@ -70,8 +70,8 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
     await stripe.issuing.cards.create(
       {
         cardholder: cardholderid,
-        financial_account: financialAccount.id,
-        currency: "usd",
+        // financial_account: financialAccount.id,
+        currency: process.env.NEXT_PUBLIC_CURRENCY as string,
         shipping: {
           name: cardholder.name,
           service: "standard",
@@ -87,8 +87,8 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
     await stripe.issuing.cards.create(
       {
         cardholder: cardholderid,
-        financial_account: financialAccount.id,
-        currency: "usd",
+        // financial_account: financialAccount.id,
+        currency: process.env.NEXT_PUBLIC_CURRENCY as string,
         type: "virtual",
         status: "active",
       },

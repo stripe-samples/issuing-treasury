@@ -19,7 +19,7 @@ import { SeverityPill } from "../severity-pill";
 
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityColor } from "src/types/severity-color";
-import { capitalize, formatDateTime, formatUSD } from "src/utils/format";
+import { capitalize, formatDateTime, formatUSD, currencyFormat } from "src/utils/format";
 
 const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
   closed: "primary",
@@ -117,7 +117,7 @@ const AuthorizationsTable = ({
                       align="right"
                       sx={{ textTransform: "uppercase", whiteSpace: "nowrap" }}
                     >
-                      {`${formatUSD(authorization.amount / 100)} USD`}
+                      {`${currencyFormat(authorization.amount / 100)} ${process.env.NEXT_PUBLIC_CURRENCY}`}
                     </TableCell>
                     <TableCell sx={{ whiteSpace: "nowrap" }}>
                       {authorization.card.cardholder.name}

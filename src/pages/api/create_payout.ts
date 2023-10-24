@@ -49,7 +49,7 @@ const createPayout = async (req: NextApiRequest, res: NextApiResponse) => {
   await stripe.payouts.create(
     {
       amount: availableBalance,
-      currency: "usd",
+      currency: process.env.NEXT_PUBLIC_CURRENCY as string,
     },
     { stripeAccount: StripeAccountId },
   );

@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { faker, fakerEN_GB } from "@faker-js/faker";
 import {
   Alert,
   Button,
@@ -58,11 +58,12 @@ const CreateCardholderForm = ({
     firstName: "",
     lastName: "",
     email: "",
+    phonenumber: "",
     address1: "",
     city: "",
     state: "",
     postalCode: "",
-    country: "US",
+    country: process.env.NEXT_PUBLIC_CA_COUNTRY,
     accept: false,
   };
 
@@ -137,6 +138,17 @@ const CreateCardholderForm = ({
                 as={TextField}
                 fullWidth
                 required
+                label="Phone number"
+                name="phonenumber"
+                error={touched.phonenumber && Boolean(errors.phonenumber)}
+                helperText={touched.phonenumber && errors.phonenumber}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Field
+                as={TextField}
+                fullWidth
+                required
                 label="Street address"
                 name="address1"
                 error={touched.address1 && Boolean(errors.address1)}
@@ -187,7 +199,8 @@ const CreateCardholderForm = ({
                 error={touched.country && Boolean(errors.country)}
                 helperText={touched.country && errors.country}
               >
-                <MenuItem value="US">United States</MenuItem>
+                {/* <MenuItem value="US">United States</MenuItem> */}
+                <MenuItem value="GB">United Kingdom</MenuItem>
               </Field>
             </Grid>
             <Grid item xs={12}>
@@ -228,14 +241,23 @@ const CardholderCreateWidget = () => {
     const form = formRef.current;
     if (form) {
       form.setValues({
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        email: faker.internet.email().toLowerCase(),
-        address1: faker.location.streetAddress(),
-        city: faker.location.city(),
-        state: faker.location.state(),
-        postalCode: faker.location.zipCode("#####"),
-        country: "US",
+        // firstName: faker.person.firstName(),
+        // lastName: faker.person.lastName(),
+        // email: faker.internet.email().toLowerCase(),
+        // address1: faker.location.streetAddress(),
+        // city: faker.location.city(),
+        // state: faker.location.state(),
+        // postalCode: faker.location.zipCode("#####"),
+        // country: "US",
+        firstName: fakerEN_GB.person.firstName(),
+        lastName: fakerEN_GB.person.lastName(),
+        email: fakerEN_GB.internet.email().toLowerCase(),
+        phonenumber: fakerEN_GB.phone.number().replaceAll(" ", ""),
+        address1: fakerEN_GB.location.streetAddress(),
+        city: fakerEN_GB.location.city(),
+        state: fakerEN_GB.location.state(),
+        postalCode: fakerEN_GB.location.zipCode("#####"),
+        country: process.env.NEXT_PUBLIC_CA_COUNTRY,
         accept: true,
       });
     }

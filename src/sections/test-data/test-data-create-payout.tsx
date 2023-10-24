@@ -17,7 +17,7 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
-import { formatUSD } from "src/utils/format";
+import { formatUSD, currencyFormat } from "src/utils/format";
 
 function TestDataCreatePayout({
   availableBalance: availableBalanceProp,
@@ -77,19 +77,22 @@ function TestDataCreatePayout({
       <CardContent sx={{ pt: 0 }}>
         <Stack spacing={1}>
           <Typography>
-            In order to enable payouts, you need to set your financial account
-            as the external account for your connected account.
+            {/* In order to enable payouts, you need to set your financial account 
+            as the external account for your connected account.*/}
+            In order to enable payouts, you need to attach a bank 
+            account as the external account for your connected account.
           </Typography>
           <Typography>
-            {`If you haven't done it yet, by pressing the "Add financial
-          account as external account" button, the financial account will be set
-          as an external account, and manual payouts will be enabled.`}
+            {`If you haven't done it yet, by pressing the "Add bank account 
+            as external account" button, a test bank account will be set as
+            an external account, and manual payouts will be enabled.`}
           </Typography>
           <Typography>
             Platforms have the ability to set up automatic payouts with
             different schedules. You can dive deep into this topic on{" "}
             <Link
-              href="https://stripe.com/docs/treasury/moving-money/payouts"
+              // href="https://stripe.com/docs/treasury/moving-money/payouts"
+              href="https://stripe.com/docs/connect/manage-payout-schedule"
               target="_blank"
               underline="none"
             >
@@ -106,7 +109,7 @@ function TestDataCreatePayout({
             >
               available balance
             </Link>{" "}
-            of <strong>{formatUSD(availableBalance / 100)} USD</strong>.
+            of <strong>{currencyFormat(availableBalance / 100)} {process.env.NEXT_PUBLIC_CURRENCY}</strong>.
           </Typography>
           {errorText !== "" && (
             <Alert severity="error" sx={{ pt: 2 }}>
@@ -137,7 +140,7 @@ function TestDataCreatePayout({
           >
             {submitting
               ? "Adding..."
-              : "Add financial account as external account"}
+              : "Add bank account as external account"}
           </Button>
         )}
       </CardActions>

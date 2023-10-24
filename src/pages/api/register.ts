@@ -61,7 +61,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   const stripe = stripeClient();
   const account = await stripe.accounts.create({
     type: "custom",
-    country: "US",
+    country: process.env.NEXT_PUBLIC_CA_COUNTRY,
     email: email,
     ...(isDemoMode() && {
       // FOR-DEMO-ONLY: We're hardcoding the business type to individual. You should either remove this line or modify it
@@ -76,7 +76,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     capabilities: {
       card_payments: { requested: true },
       transfers: { requested: true },
-      treasury: { requested: true },
+      // treasury: { requested: true },
       card_issuing: { requested: true },
     },
   });
@@ -92,27 +92,27 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   // Create Financial Account
-  await stripe.treasury.financialAccounts.create(
-    {
-      supported_currencies: ["usd"],
-      features: {
-        card_issuing: { requested: true },
-        deposit_insurance: { requested: true },
-        financial_addresses: { aba: { requested: true } },
-        inbound_transfers: { ach: { requested: true } },
-        intra_stripe_flows: { requested: true },
-        outbound_payments: {
-          ach: { requested: true },
-          us_domestic_wire: { requested: true },
-        },
-        outbound_transfers: {
-          ach: { requested: true },
-          us_domestic_wire: { requested: true },
-        },
-      },
-    },
-    { stripeAccount: account.id },
-  );
+  // await stripe.treasury.financialAccounts.create(
+  //   {
+  //     supported_currencies: ["usd"],
+  //     features: {
+  //       card_issuing: { requested: true },
+  //       deposit_insurance: { requested: true },
+  //       financial_addresses: { aba: { requested: true } },
+  //       inbound_transfers: { ach: { requested: true } },
+  //       intra_stripe_flows: { requested: true },
+  //       outbound_payments: {
+  //         ach: { requested: true },
+  //         us_domestic_wire: { requested: true },
+  //       },
+  //       outbound_transfers: {
+  //         ach: { requested: true },
+  //         us_domestic_wire: { requested: true },
+  //       },
+  //     },
+  //   },
+  //   { stripeAccount: account.id },
+  // );
 
   return res.status(200).json(apiResponse({ success: true }));
 };
