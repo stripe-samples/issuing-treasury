@@ -24,6 +24,18 @@ services:
       sync: false
     - key: NEXTAUTH_SECRET
       generateValue: true
+    - key: NEXT_PUBLIC_CA_COUNTRY
+      value: "GB"
+    - key: NEXT_PUBLIC_CA_CITY
+      value: "London"
+    - key: NEXT_PUBLIC_CA_POSTCODE
+      value: "W11 2BE"
+    - key: NEXT_PUBLIC_CURRENCY
+      value: "GBP"
+    - key: NEXT_PUBLIC_ROUTING_NUMBER
+      value: 108800
+    - key: NEXT_PUBLIC_ACCOUNT_NUMBER
+      value: 00012345
 
 databases:
 - name: issuing-treasury-db
