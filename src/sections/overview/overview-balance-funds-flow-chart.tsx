@@ -10,9 +10,9 @@ import {
 
 import { Chart } from "src/components/chart";
 import { ChartData, BalanceChartData } from "src/types/chart-data";
-import { formatUSD, currencyFormat} from "src/utils/format";
+import { currencyFormat} from "src/utils/format";
 
-const useChartOptions = (balanceFundsFlowChartData: ChartData) => {
+const useChartOptions = (balanceFundsFlowChartData: BalanceChartData) => {
   const theme = useTheme();
 
   return {
@@ -97,7 +97,7 @@ export const OverviewBalanceFundsFlowChart = ({
   balanceFundsFlowChartData,
   sx,
 }: {
-  balanceFundsFlowChartData: ChartData;
+  balanceFundsFlowChartData: BalanceChartData;
   sx?: object;
 }) => {
   const chartOptions = useChartOptions(balanceFundsFlowChartData);

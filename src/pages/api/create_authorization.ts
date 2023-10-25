@@ -26,7 +26,7 @@ const simulateAuthorization = async (
   const responseBalance = await getBalance(StripeAccountId);
   const balance = responseBalance.balance.issuing?.available[0].amount;
 
-  if (balance < 1000) {
+  if (balance && balance < 1000) {
     return res.status(400).json(
       apiResponse({
         success: false,

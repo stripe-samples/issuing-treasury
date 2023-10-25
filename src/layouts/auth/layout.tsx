@@ -99,12 +99,12 @@ const WelcomeMessage = () => (
   <Stack spacing={3}>
     <Typography variant="h4">
       {/* Stripe Issuing and Treasury platform demo */}
-      Stripe Issuing Platform Demo 
+      Stripe Issuing Platform Demo
     </Typography>
     <Typography color="neutral.500">
       {/* This web app demonstrates Stripe Issuing and Treasury APIs in an */}
-      This web app demonstrates Stripe Issuing APIs in an
-      end-to-end integration. Create an account with the demo platform to create
+      This web app demonstrates Stripe Issuing APIs in an end-to-end
+      integration. Create an account with the demo platform to create
       cards and test purchases.
       {/* cards, test purchases, and make and receive payments with a financial
       account. */}

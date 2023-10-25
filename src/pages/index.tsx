@@ -15,7 +15,7 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 // import { OverviewFinancialAccountBalance } from "src/sections/overview/overview-fa-balance";
 
 import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
-import { ChartData } from "src/types/chart-data";
+import { ChartData, BalanceChartData } from "src/types/chart-data";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   // getFinancialAccountDetails,
@@ -30,6 +30,7 @@ import { OverviewBalanceFundsFlowChart } from "src/sections/overview/overview-ba
 import {OverviewIssuingBalance} from "src/sections/overview/overview-issuing-balance";
 import {OverviewAvailableBalance} from "src/sections/overview/overview-acquring-balance";
 import { OverviewLatestBalanceTransactions } from "src/sections/overview/overview-latest-balance-transactions";
+import { log } from "console";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -84,7 +85,7 @@ const Page = ({
   // faTransactions: Stripe.Treasury.Transaction[];
   issuingBalance : Stripe.Balance.Issuing;
   availableBalance : Stripe.Balance
-  balanceFundsFlowChartData :  ChartData;
+  balanceFundsFlowChartData :  BalanceChartData;
   balanceTransactions : Stripe.BalanceTransaction[];
 
 }) => {
