@@ -90,6 +90,7 @@ On Mac, follow these instructions to install Postgres:
 
     brew install postgresql@14
     createuser -s postgres
+    createdb "$(whoami)"
 
 You'll find more about the why you need the `createuser` step [here](https://stackoverflow.com/a/15309551).
 
