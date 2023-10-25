@@ -60,11 +60,12 @@ If you're using the `nodenv` Node version manager ([setup instructions for noden
 
     nodenv install
 
-This demo uses node-version 18.17.0
+This demo uses node-version 18.17.1
 
 ```
 ls ~/.nodenv/versions
-nodenv install 18.17.0 && nodenv global 18.17.0
+nodenv install 18.17.1
+nodenv global 18.17.1
 ```
 
 If you're using the popular `nvm` Node version manager ([setup instructions for Node Version Manager](https://github.com/nvm-sh/nvm#installing-and-updating)), use:
