@@ -102,6 +102,7 @@ On Mac, follow these instructions to install Postgres:
     brew install postgresql@14
     brew services start postgresql@14 //start postgres service
     createuser -s postgres
+    createdb <your username>
 
 You'll find more about the why you need the `createuser` step [here](https://stackoverflow.com/a/15309551).
 
@@ -114,37 +115,6 @@ If it errors out (perhaps due to permission issue running the Prisma CLI), simpl
     ./db/setup-database.postgres.sh
 
 This script creates a local Postgres `issuing_treasury` database.
-
-** notes ** The db script didn't work. 
-```
-kater:~/src/issuing-treasury (main) 11:38  $ brew services restart postgresql@14
-Stopping `postgresql@14`... (might take a while)
-==> Successfully stopped `postgresql@14` (label: homebrew.mxcl.postgresql@14)
-==> Successfully started `postgresql@14` (label: homebrew.mxcl.postgresql@14)
-kater:~/src/issuing-treasury (main) 11:38  $ brew link postgresql@14 --force
-Warning: Already linked: /opt/homebrew/Cellar/postgresql@14/14.9
-To relink, run:
-  brew unlink postgresql@14 && brew link postgresql@14
-kater:~/src/issuing-treasury (main) 11:39  $ brew services info --all
-postgresql@14 (homebrew.mxcl.postgresql@14)
-Running: ✔
-Loaded: ✔
-Schedulable: ✘
-User: kater
-PID: 71754
-kater:~/src/issuing-treasury (main) 11:39  $ lsof -P -sTCP:LISTEN -i TCP -a -p 71754
-COMMAND    PID  USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
-postgres 71754 kater    7u  IPv6 0xc3eb81b4876b9731      0t0  TCP localhost:5432 (LISTEN)
-postgres 71754 kater    8u  IPv4 0xc3eb81b967c66f29      0t0  TCP localhost:5432 (LISTEN)
-kater:~/src/issuing-treasury (main) 11:39  $ ./db/setup-database.postgres.sh
-psql: error: connection to server on socket "/tmp/.s.PGSQL.5432" failed: FATAL:  database "kater" does not exist
-
-Creating database...
-psql: error: connection to server on socket "/tmp/.s.PGSQL.5432" failed: FATAL:  database "kater" does not exist
-Creating users table...
-psql: error: connection to server on socket "/tmp/.s.PGSQL.5432" failed: FATAL:  database "issuing_treasury" does not exist
-Setup complete!
-```
 
 
 ### Application launch
