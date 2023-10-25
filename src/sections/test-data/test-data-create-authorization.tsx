@@ -68,7 +68,7 @@ const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
         <Typography variant="body2">
           A 10.00{" " + process.env.NEXT_PUBLIC_CURRENCY + " "}
           <Link
-            href="https://stripe.com/docs/issuing/purchase/authorizations"
+            href="https://stripe.com/docs/issuing/purchases/authorizations"
             target="_blank"
             underline="none"
           >
