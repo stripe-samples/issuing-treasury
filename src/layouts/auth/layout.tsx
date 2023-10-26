@@ -120,7 +120,7 @@ const WelcomeMessage = () => (
       </Link>{" "}
       and{" "}
       <Link
-        href="https://github.com/stripe-samples/issuing-treasury"
+        href="https://github.com/kater-stripe/issuing-treasury"
         target="_blank"
         underline="none"
       >
