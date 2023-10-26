@@ -38,7 +38,8 @@ export default function App({
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Stripe Issuing and Treasury platform demo</title>
+        {/* <title>Stripe Issuing and Treasury platform demo</title> */}
+        <title>Stripe Issuing platform demo</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -47,11 +48,13 @@ export default function App({
         <meta property="og:url" content="https://baas.stripe.dev" />
         <meta
           property="og:title"
-          content="Stripe Issuing and Treasury platform demo"
+          // content="Stripe Issuing and Treasury platform demo"
+          content="Stripe Issuing platform demo"
         />
         <meta
           property="og:description"
-          content="This web app demonstrates Stripe Issuing and Treasury APIs in an end-to-end integration. Create an account with the demo platform to create cards, test purchases, and make and receive payments with a financial account."
+          // content="This web app demonstrates Stripe Issuing and Treasury APIs in an end-to-end integration. Create an account with the demo platform to create cards, test purchases, and make and receive payments with a financial account."
+          content="This web app demonstrates Stripe Issuing and Custom Connect APIs in an end-to-end integration. Create an account with the demo platform to create cards, test purchases, and make and receive payments."
         />
         <meta
           property="og:image"
@@ -59,17 +62,20 @@ export default function App({
         />
         <meta
           property="og:image:alt"
-          content="Stripe Issuing and Treasury Platform Sample App Screenshot"
+          // content="Stripe Issuing and Treasury Platform Sample App Screenshot"
+          content="Stripe Issuing Platform Sample App Screenshot"
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://baas.stripe.dev" />
         <meta
           name="twitter:title"
-          content="Stripe Issuing and Treasury platform demo"
+          // content="Stripe Issuing and Treasury platform demo"
+          content="Stripe Issuing platform demo"
         />
         <meta
           name="twitter:description"
-          content="This web app demonstrates Stripe Issuing and Treasury APIs in an end-to-end integration. Create an account with the demo platform to create cards, test purchases, and make and receive payments with a financial account."
+          // content="This web app demonstrates Stripe Issuing and Treasury APIs in an end-to-end integration. Create an account with the demo platform to create cards, test purchases, and make and receive payments with a financial account."
+          content="This web app demonstrates Stripe Issuing and Custom Connect APIs in an end-to-end integration. Create an account with the demo platform to create cards, test purchases, and make and receive payments."
         />
         <meta
           name="twitter:image"
@@ -77,7 +83,8 @@ export default function App({
         />
         <meta
           name="twitter:image:alt"
-          content="Stripe Issuing and Treasury Platform Sample App Screenshot"
+          // content="Stripe Issuing and Treasury Platform Sample App Screenshot"
+          content="Stripe Issuing and Platform Sample App Screenshot"
         />
       </Head>
       <SessionProvider session={session}>
