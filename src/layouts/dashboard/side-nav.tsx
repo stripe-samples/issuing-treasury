@@ -118,7 +118,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
               </SvgIcon>
             }
             fullWidth
-            href="https://github.com/stripe-samples/issuing-treasury/"
+            href="https://github.com/kater-stripe/issuing-treasury"
             sx={{ mt: 2 }}
             target="_blank"
             variant="contained"
