@@ -27,7 +27,7 @@
     "bcrypt": "^5.1.1",
     "date-fns": "2.30.0",
     "formik": "^2.4.5",
-    "jsonwebtoken": "^9.0.1",
+    "jsonwebtoken": "^9.0.2",
     "next": "^13.5.4",
     "next-auth": "^4.23.2",
     "nprogress": "^0.2.0",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "5.0.0",
-    "@types/jsonwebtoken": "^9.0.2",
+    "@types/jsonwebtoken": "^9.0.4",
     "@types/nprogress": "^0.2.2",
     "@types/react": "^18.2.25",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
