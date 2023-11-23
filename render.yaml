@@ -24,6 +24,8 @@ services:
       sync: false
     - key: NEXTAUTH_SECRET
       generateValue: true
+    - key: NEXT_PUBLIC_DEMO_MODE
+      value: true
     - key: NEXT_PUBLIC_CA_COUNTRY
       value: "GB"
     - key: NEXT_PUBLIC_CA_CITY
