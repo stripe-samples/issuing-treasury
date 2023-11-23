@@ -1,6 +1,6 @@
 import { Stripe } from "stripe";
 
-const API_VERSION = "2023-08-16";
+const API_VERSION = "2023-10-16";
 const APP_INFO_NAME = "Stripe Issuing & Treasury Starter Application";
 
 const stripeClient = () => {
