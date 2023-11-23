@@ -111,8 +111,8 @@ const Page = () => {
               ? "Entering demo..."
               : "Enter demo"
             : isContinuingSuccessfully
-            ? "Continuing..."
-            : "Continue";
+              ? "Continuing..."
+              : "Continue";
 
           return (
             <Form>
