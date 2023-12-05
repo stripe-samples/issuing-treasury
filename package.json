@@ -45,7 +45,7 @@
     "@types/bcrypt": "5.0.2",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/nprogress": "^0.2.3",
-    "@types/react": "^18.2.39",
+    "@types/react": "^18.2.42",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
     "autoprefixer": "^10.4.16",
