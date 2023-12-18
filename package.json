@@ -35,7 +35,7 @@
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-dom": "18.2.0",
-    "sharp": "^0.32.6",
+    "sharp": "^0.33.1",
     "simplebar-react": "^3.2.4",
     "stripe": "^14.7.0",
     "xstate": "^4.38.3",
