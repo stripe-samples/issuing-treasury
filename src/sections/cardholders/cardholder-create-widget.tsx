@@ -3,12 +3,15 @@ import {
   Alert,
   Button,
   Checkbox,
+  CheckboxProps,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  FormControl,
   FormControlLabel,
+  FormHelperText,
   Grid,
   Link,
   MenuItem,
@@ -191,21 +194,29 @@ const CreateCardholderForm = ({
               </Field>
             </Grid>
             <Grid item xs={12}>
-              <Field
-                type="checkbox"
-                as={FormControlLabel}
-                control={<Checkbox />}
-                label={
-                  <Typography variant="body2">
-                    This cardholder has agreed to the{" "}
-                    <Link href="#">Example Bank Authorized User Terms</Link> and{" "}
-                    <Link href="#">Example Bank Privacy Policy.</Link>
-                  </Typography>
-                }
-                name="accept"
-                error={touched.accept && Boolean(errors.accept)}
-                helperText={touched.accept && errors.accept}
-              />
+              <FormControl error={touched.accept && Boolean(errors.accept)}>
+                <Field
+                  name="accept"
+                  type="checkbox"
+                  as={(props: CheckboxProps) => (
+                    <FormControlLabel
+                      control={<Checkbox {...props} />}
+                      label={
+                        <Typography variant="body2">
+                          This cardholder has agreed to the{" "}
+                          <Link href="#">
+                            Example Bank Authorized User Terms
+                          </Link>{" "}
+                          and <Link href="#">Example Bank Privacy Policy.</Link>
+                        </Typography>
+                      }
+                    />
+                  )}
+                />
+                {touched.accept && errors.accept && (
+                  <FormHelperText>{errors.accept.toString()}</FormHelperText>
+                )}
+              </FormControl>
             </Grid>
             {errorText !== "" && (
               <Grid item xs={12}>
