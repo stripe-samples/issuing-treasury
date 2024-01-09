@@ -677,7 +677,7 @@ const SendMoneyWizardDialog = () => {
     setDestinationAddress(null);
     setTransactionResult(DEFAULT_TRANSACTION_RESULT);
     setSendingErrorText("");
-    send("RESET");
+    send({ type: "RESET" });
   };
 
   const handleOpen = () => {
@@ -687,11 +687,11 @@ const SendMoneyWizardDialog = () => {
   const handleClose = () => setShowModal(false);
 
   const handleNext = () => {
-    send("NEXT");
+    send({ type: "NEXT" });
   };
 
   const handleBack = () => {
-    send("BACK");
+    send({ type: "BACK" });
   };
 
   const selectingNetworkFormRef = useRef<FormikProps<FormikValues>>(null);
@@ -750,7 +750,7 @@ const SendMoneyWizardDialog = () => {
       handleResult({
         result,
         onSuccess: () => {
-          send("COMPLETE");
+          send({ type: "COMPLETE" });
         },
         onError: (error) => {
           setSendingErrorText((error as Error).message);
