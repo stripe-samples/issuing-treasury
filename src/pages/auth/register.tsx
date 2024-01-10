@@ -5,6 +5,8 @@ import {
   Stack,
   TextField,
   Typography,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
@@ -53,6 +55,16 @@ const validationSchema = Yup.object().shape({
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
 });
 
+type CountryOption = {
+  name: string;
+  value: string;
+};
+
+const countries: CountryOption[] = [
+  { name: "United States", value: "US" },
+  { name: "United Kingdom", value: "GB" },
+];
+
 const Page = () => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
@@ -62,6 +74,7 @@ const Page = () => {
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
+    country: "US",
   };
 
   const handleSubmit = async (
@@ -140,6 +153,16 @@ const Page = () => {
                 name="password"
                 type="password"
               />
+              <Field
+                as={Select}
+                label="Country"
+                name="country"
+                fullWidth
+                options={countries}
+              >
+                <MenuItem value="US">United States</MenuItem>
+                <MenuItem value="GB">United Kingdom</MenuItem>
+              </Field>
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
                 fullWidth

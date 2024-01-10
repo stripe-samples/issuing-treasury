@@ -7,6 +7,7 @@ import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import stripeClient from "src/utils/stripe-loader";
+import { treasurySupported } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -14,9 +15,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   });
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, password } = req.body;
+  const { email, password, country } = req.body;
   const useCase = "embedded_finance";
-  const country = "US";
 
   const getCharacterValidationError = (str: string) => {
     return `Your password must have at least 1 ${str} character`;
@@ -63,7 +63,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   const stripe = stripeClient();
   const account = await stripe.accounts.create({
     type: "custom",
-    country: "US",
+    country: country,
     email: email,
     ...(isDemoMode() && {
       // FOR-DEMO-ONLY: We're hardcoding the business type to individual. You should either remove this line or modify it
@@ -78,7 +78,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     capabilities: {
       card_payments: { requested: true },
       transfers: { requested: true },
-      treasury: { requested: true },
+      treasury: { requested: treasurySupported(country) ? true : false },
       card_issuing: { requested: true },
     },
   });
@@ -95,28 +95,30 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  // Create Financial Account
-  await stripe.treasury.financialAccounts.create(
-    {
-      supported_currencies: ["usd"],
-      features: {
-        card_issuing: { requested: true },
-        deposit_insurance: { requested: true },
-        financial_addresses: { aba: { requested: true } },
-        inbound_transfers: { ach: { requested: true } },
-        intra_stripe_flows: { requested: true },
-        outbound_payments: {
-          ach: { requested: true },
-          us_domestic_wire: { requested: true },
-        },
-        outbound_transfers: {
-          ach: { requested: true },
-          us_domestic_wire: { requested: true },
+  if (treasurySupported(country)) {
+    // Create Financial Account
+    await stripe.treasury.financialAccounts.create(
+      {
+        supported_currencies: ["usd"],
+        features: {
+          card_issuing: { requested: true },
+          deposit_insurance: { requested: true },
+          financial_addresses: { aba: { requested: true } },
+          inbound_transfers: { ach: { requested: true } },
+          intra_stripe_flows: { requested: true },
+          outbound_payments: {
+            ach: { requested: true },
+            us_domestic_wire: { requested: true },
+          },
+          outbound_transfers: {
+            ach: { requested: true },
+            us_domestic_wire: { requested: true },
+          },
         },
       },
-    },
-    { stripeAccount: account.id },
-  );
+      { stripeAccount: account.id },
+    );
+  }
 
   return res.status(200).json(apiResponse({ success: true }));
 };
