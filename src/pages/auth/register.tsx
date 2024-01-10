@@ -153,15 +153,29 @@ const Page = () => {
                 name="password"
                 type="password"
               />
-              <Field
-                as={Select}
-                label="Country"
-                name="country"
-                fullWidth
-                options={countries}
-              >
-                <MenuItem value="US">United States</MenuItem>
+              <Field as={Select} label="Country" name="country" fullWidth>
+                <MenuItem value="AT">Austria</MenuItem>
+                <MenuItem value="BE">Belgium</MenuItem>
+                <MenuItem value="HR">Croatia</MenuItem>
+                <MenuItem value="CY">Cyprus</MenuItem>
+                <MenuItem value="EE">Estonia</MenuItem>
+                <MenuItem value="FI">Finland</MenuItem>
+                <MenuItem value="FR">France</MenuItem>
+                <MenuItem value="DE">Germany</MenuItem>
+                <MenuItem value="GR">Greece</MenuItem>
+                <MenuItem value="IE">Ireland</MenuItem>
+                <MenuItem value="IT">Italy</MenuItem>
+                <MenuItem value="LV">Latvia</MenuItem>
+                <MenuItem value="LT">Lithuania</MenuItem>
+                <MenuItem value="LU">Luxembourg</MenuItem>
+                <MenuItem value="MT">Malta</MenuItem>
+                <MenuItem value="NL">Netherlands</MenuItem>
+                <MenuItem value="PT">Portugal</MenuItem>
+                <MenuItem value="SK">Slovakia</MenuItem>
+                <MenuItem value="SI">Slovenia</MenuItem>
+                <MenuItem value="ES">Spain</MenuItem>
                 <MenuItem value="GB">United Kingdom</MenuItem>
+                <MenuItem value="US">United States</MenuItem>
               </Field>
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
