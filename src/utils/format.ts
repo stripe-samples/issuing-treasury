@@ -10,6 +10,35 @@ export function formatUSD(amount: number) {
   return currencyFormatter.format(amount);
 }
 
+export const newCurrencyFormatter = (currency: string) => {
+  let locale;
+
+  switch (currency) {
+    case "gbp": {
+      locale = "en-GB";
+      break;
+    }
+    case "eur": {
+      locale = "en-EU";
+      break;
+    }
+    default: {
+      locale = "en-US";
+      break;
+    }
+  }
+
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency.toUpperCase(),
+    minimumFractionDigits: 2,
+  });
+};
+
+export function currencyFormat(amount: number, currency: string) {
+  return newCurrencyFormatter(currency).format(amount);
+}
+
 export function formatDateTime(secondsSinceEpoch: number) {
   return format(fromUnixTime(secondsSinceEpoch), "MMM dd, yyyy");
 }

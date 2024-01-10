@@ -7,42 +7,76 @@ import Stripe from "stripe";
 
 import FloatingTestPanel from "src/components/floating-test-panel";
 import DashboardLayout from "src/layouts/dashboard/layout";
+import { OverviewAvailableBalance } from "src/sections/overview/overview-acquring-balance";
+import { OverviewBalanceFundsFlowChart } from "src/sections/overview/overview-balance-funds-flow-chart";
 import { OverviewFinancialAccountBalance } from "src/sections/overview/overview-fa-balance";
 import { OverviewFinancialAccountFundsFlowChart } from "src/sections/overview/overview-fa-funds-flow-chart";
 import { OverviewFinancialAccountOutboundPending } from "src/sections/overview/overview-fa-outbound-pending";
+import { OverviewIssuingBalance } from "src/sections/overview/overview-issuing-balance";
+import { OverviewLatestBalanceTransactions } from "src/sections/overview/overview-latest-balance-transactions";
 import { OverviewLatestTransactions } from "src/sections/overview/overview-latest-transactions";
+import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
 import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
-import { ChartData } from "src/types/chart-data";
+import { ChartData, BalanceChartData } from "src/types/chart-data";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   getFinancialAccountDetails,
   getFinancialAccountTransactionDetails,
   getFinancialAccountTransactionsExpanded,
+  getBalance,
+  getBalanceTransactions,
+  treasurySupported,
 } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const StripeAccountID = session.accountId;
+  const { accountId: StripeAccountID, country } = session;
 
-  const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
-  const financialAccount = responseFaDetails.financialaccount;
+  let financialAccount = null;
+  let faFundsFlowChartData = null;
+  let faTransactions = null;
 
-  const faFundsFlowChartDataResult =
-    await getFinancialAccountTransactionDetails(StripeAccountID);
-  const faFundsFlowChartData = faFundsFlowChartDataResult.faFundsFlowChartData;
+  if (treasurySupported(country)) {
+    const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
+    financialAccount = responseFaDetails.financialaccount;
 
-  const responseFaTransations =
-    await getFinancialAccountTransactionsExpanded(StripeAccountID);
-  const faTransactions = responseFaTransations.fa_transactions;
+    const faFundsFlowChartDataResult =
+      await getFinancialAccountTransactionDetails(StripeAccountID);
+    faFundsFlowChartData = faFundsFlowChartDataResult.faFundsFlowChartData;
+
+    const responseFaTransations =
+      await getFinancialAccountTransactionsExpanded(StripeAccountID);
+    faTransactions = responseFaTransations.fa_transactions;
+  }
+
+  const responseBalanceTransactions = await getBalanceTransactions(
+    StripeAccountID,
+    country,
+  );
+  const balanceTransactions = responseBalanceTransactions.balanceTransactions;
+  const balanceFundsFlowChartData =
+    responseBalanceTransactions.balanceFundsFlowChartData;
+
+  const responseAccountBalance = await getBalance(StripeAccountID);
+  const issuingBalance = responseAccountBalance.balance.issuing;
+  const availableBalance = responseAccountBalance.balance;
 
   return {
-    props: { financialAccount, faFundsFlowChartData, faTransactions },
+    props: {
+      financialAccount,
+      faFundsFlowChartData,
+      faTransactions,
+      issuingBalance,
+      availableBalance,
+      balanceTransactions,
+      balanceFundsFlowChartData,
+    },
   };
 };
 
-const Page = ({
+const FinancialAccountStuff = ({
   financialAccount,
   faFundsFlowChartData,
   faTransactions,
@@ -50,6 +84,89 @@ const Page = ({
   financialAccount: Stripe.Treasury.FinancialAccount;
   faFundsFlowChartData: ChartData;
   faTransactions: Stripe.Treasury.Transaction[];
+}) => {
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12} sm={6}>
+        <OverviewFinancialAccountBalance
+          sx={{ height: "100%" }}
+          value={financialAccount.balance.cash.usd}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <OverviewFinancialAccountOutboundPending
+          sx={{ height: "100%" }}
+          value={financialAccount.balance.outbound_pending.usd}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <OverviewFinancialAccountFundsFlowChart
+          faFundsFlowChartData={faFundsFlowChartData}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <OverviewLatestTransactions faTransactions={faTransactions} />
+      </Grid>
+    </Grid>
+  );
+};
+
+const IssuingBalanceStuff = ({
+  issuingBalance,
+  availableBalance,
+  balanceFundsFlowChartData,
+  balanceTransactions,
+}: {
+  issuingBalance: Stripe.Balance.Issuing;
+  availableBalance: Stripe.Balance;
+  balanceFundsFlowChartData: BalanceChartData;
+  balanceTransactions: Stripe.BalanceTransaction[];
+}) => {
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12} sm={6}>
+        <OverviewAvailableBalance
+          sx={{ height: "100%" }}
+          balance={availableBalance.available[0]}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <OverviewIssuingBalance
+          sx={{ height: "100%" }}
+          balance={issuingBalance.available[0]}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <OverviewBalanceFundsFlowChart
+          balanceFundsFlowChartData={balanceFundsFlowChartData}
+        />
+      </Grid>
+
+      <Grid item xs={12}>
+        <OverviewLatestBalanceTransactions
+          balanceTransactions={balanceTransactions}
+        />
+      </Grid>
+    </Grid>
+  );
+};
+
+const Page = ({
+  financialAccount,
+  faFundsFlowChartData,
+  faTransactions,
+  issuingBalance,
+  availableBalance,
+  balanceFundsFlowChartData,
+  balanceTransactions,
+}: {
+  financialAccount: Stripe.Treasury.FinancialAccount;
+  faFundsFlowChartData: ChartData;
+  faTransactions: Stripe.Treasury.Transaction[];
+  issuingBalance: Stripe.Balance.Issuing;
+  availableBalance: Stripe.Balance;
+  balanceFundsFlowChartData: BalanceChartData;
+  balanceTransactions: Stripe.BalanceTransaction[];
 }) => {
   return (
     <>
@@ -61,33 +178,30 @@ const Page = ({
         }}
       >
         <Container maxWidth="xl">
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <OverviewFinancialAccountBalance
-                sx={{ height: "100%" }}
-                value={financialAccount.balance.cash.usd}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <OverviewFinancialAccountOutboundPending
-                sx={{ height: "100%" }}
-                value={financialAccount.balance.outbound_pending.usd}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <OverviewFinancialAccountFundsFlowChart
-                faFundsFlowChartData={faFundsFlowChartData}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <OverviewLatestTransactions faTransactions={faTransactions} />
-            </Grid>
-          </Grid>
+          {financialAccount
+            ? FinancialAccountStuff({
+                financialAccount,
+                faFundsFlowChartData,
+                faTransactions,
+              })
+            : IssuingBalanceStuff({
+                issuingBalance,
+                availableBalance,
+                balanceFundsFlowChartData,
+                balanceTransactions,
+              })}
         </Container>
       </Box>
-      <FloatingTestPanel title="Simulate a received credit">
-        <TestDataCreateReceivedCredit financialAccount={financialAccount} />
-      </FloatingTestPanel>
+
+      {financialAccount ? (
+        <FloatingTestPanel title="Simulate a received credit">
+          <TestDataCreateReceivedCredit financialAccount={financialAccount} />
+        </FloatingTestPanel>
+      ) : (
+        <FloatingTestPanel title="Simulate Issuing Balance Funding">
+          <TestDataTopUpIssuingBalance />
+        </FloatingTestPanel>
+      )}
     </>
   );
 };

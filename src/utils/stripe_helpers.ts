@@ -253,4 +253,121 @@ export async function getAuthorizationDetails(
   };
 }
 
+export async function getBalance(StripeAccountID: string) {
+  const stripe = stripeClient();
+  const balance = await stripe.balance.retrieve({
+    stripeAccount: StripeAccountID,
+  });
+
+  return {
+    balance: balance,
+  };
+}
+
+export async function getBalanceTransactions(
+  StripeAccountID: string,
+  country: string,
+) {
+  const stripe = stripeClient();
+  const currency = currencyForCountry(country);
+
+  // Calculate the start and end date for the last 7 days
+  const endDate = new Date();
+  const startDate = addDays(endDate, -NUMBER_OF_DAYS + 1);
+
+  const balanceTransactions = await stripe.balanceTransactions.list(
+    {
+      created: {
+        gte: Math.floor(startDate.getTime() / 1000), // Convert to seconds
+        lte: Math.floor(endDate.getTime() / 1000), // Convert to seconds
+      },
+      limit: 100,
+    },
+    { stripeAccount: StripeAccountID },
+  );
+
+  const datesArray: string[] = Array.from(
+    { length: NUMBER_OF_DAYS },
+    (_, index) => {
+      const date = addDays(endDate, -index);
+      return format(date, DATE_FORMAT);
+    },
+  );
+
+  const fundsFlowByDate: { [formattedDate: string]: FundsFlowByDate } =
+    datesArray.reduce(
+      (dates, formattedDate) => {
+        dates[formattedDate] = {
+          date: formattedDate,
+          fundsIn: 0,
+          fundsOut: 0,
+        };
+        return dates;
+      },
+      {} as { [formattedDate: string]: FundsFlowByDate },
+    );
+
+  const transactionList: Stripe.BalanceTransaction[] = [];
+
+  balanceTransactions.data.forEach(function (
+    transaction: Stripe.BalanceTransaction,
+  ) {
+    const date = new Date(transaction.created * 1000);
+    const formattedDate = format(date, DATE_FORMAT);
+    const amount = Math.abs(transaction.amount) / 100;
+    const type = transaction.type;
+
+    if (
+      !(
+        type == "issuing_authorization_release" ||
+        type == "issuing_authorization_hold"
+      )
+    ) {
+      if (fundsFlowByDate.hasOwnProperty(formattedDate)) {
+        if (transaction.amount > 0) {
+          fundsFlowByDate[formattedDate].fundsIn += amount;
+        } else {
+          fundsFlowByDate[formattedDate].fundsOut += amount;
+        }
+      }
+
+      transactionList.push(transaction);
+    }
+  });
+
+  const fundsInArray: number[] = datesArray.map(
+    (formattedDate) => fundsFlowByDate[formattedDate].fundsIn,
+  );
+  const fundsOutArray: number[] = datesArray.map(
+    (formattedDate) => fundsFlowByDate[formattedDate].fundsOut,
+  );
+
+  // Reverse the arrays
+  datesArray.reverse();
+  fundsInArray.reverse();
+  fundsOutArray.reverse();
+
+  const balanceTransactionsChart: BalanceChartData = {
+    currency: currency,
+    balanceTransactionsDates: datesArray,
+    balanceTransactionsFundsIn: fundsInArray,
+    balanceTransactionsFundsOut: fundsOutArray,
+  };
+
+  return {
+    balanceTransactions: transactionList,
+    balanceFundsFlowChartData: balanceTransactionsChart,
+  };
+}
+
+export const currencyForCountry = (country: string): string => {
+  if (country == "US") {
+    return "USD";
+  } else if (country == "GB") {
+    return "GBP";
+  } else {
+    return "EUR";
+  }
+};
+
 export const treasurySupported = (country: string): boolean => country == "US";
