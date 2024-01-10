@@ -54,6 +54,17 @@ export const items = [
         <BanknotesIcon />
       </SvgIcon>
     ),
+    supportedCountries: ["US"],
+  },
+  {
+    title: "Top ups",
+    path: "/top_ups",
+    icon: (
+      <SvgIcon fontSize="small">
+        <BanknotesIcon />
+      </SvgIcon>
+    ),
+    supportedCountries: ["GB"],
   },
   {
     title: "Test data",

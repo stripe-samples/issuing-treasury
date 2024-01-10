@@ -28,6 +28,8 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
     throw new Error("Session is missing in the request");
   }
 
+  const { country } = session;
+
   const content = (
     <Scrollbar
       sx={{
@@ -76,17 +78,23 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             }}
           >
             {items.map((item) => {
-              const active = item.path ? pathname === item.path : false;
+              if (
+                !item.supportedCountries ||
+                (item.supportedCountries &&
+                  item.supportedCountries.includes(country))
+              ) {
+                const active = item.path ? pathname === item.path : false;
 
-              return (
-                <SideNavItem
-                  active={active}
-                  icon={item.icon}
-                  key={item.title}
-                  path={item.path}
-                  title={item.title}
-                />
-              );
+                return (
+                  <SideNavItem
+                    active={active}
+                    icon={item.icon}
+                    key={item.title}
+                    path={item.path}
+                    title={item.title}
+                  />
+                );
+              }
             })}
           </Stack>
         </Box>
