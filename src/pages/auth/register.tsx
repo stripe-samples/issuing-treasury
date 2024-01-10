@@ -55,16 +55,6 @@ const validationSchema = Yup.object().shape({
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
 });
 
-type CountryOption = {
-  name: string;
-  value: string;
-};
-
-const countries: CountryOption[] = [
-  { name: "United States", value: "US" },
-  { name: "United Kingdom", value: "GB" },
-];
-
 const Page = () => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
