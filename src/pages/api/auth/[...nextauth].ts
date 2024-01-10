@@ -48,8 +48,14 @@ export const authOptions: NextAuthOptions = {
         const stripe = stripeClient();
         const account = await stripe.accounts.retrieve(token.accountId);
         const businessName = account.business_profile?.name;
+        const country = account.country;
+
         if (businessName != undefined) {
           token.businessName = businessName;
+        }
+
+        if (country != undefined) {
+          token.country = country;
         }
       }
 
@@ -70,10 +76,17 @@ export const authOptions: NextAuthOptions = {
         );
       }
 
+      if (token.country == undefined) {
+        throw new Error("Session callback: country is missing in the token");
+      }
+
       session.email = token.email;
       session.accountId = token.accountId;
       session.requiresOnboarding = token.requiresOnboarding;
       session.businessName = token.businessName;
+      session.country = token.country;
+      session.currency = token.currency;
+      session.useCase = token.useCase;
 
       return session;
     },

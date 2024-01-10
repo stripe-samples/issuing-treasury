@@ -1,7 +1,7 @@
 import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
-import { ChartData } from "src/types/chart-data";
+import { ChartData, BalanceChartData } from "src/types/chart-data";
 import stripeClient from "src/utils/stripe-loader";
 
 export async function getFinancialAccountTransactions(StripeAccountID: string) {
@@ -252,3 +252,5 @@ export async function getAuthorizationDetails(
     authorization,
   };
 }
+
+export const treasurySupported = (country: string): boolean => country == "US";

@@ -27,6 +27,8 @@ export const authenticateUser = async (email: string, password: string) => {
       email: user.email,
       accountId: user.accountId,
       requiresOnboarding: requiresOnboarding,
+      country: user.country,
+      useCase: user.useCase,
     };
   }
 

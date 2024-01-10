@@ -5,6 +5,8 @@ import {
   Stack,
   TextField,
   Typography,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
@@ -14,6 +16,7 @@ import { ReactNode, useState } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
+import UseCase from "src/types/use_cases";
 import {
   extractJsonFromResponse,
   handleResult,
@@ -62,6 +65,8 @@ const Page = () => {
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
+    country: "US",
+    useCase: UseCase.EmbeddedFinance,
   };
 
   const handleSubmit = async (
@@ -72,6 +77,8 @@ const Page = () => {
     const response = await postApi("/api/register", {
       email: values.email,
       password: values.password,
+      country: values.country,
+      useCase: values.useCase,
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
@@ -140,6 +147,44 @@ const Page = () => {
                 name="password"
                 type="password"
               />
+              <Field as={Select} label="Country" name="country" fullWidth>
+                <MenuItem value="AT">Austria</MenuItem>
+                <MenuItem value="BE">Belgium</MenuItem>
+                <MenuItem value="HR">Croatia</MenuItem>
+                <MenuItem value="CY">Cyprus</MenuItem>
+                <MenuItem value="EE">Estonia</MenuItem>
+                <MenuItem value="FI">Finland</MenuItem>
+                <MenuItem value="FR">France</MenuItem>
+                <MenuItem value="DE">Germany</MenuItem>
+                <MenuItem value="GR">Greece</MenuItem>
+                <MenuItem value="IE">Ireland</MenuItem>
+                <MenuItem value="IT">Italy</MenuItem>
+                <MenuItem value="LV">Latvia</MenuItem>
+                <MenuItem value="LT">Lithuania</MenuItem>
+                <MenuItem value="LU">Luxembourg</MenuItem>
+                <MenuItem value="MT">Malta</MenuItem>
+                <MenuItem value="NL">Netherlands</MenuItem>
+                <MenuItem value="PT">Portugal</MenuItem>
+                <MenuItem value="SK">Slovakia</MenuItem>
+                <MenuItem value="SI">Slovenia</MenuItem>
+                <MenuItem value="ES">Spain</MenuItem>
+                <MenuItem value="GB">United Kingdom</MenuItem>
+                <MenuItem value="US">United States</MenuItem>
+              </Field>
+              <Field
+                as={Select}
+                label="Use case"
+                name="useCase"
+                fullWidth
+                error={!!(touched.useCase && errors.useCase)}
+              >
+                <MenuItem value={UseCase.EmbeddedFinance}>
+                  Embedded Finance
+                </MenuItem>
+                <MenuItem value={UseCase.ExpenseManagement}>
+                  Expense Management
+                </MenuItem>
+              </Field>
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
                 fullWidth
