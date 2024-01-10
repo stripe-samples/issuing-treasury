@@ -75,6 +75,7 @@ const Page = () => {
     const response = await postApi("/api/register", {
       email: values.email,
       password: values.password,
+      country: values.country,
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
