@@ -272,4 +272,175 @@ export async function getAuthorizationDetails(
   };
 }
 
-export const treasurySupported = (country: string): boolean => country == "US";
+export async function getBalance(stripeAccount: StripeAccount) {
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
+
+  const balance = await stripe.balance.retrieve({
+    stripeAccount: accountId,
+  });
+
+  return {
+    balance: balance,
+  };
+}
+
+export async function getBalanceTransactions(
+  stripeAccount: StripeAccount,
+  currency: string,
+) {
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
+
+  // Calculate the start and end date for the last 7 days
+  const endDate = new Date();
+  const startDate = addDays(endDate, -NUMBER_OF_DAYS + 1);
+
+  const balanceTransactions = await stripe.balanceTransactions.list(
+    {
+      created: {
+        gte: Math.floor(startDate.getTime() / 1000), // Convert to seconds
+        lte: Math.floor(endDate.getTime() / 1000), // Convert to seconds
+      },
+      limit: 100,
+    },
+    { stripeAccount: accountId },
+  );
+
+  const datesArray: string[] = Array.from(
+    { length: NUMBER_OF_DAYS },
+    (_, index) => {
+      const date = addDays(endDate, -index);
+      return format(date, DATE_FORMAT);
+    },
+  );
+
+  const fundsFlowByDate: { [formattedDate: string]: FundsFlowByDate } =
+    datesArray.reduce(
+      (dates, formattedDate) => {
+        dates[formattedDate] = {
+          date: formattedDate,
+          fundsIn: 0,
+          fundsOut: 0,
+        };
+        return dates;
+      },
+      {} as { [formattedDate: string]: FundsFlowByDate },
+    );
+
+  const transactionList: Stripe.BalanceTransaction[] = [];
+
+  balanceTransactions.data.forEach(function (
+    transaction: Stripe.BalanceTransaction,
+  ) {
+    const date = new Date(transaction.created * 1000);
+    const formattedDate = format(date, DATE_FORMAT);
+    const amount = Math.abs(transaction.amount) / 100;
+    const type = transaction.type;
+
+    if (
+      !(
+        type == "issuing_authorization_release" ||
+        type == "issuing_authorization_hold"
+      )
+    ) {
+      if (fundsFlowByDate.hasOwnProperty(formattedDate)) {
+        if (transaction.amount > 0) {
+          fundsFlowByDate[formattedDate].fundsIn += amount;
+        } else {
+          fundsFlowByDate[formattedDate].fundsOut += amount;
+        }
+      }
+
+      transactionList.push(transaction);
+    }
+  });
+
+  const fundsInArray: number[] = datesArray.map(
+    (formattedDate) => fundsFlowByDate[formattedDate].fundsIn,
+  );
+  const fundsOutArray: number[] = datesArray.map(
+    (formattedDate) => fundsFlowByDate[formattedDate].fundsOut,
+  );
+
+  // Reverse the arrays
+  datesArray.reverse();
+  fundsInArray.reverse();
+  fundsOutArray.reverse();
+
+  const balanceTransactionsChart: BalanceChartData = {
+    currency: currency,
+    balanceTransactionsDates: datesArray,
+    balanceTransactionsFundsIn: fundsInArray,
+    balanceTransactionsFundsOut: fundsOutArray,
+  };
+
+  return {
+    balanceTransactions: transactionList,
+    balanceFundsFlowChartData: balanceTransactionsChart,
+  };
+}
+
+export type FinancialAddress = {
+  type: "iban" | "sort_code";
+  supported_networks: string[];
+  iban?: {
+    account_holder_name: string;
+    bic: string;
+    country: string;
+    iban: string;
+  };
+  sort_code?: {
+    account_holder_name: string;
+    account_number: string;
+    sort_code: string;
+  };
+};
+
+export type FundingInstructions = {
+  currency: string;
+  funding_type: string;
+  livemode: boolean;
+  object: string;
+  bank_transfer: {
+    country: string;
+    type: string;
+    financial_addresses: FinancialAddress[];
+  };
+};
+
+export async function createFundingInstructions(
+  stripeAccount: StripeAccount,
+  country: string,
+  currency: string,
+): Promise<FundingInstructions> {
+  const { accountId } = stripeAccount;
+  const bankTransferType =
+    country == "GB" ? "gb_bank_transfer" : "eu_bank_transfer";
+  const data = {
+    currency: currency as string,
+    funding_type: "bank_transfer",
+    "bank_transfer[type]": bankTransferType,
+  };
+
+  // using fetch, because this API is not yet supported in the Node.js libary
+  const response = await fetch(
+    "https://api.stripe.com/v1/issuing/funding_instructions",
+    {
+      method: "POST",
+      headers: {
+        "Stripe-Account": accountId,
+        "content-type": "application/x-www-form-urlencoded",
+        Authorization: "Bearer " + process.env.STRIPE_SECRET_KEY,
+      },
+      body: new URLSearchParams(data),
+    },
+  );
+  const responseBody = await response.json();
+  return responseBody;
+}
+
+const TREASURY_SUPPORTED_COUNTRIES = ["US"];
+
+export const treasurySupported = (country: string): boolean =>
+  TREASURY_SUPPORTED_COUNTRIES.includes(country);
