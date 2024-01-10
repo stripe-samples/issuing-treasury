@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import { currencyForCountry } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -15,8 +14,7 @@ const simulateIssuingBalanceFunding = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { accountId: StripeAccountId, country } = session;
-  const currency = currencyForCountry(country);
+  const { accountId: StripeAccountId, currency } = session;
 
   const data = {
     amount: "50000",

@@ -32,7 +32,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { accountId: StripeAccountID, country } = session;
+  const { accountId: StripeAccountID, country, currency } = session;
 
   let financialAccount = null;
   let faFundsFlowChartData = null;
@@ -53,7 +53,7 @@ export const getServerSideProps = async (
 
   const responseBalanceTransactions = await getBalanceTransactions(
     StripeAccountID,
-    country,
+    currency,
   );
   const balanceTransactions = responseBalanceTransactions.balanceTransactions;
   const balanceFundsFlowChartData =

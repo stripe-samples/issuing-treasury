@@ -266,10 +266,9 @@ export async function getBalance(StripeAccountID: string) {
 
 export async function getBalanceTransactions(
   StripeAccountID: string,
-  country: string,
+  currency: string,
 ) {
   const stripe = stripeClient();
-  const currency = currencyForCountry(country);
 
   // Calculate the start and end date for the last 7 days
   const endDate = new Date();
@@ -360,14 +359,7 @@ export async function getBalanceTransactions(
   };
 }
 
-export const currencyForCountry = (country: string): string => {
-  if (country == "US") {
-    return "USD";
-  } else if (country == "GB") {
-    return "GBP";
-  } else {
-    return "EUR";
-  }
-};
+const TREASURY_SUPPORTED_COUNTRIES = ["US"];
 
-export const treasurySupported = (country: string): boolean => country == "US";
+export const treasurySupported = (country: string): boolean =>
+  TREASURY_SUPPORTED_COUNTRIES.includes(country);
