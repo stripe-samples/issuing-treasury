@@ -6,6 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { authenticateUser } from "src/utils/authentication";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
+import { getPlatform } from "src/utils/platform";
 import stripeClient from "src/utils/stripe-loader";
 
 export const authOptions: NextAuthOptions = {
@@ -33,10 +34,15 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     jwt: async ({ token, user }: { token: JWT; user?: User }) => {
+      const stripeAccount = {
+        accountId: token.accountId,
+        platform: getPlatform(token.country),
+      };
+
       if (token.requiresOnboarding != undefined) {
         token.requiresOnboarding =
           token.requiresOnboarding &&
-          (await hasOutstandingRequirements(token.accountId));
+          (await hasOutstandingRequirements(stripeAccount));
       }
 
       if (user?.email) {
@@ -45,7 +51,8 @@ export const authOptions: NextAuthOptions = {
 
       // If accountId is undefined, that means we're most likely not authenticated yet
       if (token.accountId != undefined && token.businessName == undefined) {
-        const stripe = stripeClient();
+        const platform = getPlatform(token.country);
+        const stripe = stripeClient(platform);
         const account = await stripe.accounts.retrieve(token.accountId);
         const businessName = account.business_profile?.name;
         const country = account.country;
@@ -80,8 +87,13 @@ export const authOptions: NextAuthOptions = {
         throw new Error("Session callback: country is missing in the token");
       }
 
+      const stripeAccount = {
+        accountId: token.accountId,
+        platform: getPlatform(token.country),
+      };
+
       session.email = token.email;
-      session.accountId = token.accountId;
+      session.stripeAccount = stripeAccount;
       session.requiresOnboarding = token.requiresOnboarding;
       session.businessName = token.businessName;
       session.country = token.country;

@@ -12,8 +12,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createPaymentLink = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
-  const stripe = stripeClient();
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   const prices = await stripe.prices.list(
     {
@@ -22,7 +23,7 @@ const createPaymentLink = async (req: NextApiRequest, res: NextApiResponse) => {
       type: "one_time",
     },
     {
-      stripeAccount: StripeAccountId,
+      stripeAccount: accountId,
     },
   );
 
@@ -37,7 +38,7 @@ const createPaymentLink = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           },
           {
-            stripeAccount: StripeAccountId,
+            stripeAccount: accountId,
           },
         )
       : prices.data[0];
@@ -53,7 +54,7 @@ const createPaymentLink = async (req: NextApiRequest, res: NextApiResponse) => {
       ],
     },
     {
-      stripeAccount: StripeAccountId,
+      stripeAccount: accountId,
     },
   );
 

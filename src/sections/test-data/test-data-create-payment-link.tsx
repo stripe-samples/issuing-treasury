@@ -26,6 +26,8 @@ function TestDataCreatePaymentLink() {
   if (session == undefined) {
     throw new Error("Session is missing in the request");
   }
+  const { stripeAccount } = session;
+  const { accountId } = stripeAccount;
   const router = useRouter();
 
   const [submitted, setSubmitted] = useState(false);
@@ -87,7 +89,7 @@ function TestDataCreatePaymentLink() {
             <Typography>
               You can view the payments{" "}
               <Link
-                href={`https://dashboard.stripe.com/${session.accountId}/test/payments`}
+                href={`https://dashboard.stripe.com/${accountId}/test/payments`}
                 target="_blank"
                 underline="none"
               >

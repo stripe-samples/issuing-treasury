@@ -16,8 +16,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const email = session.email;
-  const accountId = session.accountId;
+  const { email, stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
 
   const {
     businessName,
@@ -101,7 +101,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     }),
   };
 
-  const stripe = stripeClient();
+  const stripe = stripeClient(platform);
   await stripe.accounts.update(accountId, onboardingData);
 
   // FOR-DEMO-ONLY: We're going to check if the user wants to skip the onboarding process. If they do, we'll redirect to
@@ -114,7 +114,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // This is the Connect Onboarding URL that will be used to collect KYC information from the user
-  const onboardingUrl = await createAccountOnboardingUrl(accountId);
+  const onboardingUrl = await createAccountOnboardingUrl(stripeAccount);
 
   return res
     .status(200)

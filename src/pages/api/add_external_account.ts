@@ -15,14 +15,13 @@ const addExternalAccount = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
-  const stripe = stripeClient();
   const financialAccounts = await stripe.treasury.financialAccounts.list(
     { expand: ["data.financial_addresses.aba.account_number"] },
-    {
-      stripeAccount: StripeAccountId,
-    },
+    { stripeAccount: accountId },
   );
 
   const financialAccount = financialAccounts.data[0];
@@ -47,7 +46,7 @@ const addExternalAccount = async (
     },
     undefined,
   );
-  await stripe.accounts.createExternalAccount(StripeAccountId, {
+  await stripe.accounts.createExternalAccount(accountId, {
     external_account: token.id,
   });
 

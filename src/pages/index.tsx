@@ -24,17 +24,17 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const StripeAccountID = session.accountId;
+  const { stripeAccount } = session;
 
-  const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
+  const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
   const financialAccount = responseFaDetails.financialaccount;
 
   const faFundsFlowChartDataResult =
-    await getFinancialAccountTransactionDetails(StripeAccountID);
+    await getFinancialAccountTransactionDetails(stripeAccount);
   const faFundsFlowChartData = faFundsFlowChartDataResult.faFundsFlowChartData;
 
   const responseFaTransations =
-    await getFinancialAccountTransactionsExpanded(StripeAccountID);
+    await getFinancialAccountTransactionsExpanded(stripeAccount);
   const faTransactions = responseFaTransations.fa_transactions;
 
   return {

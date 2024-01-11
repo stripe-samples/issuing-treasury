@@ -12,16 +12,16 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const StripeAccountID = session.accountId;
-
-  const stripe = stripeClient();
-  const responseAccount = await stripe.accounts.retrieve(StripeAccountID);
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
+  const responseAccount = await stripe.accounts.retrieve(accountId);
 
   const hasExternalAccount =
     responseAccount.external_accounts?.data[0] != undefined;
 
   const responseBalance = await stripe.balance.retrieve({
-    stripeAccount: StripeAccountID,
+    stripeAccount: accountId,
   });
   const availableBalance = responseBalance.available[0].amount;
 

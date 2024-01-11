@@ -13,19 +13,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const deleteAccount = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
-  const stripe = stripeClient();
+  const { stripeAccount, user } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   // In the demo app, this is straight forward. In a real app, you'd want to make sure that balances are zeroed out
   // before deleting the account, etc.
-  await stripe.accounts.del(StripeAccountId);
+  await stripe.accounts.del(accountId);
 
-  if (session.user?.email == undefined) {
+  if (user?.email == undefined) {
     throw new Error("User email is undefined");
   }
   await prisma.user.delete({
     where: {
-      email: session.user?.email,
+      email: user?.email,
     },
   });
 

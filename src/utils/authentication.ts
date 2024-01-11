@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 
 import { hasOutstandingRequirements } from "./onboarding-helpers";
+import { getPlatform } from "./platform";
 
 import { prisma } from "src/db";
 
@@ -20,7 +21,12 @@ export const authenticateUser = async (email: string, password: string) => {
       data: { lastLoginAt: new Date() },
     });
 
-    const requiresOnboarding = await hasOutstandingRequirements(user.accountId);
+    const stripeAccount = {
+      accountId: user.accountId,
+      platform: getPlatform(user.country),
+    };
+
+    const requiresOnboarding = await hasOutstandingRequirements(stripeAccount);
 
     return {
       id: user.id.toString(),

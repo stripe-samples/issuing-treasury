@@ -24,6 +24,8 @@ import LatestCardAuthorizations from "src/sections/[cardId]/latest-card-authoriz
 import TestDataCreateAuthorization from "src/sections/test-data/test-data-create-authorization";
 import { formatUSD } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
+import StripeAccount from "src/utils/stripe-account";
+import { getStripePublishableKey } from "src/utils/stripe-authentication";
 import { getCardDetails } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = async (
@@ -34,14 +36,14 @@ export const getServerSideProps = async (
   if (cardId === undefined) {
     throw new Error("cardId must be provided");
   }
-  const StripeAccountID = session.accountId;
-  const cardTransactions = await getCardDetails(StripeAccountID, cardId);
+  const { stripeAccount } = session;
+  const cardTransactions = await getCardDetails(stripeAccount, cardId);
 
   return {
     props: {
       authorizations: cardTransactions.card_authorizations,
       currentSpend: cardTransactions.current_spend,
-      accountId: StripeAccountID,
+      stripeAccount: stripeAccount,
       cardId: context?.params?.cardId,
       card: cardTransactions.card_details,
     },
@@ -51,18 +53,20 @@ export const getServerSideProps = async (
 const Page = ({
   authorizations,
   currentSpend,
-  accountId,
+  stripeAccount,
   cardId,
   card,
 }: {
   authorizations: Stripe.Issuing.Authorization[];
   currentSpend: number;
-  accountId: string;
+  stripeAccount: StripeAccount;
   cardId: string;
   card: Stripe.Issuing.Card;
 }) => {
-  const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-  if (stripePublishableKey === undefined) {
+  const { accountId, platform } = stripeAccount;
+  const stripePublishableKey = getStripePublishableKey(platform);
+
+  if (!stripePublishableKey) {
     throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY must be defined");
   }
 
