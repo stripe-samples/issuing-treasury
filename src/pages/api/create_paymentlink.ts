@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createPaymentLink = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
+  const { accountId: StripeAccountId, currency } = session;
   const stripe = stripeClient();
 
   const prices = await stripe.prices.list(
@@ -31,7 +31,7 @@ const createPaymentLink = async (req: NextApiRequest, res: NextApiResponse) => {
       ? await stripe.prices.create(
           {
             unit_amount: 1000,
-            currency: "usd",
+            currency: currency,
             product_data: {
               name: "Some Product",
             },
