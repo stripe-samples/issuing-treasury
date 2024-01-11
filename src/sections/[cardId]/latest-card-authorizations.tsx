@@ -19,7 +19,7 @@ import Stripe from "stripe";
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
 import { SeverityColor } from "src/types/severity-color";
-import { capitalize, formatDateTime, formatUSD } from "src/utils/format";
+import { capitalize, currencyFormat, formatDateTime } from "src/utils/format";
 
 const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
   closed: "primary",
@@ -69,7 +69,10 @@ const LatestCardAuthorizations = ({
                             whiteSpace: "nowrap",
                           }}
                         >
-                          {`${formatUSD(authorization.amount / 100)} USD`}
+                          {currencyFormat(
+                            authorization.amount / 100,
+                            authorization.currency,
+                          )}
                         </TableCell>
                         <TableCell>
                           <SeverityPill

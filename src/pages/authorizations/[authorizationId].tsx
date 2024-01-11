@@ -16,8 +16,8 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 import { SeverityColor } from "src/types/severity-color";
 import {
   capitalize,
+  currencyFormat,
   formatDateAndTime,
-  formatUSD,
   titleize,
 } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
@@ -109,7 +109,10 @@ const Page = ({
                 <Typography variant="subtitle2">Amount</Typography>
                 <Box sx={{ mt: 0.5 }}>
                   <Typography variant="body2" color="text.secondary">
-                    {`${formatUSD(authorization.amount / 100)} USD`}
+                    {currencyFormat(
+                      authorization.amount / 100,
+                      authorization.currency,
+                    )}
                   </Typography>
                 </Box>
               </Grid>
