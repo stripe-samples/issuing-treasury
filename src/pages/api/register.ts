@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
@@ -9,6 +8,7 @@ import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getPlatform } from "src/utils/platform";
 import stripeClient from "src/utils/stripe-loader";
+import validationSchemas from "src/utils/validation_schemas";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -29,41 +29,8 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
   const useTreasury = useCase == UseCase.EmbeddedFinance;
 
-  const getCharacterValidationError = (str: string) => {
-    return `Your password must have at least 1 ${str} character`;
-  };
-  const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Must be a valid email")
-      .max(255)
-      .required("Email is required"),
-    password: Yup.string()
-      .max(255)
-      .required("Password is required")
-      // check minimum characters
-      .min(8, "Password must have at least 8 characters")
-      // different error messages for different requirements
-      .matches(/[0-9]/, getCharacterValidationError("digit"))
-      .matches(/[a-z]/, getCharacterValidationError("lowercase"))
-      .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-    country: Yup.string().max(2).required("Country is required"),
-    useCase: Yup.string().when("country", {
-      is: "US",
-      then: (schema) =>
-        schema.oneOf(
-          ["embedded_finance"],
-          "This use case is not yet supported in the selected country",
-        ),
-      otherwise: (schema) =>
-        schema.oneOf(
-          ["expense_management"],
-          "This use case is not yet supported in the selected country",
-        ),
-    }),
-  });
-
   try {
-    await validationSchema.validate(
+    await validationSchemas.user.validate(
       { email, password, country, useCase },
       { abortEarly: false },
     );
