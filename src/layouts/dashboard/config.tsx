@@ -61,7 +61,7 @@ export const items = [
   },
   {
     title: "Top ups",
-    path: "/top_ups",
+    path: "/top-ups",
     icon: (
       <SvgIcon fontSize="small">
         <BanknotesIcon />
