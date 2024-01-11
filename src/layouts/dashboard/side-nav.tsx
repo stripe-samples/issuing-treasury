@@ -19,6 +19,32 @@ import { Scrollbar } from "src/components/scrollbar";
 import { items } from "src/layouts/dashboard/config";
 import { SideNavItem } from "src/layouts/dashboard/side-nav-item";
 
+const validNavigationItem = (
+  item: {
+    title: string;
+    path: string;
+    icon: React.ReactNode;
+    countries?: string[];
+    useCases?: string[];
+  },
+  country: string,
+  useCase: string,
+) => {
+  if (item.countries) {
+    if (!item.countries.includes(country)) {
+      return false;
+    }
+  }
+
+  if (item.useCases) {
+    if (!item.useCases.includes(useCase)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   const { open, onClose } = props;
   const pathname = usePathname();
@@ -28,7 +54,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
     throw new Error("Session is missing in the request");
   }
 
-  const { country } = session;
+  const { country, useCase } = session;
 
   const content = (
     <Scrollbar
@@ -78,11 +104,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             }}
           >
             {items.map((item) => {
-              if (
-                !item.supportedCountries ||
-                (item.supportedCountries &&
-                  item.supportedCountries.includes(country))
-              ) {
+              if (validNavigationItem(item, country, useCase)) {
                 const active = item.path ? pathname === item.path : false;
 
                 return (
