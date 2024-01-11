@@ -65,6 +65,7 @@ const Page = () => {
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
     country: "US",
+    useCase: "embedded_finance",
   };
 
   const handleSubmit = async (
@@ -76,6 +77,7 @@ const Page = () => {
       email: values.email,
       password: values.password,
       country: values.country,
+      useCase: values.useCase,
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
@@ -167,6 +169,12 @@ const Page = () => {
                 <MenuItem value="ES">Spain</MenuItem>
                 <MenuItem value="GB">United Kingdom</MenuItem>
                 <MenuItem value="US">United States</MenuItem>
+              </Field>
+              <Field as={Select} label="Use case" name="useCase" fullWidth>
+                <MenuItem value="embedded_finance">Embedded Finance</MenuItem>
+                <MenuItem value="expense_management">
+                  Expense Management
+                </MenuItem>
               </Field>
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button

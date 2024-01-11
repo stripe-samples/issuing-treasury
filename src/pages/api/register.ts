@@ -15,8 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   });
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, password, country } = req.body;
-  const useCase = "embedded_finance";
+  const { email, password, country, useCase } = req.body;
 
   const getCharacterValidationError = (str: string) => {
     return `Your password must have at least 1 ${str} character`;
@@ -35,10 +34,27 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       .matches(/[0-9]/, getCharacterValidationError("digit"))
       .matches(/[a-z]/, getCharacterValidationError("lowercase"))
       .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
+    country: Yup.string().max(2).required("Country is required"),
+    useCase: Yup.string().when("country", {
+      is: "US",
+      then: (schema) =>
+        schema.oneOf(
+          ["embedded_finance"],
+          "This use case is not yet supported in the selected country",
+        ),
+      otherwise: (schema) =>
+        schema.oneOf(
+          ["expense_management"],
+          "This use case is not yet supported in the selected country",
+        ),
+    }),
   });
 
   try {
-    await validationSchema.validate({ email, password }, { abortEarly: false });
+    await validationSchema.validate(
+      { email, password, country, useCase },
+      { abortEarly: false },
+    );
   } catch (error) {
     return res.status(400).json(
       apiResponse({
@@ -90,8 +106,13 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       email: email,
       password: hashedPassword,
       accountId: account.id,
+<<<<<<< HEAD
       useCase,
       country,
+=======
+      country: country,
+      useCase: useCase,
+>>>>>>> ce0d1f5 (collect and store use case at onboarding)
     },
   });
 
