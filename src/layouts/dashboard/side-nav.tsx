@@ -18,6 +18,7 @@ import { Logo } from "src/components/logo";
 import { Scrollbar } from "src/components/scrollbar";
 import { items } from "src/layouts/dashboard/config";
 import { SideNavItem } from "src/layouts/dashboard/side-nav-item";
+import UseCase from "src/types/use_cases";
 
 const validNavigationItem = (
   item: {
@@ -25,10 +26,10 @@ const validNavigationItem = (
     path: string;
     icon: React.ReactNode;
     countries?: string[];
-    useCases?: string[];
+    useCases?: UseCase[];
   },
   country: string,
-  useCase: string,
+  useCase: UseCase,
 ) => {
   if (item.countries) {
     if (!item.countries.includes(country)) {

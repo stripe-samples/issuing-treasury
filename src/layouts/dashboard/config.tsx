@@ -9,6 +9,8 @@ import {
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
+import UseCase from "src/types/use_cases";
+
 export const items = [
   {
     title: "Overview",
@@ -55,7 +57,7 @@ export const items = [
       </SvgIcon>
     ),
     countries: ["US"],
-    use_cases: ["embedded_finance"],
+    use_cases: [UseCase.EmbeddedFinance],
   },
   {
     title: "Top ups",
@@ -88,7 +90,7 @@ export const items = [
       "SI",
       "SK",
     ],
-    use_cases: ["expense_management"],
+    use_cases: [UseCase.ExpenseManagement],
   },
   {
     title: "Test data",

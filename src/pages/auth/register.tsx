@@ -15,6 +15,7 @@ import { signIn } from "next-auth/react";
 import { ReactNode, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
+import UseCase from "src/types/use_cases";
 import {
   extractJsonFromResponse,
   handleResult,
@@ -46,7 +47,7 @@ const Page = () => {
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
     country: "US",
-    useCase: "embedded_finance",
+    useCase: UseCase.EmbeddedFinance,
   };
 
   const handleSubmit = async (
@@ -158,8 +159,10 @@ const Page = () => {
                 fullWidth
                 error={!!(touched.useCase && errors.useCase)}
               >
-                <MenuItem value="embedded_finance">Embedded Finance</MenuItem>
-                <MenuItem value="expense_management">
+                <MenuItem value={UseCase.EmbeddedFinance}>
+                  Embedded Finance
+                </MenuItem>
+                <MenuItem value={UseCase.ExpenseManagement}>
                   Expense Management
                 </MenuItem>
               </Field>
