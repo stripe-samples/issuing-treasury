@@ -13,11 +13,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createPayout = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { accountId: StripeAccountId, currency } = session;
-  const stripe = stripeClient();
+  const { currency, stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   const balance = await stripe.balance.retrieve({
-    stripeAccount: StripeAccountId,
+    stripeAccount: accountId,
   });
   const availableBalance = balance.available[0].amount;
 
@@ -51,7 +52,7 @@ const createPayout = async (req: NextApiRequest, res: NextApiResponse) => {
       amount: availableBalance,
       currency: currency,
     },
-    { stripeAccount: StripeAccountId },
+    { stripeAccount: accountId },
   );
 
   return res.status(200).json(apiResponse({ success: true }));

@@ -22,8 +22,8 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const StripeAccountID = session.accountId;
-  const responseCardholders = await getCardholders(StripeAccountID);
+  const { stripeAccount } = session;
+  const responseCardholders = await getCardholders(stripeAccount);
 
   return {
     props: {

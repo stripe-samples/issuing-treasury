@@ -13,7 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const switchCardStatus = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
 
   const cardId = req.query.cardId?.toString() || "";
   const { newStatus } = req.body;
@@ -35,11 +36,11 @@ const switchCardStatus = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const stripe = stripeClient();
+  const stripe = stripeClient(platform);
   await stripe.issuing.cards.update(
     cardId,
     { status: newStatus },
-    { stripeAccount: StripeAccountId },
+    { stripeAccount: accountId },
   );
 
   return res.status(200).json(apiResponse({ success: true }));

@@ -20,16 +20,17 @@ const simulateAuthorization = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { accountId: StripeAccountId, currency, useCase } = session;
-  const stripe = stripeClient();
+  const { stripeAccount, currency, useCase } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   let balance;
   if (useCase == UseCase.EmbeddedFinance) {
-    const responseFaDetails = await getFinancialAccountDetails(StripeAccountId);
+    const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
     const financialAccount = responseFaDetails.financialaccount;
     balance = financialAccount.balance.cash.usd;
   } else {
-    const responseBalance = await getBalance(StripeAccountId);
+    const responseBalance = await getBalance(stripeAccount);
     balance = responseBalance.balance.issuing?.available[0].amount || 0;
   }
 
@@ -50,11 +51,11 @@ const simulateAuthorization = async (
       currency: currency,
       card: req.body.cardId,
     },
-    { stripeAccount: StripeAccountId },
+    { stripeAccount: accountId },
   );
 
   await stripe.testHelpers.issuing.authorizations.capture(authorization.id, {
-    stripeAccount: StripeAccountId,
+    stripeAccount: accountId,
   });
 
   return res.status(200).json(apiResponse({ success: true }));

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
 
 import { hasOutstandingRequirements } from "./utils/onboarding-helpers";
+import { getPlatform } from "./utils/platform";
 
 export default withAuth(
   // This will only be called once the user is authorized
@@ -33,9 +34,13 @@ export default withAuth(
     const accessingOnboarding =
       req.nextUrl.pathname === "/onboard" ||
       req.nextUrl.pathname === "/api/onboard";
+    const stripeAccount = {
+      accountId: token.accountId,
+      platform: getPlatform(token.country),
+    };
     const requiresOnboarding =
       token.requiresOnboarding &&
-      (await hasOutstandingRequirements(token.accountId));
+      (await hasOutstandingRequirements(stripeAccount));
     // If the user needs to onboard but they are trying to access other pages, redirect them to the onboarding page
     if (requiresOnboarding && !accessingOnboarding) {
       return NextResponse.redirect(new URL("/onboard", req.url));

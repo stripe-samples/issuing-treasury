@@ -32,34 +32,34 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { accountId: StripeAccountID, country, currency } = session;
+  const { country, currency, stripeAccount } = session;
 
   let financialAccount = null;
   let faFundsFlowChartData = null;
   let faTransactions = null;
 
   if (treasurySupported(country)) {
-    const responseFaDetails = await getFinancialAccountDetails(StripeAccountID);
+    const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
     financialAccount = responseFaDetails.financialaccount;
 
     const faFundsFlowChartDataResult =
-      await getFinancialAccountTransactionDetails(StripeAccountID);
+      await getFinancialAccountTransactionDetails(stripeAccount);
     faFundsFlowChartData = faFundsFlowChartDataResult.faFundsFlowChartData;
 
     const responseFaTransations =
-      await getFinancialAccountTransactionsExpanded(StripeAccountID);
+      await getFinancialAccountTransactionsExpanded(stripeAccount);
     faTransactions = responseFaTransations.fa_transactions;
   }
 
   const responseBalanceTransactions = await getBalanceTransactions(
-    StripeAccountID,
+    stripeAccount,
     currency,
   );
   const balanceTransactions = responseBalanceTransactions.balanceTransactions;
   const balanceFundsFlowChartData =
     responseBalanceTransactions.balanceFundsFlowChartData;
 
-  const responseAccountBalance = await getBalance(StripeAccountID);
+  const responseAccountBalance = await getBalance(stripeAccount);
   const issuingBalance = responseAccountBalance.balance.issuing;
   const availableBalance = responseAccountBalance.balance;
 

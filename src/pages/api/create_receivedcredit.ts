@@ -15,13 +15,14 @@ const simulateReceivedCredit = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
-  const stripe = stripeClient();
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   // Get financial accounts for the Connected Account
   const financialAccounts = await stripe.treasury.financialAccounts.list(
     { expand: ["data.financial_addresses.aba.account_number"] },
-    { stripeAccount: StripeAccountId },
+    { stripeAccount: accountId },
   );
   const financialAccount = financialAccounts.data[0];
 
@@ -32,7 +33,7 @@ const simulateReceivedCredit = async (
       financial_account: financialAccount.id,
       network: "ach",
     },
-    { stripeAccount: StripeAccountId },
+    { stripeAccount: accountId },
   );
 
   return res.status(200).json(apiResponse({ success: true }));

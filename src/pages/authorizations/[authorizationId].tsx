@@ -31,11 +31,8 @@ export const getServerSideProps = async (
   if (authorizationId === undefined) {
     throw new Error("authorizationId must be provided");
   }
-  const StripeAccountID = session.accountId;
-  const result = await getAuthorizationDetails(
-    StripeAccountID,
-    authorizationId,
-  );
+  const { stripeAccount } = session;
+  const result = await getAuthorizationDetails(stripeAccount, authorizationId);
 
   return {
     props: {

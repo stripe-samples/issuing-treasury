@@ -4,6 +4,7 @@ import { apiResponse } from "src/types/api-response";
 import UseCase from "src/types/use_cases";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
+import StripeAccount from "src/utils/stripe-account";
 import stripeClient from "src/utils/stripe-loader";
 
 const TEST_GB_ACCOUNT_NUMBER = "00012345";
@@ -15,17 +16,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   });
 
 const addExternalFinancialAccount = async (
-  StripeAccountId: string,
+  stripeAccount: StripeAccount,
   country: string,
   currency: string,
 ) => {
-  const stripe = stripeClient();
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   const financialAccounts = await stripe.treasury.financialAccounts.list(
     { expand: ["data.financial_addresses.aba.account_number"] },
-    {
-      stripeAccount: StripeAccountId,
-    },
+    { stripeAccount: accountId },
   );
 
   const financialAccount = financialAccounts.data[0];
@@ -55,10 +55,11 @@ const addExternalFinancialAccount = async (
 };
 
 const addExternalBankAccount = async (
-  StripeAccountId: string,
+  stripeAccount: StripeAccount,
   currency: string,
 ) => {
-  const stripe = stripeClient();
+  const { platform } = stripeAccount;
+  const stripe = stripeClient(platform);
   const token = await stripe.tokens.create(
     {
       bank_account: {
@@ -79,21 +80,18 @@ const addExternalAccount = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { accountId: StripeAccountId, country, currency, useCase } = session;
-  const stripe = stripeClient();
+  const { country, currency, useCase, stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   let token;
   if (useCase == UseCase.EmbeddedFinance) {
-    token = await addExternalFinancialAccount(
-      StripeAccountId,
-      country,
-      currency,
-    );
+    token = await addExternalFinancialAccount(stripeAccount, country, currency);
   } else {
-    token = await addExternalBankAccount(StripeAccountId, currency);
+    token = await addExternalBankAccount(stripeAccount, currency);
   }
 
-  await stripe.accounts.createExternalAccount(StripeAccountId, {
+  await stripe.accounts.createExternalAccount(accountId, {
     external_account: token.id,
   });
 

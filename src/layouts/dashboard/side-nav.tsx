@@ -55,7 +55,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
     throw new Error("Session is missing in the request");
   }
 
-  const { country, useCase } = session;
+  const { businessName, country, useCase } = session;
 
   const content = (
     <Scrollbar
@@ -82,7 +82,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           </Box>
           <Box width="100%">
             <Typography color="inherit" variant="subtitle1">
-              {session.businessName}
+              {businessName}
             </Typography>
           </Box>
         </Stack>

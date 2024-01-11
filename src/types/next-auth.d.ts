@@ -14,6 +14,7 @@ declare module "next-auth" {
     country: string;
     currency: string;
     useCase: UseCase;
+    stripeAccount: StripeAccount;
   }
 }
 

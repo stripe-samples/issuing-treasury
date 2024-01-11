@@ -23,7 +23,6 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
 import { currencyFormat } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import stripeClient from "src/utils/stripe-loader";
 import {
   FinancialAddress,
   FundingInstructions,
@@ -35,15 +34,15 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { accountId, country, currency } = session;
+  const { stripeAccount, country, currency } = session;
 
   const fundingInstructions = await createFundingInstructions(
-    accountId,
+    stripeAccount,
     country,
     currency,
   );
 
-  const response = await getBalance(accountId);
+  const response = await getBalance(stripeAccount);
   const balance = response.balance;
   const availableBalance = balance.available[0];
 

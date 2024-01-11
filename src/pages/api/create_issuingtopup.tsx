@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
+import { getStripeSecretKey } from "src/utils/stripe-authentication";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -14,7 +15,8 @@ const simulateIssuingBalanceFunding = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { accountId: StripeAccountId, currency } = session;
+  const { currency, stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
 
   const data = {
     amount: "50000",
@@ -25,9 +27,9 @@ const simulateIssuingBalanceFunding = async (
   await fetch("https://api.stripe.com/v1/test_helpers/issuing/fund_balance", {
     method: "POST",
     headers: {
-      "Stripe-Account": StripeAccountId,
+      "Stripe-Account": accountId,
       "content-type": "application/x-www-form-urlencoded",
-      Authorization: "Bearer " + process.env.STRIPE_SECRET_KEY,
+      Authorization: "Bearer " + getStripeSecretKey(platform),
     },
     body: new URLSearchParams(data),
   });

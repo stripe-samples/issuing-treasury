@@ -15,13 +15,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { accountId: StripeAccountId, useCase, currency } = session;
-  const stripe = stripeClient();
+  const { useCase, currency, stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   let financialAccount = null;
   if (useCase == UseCase.EmbeddedFinance) {
     const financialAccounts = await stripe.treasury.financialAccounts.list({
-      stripeAccount: StripeAccountId,
+      stripeAccount: accountId,
     });
 
     financialAccount = financialAccounts.data[0];
@@ -29,7 +30,7 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { cardholderid, card_type } = req.body;
   const cardholder = await stripe.issuing.cardholders.retrieve(cardholderid, {
-    stripeAccount: StripeAccountId,
+    stripeAccount: accountId,
   });
 
   try {
@@ -101,7 +102,7 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   await stripe.issuing.cards.create(
     cardOptions as Stripe.Issuing.CardCreateParams,
     {
-      stripeAccount: StripeAccountId,
+      stripeAccount: accountId,
     },
   );
 

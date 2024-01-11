@@ -5,6 +5,7 @@ import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
+import { getPlatform } from "src/utils/platform";
 import stripeClient from "src/utils/stripe-loader";
 import { treasurySupported } from "src/utils/stripe_helpers";
 import validationSchemas from "src/utils/validation_schemas";
@@ -43,7 +44,8 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Create a Connected Account
-  const stripe = stripeClient();
+  const platform = getPlatform(country);
+  const stripe = stripeClient(platform);
   const account = await stripe.accounts.create({
     type: "custom",
     country: country,
