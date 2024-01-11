@@ -16,8 +16,15 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
+import { currencyFormat } from "src/utils/format";
 
-const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
+const TestDataCreateAuthorization = ({
+  cardId,
+  currency,
+}: {
+  cardId: string;
+  currency: string;
+}) => {
   const router = useRouter();
 
   const [submitting, setSubmitting] = useState(false);
@@ -47,7 +54,7 @@ const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
     <>
       <Stack spacing={1}>
         <Typography variant="body2">
-          A $10.00{" "}
+          A {currencyFormat(10.0, currency)}{" "}
           <Link
             href="https://stripe.com/docs/issuing/purchase/authorizations"
             target="_blank"
@@ -66,7 +73,7 @@ const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
             "Error: Insufficient funds to create a test purchase." ? (
               <span>
                 Insufficient funds to create a test purchase.{" "}
-                <Link href="/financial_account" underline="none">
+                <Link href="/" underline="none">
                   Add funds
                 </Link>{" "}
                 to your financial account first.
