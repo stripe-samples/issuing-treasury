@@ -18,8 +18,12 @@ import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
+<<<<<<< HEAD
 import { ReactNode, useState, ReactElement, useContext } from "react";
 import * as Yup from "yup";
+=======
+import { ReactNode, useState, ReactElement } from "react";
+>>>>>>> d669675 (centralize some validations)
 
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
@@ -36,6 +40,7 @@ import {
   RegistrationModeContext,
 } from "src/utils/registration-mode-context";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
+import validationSchemas from "src/utils/validation_schemas";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -148,7 +153,7 @@ const Page = ({
       </Stack>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={validationSchemas.user}
         onSubmit={handleSubmit}
       >
         {({ errors, touched, isValid, dirty, values, setFieldValue }) => (

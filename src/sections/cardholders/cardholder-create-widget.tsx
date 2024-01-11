@@ -23,13 +23,13 @@ import { Formik, Form, Field, FormikProps, FormikValues } from "formik";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import React, { RefObject, useRef } from "react";
-import * as Yup from "yup";
 
 import {
   extractJsonFromResponse,
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
+import validationSchemas from "src/utils/validation_schemas";
 
 const validCardholderCountries = (
   country: string,
@@ -66,28 +66,6 @@ const validCardholderCountries = (
   ];
 };
 
-const baseValidationSchema = Yup.object({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email address is required"),
-  address1: Yup.string().required("Street address is required"),
-  city: Yup.string().required("City is required"),
-  state: Yup.string().required("State / Province is required"),
-  postalCode: Yup.string().required("ZIP / Postal code is required"),
-  country: Yup.string().required("Country is required"),
-  accept: Yup.boolean()
-    .required("The terms of service and privacy policy must be accepted.")
-    .oneOf([true], "The terms of service and privacy policy must be accepted."),
-});
-
-const validationSchemaWithSCA = baseValidationSchema.concat(
-  Yup.object({
-    phoneNumber: Yup.string().required("Phone number is required for SCA"),
-  }),
-);
-
 const CreateCardholderForm = ({
   formRef,
   onCreate,
@@ -106,9 +84,9 @@ const CreateCardholderForm = ({
   // phone number requirements.
   let validationSchema;
   if (country == "US") {
-    validationSchema = baseValidationSchema;
+    validationSchema = validationSchemas.cardholder.default;
   } else {
-    validationSchema = validationSchemaWithSCA;
+    validationSchema = validationSchemas.cardholder.withSCA;
   }
 
   const initialValues = {

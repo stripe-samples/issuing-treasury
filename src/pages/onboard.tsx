@@ -16,7 +16,6 @@ import {
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { signOut } from "next-auth/react";
 import React, { ChangeEvent, ReactNode, useState } from "react";
-import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
 import {
@@ -25,10 +24,7 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-
-const validationSchema = Yup.object().shape({
-  businessName: Yup.string().max(255).required("Business name is required"),
-});
+import validationSchemas from "src/utils/validation_schemas";
 
 const Page = () => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
@@ -102,7 +98,7 @@ const Page = () => {
       </Stack>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={validationSchemas.business.default}
         onSubmit={handleSubmit}
       >
         {({ errors, touched, values, isValid, setFieldValue }) => {

@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
-import * as Yup from "yup";
 
 import { apiResponse } from "src/types/api-response";
 import UseCase from "src/types/use_cases";
@@ -9,6 +8,7 @@ import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
+import validationSchemas from "src/utils/validation_schemas";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -36,12 +36,12 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     skipOnboarding,
   }: { businessName: string; skipOnboarding?: boolean } = req.body;
 
-  const validationSchema = Yup.object().shape({
-    businessName: Yup.string().max(255).required("Business name is required"),
-    ...(isDemoMode() && {
-      skipOnboarding: Yup.boolean().required("Skip onboarding choice required"),
-    }),
-  });
+  let validationSchema;
+  if (isDemoMode()) {
+    validationSchema = validationSchemas.business.withOnbardingSkip;
+  } else {
+    validationSchema = validationSchemas.business.default;
+  }
 
   try {
     await validationSchema.validate(
