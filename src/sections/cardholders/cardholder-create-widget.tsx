@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { allFakers } from "@faker-js/faker";
 import {
   Alert,
   Button,
@@ -18,8 +18,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import clm from "country-locale-map";
 import { Formik, Form, Field, FormikProps, FormikValues } from "formik";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import React, { RefObject, useRef } from "react";
 import * as Yup from "yup";
 
@@ -29,6 +31,63 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 
+const validCardholderCountries = (
+  country: string,
+): { name: string; code: string }[] => {
+  if (country == "US") {
+    return [{ name: "United States", code: "US" }];
+  }
+
+  if (country == "GB") {
+    return [{ name: "United Kingdom", code: "GB" }];
+  }
+
+  return [
+    { name: "Austria", code: "AT" },
+    { name: "Belgium", code: "BE" },
+    { name: "Croatia", code: "HR" },
+    { name: "Cyprus", code: "CY" },
+    { name: "Estonia", code: "EE" },
+    { name: "Finland", code: "FI" },
+    { name: "France", code: "FR" },
+    { name: "Germany", code: "DE" },
+    { name: "Greece", code: "GR" },
+    { name: "Ireland", code: "IE" },
+    { name: "Italy", code: "IT" },
+    { name: "Latvia", code: "LV" },
+    { name: "Lithuania", code: "LT" },
+    { name: "Luxembourg", code: "LU" },
+    { name: "Malta", code: "MT" },
+    { name: "Netherlands", code: "NL" },
+    { name: "Portugal", code: "PT" },
+    { name: "Slovakia", code: "SK" },
+    { name: "Slovenia", code: "SI" },
+    { name: "Spain", code: "ES" },
+  ];
+};
+
+const baseValidationSchema = Yup.object({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email address is required"),
+  address1: Yup.string().required("Street address is required"),
+  city: Yup.string().required("City is required"),
+  state: Yup.string().required("State / Province is required"),
+  postalCode: Yup.string().required("ZIP / Postal code is required"),
+  country: Yup.string().required("Country is required"),
+  accept: Yup.boolean()
+    .required("The terms of service and privacy policy must be accepted.")
+    .oneOf([true], "The terms of service and privacy policy must be accepted."),
+});
+
+const validationSchemaWithSCA = baseValidationSchema.concat(
+  Yup.object({
+    phoneNumber: Yup.string().required("Phone number is required for SCA"),
+  }),
+);
+
 const CreateCardholderForm = ({
   formRef,
   onCreate,
@@ -37,30 +96,24 @@ const CreateCardholderForm = ({
   onCreate: () => void;
 }) => {
   const router = useRouter();
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
 
-  const validationSchema = Yup.object({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email address is required"),
-    address1: Yup.string().required("Street address is required"),
-    city: Yup.string().required("City is required"),
-    state: Yup.string().required("State / Province is required"),
-    postalCode: Yup.string().required("ZIP / Postal code is required"),
-    country: Yup.string().required("Country is required"),
-    accept: Yup.boolean()
-      .required("The terms of service and privacy policy must be accepted.")
-      .oneOf(
-        [true],
-        "The terms of service and privacy policy must be accepted.",
-      ),
-  });
+  let validationSchema;
+  if (country == "US") {
+    validationSchema = baseValidationSchema;
+  } else {
+    validationSchema = validationSchemaWithSCA;
+  }
 
   const initialValues = {
     firstName: "",
     lastName: "",
     email: "",
+    phoneNumber: "",
     address1: "",
     city: "",
     state: "",
@@ -140,6 +193,17 @@ const CreateCardholderForm = ({
                 as={TextField}
                 fullWidth
                 required
+                label="Phone number"
+                name="phoneNumber"
+                error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                helperText={touched.phoneNumber && errors.phoneNumber}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Field
+                as={TextField}
+                fullWidth
+                required
                 label="Street address"
                 name="address1"
                 error={touched.address1 && Boolean(errors.address1)}
@@ -190,7 +254,11 @@ const CreateCardholderForm = ({
                 error={touched.country && Boolean(errors.country)}
                 helperText={touched.country && errors.country}
               >
-                <MenuItem value="US">United States</MenuItem>
+                {validCardholderCountries(country).map((validCountry) => (
+                  <MenuItem key={validCountry.code} value={validCountry.code}>
+                    {validCountry.name}
+                  </MenuItem>
+                ))}
               </Field>
             </Grid>
             <Grid item xs={12}>
@@ -235,18 +303,39 @@ const CardholderCreateWidget = () => {
 
   const formRef = useRef<FormikProps<FormikValues>>(null);
 
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
+
   const handleAutofill = () => {
     const form = formRef.current;
     if (form) {
+      const locale = clm.getLocaleByAlpha2(country) || "en_US";
+      const faker =
+        allFakers[locale as keyof typeof allFakers] || allFakers["en_US"];
+
+      let state;
+      let zipCode;
+      if (country == "US") {
+        state = faker.location.state();
+        zipCode = faker.location.zipCode("#####");
+      } else {
+        state = faker.location.county();
+        zipCode = faker.location.zipCode();
+      }
+
       form.setValues({
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         email: faker.internet.email().toLowerCase(),
+        phoneNumber: faker.phone.number(),
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
-        state: faker.location.state(),
-        postalCode: faker.location.zipCode("#####"),
-        country: "US",
+        state: state,
+        postalCode: zipCode,
+        country: country,
         accept: true,
       });
     }
