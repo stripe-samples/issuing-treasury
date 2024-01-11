@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
+import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
+import validationSchemas from "src/utils/validation_schemas";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -13,36 +14,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
+  const { accountId: StripeAccountId, useCase, currency } = session;
   const stripe = stripeClient();
 
-  const financialAccounts = await stripe.treasury.financialAccounts.list({
-    stripeAccount: StripeAccountId,
-  });
+  let financialAccount = null;
+  if (useCase == "embedded_finance") {
+    const financialAccounts = await stripe.treasury.financialAccounts.list({
+      stripeAccount: StripeAccountId,
+    });
 
-  const financialAccount = financialAccounts.data[0];
+    financialAccount = financialAccounts.data[0];
+  }
+
   const { cardholderid, card_type } = req.body;
   const cardholder = await stripe.issuing.cardholders.retrieve(cardholderid, {
     stripeAccount: StripeAccountId,
   });
 
-  const validationSchema = Yup.object().shape({
-    line1: Yup.string().required("Cardholder billing address is required"),
-    city: Yup.string().required("Cardholder billing address city is required"),
-    state: Yup.string().required(
-      "Cardholder billing address state is required",
-    ),
-    postal_code: Yup.string().required(
-      "Cardholder billing address postal code is required",
-    ),
-    country: Yup.string().required(
-      "Cardholder billing address country is required",
-    ),
-  });
-
   try {
     const billingAddress = cardholder.billing.address;
-    await validationSchema.validate(
+    await validationSchemas.card.validate(
       { ...billingAddress },
       { abortEarly: false },
     );
@@ -54,6 +45,11 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   }
+
+  let cardOptions: Partial<Stripe.Issuing.CardCreateParams> = {
+    cardholder: cardholderid,
+    currency: currency,
+  };
 
   if (card_type == "physical") {
     const shippingAddress = {
@@ -67,34 +63,46 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
       postal_code: cardholder.billing.address.postal_code || "",
       country: cardholder.billing.address.country || "",
     };
-    await stripe.issuing.cards.create(
-      {
-        cardholder: cardholderid,
-        financial_account: financialAccount.id,
-        currency: "usd",
-        shipping: {
-          name: cardholder.name,
-          service: "standard",
-          type: "individual",
-          address: shippingAddress,
-        },
-        type: "physical",
-        status: "inactive",
+
+    cardOptions = {
+      ...cardOptions,
+      shipping: {
+        name: cardholder.name,
+        service: "standard",
+        type: "individual",
+        address: shippingAddress,
       },
-      { stripeAccount: StripeAccountId },
-    );
+      type: "physical",
+      status: "inactive",
+    };
+
+    if (financialAccount) {
+      cardOptions = {
+        ...cardOptions,
+        financial_account: financialAccount.id,
+      };
+    }
   } else {
-    await stripe.issuing.cards.create(
-      {
-        cardholder: cardholderid,
+    cardOptions = {
+      ...cardOptions,
+      type: "virtual",
+      status: "active",
+    };
+
+    if (financialAccount) {
+      cardOptions = {
+        ...cardOptions,
         financial_account: financialAccount.id,
-        currency: "usd",
-        type: "virtual",
-        status: "active",
-      },
-      { stripeAccount: StripeAccountId },
-    );
+      };
+    }
   }
+
+  await stripe.issuing.cards.create(
+    cardOptions as Stripe.Issuing.CardCreateParams,
+    {
+      stripeAccount: StripeAccountId,
+    },
+  );
 
   res.redirect("/cards");
 };

@@ -66,11 +66,24 @@ const businessWithOnboardingSkip = businessBase.concat(
   }),
 );
 
+const card = Yup.object().shape({
+  line1: Yup.string().required("Cardholder billing address is required"),
+  city: Yup.string().required("Cardholder billing address city is required"),
+  state: Yup.string().required("Cardholder billing address state is required"),
+  postal_code: Yup.string().required(
+    "Cardholder billing address postal code is required",
+  ),
+  country: Yup.string().required(
+    "Cardholder billing address country is required",
+  ),
+});
+
 const schemas = {
   business: {
     default: businessBase,
     withOnbardingSkip: businessWithOnboardingSkip,
   },
+  card,
   cardholder: {
     default: cardholderBase,
     withSCA: cardholderWithSCA,

@@ -34,7 +34,7 @@ export const getServerSideProps = async (
   if (cardId === undefined) {
     throw new Error("cardId must be provided");
   }
-  const StripeAccountID = session.accountId;
+  const { accountId: StripeAccountID, currency } = session;
   const cardTransactions = await getCardDetails(StripeAccountID, cardId);
 
   return {
@@ -44,6 +44,7 @@ export const getServerSideProps = async (
       accountId: StripeAccountID,
       cardId: context?.params?.cardId,
       card: cardTransactions.card_details,
+      currency: currency,
     },
   };
 };
@@ -54,12 +55,14 @@ const Page = ({
   accountId,
   cardId,
   card,
+  currency,
 }: {
   authorizations: Stripe.Issuing.Authorization[];
   currentSpend: number;
   accountId: string;
   cardId: string;
   card: Stripe.Issuing.Card;
+  currency: string;
 }) => {
   const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   if (stripePublishableKey === undefined) {
@@ -146,7 +149,7 @@ const Page = ({
         </Container>
       </Box>
       <FloatingTestPanel title="Create a test purchase">
-        <TestDataCreateAuthorization cardId={cardId} />
+        <TestDataCreateAuthorization cardId={cardId} currency={currency} />
       </FloatingTestPanel>
     </>
   );
