@@ -30,8 +30,8 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const StripeAccountID = session.accountId;
-  const responseAuthorizations = await getAuthorizations(StripeAccountID);
+  const { stripeAccount } = session;
+  const responseAuthorizations = await getAuthorizations(stripeAccount);
 
   return {
     props: {

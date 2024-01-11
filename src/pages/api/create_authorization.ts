@@ -16,12 +16,14 @@ const simulateAuthorization = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
-  const stripe = stripeClient();
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
-  const responseFaDetails = await getFinancialAccountDetails(StripeAccountId);
+  const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
   const financialAccount = responseFaDetails.financialaccount;
   const balance = financialAccount.balance.cash.usd;
+
   if (balance < 1000) {
     return res.status(400).json(
       apiResponse({
@@ -39,11 +41,11 @@ const simulateAuthorization = async (
       currency: "usd",
       card: req.body.cardId,
     },
-    { stripeAccount: StripeAccountId },
+    { stripeAccount: accountId },
   );
 
   await stripe.testHelpers.issuing.authorizations.capture(authorization.id, {
-    stripeAccount: StripeAccountId,
+    stripeAccount: accountId,
   });
 
   return res.status(200).json(apiResponse({ success: true }));

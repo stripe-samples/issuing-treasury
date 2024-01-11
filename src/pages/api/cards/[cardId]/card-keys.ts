@@ -13,7 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createCardKey = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const accountId = session.accountId;
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
 
   const cardId = req.query.cardId?.toString() || "";
   const nonce = req.body.nonce;
@@ -34,7 +35,7 @@ const createCardKey = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const apiVersion = "2022-08-01";
-  const stripe = stripeClient();
+  const stripe = stripeClient(platform);
   const ephemeralKey = await stripe.ephemeralKeys.create(
     {
       nonce: nonce,

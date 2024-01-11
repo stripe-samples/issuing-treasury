@@ -30,7 +30,8 @@ const validationSchema = Yup.object({
 
 const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
 
   const {
     firstName,
@@ -70,7 +71,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const ip =
     req.headers["x-real-ip"]?.toString() || req.connection.remoteAddress;
-  const stripe = stripeClient();
+  const stripe = stripeClient(platform);
   await stripe.issuing.cardholders.create(
     {
       type: "individual",
@@ -97,7 +98,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     },
     {
-      stripeAccount: StripeAccountId,
+      stripeAccount: accountId,
     },
   );
 
@@ -106,11 +107,12 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const updateCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
 
   const ip =
     req.headers["x-real-ip"]?.toString() || req.connection.remoteAddress;
-  const stripe = stripeClient();
+  const stripe = stripeClient(platform);
   await stripe.issuing.cardholders.update(
     req.body.cardholderId,
     {
@@ -126,7 +128,7 @@ const updateCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     },
     {
-      stripeAccount: StripeAccountId,
+      stripeAccount: accountId,
     },
   );
 

@@ -14,8 +14,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const sendMoney = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
-  const stripe = stripeClient();
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   let amountString = req.body.amount.toString();
   if (amountString.includes(".")) {
@@ -28,7 +29,7 @@ const sendMoney = async (req: NextApiRequest, res: NextApiResponse) => {
   // Get financial accounts for the Connected Account
   const financialAccounts = await stripe.treasury.financialAccounts.list(
     { expand: ["data.financial_addresses.aba.account_number"] },
-    { stripeAccount: StripeAccountId },
+    { stripeAccount: accountId },
   );
   const financialAccount = financialAccounts.data[0];
 
@@ -82,20 +83,20 @@ const sendMoney = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
     },
-    { stripeAccount: StripeAccountId },
+    { stripeAccount: accountId },
   );
 
   if (req.body.transaction_result == TransactionResult.POSTED) {
     await stripe.testHelpers.treasury.outboundPayments.post(
       outboundPayment.id,
-      { stripeAccount: StripeAccountId },
+      { stripeAccount: accountId },
     );
   }
   // TODO: Handle the return status of the transaction result
   if (req.body.transaction_result == TransactionResult.FAILED) {
     await stripe.testHelpers.treasury.outboundPayments.fail(
       outboundPayment.id,
-      { stripeAccount: StripeAccountId },
+      { stripeAccount: accountId },
     );
   }
 

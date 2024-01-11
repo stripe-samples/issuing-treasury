@@ -13,6 +13,7 @@ declare module "next-auth" {
     businessName: string;
     country: string;
     useCase: UseCase;
+    stripeAccount: StripeAccount;
   }
 }
 

@@ -13,17 +13,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
-  const stripe = stripeClient();
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
 
   const financialAccounts = await stripe.treasury.financialAccounts.list({
-    stripeAccount: StripeAccountId,
+    stripeAccount: accountId,
   });
 
   const financialAccount = financialAccounts.data[0];
   const { cardholderid, card_type } = req.body;
   const cardholder = await stripe.issuing.cardholders.retrieve(cardholderid, {
-    stripeAccount: StripeAccountId,
+    stripeAccount: accountId,
   });
 
   const validationSchema = Yup.object().shape({
@@ -81,7 +82,7 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
         type: "physical",
         status: "inactive",
       },
-      { stripeAccount: StripeAccountId },
+      { stripeAccount: accountId },
     );
   } else {
     await stripe.issuing.cards.create(
@@ -92,7 +93,7 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
         type: "virtual",
         status: "active",
       },
-      { stripeAccount: StripeAccountId },
+      { stripeAccount: accountId },
     );
   }
 

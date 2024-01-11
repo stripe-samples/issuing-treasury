@@ -27,6 +27,8 @@ export const AccountPopover = ({
   if (session == undefined) {
     throw new Error("Session is missing in the request");
   }
+  const { stripeAccount, email, businessName } = session;
+  const { accountId } = stripeAccount;
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -53,7 +55,7 @@ export const AccountPopover = ({
       >
         <Typography variant="overline">Business Name</Typography>
         <Typography color="text.secondary" variant="body2">
-          {session.businessName}
+          {businessName}
         </Typography>
       </Box>
       <Divider />
@@ -65,16 +67,16 @@ export const AccountPopover = ({
       >
         <Typography variant="overline">Account</Typography>
         <Typography color="text.secondary" variant="body2" noWrap>
-          {session.email}
+          {email}
         </Typography>
         {(!isDemoMode() || router.query.debug) && (
           <Typography color="text.secondary" variant="body2" mt={1}>
             <Link
-              href={`https://dashboard.stripe.com/${session.accountId}/test/issuing/overview`}
+              href={`https://dashboard.stripe.com/${accountId}/test/issuing/overview`}
               target="_blank"
               underline="none"
             >
-              {session.accountId}{" "}
+              {accountId}{" "}
               <SvgIcon fontSize="small" sx={{ verticalAlign: "top" }}>
                 <ArrowTopRightOnSquareIcon />
               </SvgIcon>
