@@ -1,3 +1,4 @@
+import parsePhoneNumber from "libphonenumber-js";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -12,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
     PUT: updateCardholder,
   });
 
-const validationSchema = Yup.object({
+const baseValidationSchema = Yup.object({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
   email: Yup.string()
@@ -28,14 +29,28 @@ const validationSchema = Yup.object({
     .oneOf([true], "The terms of service and privacy policy must be accepted."),
 });
 
+const validationSchemaWithSCA = baseValidationSchema.concat(
+  Yup.object({
+    phoneNumber: Yup.string().required("Phone number is required for SCA"),
+  }),
+);
+
 const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const StripeAccountId = session.accountId;
+  const { accountId: StripeAccountId, country: userCountry } = session;
+
+  let validationSchema;
+  if (userCountry == "US") {
+    validationSchema = baseValidationSchema;
+  } else {
+    validationSchema = validationSchemaWithSCA;
+  }
 
   const {
     firstName,
     lastName,
     email,
+    phoneNumber,
     address1,
     city,
     state,
@@ -50,6 +65,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
         firstName,
         lastName,
         email,
+        phoneNumber,
         address1,
         city,
         state,
@@ -68,6 +84,12 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
+  let formattedPhoneNumber = phoneNumber;
+  const parsedPhoneNumber = parsePhoneNumber(phoneNumber, country);
+  if (parsedPhoneNumber) {
+    formattedPhoneNumber = parsedPhoneNumber.formatInternational();
+  }
+
   const ip =
     req.headers["x-real-ip"]?.toString() || req.connection.remoteAddress;
   const stripe = stripeClient();
@@ -76,6 +98,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
       type: "individual",
       name: firstName + " " + lastName,
       email: email,
+      phone_number: formattedPhoneNumber.replaceAll(" ", ""),
       individual: {
         first_name: firstName,
         last_name: lastName,
