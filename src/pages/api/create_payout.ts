@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createPayout = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount } = session;
+  const { stripeAccount, currency } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
@@ -50,7 +50,7 @@ const createPayout = async (req: NextApiRequest, res: NextApiResponse) => {
   await stripe.payouts.create(
     {
       amount: availableBalance,
-      currency: "usd",
+      currency: currency,
     },
     { stripeAccount: accountId },
   );
