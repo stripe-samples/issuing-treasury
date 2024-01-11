@@ -54,7 +54,8 @@ export const items = [
         <BanknotesIcon />
       </SvgIcon>
     ),
-    supportedCountries: ["US"],
+    countries: ["US"],
+    use_cases: ["embedded_finance"],
   },
   {
     title: "Top ups",
@@ -64,7 +65,30 @@ export const items = [
         <BanknotesIcon />
       </SvgIcon>
     ),
-    supportedCountries: ["GB"],
+    countries: [
+      "AT",
+      "BE",
+      "CY",
+      "DE",
+      "EE",
+      "ES",
+      "FI",
+      "FR",
+      "GB",
+      "GR",
+      "HR",
+      "IE",
+      "IT",
+      "LT",
+      "LU",
+      "LV",
+      "MT",
+      "NL",
+      "PT",
+      "SI",
+      "SK",
+    ],
+    use_cases: ["expense_management"],
   },
   {
     title: "Test data",
