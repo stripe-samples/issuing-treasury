@@ -1,11 +1,11 @@
-import parsePhoneNumber from "libphonenumber-js";
+import { parsePhoneNumber } from "libphonenumber-js";
 import { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
+import validationSchemas from "src/utils/validation_schemas";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -13,37 +13,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
     PUT: updateCardholder,
   });
 
-const baseValidationSchema = Yup.object({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email address is required"),
-  address1: Yup.string().required("Street address is required"),
-  city: Yup.string().required("City is required"),
-  state: Yup.string().required("State / Province is required"),
-  postalCode: Yup.string().required("ZIP / Postal code is required"),
-  country: Yup.string().required("Country is required"),
-  accept: Yup.boolean()
-    .required("The terms of service and privacy policy must be accepted.")
-    .oneOf([true], "The terms of service and privacy policy must be accepted."),
-});
-
-const validationSchemaWithSCA = baseValidationSchema.concat(
-  Yup.object({
-    phoneNumber: Yup.string().required("Phone number is required for SCA"),
-  }),
-);
-
 const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
   const { accountId: StripeAccountId, country: userCountry } = session;
 
   let validationSchema;
   if (userCountry == "US") {
-    validationSchema = baseValidationSchema;
+    validationSchema = validationSchemas.cardholder.default;
   } else {
-    validationSchema = validationSchemaWithSCA;
+    validationSchema = validationSchemas.cardholder.withSCA;
   }
 
   const {

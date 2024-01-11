@@ -13,7 +13,6 @@ import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
 import { ReactNode, useState } from "react";
-import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
 import {
@@ -23,6 +22,7 @@ import {
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
+import validationSchemas from "src/utils/validation_schemas";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -35,25 +35,6 @@ export const getServerSideProps = async (
 
   return { props: {} };
 };
-
-const getCharacterValidationError = (str: string) => {
-  return `Your password must have at least 1 ${str} character`;
-};
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Must be a valid email")
-    .max(255)
-    .required("Email is required"),
-  password: Yup.string()
-    .max(255)
-    .required("Password is required")
-    // check minimum characters
-    .min(8, "Password must have at least 8 characters")
-    // different error messages for different requirements
-    .matches(/[0-9]/, getCharacterValidationError("digit"))
-    .matches(/[a-z]/, getCharacterValidationError("lowercase"))
-    .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-});
 
 const Page = () => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
@@ -120,7 +101,7 @@ const Page = () => {
       </Stack>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={validationSchemas.user}
         onSubmit={handleSubmit}
       >
         {({ errors, touched, isValid, dirty }) => (
@@ -170,7 +151,13 @@ const Page = () => {
                 <MenuItem value="GB">United Kingdom</MenuItem>
                 <MenuItem value="US">United States</MenuItem>
               </Field>
-              <Field as={Select} label="Use case" name="useCase" fullWidth>
+              <Field
+                as={Select}
+                label="Use case"
+                name="useCase"
+                fullWidth
+                error={!!(touched.useCase && errors.useCase)}
+              >
                 <MenuItem value="embedded_finance">Embedded Finance</MenuItem>
                 <MenuItem value="expense_management">
                   Expense Management
