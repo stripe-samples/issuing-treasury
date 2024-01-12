@@ -25,18 +25,10 @@ const validNavigationItem = (
     title: string;
     path: string;
     icon: React.ReactNode;
-    countries?: string[];
     useCases?: UseCase[];
   },
-  country: string,
   useCase: UseCase,
 ) => {
-  if (item.countries) {
-    if (!item.countries.includes(country)) {
-      return false;
-    }
-  }
-
   if (item.useCases) {
     if (!item.useCases.includes(useCase)) {
       return false;
@@ -55,7 +47,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
     throw new Error("Session is missing in the request");
   }
 
-  const { businessName, country, useCase } = session;
+  const { businessName, useCase } = session;
 
   const content = (
     <Scrollbar
@@ -105,7 +97,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             }}
           >
             {items.map((item) => {
-              if (validNavigationItem(item, country, useCase)) {
+              if (validNavigationItem(item, useCase)) {
                 const active = item.path ? pathname === item.path : false;
 
                 return (
