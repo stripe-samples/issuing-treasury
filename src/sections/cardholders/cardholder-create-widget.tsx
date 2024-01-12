@@ -98,7 +98,7 @@ const CreateCardholderForm = ({
     city: "",
     state: "",
     postalCode: "",
-    country: "US",
+    country: country,
     accept: false,
   };
 
