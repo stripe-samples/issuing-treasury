@@ -7,12 +7,20 @@ import {
   Typography,
   Select,
   MenuItem,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormLabel,
+  Divider,
+  Box,
+  Tooltip,
+  SelectChangeEvent,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, ReactElement } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
@@ -124,7 +132,7 @@ const Page = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isValid, dirty }) => (
+        {({ errors, touched, isValid, dirty, values, setFieldValue }) => (
           <Form>
             <Stack spacing={3}>
               <Field
@@ -147,7 +155,22 @@ const Page = () => {
                 name="password"
                 type="password"
               />
-              <Field as={Select} label="Country" name="country" fullWidth>
+              <Field
+                as={Select}
+                label="Country"
+                name="country"
+                fullWidth
+                onChange={(_: SelectChangeEvent, element: ReactElement) => {
+                  const country = element.props.value;
+                  setFieldValue("country", element.props.value);
+
+                  if (country == "US") {
+                    setFieldValue("useCase", UseCase.EmbeddedFinance);
+                  } else {
+                    setFieldValue("useCase", UseCase.ExpenseManagement);
+                  }
+                }}
+              >
                 <MenuItem value="AT">Austria</MenuItem>
                 <MenuItem value="BE">Belgium</MenuItem>
                 <MenuItem value="HR">Croatia</MenuItem>
@@ -171,20 +194,62 @@ const Page = () => {
                 <MenuItem value="GB">United Kingdom</MenuItem>
                 <MenuItem value="US">United States</MenuItem>
               </Field>
+              <Divider />
+              <FormLabel>What kind of app are you building?</FormLabel>
               <Field
-                as={Select}
+                as={RadioGroup}
                 label="Use case"
                 name="useCase"
                 fullWidth
                 error={!!(touched.useCase && errors.useCase)}
               >
-                <MenuItem value={UseCase.EmbeddedFinance}>
-                  Embedded Finance
-                </MenuItem>
-                <MenuItem value={UseCase.ExpenseManagement}>
-                  Expense Management
-                </MenuItem>
+                <Tooltip
+                  title={
+                    values.country != "US" &&
+                    "Embedded finance is not yet supported in the selected country"
+                  }
+                >
+                  <FormControlLabel
+                    value={UseCase.EmbeddedFinance}
+                    control={<Radio />}
+                    label={
+                      <Box mb={2}>
+                        <Typography variant="button" display="block">
+                          Embedded finance
+                        </Typography>
+                        <Typography variant="caption">
+                          Full-stack financial services for your users
+                        </Typography>
+                      </Box>
+                    }
+                    disabled={values.country != "US"}
+                  />
+                </Tooltip>
+
+                <Tooltip
+                  title={
+                    values.country == "US" &&
+                    "Expense management in the US is not yet suported in the demo app"
+                  }
+                >
+                  <FormControlLabel
+                    value={UseCase.ExpenseManagement}
+                    control={<Radio />}
+                    label={
+                      <>
+                        <Typography variant="button" display="block">
+                          Expense management
+                        </Typography>
+                        <Typography variant="caption">
+                          A commercial pre-funded card issuing program
+                        </Typography>
+                      </>
+                    }
+                    disabled={values.country == "US"}
+                  />
+                </Tooltip>
               </Field>
+
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
                 fullWidth
