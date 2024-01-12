@@ -37,6 +37,10 @@ export const getServerSideProps = async (
   let financialAccount = null;
   let faFundsFlowChartData = null;
   let faTransactions = null;
+  let issuingBalance = null;
+  let availableBalance = null;
+  let balanceTransactions = null;
+  let balanceFundsFlowChartData = null;
 
   if (treasurySupported(country)) {
     const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
@@ -49,19 +53,19 @@ export const getServerSideProps = async (
     const responseFaTransations =
       await getFinancialAccountTransactionsExpanded(stripeAccount);
     faTransactions = responseFaTransations.fa_transactions;
+  } else {
+    const responseBalanceTransactions = await getBalanceTransactions(
+      stripeAccount,
+      currency,
+    );
+    balanceTransactions = responseBalanceTransactions.balanceTransactions;
+    balanceFundsFlowChartData =
+      responseBalanceTransactions.balanceFundsFlowChartData;
+
+    const responseAccountBalance = await getBalance(stripeAccount);
+    issuingBalance = responseAccountBalance.balance.issuing;
+    availableBalance = responseAccountBalance.balance;
   }
-
-  const responseBalanceTransactions = await getBalanceTransactions(
-    stripeAccount,
-    currency,
-  );
-  const balanceTransactions = responseBalanceTransactions.balanceTransactions;
-  const balanceFundsFlowChartData =
-    responseBalanceTransactions.balanceFundsFlowChartData;
-
-  const responseAccountBalance = await getBalance(stripeAccount);
-  const issuingBalance = responseAccountBalance.balance.issuing;
-  const availableBalance = responseAccountBalance.balance;
 
   return {
     props: {
