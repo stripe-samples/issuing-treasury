@@ -20,7 +20,6 @@ import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { set } from "nprogress";
 import { ReactElement, ReactNode, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
