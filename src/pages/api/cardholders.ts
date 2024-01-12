@@ -88,6 +88,8 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   let formattedPhoneNumber = phoneNumber;
   const parsedPhoneNumber = parsePhoneNumber(phoneNumber, country);
   if (parsedPhoneNumber) {
+    // remove any extension faker may have generated
+    parsedPhoneNumber.setExt("");
     formattedPhoneNumber = parsedPhoneNumber.formatInternational();
   }
 
