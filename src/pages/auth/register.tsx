@@ -175,21 +175,6 @@ const Page = () => {
                 <MenuItem value="GB">United Kingdom</MenuItem>
                 <MenuItem value="US">United States</MenuItem>
               </Field>
-              {/* <Field
-                as={Select}
-                label="Use case"
-                name="useCase"
-                fullWidth
-                error={!!(touched.useCase && errors.useCase)}
-              >
-                <MenuItem value={UseCase.EmbeddedFinance}>
-                  Embedded Finance
-                </MenuItem>
-                <MenuItem value={UseCase.ExpenseManagement}>
-                  Expense Management
-                </MenuItem>
-              </Field> */}
-
               <Divider />
               <FormLabel>What kind of app are you building?</FormLabel>
               <Field
