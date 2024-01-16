@@ -15,8 +15,6 @@ model User {
   email       String   @unique
   password    String
   accountId   String   @map("account_id")
-  country     String   @map("country")
-  useCase     String   @map("use_case")
   lastLoginAt DateTime @default(now()) @map("last_login_at")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
