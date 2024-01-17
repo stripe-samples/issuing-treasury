@@ -1,7 +1,7 @@
 import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
-import { ChartData, BalanceChartData } from "src/types/chart-data";
+import { ChartData } from "src/types/chart-data";
 import stripeClient from "src/utils/stripe-loader";
 
 export async function getFinancialAccountTransactions(StripeAccountID: string) {
