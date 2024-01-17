@@ -2,7 +2,7 @@
   "editor.formatOnSave": false,
   // Automatically apply eslint fixes on save.
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "typescript.tsdk": "node_modules/typescript/lib",
   "gitlens.currentLine.enabled": false,

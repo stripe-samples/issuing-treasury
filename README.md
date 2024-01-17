@@ -96,7 +96,7 @@ You'll find more about the why you need the `createuser` step [here](https://sta
 
 Next, create the database with:
 
-    npx prisma db push
+    npx prisma migrate dev
 
 If it errors out (perhaps due to permission issue running the Prisma CLI), simply run the included script:
 
