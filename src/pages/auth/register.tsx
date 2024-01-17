@@ -171,27 +171,69 @@ const Page = () => {
                   }
                 }}
               >
-                <MenuItem value="AT">Austria</MenuItem>
-                <MenuItem value="BE">Belgium</MenuItem>
-                <MenuItem value="HR">Croatia</MenuItem>
-                <MenuItem value="CY">Cyprus</MenuItem>
-                <MenuItem value="EE">Estonia</MenuItem>
-                <MenuItem value="FI">Finland</MenuItem>
-                <MenuItem value="FR">France</MenuItem>
-                <MenuItem value="DE">Germany</MenuItem>
-                <MenuItem value="GR">Greece</MenuItem>
-                <MenuItem value="IE">Ireland</MenuItem>
-                <MenuItem value="IT">Italy</MenuItem>
-                <MenuItem value="LV">Latvia</MenuItem>
-                <MenuItem value="LT">Lithuania</MenuItem>
-                <MenuItem value="LU">Luxembourg</MenuItem>
-                <MenuItem value="MT">Malta</MenuItem>
-                <MenuItem value="NL">Netherlands</MenuItem>
-                <MenuItem value="PT">Portugal</MenuItem>
-                <MenuItem value="SK">Slovakia</MenuItem>
-                <MenuItem value="SI">Slovenia</MenuItem>
-                <MenuItem value="ES">Spain</MenuItem>
-                <MenuItem value="GB">United Kingdom</MenuItem>
+                <MenuItem value="AT" disabled>
+                  Austria
+                </MenuItem>
+                <MenuItem value="BE" disabled>
+                  Belgium
+                </MenuItem>
+                <MenuItem value="HR" disabled>
+                  Croatia
+                </MenuItem>
+                <MenuItem value="CY" disabled>
+                  Cyprus
+                </MenuItem>
+                <MenuItem value="EE" disabled>
+                  Estonia
+                </MenuItem>
+                <MenuItem value="FI" disabled>
+                  Finland
+                </MenuItem>
+                <MenuItem value="FR" disabled>
+                  France
+                </MenuItem>
+                <MenuItem value="DE" disabled>
+                  Germany
+                </MenuItem>
+                <MenuItem value="GR" disabled>
+                  Greece
+                </MenuItem>
+                <MenuItem value="IE" disabled>
+                  Ireland
+                </MenuItem>
+                <MenuItem value="IT" disabled>
+                  Italy
+                </MenuItem>
+                <MenuItem value="LV" disabled>
+                  Latvia
+                </MenuItem>
+                <MenuItem value="LT" disabled>
+                  Lithuania
+                </MenuItem>
+                <MenuItem value="LU" disabled>
+                  Luxembourg
+                </MenuItem>
+                <MenuItem value="MT" disabled>
+                  Malta
+                </MenuItem>
+                <MenuItem value="NL" disabled>
+                  Netherlands
+                </MenuItem>
+                <MenuItem value="PT" disabled>
+                  Portugal
+                </MenuItem>
+                <MenuItem value="SK" disabled>
+                  Slovakia
+                </MenuItem>
+                <MenuItem value="SI" disabled>
+                  Slovenia
+                </MenuItem>
+                <MenuItem value="ES" disabled>
+                  Spain
+                </MenuItem>
+                <MenuItem value="GB" disabled>
+                  United Kingdom
+                </MenuItem>
                 <MenuItem value="US">United States</MenuItem>
               </Field>
               <Divider />
