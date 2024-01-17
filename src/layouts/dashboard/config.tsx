@@ -9,8 +9,6 @@ import {
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
-import UseCase from "src/types/use_cases";
-
 export const items = [
   {
     title: "Overview",
