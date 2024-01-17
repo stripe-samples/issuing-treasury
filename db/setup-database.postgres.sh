@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ideally you should be able to use `npx prisma db push` to migrate your Postgres database but if that fails for any
+# Ideally you should be able to use `npx prisma migrate dev` to migrate your Postgres database but if that fails for any
 # reason, you can use this script to get started quickly.
 
 DB_NAME="issuing_treasury"
