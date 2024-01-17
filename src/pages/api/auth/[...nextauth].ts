@@ -56,6 +56,7 @@ export const authOptions: NextAuthOptions = {
         const account = await stripe.accounts.retrieve(token.accountId);
         const businessName = account.business_profile?.name;
         const country = account.country;
+        const currency = account.default_currency;
 
         if (businessName != undefined) {
           token.businessName = businessName;
@@ -63,6 +64,10 @@ export const authOptions: NextAuthOptions = {
 
         if (country != undefined) {
           token.country = country;
+        }
+
+        if (currency != undefined) {
+          token.currency = currency;
         }
       }
 
@@ -87,6 +92,10 @@ export const authOptions: NextAuthOptions = {
         throw new Error("Session callback: country is missing in the token");
       }
 
+      if (token.currency == undefined) {
+        throw new Error("Session callback: currency is missing in the token");
+      }
+
       const stripeAccount = {
         accountId: token.accountId,
         platform: getPlatform(token.country),
@@ -98,6 +107,7 @@ export const authOptions: NextAuthOptions = {
       session.businessName = token.businessName;
       session.country = token.country;
       session.useCase = token.useCase;
+      session.currency = token.currency;
 
       return session;
     },
