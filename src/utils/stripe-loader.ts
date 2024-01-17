@@ -11,8 +11,7 @@ const stripeClient = (platform: Platform) => {
 
   if (!stripeSecretKey) {
     throw new Error(
-      platform +
-        "Cannot instantiate Stripe client. STRIPE_SECRET_KEY needs to be set in environment variables.",
+      "Cannot instantiate Stripe client. STRIPE_SECRET_KEY needs to be set in environment variables.",
     );
   }
 
