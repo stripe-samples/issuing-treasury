@@ -85,7 +85,6 @@ export const authOptions: NextAuthOptions = {
       session.requiresOnboarding = token.requiresOnboarding;
       session.businessName = token.businessName;
       session.country = token.country;
-      session.currency = token.currency;
       session.useCase = token.useCase;
 
       return session;
