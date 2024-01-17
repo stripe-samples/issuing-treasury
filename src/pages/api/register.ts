@@ -15,6 +15,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, password } = req.body;
+  const useCase = "embedded_finance";
+  const country = "US";
 
   const getCharacterValidationError = (str: string) => {
     return `Your password must have at least 1 ${str} character`;
@@ -88,6 +90,8 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       email: email,
       password: hashedPassword,
       accountId: account.id,
+      useCase,
+      country,
     },
   });
 
