@@ -12,7 +12,6 @@ declare module "next-auth" {
     requiresOnboarding: boolean;
     businessName: string;
     country: string;
-    currency: string;
     useCase: UseCase;
   }
 }
@@ -24,7 +23,6 @@ declare module "next-auth/jwt" {
     requiresOnboarding: boolean;
     businessName: string;
     country: string;
-    currency: string;
     useCase: UseCase;
   }
 }
