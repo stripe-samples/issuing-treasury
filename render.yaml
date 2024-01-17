@@ -19,9 +19,17 @@ services:
       fromDatabase:
         name: issuing-treasury-db
         property: connectionString
-    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US
       sync: false
-    - key: STRIPE_SECRET_KEY
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK
+      sync: false
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU
+      sync: false
+    - key: STRIPE_SECRET_KEY_US
+      sync: false
+    - key: STRIPE_SECRET_KEY_UK
+      sync: false
+    - key: STRIPE_SECRET_KEY_EU
       sync: false
     - key: NEXTAUTH_SECRET
       generateValue: true
