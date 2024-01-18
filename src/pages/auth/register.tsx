@@ -238,7 +238,9 @@ const Page = () => {
                 <MenuItem value="ES" disabled>
                   Spain
                 </MenuItem>
-                <MenuItem value="GB">United Kingdom</MenuItem>
+                <MenuItem value="GB" disabled>
+                  United Kingdom
+                </MenuItem>
                 <MenuItem value="US">United States</MenuItem>
               </Field>
               <Divider />
