@@ -5,7 +5,7 @@ const getStripeSecretKey = (platform: Platform): string | null => {
 
   switch (platform) {
     case Platform.US:
-      key = process.env.STRIPE_SECRET_KEY_US;
+      key = process.env.STRIPE_SECRET_KEY_US || process.env.STRIPE_SECRET_KEY;
       break;
     case Platform.UK:
       key = process.env.STRIPE_SECRET_KEY_UK;
@@ -23,7 +23,9 @@ const getStripePublishableKey = (platform: Platform): string | null => {
 
   switch (platform) {
     case Platform.US:
-      key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US;
+      key =
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US ||
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
       break;
     case Platform.UK:
       key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK;
