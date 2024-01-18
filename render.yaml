@@ -1,3 +1,4 @@
+previewsEnabled: false
 services:
 - type: web
   name: issuing-treasury
