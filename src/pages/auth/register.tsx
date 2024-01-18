@@ -20,7 +20,7 @@ import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { ReactNode, useState, ReactElement } from "react";
+import { ReactNode, useState, ReactElement, useContext } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
@@ -31,6 +31,10 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
+import {
+  RegistrationMode,
+  RegistrationModeContext,
+} from "src/utils/registration-mode-context";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 
 export const getServerSideProps = async (
@@ -67,6 +71,7 @@ const validationSchema = Yup.object().shape({
 const Page = () => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
+  const { setMode } = useContext(RegistrationModeContext);
 
   const initialValues = {
     email: "",
@@ -165,8 +170,10 @@ const Page = () => {
                   setFieldValue("country", element.props.value);
 
                   if (country == "US") {
+                    setMode(RegistrationMode.IssuingTreasury);
                     setFieldValue("useCase", UseCase.EmbeddedFinance);
                   } else {
+                    setMode(RegistrationMode.Issuing);
                     setFieldValue("useCase", UseCase.ExpenseManagement);
                   }
                 }}
@@ -231,9 +238,7 @@ const Page = () => {
                 <MenuItem value="ES" disabled>
                   Spain
                 </MenuItem>
-                <MenuItem value="GB" disabled>
-                  United Kingdom
-                </MenuItem>
+                <MenuItem value="GB">United Kingdom</MenuItem>
                 <MenuItem value="US">United States</MenuItem>
               </Field>
               <Divider />
@@ -260,7 +265,9 @@ const Page = () => {
                           Embedded finance
                         </Typography>
                         <Typography variant="caption">
-                          Full-stack financial services for your users
+                          Full-stack financial services to create cards, make
+                          payments, and send and receive money with a financial
+                          account
                         </Typography>
                       </Box>
                     }

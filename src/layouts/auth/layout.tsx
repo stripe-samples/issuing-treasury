@@ -12,60 +12,68 @@ import {
   useTheme,
 } from "@mui/material";
 import NextLink from "next/link";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useContext } from "react";
 
 import { Logo } from "src/components/logo";
+import {
+  RegistrationMode,
+  RegistrationModeContext,
+} from "src/utils/registration-mode-context";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
+  const [mode, setMode] = useState(RegistrationMode.IssuingTreasury);
+  const registrationModeContext = { mode, setMode };
 
   return (
-    <Box
-      component="main"
-      display="flex"
-      flex="auto"
-      flexDirection="column"
-      alignItems="center"
-      pt={20}
-      sx={{
-        backgroundColor: "neutral.50",
-      }}
-    >
-      <TopLogoBar />
+    <RegistrationModeContext.Provider value={registrationModeContext}>
       <Box
+        component="main"
         display="flex"
-        width="100%"
-        flexWrap="wrap"
-        justifyContent="space-evenly"
-        maxWidth={theme.spacing(169)}
+        flex="auto"
+        flexDirection="column"
+        alignItems="center"
+        pt={20}
+        sx={{
+          backgroundColor: "neutral.50",
+        }}
       >
+        <TopLogoBar />
         <Box
-          width="100%"
           display="flex"
-          maxWidth={theme.spacing(65)}
-          px={4}
-          mb={4}
+          width="100%"
+          flexWrap="wrap"
+          justifyContent="space-evenly"
+          maxWidth={theme.spacing(169)}
         >
-          <Box flexGrow={1}>
-            <WelcomeMessage />
+          <Box
+            width="100%"
+            display="flex"
+            maxWidth={theme.spacing(65)}
+            px={4}
+            mb={4}
+          >
+            <Box flexGrow={1}>
+              <WelcomeMessage />
+            </Box>
+          </Box>
+          <Box
+            width="100%"
+            display="flex"
+            maxWidth={theme.spacing(65)}
+            px={4}
+            mb={4}
+          >
+            <Box flexGrow={1}>
+              <Card>
+                <CardContent>{children}</CardContent>
+              </Card>
+            </Box>
           </Box>
         </Box>
-        <Box
-          width="100%"
-          display="flex"
-          maxWidth={theme.spacing(65)}
-          px={4}
-          mb={4}
-        >
-          <Box flexGrow={1}>
-            <Card>
-              <CardContent>{children}</CardContent>
-            </Card>
-          </Box>
-        </Box>
+        <CookieBanner />
       </Box>
-      <CookieBanner />
-    </Box>
+    </RegistrationModeContext.Provider>
   );
 };
 
@@ -95,43 +103,73 @@ const TopLogoBar = () => (
   </Box>
 );
 
-const WelcomeMessage = () => (
-  <Stack spacing={3}>
-    <Typography variant="h4">
-      Stripe Issuing and Treasury platform demo
-    </Typography>
-    <Typography color="neutral.500">
-      This web app demonstrates Stripe Issuing and Treasury APIs in an
-      end-to-end integration. Create an account with the demo platform to create
-      cards, test purchases, and make and receive payments with a financial
-      account.
-    </Typography>
-    <Typography>
-      View our{" "}
-      <Link
-        href="https://stripe.com/docs/baas/start-integration/sample-app"
-        target="_blank"
-        underline="none"
-      >
-        docs
-      </Link>{" "}
-      and{" "}
-      <Link
-        href="https://github.com/stripe-samples/issuing-treasury"
-        target="_blank"
-        underline="none"
-      >
-        source code
-      </Link>{" "}
-      on GitHub.
-    </Typography>
-    <Typography>
-      <Link href="https://stripe.com/privacy" target="_blank" underline="none">
-        Stripe Privacy Policy & Terms apply
-      </Link>
-    </Typography>
-  </Stack>
-);
+const WelcomeMessage = () => {
+  const { mode } = useContext(RegistrationModeContext);
+  let title;
+  let about;
+
+  if (mode == RegistrationMode.IssuingTreasury) {
+    title = (
+      <Typography variant="h4">
+        Stripe Issuing and Treasury platform demo
+      </Typography>
+    );
+
+    about = (
+      <Typography color="neutral.500">
+        This web app demonstrates Stripe Issuing and Treasury APIs in an
+        end-to-end integration. Create an account with the demo platform to
+        create cards, test purchases, and make and receive payments with a
+        financial account.
+      </Typography>
+    );
+  } else {
+    title = <Typography variant="h4">Stripe Issuing demo</Typography>;
+
+    about = (
+      <Typography color="neutral.500">
+        This web app demonstrates Stripe Issuing API in an end-to-end
+        integration. Create an account with the demo platform to create cards,
+        test purchases, and simulate balance funding.
+      </Typography>
+    );
+  }
+
+  return (
+    <Stack spacing={3}>
+      {title}
+      {about}
+      <Typography>
+        View our{" "}
+        <Link
+          href="https://stripe.com/docs/baas/start-integration/sample-app"
+          target="_blank"
+          underline="none"
+        >
+          docs
+        </Link>{" "}
+        and{" "}
+        <Link
+          href="https://github.com/stripe-samples/issuing-treasury"
+          target="_blank"
+          underline="none"
+        >
+          source code
+        </Link>{" "}
+        on GitHub.
+      </Typography>
+      <Typography>
+        <Link
+          href="https://stripe.com/privacy"
+          target="_blank"
+          underline="none"
+        >
+          Stripe Privacy Policy & Terms apply
+        </Link>
+      </Typography>
+    </Stack>
+  );
+};
 
 const CookieBanner = () => {
   const [acknowledgedCookieNotice, setAcknowledgedCookieNotice] = useState(
