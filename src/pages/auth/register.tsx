@@ -30,6 +30,7 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
+import { Platform, enabledPlatforms } from "src/utils/platform";
 import {
   RegistrationMode,
   RegistrationModeContext,
@@ -45,7 +46,13 @@ export const getServerSideProps = async (
     return { redirect: { destination: "/", permanent: false } };
   }
 
-  return { props: {} };
+  const {
+    [Platform.US]: enableUS,
+    [Platform.UK]: enableUK,
+    [Platform.EU]: enableEU,
+  } = enabledPlatforms();
+
+  return { props: { enableUS, enableUK, enableEU } };
 };
 
 const getCharacterValidationError = (str: string) => {
@@ -67,7 +74,15 @@ const validationSchema = Yup.object().shape({
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
 });
 
-const Page = () => {
+const Page = ({
+  enableUS,
+  enableUK,
+  enableEU,
+}: {
+  enableUS: boolean;
+  enableUK: boolean;
+  enableEU: boolean;
+}) => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
   const { setMode } = useContext(RegistrationModeContext);
@@ -175,11 +190,72 @@ const Page = () => {
                   }
                 }}
               >
-                {COUNTRIES.map(([code, name]) => (
-                  <MenuItem key={code} value={code} disabled={code !== "US"}>
-                    {name}
-                  </MenuItem>
-                ))}
+                <MenuItem value="AT" disabled={!enableEU}>
+                  Austria
+                </MenuItem>
+                <MenuItem value="BE" disabled={!enableEU}>
+                  Belgium
+                </MenuItem>
+                <MenuItem value="HR" disabled={!enableEU}>
+                  Croatia
+                </MenuItem>
+                <MenuItem value="CY" disabled={!enableEU}>
+                  Cyprus
+                </MenuItem>
+                <MenuItem value="EE" disabled={!enableEU}>
+                  Estonia
+                </MenuItem>
+                <MenuItem value="FI" disabled={!enableEU}>
+                  Finland
+                </MenuItem>
+                <MenuItem value="FR" disabled={!enableEU}>
+                  France
+                </MenuItem>
+                <MenuItem value="DE" disabled={!enableEU}>
+                  Germany
+                </MenuItem>
+                <MenuItem value="GR" disabled={!enableEU}>
+                  Greece
+                </MenuItem>
+                <MenuItem value="IE" disabled={!enableEU}>
+                  Ireland
+                </MenuItem>
+                <MenuItem value="IT" disabled={!enableEU}>
+                  Italy
+                </MenuItem>
+                <MenuItem value="LV" disabled={!enableEU}>
+                  Latvia
+                </MenuItem>
+                <MenuItem value="LT" disabled={!enableEU}>
+                  Lithuania
+                </MenuItem>
+                <MenuItem value="LU" disabled={!enableEU}>
+                  Luxembourg
+                </MenuItem>
+                <MenuItem value="MT" disabled={!enableEU}>
+                  Malta
+                </MenuItem>
+                <MenuItem value="NL" disabled={!enableEU}>
+                  Netherlands
+                </MenuItem>
+                <MenuItem value="PT" disabled={!enableEU}>
+                  Portugal
+                </MenuItem>
+                <MenuItem value="SK" disabled={!enableEU}>
+                  Slovakia
+                </MenuItem>
+                <MenuItem value="SI" disabled={!enableEU}>
+                  Slovenia
+                </MenuItem>
+                <MenuItem value="ES" disabled={!enableEU}>
+                  Spain
+                </MenuItem>
+                <MenuItem value="GB" disabled={!enableUK}>
+                  United Kingdom
+                </MenuItem>
+                <MenuItem value="US" disabled={!enableUS}>
+                  United States
+                </MenuItem>
               </Field>
               <Divider />
               <Field
