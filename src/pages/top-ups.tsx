@@ -35,10 +35,17 @@ export const getServerSideProps = async (
 ) => {
   const session = await getSessionForServerSideProps(context);
   const { stripeAccount, country, currency } = session;
-  const { accountId } = stripeAccount;
 
+  // To top up an Issuing balance, you (or your user) will send a bank
+  // transfer to a Stripe-owned account. Each user will have their own
+  // unique destination to which transfers can be made, and any received
+  // transfers will be credited to that user's Issuing balance.
+  // Create or retrieve Funding Instructions[0] to get the correct
+  // destination bank account details for a user.
+  //
+  // [0] https://stripe.com/docs/api/issuing/funding_instructions
   const fundingInstructions = await createFundingInstructions(
-    accountId,
+    stripeAccount,
     country,
     currency,
   );
@@ -52,6 +59,10 @@ export const getServerSideProps = async (
   };
 };
 
+// When creating Funding Instructions, Stripe will assign a destination
+// bank account in an appropriate country for the user. Topups must be
+// sent as either FPS/BACS or SEPA credit transfers, depending on the
+// banking rails used in the country the bank account is created in.
 const FPSTransferTopupInstructions = ({
   financialAddress,
 }: {
