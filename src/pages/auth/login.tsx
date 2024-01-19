@@ -59,7 +59,7 @@ const Page = () => {
       });
 
       if (response?.ok) {
-        router.push((callbackUrl ?? "/") as string);
+        window.location.href = (callbackUrl ?? "/") as string;
       } else if (response?.error === "CredentialsSignin") {
         if (isDemoMode()) {
           throw new Error(
