@@ -2,6 +2,7 @@ import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
 import StripeAccount from "./stripe-account";
+import { getStripeSecretKey } from "./stripe-authentication";
 
 import { ChartData } from "src/types/chart-data";
 import stripeClient from "src/utils/stripe-loader";
@@ -318,7 +319,7 @@ export async function createFundingInstructions(
   country: string,
   currency: string,
 ): Promise<FundingInstructions> {
-  const { accountId } = stripeAccount;
+  const { accountId, platform } = stripeAccount;
   const bankTransferType =
     country == "GB" ? "gb_bank_transfer" : "eu_bank_transfer";
   const data = {
@@ -335,7 +336,7 @@ export async function createFundingInstructions(
       headers: {
         "Stripe-Account": accountId,
         "content-type": "application/x-www-form-urlencoded",
-        Authorization: "Bearer " + process.env.STRIPE_SECRET_KEY,
+        Authorization: "Bearer " + getStripeSecretKey(platform),
       },
       body: new URLSearchParams(data),
     },
