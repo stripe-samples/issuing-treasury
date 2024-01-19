@@ -56,6 +56,10 @@ export const items = [
         <BanknotesIcon />
       </SvgIcon>
     ),
+    // Embedded Finance platforms use Treasury Financial Accounts[0]
+    // to store money and fund payments on Issuing cards
+    //
+    // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
     use_cases: [UseCase.EmbeddedFinance],
   },
   {
@@ -66,6 +70,11 @@ export const items = [
         <BanknotesIcon />
       </SvgIcon>
     ),
+    // Expense Management platforms do not use Treasury, and instead
+    // fund payments on Issuing cards from Balances. These balances
+    // can be topped up[0] via bank transfers
+    //
+    // [0] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
     use_cases: [UseCase.ExpenseManagement],
   },
   {
