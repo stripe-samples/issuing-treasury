@@ -27,7 +27,7 @@ export const AccountPopover = ({
   if (session == undefined) {
     throw new Error("Session is missing in the request");
   }
-  const { stripeAccount, email, businessName } = session;
+  const { stripeAccount, email, businessName, country } = session;
   const { accountId } = stripeAccount;
   const router = useRouter();
 
@@ -56,6 +56,10 @@ export const AccountPopover = ({
         <Typography variant="overline">Business Name</Typography>
         <Typography color="text.secondary" variant="body2">
           {businessName}
+        </Typography>
+        <Typography variant="overline">Country</Typography>
+        <Typography color="text.secondary" variant="body2">
+          {country}
         </Typography>
       </Box>
       <Divider />
