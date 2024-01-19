@@ -18,6 +18,7 @@ import { OverviewLatestTransactions } from "src/sections/overview/overview-lates
 import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
 import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
 import { ChartData, BalanceChartData } from "src/types/chart-data";
+import UseCase from "src/types/use_cases";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   getFinancialAccountDetails,
@@ -25,14 +26,13 @@ import {
   getFinancialAccountTransactionsExpanded,
   getBalance,
   getBalanceTransactions,
-  treasurySupported,
 } from "src/utils/stripe_helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { stripeAccount, country, currency } = session;
+  const { stripeAccount, useCase, currency } = session;
 
   let financialAccount = null;
   let faFundsFlowChartData = null;
@@ -42,7 +42,7 @@ export const getServerSideProps = async (
   let balanceTransactions = null;
   let balanceFundsFlowChartData = null;
 
-  if (treasurySupported(country)) {
+  if (useCase == UseCase.EmbeddedFinance) {
     const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
     financialAccount = responseFaDetails.financialaccount;
 
