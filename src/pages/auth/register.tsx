@@ -18,12 +18,7 @@ import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-<<<<<<< HEAD
 import { ReactNode, useState, ReactElement, useContext } from "react";
-import * as Yup from "yup";
-=======
-import { ReactNode, useState, ReactElement } from "react";
->>>>>>> d669675 (centralize some validations)
 
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
@@ -59,25 +54,6 @@ export const getServerSideProps = async (
 
   return { props: { enableUS, enableUK, enableEU } };
 };
-
-const getCharacterValidationError = (str: string) => {
-  return `Your password must have at least 1 ${str} character`;
-};
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Must be a valid email")
-    .max(255)
-    .required("Email is required"),
-  password: Yup.string()
-    .max(255)
-    .required("Password is required")
-    // check minimum characters
-    .min(8, "Password must have at least 8 characters")
-    // different error messages for different requirements
-    .matches(/[0-9]/, getCharacterValidationError("digit"))
-    .matches(/[a-z]/, getCharacterValidationError("lowercase"))
-    .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-});
 
 const Page = ({
   enableUS,
