@@ -85,10 +85,17 @@ const addExternalAccount = async (
   const stripe = stripeClient(platform);
 
   let token;
+  // If the user has a Treasury Financial Account (as is enabled for embedded
+  // finance platforms), then use that as a payout[0] destination. Otherwise,
+  // add a (fake) external bank account, which in a real livemode deployment
+  // would be provided by the user. When the user requests a payout from their
+  // balance, the funds will be sent to whatever account is set here.
+  //
+  // [0] https://stripe.com/docs/payouts
   if (useCase == UseCase.EmbeddedFinance) {
     token = await addExternalFinancialAccount(stripeAccount, country, currency);
   } else {
-    token = await addExternalBankAccount(accountId, currency);
+    token = await addExternalBankAccount(stripeAccount, currency);
   }
 
   await stripe.accounts.createExternalAccount(accountId, {
