@@ -64,6 +64,6 @@ export const config = {
      * - assets (images, fonts, etc.)
      * - (auth|api)/register (registration page)
      */
-    "/((?!_next/static|_next/image|favicon.ico|assets|auth/register|api/register).*)",
+    "/((?!_next/static|_next/image|favicon.ico|assets|auth/register|api/register|auth/login).*)",
   ],
 };
