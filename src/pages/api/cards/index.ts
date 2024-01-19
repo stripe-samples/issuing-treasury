@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
+import UseCase from "src/types/use_cases";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -19,7 +20,7 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const stripe = stripeClient(platform);
 
   let financialAccount = null;
-  if (useCase == "embedded_finance") {
+  if (useCase == UseCase.EmbeddedFinance) {
     const financialAccounts = await stripe.treasury.financialAccounts.list({
       stripeAccount: accountId,
     });
