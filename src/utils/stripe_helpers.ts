@@ -344,8 +344,3 @@ export async function createFundingInstructions(
   const responseBody = await response.json();
   return responseBody;
 }
-
-const TREASURY_SUPPORTED_COUNTRIES = ["US"];
-
-export const treasurySupported = (country: string): boolean =>
-  TREASURY_SUPPORTED_COUNTRIES.includes(country);
