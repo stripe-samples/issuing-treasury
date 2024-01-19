@@ -7,7 +7,6 @@ import Stripe from "stripe";
 
 import FloatingTestPanel from "src/components/floating-test-panel";
 import DashboardLayout from "src/layouts/dashboard/layout";
-import { OverviewAvailableBalance } from "src/sections/overview/overview-acquring-balance";
 import { OverviewBalanceFundsFlowChart } from "src/sections/overview/overview-balance-funds-flow-chart";
 import { OverviewFinancialAccountBalance } from "src/sections/overview/overview-fa-balance";
 import { OverviewFinancialAccountFundsFlowChart } from "src/sections/overview/overview-fa-funds-flow-chart";
@@ -15,6 +14,7 @@ import { OverviewFinancialAccountOutboundPending } from "src/sections/overview/o
 import { OverviewIssuingBalance } from "src/sections/overview/overview-issuing-balance";
 import { OverviewLatestBalanceTransactions } from "src/sections/overview/overview-latest-balance-transactions";
 import { OverviewLatestTransactions } from "src/sections/overview/overview-latest-transactions";
+import { OverviewAvailableBalance } from "src/sections/overview/overview-payments-balance";
 import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
 import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
 import { ChartData, BalanceChartData } from "src/types/chart-data";

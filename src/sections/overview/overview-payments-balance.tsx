@@ -22,7 +22,7 @@ export const OverviewAvailableBalance = (props: {
         >
           <Stack spacing={1}>
             <Typography color="text.secondary" variant="overline">
-              Acquiring Available Balance
+              Payments Available Balance
             </Typography>
             <Typography variant="h4">
               {currencyFormat(value / 100, currency)}
