@@ -4,11 +4,11 @@ import * as Yup from "yup";
 
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
+import UseCase from "src/types/use_cases";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getPlatform } from "src/utils/platform";
 import stripeClient from "src/utils/stripe-loader";
-import { treasurySupported } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -17,6 +17,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, password, country, useCase } = req.body;
+
+  // Embedded Finance is a full financial services stack for your users:
+  // accounts[0] with Treasury to store and send funds, with cards[1] with
+  // Issuing for spending.
+  // This is different from the Expense Management example, where you
+  // top up balances[2] to fund spend on Issuing cards.
+  //
+  // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
+  // [1] https://stripe.com/docs/issuing/how-issuing-works
+  // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
+  const useTreasury = useCase == UseCase.EmbeddedFinance;
 
   const getCharacterValidationError = (str: string) => {
     return `Your password must have at least 1 ${str} character`;
@@ -96,7 +107,9 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     capabilities: {
       card_payments: { requested: true },
       transfers: { requested: true },
-      treasury: { requested: treasurySupported(country) ? true : false },
+      // if we are creating an user an embedded finance platform, we must request
+      // the `treasury` capability in order to create a FinancialAccount for them
+      treasury: { requested: useTreasury ? true : false },
       card_issuing: { requested: true },
     },
   });
@@ -113,8 +126,9 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  if (treasurySupported(country)) {
-    // Create Financial Account
+  if (useTreasury) {
+    // If this is an Embedded Finance user, create a Treasury Financial Account,
+    // in which the user will store their funds
     await stripe.treasury.financialAccounts.create(
       {
         supported_currencies: ["usd"],
