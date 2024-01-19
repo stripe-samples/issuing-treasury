@@ -102,6 +102,8 @@ const CreateCardholderForm = ({
   }
   const { country } = session;
 
+  // See pages/api/cardholders.ts for more information on cardholder
+  // phone number requirements.
   let validationSchema;
   if (country == "US") {
     validationSchema = baseValidationSchema;
