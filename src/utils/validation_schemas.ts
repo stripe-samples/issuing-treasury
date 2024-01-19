@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 
+import UseCase from "src/types/use_cases";
+
 const cardholderBase = Yup.object({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
@@ -45,12 +47,12 @@ const user = Yup.object().shape({
     is: "US",
     then: (schema) =>
       schema.oneOf(
-        ["embedded_finance"],
+        [UseCase.EmbeddedFinance],
         "This use case is not yet supported in the selected country",
       ),
     otherwise: (schema) =>
       schema.oneOf(
-        ["expense_management"],
+        [UseCase.ExpenseManagement],
         "This use case is not yet supported in the selected country",
       ),
   }),
