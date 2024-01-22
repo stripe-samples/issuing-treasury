@@ -5,7 +5,6 @@ import {
   Stack,
   TextField,
   Typography,
-  Select,
   MenuItem,
   RadioGroup,
   FormControlLabel,
@@ -161,9 +160,10 @@ const Page = () => {
                 type="password"
               />
               <Field
-                as={Select}
+                as={TextField}
                 label="Country"
                 name="country"
+                select
                 fullWidth
                 onChange={(_: SelectChangeEvent, element: ReactElement) => {
                   const country = element.props.value;
