@@ -142,7 +142,6 @@ const Page = () => {
               <Field
                 as={TextField}
                 error={!!(touched.email && errors.email)}
-                fullWidth
                 helperText={touched.email && errors.email}
                 label="Email"
                 name="email"
@@ -150,7 +149,6 @@ const Page = () => {
               <Field
                 as={TextField}
                 error={!!(touched.password && errors.password)}
-                fullWidth
                 helperText={
                   (touched.password && errors.password) ||
                   "Password must be at least 8 characters with a number, a lowercase character, and an uppercase character."
@@ -164,7 +162,6 @@ const Page = () => {
                 label="Country"
                 name="country"
                 select
-                fullWidth
                 onChange={(_: SelectChangeEvent, element: ReactElement) => {
                   const country = element.props.value;
                   setFieldValue("country", element.props.value);
@@ -189,7 +186,6 @@ const Page = () => {
                 as={RadioGroup}
                 label="Use case"
                 name="useCase"
-                fullWidth
                 error={!!(touched.useCase && errors.useCase)}
               >
                 <FormLabel sx={{ mb: 2 }}>
@@ -235,7 +231,6 @@ const Page = () => {
               </Field>
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
-                fullWidth
                 size="large"
                 sx={{ mt: 3 }}
                 type="submit"
