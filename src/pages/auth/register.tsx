@@ -24,6 +24,7 @@ import { ReactNode, useState, ReactElement, useContext } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
+import { COUNTRIES } from "src/types/constants";
 import UseCase from "src/types/use_cases";
 import {
   extractJsonFromResponse,
@@ -178,70 +179,11 @@ const Page = () => {
                   }
                 }}
               >
-                <MenuItem value="AT" disabled>
-                  Austria
-                </MenuItem>
-                <MenuItem value="BE" disabled>
-                  Belgium
-                </MenuItem>
-                <MenuItem value="HR" disabled>
-                  Croatia
-                </MenuItem>
-                <MenuItem value="CY" disabled>
-                  Cyprus
-                </MenuItem>
-                <MenuItem value="EE" disabled>
-                  Estonia
-                </MenuItem>
-                <MenuItem value="FI" disabled>
-                  Finland
-                </MenuItem>
-                <MenuItem value="FR" disabled>
-                  France
-                </MenuItem>
-                <MenuItem value="DE" disabled>
-                  Germany
-                </MenuItem>
-                <MenuItem value="GR" disabled>
-                  Greece
-                </MenuItem>
-                <MenuItem value="IE" disabled>
-                  Ireland
-                </MenuItem>
-                <MenuItem value="IT" disabled>
-                  Italy
-                </MenuItem>
-                <MenuItem value="LV" disabled>
-                  Latvia
-                </MenuItem>
-                <MenuItem value="LT" disabled>
-                  Lithuania
-                </MenuItem>
-                <MenuItem value="LU" disabled>
-                  Luxembourg
-                </MenuItem>
-                <MenuItem value="MT" disabled>
-                  Malta
-                </MenuItem>
-                <MenuItem value="NL" disabled>
-                  Netherlands
-                </MenuItem>
-                <MenuItem value="PT" disabled>
-                  Portugal
-                </MenuItem>
-                <MenuItem value="SK" disabled>
-                  Slovakia
-                </MenuItem>
-                <MenuItem value="SI" disabled>
-                  Slovenia
-                </MenuItem>
-                <MenuItem value="ES" disabled>
-                  Spain
-                </MenuItem>
-                <MenuItem value="GB" disabled>
-                  United Kingdom
-                </MenuItem>
-                <MenuItem value="US">United States</MenuItem>
+                {COUNTRIES.map(([code, name]) => (
+                  <MenuItem key={code} value={code} disabled={code !== "US"}>
+                    {name}
+                  </MenuItem>
+                ))}
               </Field>
               <Divider />
               <FormLabel>What kind of app are you building?</FormLabel>
