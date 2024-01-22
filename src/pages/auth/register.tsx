@@ -22,7 +22,7 @@ import { ReactNode, useState, ReactElement, useContext } from "react";
 import * as Yup from "yup";
 
 import AuthLayout from "src/layouts/auth/layout";
-import { COUNTRIES } from "src/types/constants";
+// import { COUNTRIES } from "src/types/constants";
 import UseCase from "src/types/use_cases";
 import {
   extractJsonFromResponse,
