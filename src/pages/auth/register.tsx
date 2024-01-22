@@ -12,7 +12,6 @@ import {
   Radio,
   FormLabel,
   Divider,
-  Box,
   Tooltip,
   SelectChangeEvent,
 } from "@mui/material";
@@ -186,7 +185,6 @@ const Page = () => {
                 ))}
               </Field>
               <Divider />
-              <FormLabel>What kind of app are you building?</FormLabel>
               <Field
                 as={RadioGroup}
                 label="Use case"
@@ -194,6 +192,9 @@ const Page = () => {
                 fullWidth
                 error={!!(touched.useCase && errors.useCase)}
               >
+                <FormLabel sx={{ mb: 2 }}>
+                  Which financial product would you like to register to use?
+                </FormLabel>
                 <Tooltip
                   title={
                     values.country != "US" &&
@@ -204,45 +205,34 @@ const Page = () => {
                     value={UseCase.EmbeddedFinance}
                     control={<Radio />}
                     label={
-                      <Box mb={2}>
-                        <Typography variant="button" display="block">
-                          Embedded finance
+                      <>
+                        <Typography>
+                          Full-stack financial services for your business
                         </Typography>
                         <Typography variant="caption">
-                          Full-stack financial services to create cards, make
-                          payments, and send and receive money with a financial
-                          account
+                          Create cards, make payments, and send and receive
+                          money with a financial account
                         </Typography>
-                      </Box>
+                      </>
                     }
                     disabled={values.country != "US"}
                   />
                 </Tooltip>
-
                 <Tooltip
                   title={
                     values.country == "US" &&
-                    "Expense management in the US is not yet suported in the demo app"
+                    isDemoMode() &&
+                    "This financial product is not yet available in this demo for US businesses"
                   }
                 >
                   <FormControlLabel
                     value={UseCase.ExpenseManagement}
                     control={<Radio />}
-                    label={
-                      <>
-                        <Typography variant="button" display="block">
-                          Expense management
-                        </Typography>
-                        <Typography variant="caption">
-                          A commercial pre-funded card issuing program
-                        </Typography>
-                      </>
-                    }
+                    label="A commercial pre-funded card issuing program"
                     disabled={values.country == "US"}
                   />
                 </Tooltip>
               </Field>
-
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
                 fullWidth
