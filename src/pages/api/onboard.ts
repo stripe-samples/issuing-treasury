@@ -8,6 +8,7 @@ import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
+import { treasurySupported } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -16,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { email, stripeAccount } = session;
+  const { email, stripeAccount, country } = session;
   const { accountId, platform } = stripeAccount;
 
   const {
@@ -69,10 +70,16 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         address: {
           // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
           line1: "address_full_match",
-          city: "South San Francisco",
-          state: "CA",
-          postal_code: "94080",
-          country: "US",
+          ...(country === "US" && {
+            city: "South San Francisco",
+            state: "CA",
+            postal_code: "94080",
+          }),
+          ...(country === "GB" && {
+            city: "London",
+            postal_code: "WC32 4AP",
+          }),
+          country: country,
         },
         // These values together cause the DOB to be verified in testmode: https://stripe.com/docs/connect/testing#test-dobs
         dob: {
@@ -94,9 +101,11 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         card_issuing: {
           tos_acceptance: TOS_ACCEPTANCE,
         },
-        treasury: {
-          tos_acceptance: TOS_ACCEPTANCE,
-        },
+        ...(treasurySupported(country) && {
+          treasury: {
+            tos_acceptance: TOS_ACCEPTANCE,
+          },
+        }),
       },
     }),
   };
