@@ -1,4 +1,3 @@
-import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
   Box,
@@ -7,7 +6,6 @@ import {
   Container,
   Grid,
   Stack,
-  SvgIcon,
   Typography,
 } from "@mui/material";
 import { Elements } from "@stripe/react-stripe-js";
@@ -16,13 +14,14 @@ import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
+import CurrencyIcon from "src/components/currency-icon";
 import FloatingTestPanel from "src/components/floating-test-panel";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import CardDetails from "src/sections/[cardId]/card-details";
 import CardIllustration from "src/sections/[cardId]/card-illustration";
 import LatestCardAuthorizations from "src/sections/[cardId]/latest-card-authorizations";
 import TestDataCreateAuthorization from "src/sections/test-data/test-data-create-authorization";
-import { formatUSD } from "src/utils/format";
+import { currencyFormat } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import StripeAccount from "src/utils/stripe-account";
 import { getStripePublishableKey } from "src/utils/stripe-authentication";
@@ -80,7 +79,7 @@ const Page = ({
   const spendingLimit = card.spending_controls.spending_limits?.[0];
   const spendingLimitDisplay =
     spendingLimit != undefined
-      ? `${formatUSD(spendingLimit.amount / 100)} ${spendingLimit.interval}`
+      ? `${currencyFormat(spendingLimit.amount / 100, currency)} ${spendingLimit.interval}`
       : "No spending limit set";
 
   return (
@@ -115,7 +114,7 @@ const Page = ({
                         Current spend
                       </Typography>
                       <Typography variant="h4">
-                        {formatUSD(currentSpend / 100)}
+                        {currencyFormat(currentSpend / 100, currency)}
                       </Typography>
                       <Typography pt={1} color="text.secondary">
                         Spending limit:
@@ -131,9 +130,7 @@ const Page = ({
                         width: 56,
                       }}
                     >
-                      <SvgIcon>
-                        <CurrencyDollarIcon />
-                      </SvgIcon>
+                      <CurrencyIcon currency={currency} />
                     </Avatar>
                   </Stack>
                 </CardContent>
