@@ -3,12 +3,12 @@ import Stripe from "stripe";
 import * as Yup from "yup";
 
 import { apiResponse } from "src/types/api-response";
+import UseCase from "src/types/use_cases";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
-import { treasurySupported } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -17,8 +17,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { email, stripeAccount, country } = session;
+  const { email, stripeAccount, country, useCase } = session;
   const { accountId, platform } = stripeAccount;
+
+  // Embedded Finance is a full financial services stack for your users:
+  // accounts[0] with Treasury to store and send funds, with cards[1] with
+  // Issuing for spending.
+  // This is different from the Expense Management example, where you
+  // top up balances[2] to fund spend on Issuing cards.
+  //
+  // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
+  // [1] https://stripe.com/docs/issuing/how-issuing-works
+  // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
+  const useTreasury = useCase == UseCase.EmbeddedFinance;
 
   const {
     businessName,
@@ -101,7 +112,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         card_issuing: {
           tos_acceptance: TOS_ACCEPTANCE,
         },
-        ...(treasurySupported(country) && {
+        ...(useTreasury && {
           treasury: {
             tos_acceptance: TOS_ACCEPTANCE,
           },

@@ -109,7 +109,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       transfers: { requested: true },
       // if we are creating an user an embedded finance platform, we must request
       // the `treasury` capability in order to create a FinancialAccount for them
-      treasury: { requested: useTreasury ? true : false },
+      treasury: { requested: useTreasury },
       card_issuing: { requested: true },
     },
   });
