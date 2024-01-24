@@ -14,7 +14,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { stripeAccount, useCase } = session;
+  const { stripeAccount, financialProduct } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
   const responseAccount = await stripe.accounts.retrieve(accountId);
@@ -29,19 +29,21 @@ export const getServerSideProps = async (
   const availableBalance = responseBalance.available[0].amount;
   const currency = responseBalance.available[0].currency;
 
-  return { props: { hasExternalAccount, availableBalance, currency, useCase } };
+  return {
+    props: { hasExternalAccount, availableBalance, currency, financialProduct },
+  };
 };
 
 const Page = ({
   hasExternalAccount,
   availableBalance,
   currency,
-  useCase,
+  financialProduct,
 }: {
   hasExternalAccount: boolean;
   availableBalance: number;
   currency: string;
-  useCase: FinancialProduct;
+  financialProduct: FinancialProduct;
 }) => {
   return (
     <>
@@ -58,7 +60,7 @@ const Page = ({
               <TestDataCreatePaymentLink />
             </Grid>
             <Grid item xs={12} sm={10} md={8}>
-              {useCase == FinancialProduct.EmbeddedFinance ? (
+              {financialProduct == FinancialProduct.EmbeddedFinance ? (
                 <TestDataCreatePayouts
                   hasExternalAccount={hasExternalAccount}
                   availableBalance={availableBalance}

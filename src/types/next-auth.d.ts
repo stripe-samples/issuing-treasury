@@ -13,7 +13,7 @@ declare module "next-auth" {
     businessName: string;
     country: string;
     currency: string;
-    useCase: UseCase;
+    financialProduct: FinancialProduct;
     stripeAccount: StripeAccount;
   }
 }
@@ -26,6 +26,6 @@ declare module "next-auth/jwt" {
     businessName: string;
     country: string;
     currency: string;
-    useCase: UseCase;
+    financialProduct: FinancialProduct;
   }
 }

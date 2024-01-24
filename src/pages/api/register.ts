@@ -16,11 +16,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   });
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, password, country, useCase } = req.body;
+  const { email, password, country, financialProduct } = req.body;
 
   try {
     await validationSchemas.user.validate(
-      { email, password, country, useCase },
+      { email, password, country, financialProduct },
       { abortEarly: false },
     );
   } catch (error) {
@@ -66,7 +66,8 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       // if we are creating an user an embedded finance platform, we must request
       // the `treasury` capability in order to create a FinancialAccount for them
       treasury: {
-        requested: useCase == FinancialProduct.EmbeddedFinance ? true : false,
+        requested:
+          financialProduct == FinancialProduct.EmbeddedFinance ? true : false,
       },
       card_issuing: { requested: true },
     },
@@ -79,7 +80,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       email: email,
       password: hashedPassword,
       accountId: account.id,
-      useCase,
+      financialProduct,
       country,
     },
   });
@@ -93,7 +94,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
   // [1] https://stripe.com/docs/issuing/how-issuing-works
   // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
-  if (useCase == FinancialProduct.EmbeddedFinance) {
+  if (financialProduct == FinancialProduct.EmbeddedFinance) {
     // If this is an Embedded Finance user, create a Treasury Financial Account,
     // in which the user will store their funds
     await stripe.treasury.financialAccounts.create(

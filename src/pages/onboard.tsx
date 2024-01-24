@@ -37,16 +37,16 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { useCase } = session;
+  const { financialProduct } = session;
 
   return {
     props: {
-      useCase,
+      financialProduct,
     },
   };
 };
 
-const Page = ({ useCase }: { useCase: FinancialProduct }) => {
+const Page = ({ financialProduct }: { financialProduct: FinancialProduct }) => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
   const [showConnectOnboardingGuide, setShowConnectOnboardingGuide] =
@@ -55,7 +55,7 @@ const Page = ({ useCase }: { useCase: FinancialProduct }) => {
   const { setMode } = useContext(RegistrationModeContext);
 
   setMode(
-    useCase == FinancialProduct.EmbeddedFinance
+    financialProduct == FinancialProduct.EmbeddedFinance
       ? RegistrationMode.IssuingTreasury
       : RegistrationMode.Issuing,
   );

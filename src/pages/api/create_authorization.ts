@@ -20,7 +20,7 @@ const simulateAuthorization = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount, currency, useCase } = session;
+  const { stripeAccount, currency, financialProduct } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
@@ -31,7 +31,7 @@ const simulateAuthorization = async (
   // to check for funds, which should illustrate where money comes from to
   // fund Issuing transactions.
   let balance;
-  if (useCase == FinancialProduct.EmbeddedFinance) {
+  if (financialProduct == FinancialProduct.EmbeddedFinance) {
     const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
     const financialAccount = responseFaDetails.financialaccount;
     balance = financialAccount.balance.cash.usd;

@@ -80,7 +80,7 @@ const addExternalAccount = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { country, currency, useCase, stripeAccount } = session;
+  const { country, currency, financialProduct, stripeAccount } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
@@ -92,7 +92,7 @@ const addExternalAccount = async (
   // balance, the funds will be sent to whatever account is set here.
   //
   // [0] https://stripe.com/docs/payouts
-  if (useCase == FinancialProduct.EmbeddedFinance) {
+  if (financialProduct == FinancialProduct.EmbeddedFinance) {
     token = await addExternalFinancialAccount(stripeAccount, country, currency);
   } else {
     token = await addExternalBankAccount(stripeAccount, currency);
