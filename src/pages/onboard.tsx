@@ -19,7 +19,7 @@ import { signOut } from "next-auth/react";
 import React, { ChangeEvent, ReactNode, useContext, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 import {
   extractJsonFromResponse,
   handleResult,
@@ -46,7 +46,7 @@ export const getServerSideProps = async (
   };
 };
 
-const Page = ({ useCase }: { useCase: UseCase }) => {
+const Page = ({ useCase }: { useCase: FinancialProduct }) => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
   const [showConnectOnboardingGuide, setShowConnectOnboardingGuide] =
@@ -55,7 +55,7 @@ const Page = ({ useCase }: { useCase: UseCase }) => {
   const { setMode } = useContext(RegistrationModeContext);
 
   setMode(
-    useCase == UseCase.EmbeddedFinance
+    useCase == FinancialProduct.EmbeddedFinance
       ? RegistrationMode.IssuingTreasury
       : RegistrationMode.Issuing,
   );

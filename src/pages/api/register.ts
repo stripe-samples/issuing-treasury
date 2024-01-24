@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getPlatform } from "src/utils/platform";
@@ -66,7 +66,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       // if we are creating an user an embedded finance platform, we must request
       // the `treasury` capability in order to create a FinancialAccount for them
       treasury: {
-        requested: useCase == UseCase.EmbeddedFinance ? true : false,
+        requested: useCase == FinancialProduct.EmbeddedFinance ? true : false,
       },
       card_issuing: { requested: true },
     },
@@ -93,7 +93,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
   // [1] https://stripe.com/docs/issuing/how-issuing-works
   // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
-  if (useCase == UseCase.EmbeddedFinance) {
+  if (useCase == FinancialProduct.EmbeddedFinance) {
     // If this is an Embedded Finance user, create a Treasury Financial Account,
     // in which the user will store their funds
     await stripe.treasury.financialAccounts.create(

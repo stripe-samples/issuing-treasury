@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
@@ -110,7 +110,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
         // [1] https://stripe.com/docs/issuing/how-issuing-works
         // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
-        ...(useCase == UseCase.EmbeddedFinance && {
+        ...(useCase == FinancialProduct.EmbeddedFinance && {
           treasury: {
             tos_acceptance: TOS_ACCEPTANCE,
           },

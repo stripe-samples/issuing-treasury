@@ -6,7 +6,7 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
 import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
 import TestDataCreatePayoutsToBank from "src/sections/test-data/test-data-create-payout-to-bank";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
@@ -41,7 +41,7 @@ const Page = ({
   hasExternalAccount: boolean;
   availableBalance: number;
   currency: string;
-  useCase: UseCase;
+  useCase: FinancialProduct;
 }) => {
   return (
     <>
@@ -58,7 +58,7 @@ const Page = ({
               <TestDataCreatePaymentLink />
             </Grid>
             <Grid item xs={12} sm={10} md={8}>
-              {useCase == UseCase.EmbeddedFinance ? (
+              {useCase == FinancialProduct.EmbeddedFinance ? (
                 <TestDataCreatePayouts
                   hasExternalAccount={hasExternalAccount}
                   availableBalance={availableBalance}

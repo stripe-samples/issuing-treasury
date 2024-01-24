@@ -22,7 +22,7 @@ import { ReactNode, useState, ReactElement, useContext } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 import {
   extractJsonFromResponse,
   handleResult,
@@ -74,7 +74,7 @@ const Page = ({
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
     country: "US",
-    useCase: UseCase.EmbeddedFinance,
+    useCase: FinancialProduct.EmbeddedFinance,
   };
 
   const handleSubmit = async (
@@ -164,10 +164,13 @@ const Page = ({
 
                   if (country == "US") {
                     setMode(RegistrationMode.IssuingTreasury);
-                    setFieldValue("useCase", UseCase.EmbeddedFinance);
+                    setFieldValue("useCase", FinancialProduct.EmbeddedFinance);
                   } else {
                     setMode(RegistrationMode.Issuing);
-                    setFieldValue("useCase", UseCase.ExpenseManagement);
+                    setFieldValue(
+                      "useCase",
+                      FinancialProduct.ExpenseManagement,
+                    );
                   }
                 }}
               >
@@ -255,7 +258,7 @@ const Page = ({
                   }
                 >
                   <FormControlLabel
-                    value={UseCase.EmbeddedFinance}
+                    value={FinancialProduct.EmbeddedFinance}
                     control={<Radio />}
                     label={
                       <>
@@ -279,7 +282,7 @@ const Page = ({
                   }
                 >
                   <FormControlLabel
-                    value={UseCase.ExpenseManagement}
+                    value={FinancialProduct.ExpenseManagement}
                     control={<Radio />}
                     label="A commercial pre-funded card issuing program"
                     disabled={values.country == "US"}

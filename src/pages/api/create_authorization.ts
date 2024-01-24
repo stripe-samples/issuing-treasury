@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -31,7 +31,7 @@ const simulateAuthorization = async (
   // to check for funds, which should illustrate where money comes from to
   // fund Issuing transactions.
   let balance;
-  if (useCase == UseCase.EmbeddedFinance) {
+  if (useCase == FinancialProduct.EmbeddedFinance) {
     const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
     const financialAccount = responseFaDetails.financialaccount;
     balance = financialAccount.balance.cash.usd;

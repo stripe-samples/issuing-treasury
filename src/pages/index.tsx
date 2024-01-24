@@ -18,7 +18,7 @@ import { OverviewAvailableBalance } from "src/sections/overview/overview-payment
 import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
 import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
 import { ChartData, BalanceChartData } from "src/types/chart-data";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   getFinancialAccountDetails,
@@ -42,7 +42,7 @@ export const getServerSideProps = async (
   let balanceTransactions = null;
   let balanceFundsFlowChartData = null;
 
-  if (useCase == UseCase.EmbeddedFinance) {
+  if (useCase == FinancialProduct.EmbeddedFinance) {
     const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
     financialAccount = responseFaDetails.financialaccount;
 

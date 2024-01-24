@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 
 export const items = [
   {
@@ -60,7 +60,7 @@ export const items = [
     // to store money and fund payments on Issuing cards
     //
     // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
-    useCases: [UseCase.EmbeddedFinance],
+    useCases: [FinancialProduct.EmbeddedFinance],
   },
   {
     title: "Top ups",
@@ -75,7 +75,7 @@ export const items = [
     // can be topped up[0] via bank transfers
     //
     // [0] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
-    useCases: [UseCase.ExpenseManagement],
+    useCases: [FinancialProduct.ExpenseManagement],
   },
   {
     title: "Test data",

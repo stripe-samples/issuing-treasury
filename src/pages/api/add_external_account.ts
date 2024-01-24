@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import StripeAccount from "src/utils/stripe-account";
@@ -92,7 +92,7 @@ const addExternalAccount = async (
   // balance, the funds will be sent to whatever account is set here.
   //
   // [0] https://stripe.com/docs/payouts
-  if (useCase == UseCase.EmbeddedFinance) {
+  if (useCase == FinancialProduct.EmbeddedFinance) {
     token = await addExternalFinancialAccount(stripeAccount, country, currency);
   } else {
     token = await addExternalBankAccount(stripeAccount, currency);
