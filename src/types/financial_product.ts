@@ -1,6 +1,6 @@
-enum UseCase {
+enum FinancialProduct {
   ExpenseManagement = "expense_management",
   EmbeddedFinance = "embedded_finance",
 }
 
-export default UseCase;
+export default FinancialProduct;

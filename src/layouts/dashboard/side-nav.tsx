@@ -18,16 +18,16 @@ import { Logo } from "src/components/logo";
 import { Scrollbar } from "src/components/scrollbar";
 import { items } from "src/layouts/dashboard/config";
 import { SideNavItem } from "src/layouts/dashboard/side-nav-item";
-import UseCase from "src/types/use_cases";
+import FinancialProduct from "src/types/financial_product";
 
 const validNavigationItem = (
   item: {
     title: string;
     path: string;
     icon: React.ReactNode;
-    useCases?: UseCase[];
+    useCases?: FinancialProduct[];
   },
-  useCase: UseCase,
+  useCase: FinancialProduct,
 ) => {
   if (item.useCases) {
     if (!item.useCases.includes(useCase)) {
