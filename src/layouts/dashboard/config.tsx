@@ -60,7 +60,7 @@ export const items = [
     // to store money and fund payments on Issuing cards
     //
     // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
-    useCases: [FinancialProduct.EmbeddedFinance],
+    financialProducts: [FinancialProduct.EmbeddedFinance],
   },
   {
     title: "Top ups",
@@ -75,7 +75,7 @@ export const items = [
     // can be topped up[0] via bank transfers
     //
     // [0] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
-    useCases: [FinancialProduct.ExpenseManagement],
+    financialProducts: [FinancialProduct.ExpenseManagement],
   },
   {
     title: "Test data",
