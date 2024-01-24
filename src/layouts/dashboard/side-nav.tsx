@@ -25,12 +25,12 @@ const validNavigationItem = (
     title: string;
     path: string;
     icon: React.ReactNode;
-    useCases?: FinancialProduct[];
+    financialProducts?: FinancialProduct[];
   },
-  useCase: FinancialProduct,
+  financialProduct: FinancialProduct,
 ) => {
-  if (item.useCases) {
-    if (!item.useCases.includes(useCase)) {
+  if (item.financialProducts) {
+    if (!item.financialProducts.includes(financialProduct)) {
       return false;
     }
   }
@@ -47,7 +47,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
     throw new Error("Session is missing in the request");
   }
 
-  const { useCase } = session;
+  const { financialProduct } = session;
 
   const content = (
     <Scrollbar
@@ -97,7 +97,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             }}
           >
             {items.map((item) => {
-              if (validNavigationItem(item, useCase)) {
+              if (validNavigationItem(item, financialProduct)) {
                 const active = item.path ? pathname === item.path : false;
 
                 return (
