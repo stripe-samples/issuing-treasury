@@ -32,7 +32,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { stripeAccount, useCase, currency } = session;
+  const { stripeAccount, financialProduct, currency } = session;
 
   let financialAccount = null;
   let faFundsFlowChartData = null;
@@ -42,7 +42,7 @@ export const getServerSideProps = async (
   let balanceTransactions = null;
   let balanceFundsFlowChartData = null;
 
-  if (useCase == FinancialProduct.EmbeddedFinance) {
+  if (financialProduct == FinancialProduct.EmbeddedFinance) {
     const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
     financialAccount = responseFaDetails.financialaccount;
 

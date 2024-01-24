@@ -43,17 +43,17 @@ const user = Yup.object().shape({
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
   country: Yup.string().max(2).required("Country is required"),
-  useCase: Yup.string().when("country", {
+  financialProduct: Yup.string().when("country", {
     is: "US",
     then: (schema) =>
       schema.oneOf(
         [FinancialProduct.EmbeddedFinance],
-        "This use case is not yet supported in the selected country",
+        "This financial product is not yet supported in the selected country",
       ),
     otherwise: (schema) =>
       schema.oneOf(
         [FinancialProduct.ExpenseManagement],
-        "This use case is not yet supported in the selected country",
+        "This financial product is not yet supported in the selected country",
       ),
   }),
 });

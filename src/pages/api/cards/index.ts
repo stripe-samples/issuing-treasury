@@ -15,12 +15,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount, useCase, currency } = session;
+  const { stripeAccount, financialProduct, currency } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
   let financialAccount = null;
-  if (useCase == FinancialProduct.EmbeddedFinance) {
+  if (financialProduct == FinancialProduct.EmbeddedFinance) {
     const financialAccounts = await stripe.treasury.financialAccounts.list({
       stripeAccount: accountId,
     });

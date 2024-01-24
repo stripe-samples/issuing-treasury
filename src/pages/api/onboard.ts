@@ -17,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { email, stripeAccount, country, useCase } = session;
+  const { email, stripeAccount, country, financialProduct } = session;
   const { accountId, platform } = stripeAccount;
 
   const {
@@ -110,7 +110,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
         // [1] https://stripe.com/docs/issuing/how-issuing-works
         // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
-        ...(useCase == FinancialProduct.EmbeddedFinance && {
+        ...(financialProduct == FinancialProduct.EmbeddedFinance && {
           treasury: {
             tos_acceptance: TOS_ACCEPTANCE,
           },

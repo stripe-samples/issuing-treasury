@@ -74,7 +74,7 @@ const Page = ({
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
     country: "US",
-    useCase: FinancialProduct.EmbeddedFinance,
+    financialProduct: FinancialProduct.EmbeddedFinance,
   };
 
   const handleSubmit = async (
@@ -86,7 +86,7 @@ const Page = ({
       email: values.email,
       password: values.password,
       country: values.country,
-      useCase: values.useCase,
+      financialProduct: values.financialProduct,
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
@@ -164,11 +164,14 @@ const Page = ({
 
                   if (country == "US") {
                     setMode(RegistrationMode.IssuingTreasury);
-                    setFieldValue("useCase", FinancialProduct.EmbeddedFinance);
+                    setFieldValue(
+                      "financialProduct",
+                      FinancialProduct.EmbeddedFinance,
+                    );
                   } else {
                     setMode(RegistrationMode.Issuing);
                     setFieldValue(
-                      "useCase",
+                      "financialProduct",
                       FinancialProduct.ExpenseManagement,
                     );
                   }
@@ -245,8 +248,8 @@ const Page = ({
               <Field
                 as={RadioGroup}
                 label="Use case"
-                name="useCase"
-                error={!!(touched.useCase && errors.useCase)}
+                name="financialProduct"
+                error={!!(touched.financialProduct && errors.financialProduct)}
               >
                 <FormLabel sx={{ mb: 2 }}>
                   Which financial product would you like to register to use?
