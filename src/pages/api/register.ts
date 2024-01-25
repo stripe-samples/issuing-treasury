@@ -61,15 +61,15 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     }),
     capabilities: {
-      card_payments: { requested: true },
       transfers: { requested: true },
-      // if we are creating an user an embedded finance platform, we must request
-      // the `treasury` capability in order to create a FinancialAccount for them
-      treasury: {
-        requested:
-          financialProduct == FinancialProduct.EmbeddedFinance ? true : false,
-      },
       card_issuing: { requested: true },
+      // If we are creating an user an embedded finance platform, we must request
+      // the `treasury` capability in order to create a FinancialAccount for them
+      ...(financialProduct == FinancialProduct.EmbeddedFinance && {
+        treasury: {
+          requested: true,
+        },
+      }),
     },
   });
 
