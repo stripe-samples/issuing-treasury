@@ -34,6 +34,10 @@ For details of more features see the [Issuing and Treasury sample app documentat
 - Activate Stripe Issuing and Treasury in test mode through this link: <https://dashboard.stripe.com/setup/treasury/activate?a=1>
 - Obtain your Stripe API keys at <https://dashboard.stripe.com/test/apikeys>
 
+## Deploy the web application on Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Ftree%2Fbase-app%2F_base_&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,NEXTAUTH_SECRET&project-name=issuing-treasury&demo-title=Stripe%20BaaS%20demo%20app&demo-description=Full-stack%20financial%20services%20for%20your%20business%2C%20with%20Stripe%20Issuing%20and%20Treasury)
+
 ## Deploy the web application on Render
 
 You can immediately deploy this sample app to a unique, public URL (for example: `https://issuing-treasury-xyz1.onrender.com`) with no coding required by using Render.
