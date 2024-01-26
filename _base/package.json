@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --resolve-plugins-relative-to=./"
+    "lint": "next lint --resolve-plugins-relative-to=./",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@emotion/cache": "11.11.0",
