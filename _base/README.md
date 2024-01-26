@@ -36,7 +36,7 @@ For details of more features see the [Issuing and Treasury sample app documentat
 
 ## Deploy the web application on Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Ftree%2Fbase-app%2F_base_&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,NEXTAUTH_SECRET&project-name=issuing-treasury&demo-title=Stripe%20BaaS%20demo%20app&demo-description=Full-stack%20financial%20services%20for%20your%20business%2C%20with%20Stripe%20Issuing%20and%20Treasury)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Ftree%2Fbase-app%2F_base&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,NEXTAUTH_SECRET&project-name=issuing-treasury&demo-title=Stripe%20BaaS%20demo%20app&demo-description=Full-stack%20financial%20services%20for%20your%20business%2C%20with%20Stripe%20Issuing%20and%20Treasury&repository-name=issuing-treasury)
 
 ## Deploy the web application on Render
 
