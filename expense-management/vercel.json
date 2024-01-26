@@ -1,9 +1,0 @@
-{
-  "buildCommand": "npm install; npx prisma migrate deploy; npx prisma generate; npm run build;",
-  "framework": "nextjs",
-  "git": {
-    "deploymentEnabled": {
-      "main": false
-    }
-  }
-}
