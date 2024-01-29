@@ -9,8 +9,6 @@ import {
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
-import FinancialProduct from "src/types/financial_product";
-
 export const items = [
   {
     title: "Overview",
@@ -56,26 +54,6 @@ export const items = [
         <BanknotesIcon />
       </SvgIcon>
     ),
-    // Embedded Finance platforms use Treasury Financial Accounts[0]
-    // to store money and fund payments on Issuing cards
-    //
-    // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
-    financialProducts: [FinancialProduct.EmbeddedFinance],
-  },
-  {
-    title: "Top ups",
-    path: "/top-ups",
-    icon: (
-      <SvgIcon fontSize="small">
-        <BanknotesIcon />
-      </SvgIcon>
-    ),
-    // Expense Management platforms do not use Treasury, and instead
-    // fund payments on Issuing cards from Balances. These balances
-    // can be topped up[0] via bank transfers
-    //
-    // [0] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
-    financialProducts: [FinancialProduct.ExpenseManagement],
   },
   {
     title: "Test data",

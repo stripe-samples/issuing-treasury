@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
-import FinancialProduct from "src/types/financial_product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -15,18 +14,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount, financialProduct, currency } = session;
+  const { stripeAccount, currency } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
-  let financialAccount = null;
-  if (financialProduct == FinancialProduct.EmbeddedFinance) {
-    const financialAccounts = await stripe.treasury.financialAccounts.list({
-      stripeAccount: accountId,
-    });
+  const financialAccounts = await stripe.treasury.financialAccounts.list({
+    stripeAccount: accountId,
+  });
 
-    financialAccount = financialAccounts.data[0];
-  }
+  const financialAccount = financialAccounts.data[0];
 
   const { cardholderid, card_type } = req.body;
   const cardholder = await stripe.issuing.cardholders.retrieve(cardholderid, {
@@ -51,6 +47,7 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   let cardOptions: Partial<Stripe.Issuing.CardCreateParams> = {
     cardholder: cardholderid,
     currency: currency,
+    financial_account: financialAccount.id,
   };
 
   if (card_type == "physical") {
@@ -77,26 +74,12 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
       type: "physical",
       status: "inactive",
     };
-
-    if (financialAccount) {
-      cardOptions = {
-        ...cardOptions,
-        financial_account: financialAccount.id,
-      };
-    }
   } else {
     cardOptions = {
       ...cardOptions,
       type: "virtual",
       status: "active",
     };
-
-    if (financialAccount) {
-      cardOptions = {
-        ...cardOptions,
-        financial_account: financialAccount.id,
-      };
-    }
   }
 
   await stripe.issuing.cards.create(

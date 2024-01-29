@@ -18,12 +18,6 @@ const cardholderBase = Yup.object({
     .oneOf([true], "The terms of service and privacy policy must be accepted."),
 });
 
-const cardholderWithSCA = cardholderBase.concat(
-  Yup.object({
-    phoneNumber: Yup.string().required("Phone number is required for SCA"),
-  }),
-);
-
 const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
 };
@@ -88,7 +82,6 @@ const schemas = {
   card,
   cardholder: {
     default: cardholderBase,
-    withSCA: cardholderWithSCA,
   },
   user,
 };
