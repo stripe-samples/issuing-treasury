@@ -1,14 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
-import FinancialProduct from "src/types/financial_product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
-import {
-  getBalance,
-  getFinancialAccountDetails,
-} from "src/utils/stripe_helpers";
+import { getBalance } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -20,25 +16,12 @@ const simulateAuthorization = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount, currency, financialProduct } = session;
+  const { stripeAccount, currency } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
-  // A user must have sufficient funds in order to authorize a transaction
-  // on an Issuing card. For Embedded Finance users, these funds will be
-  // stored in a Treasury Financial Account, whereas other users who do not
-  // use Treasury will maintain an Issuing Balance. Here, we determine where
-  // to check for funds, which should illustrate where money comes from to
-  // fund Issuing transactions.
-  let balance;
-  if (financialProduct == FinancialProduct.EmbeddedFinance) {
-    const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
-    const financialAccount = responseFaDetails.financialaccount;
-    balance = financialAccount.balance.cash.usd;
-  } else {
-    const responseBalance = await getBalance(stripeAccount);
-    balance = responseBalance.balance.issuing?.available[0].amount || 0;
-  }
+  const responseBalance = await getBalance(stripeAccount);
+  const balance = responseBalance.balance.issuing?.available[0].amount || 0;
 
   if (balance < 1000) {
     return res.status(400).json(

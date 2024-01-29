@@ -4,15 +4,14 @@ const getStripeSecretKey = (platform: Platform): string | null => {
   let key;
 
   switch (platform) {
-    case Platform.US:
-      key = process.env.STRIPE_SECRET_KEY_US || process.env.STRIPE_SECRET_KEY;
-      break;
     case Platform.UK:
       key = process.env.STRIPE_SECRET_KEY_UK;
       break;
     case Platform.EU:
       key = process.env.STRIPE_SECRET_KEY_EU;
       break;
+    default:
+      throw new Error(`Unspported platform: ${platform}`);
   }
 
   return key || null;
@@ -22,17 +21,14 @@ const getStripePublishableKey = (platform: Platform): string | null => {
   let key;
 
   switch (platform) {
-    case Platform.US:
-      key =
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US ||
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-      break;
     case Platform.UK:
       key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK;
       break;
     case Platform.EU:
       key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU;
       break;
+    default:
+      throw new Error(`Unspported platform: ${platform}`);
   }
 
   return key || null;
