@@ -22,9 +22,11 @@ This sample demonstrates a basic web application with expense management feature
 
 ## Deploy the sample app to the cloud
 
-Click the button below to get started on [Vercel](https://vercel.com/docs). During setup, you will be asked to provide values for some environment variables. See information about [required environment variables](#environment-variables) below to learn more about the API keys and secrets you'll need to provide. This starter app supports both UK and EU Issuing users: you can provide Stripe API keys for platforms based in _one or both_ of those regions. Most users will only need to provide either the `_UK` or `_EU` environment variables, but users who want to issue cards across both regions can provide all of the requested keys as environment variables.
+Click the button below to get started on [Vercel](https://vercel.com/docs). During setup, you will be asked to provide values for some environment variables. See information about [required environment variables](#environment-variables) below to learn more about the API keys and secrets you'll need to provide.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Ftree%2Fbase-app%2Fexpense-management&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK,STRIPE_SECRET_KEY_UK,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU,STRIPE_SECRET_KEY_EU,NEXTAUTH_SECRET&project-name=expense-management&demo-title=Expense%20Management%20app&demo-description=A%20commercial%20pre-funded%20card)
+This starter app supports both UK and EU Issuing users: you can provide Stripe API keys for platforms based in _one or both_ of those regions. Most users will only issue in one region, so will need to provide only the `_UK` or `_EU` environment variables. Note that Vercel considers all environment variables for one-click deployments to be compulsory: use the string value `none` for the regional environment variables that you don't want to provide.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Ftree%2Fbase-app%2Fexpense-management&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK,STRIPE_SECRET_KEY_UK,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU,STRIPE_SECRET_KEY_EU,NEXTAUTH_SECRET&project-name=expense-management&demo-title=Expense%20Management%20app&demo-description=A%20commercial%20pre-funded%20card&repository-name=expense-management&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D)
 
 ## Local development
 
