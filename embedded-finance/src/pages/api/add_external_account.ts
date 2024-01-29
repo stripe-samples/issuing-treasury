@@ -1,14 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
-import FinancialProduct from "src/types/financial_product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import StripeAccount from "src/utils/stripe-account";
 import stripeClient from "src/utils/stripe-loader";
-
-const TEST_GB_ACCOUNT_NUMBER = "00012345";
-const TEST_GB_SORT_CODE = "108800";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -54,49 +50,20 @@ const addExternalFinancialAccount = async (
   return token;
 };
 
-const addExternalBankAccount = async (
-  stripeAccount: StripeAccount,
-  currency: string,
-) => {
-  const { platform } = stripeAccount;
-  const stripe = stripeClient(platform);
-  const token = await stripe.tokens.create(
-    {
-      bank_account: {
-        account_number: TEST_GB_ACCOUNT_NUMBER,
-        routing_number: TEST_GB_SORT_CODE,
-        country: "GB",
-        currency: currency,
-      },
-    },
-    undefined,
-  );
-
-  return token;
-};
-
 const addExternalAccount = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { country, currency, financialProduct, stripeAccount } = session;
+  const { country, currency, stripeAccount } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
-  let token;
-  // If the user has a Treasury Financial Account (as is enabled for embedded
-  // finance platforms), then use that as a payout[0] destination. Otherwise,
-  // add a (fake) external bank account, which in a real livemode deployment
-  // would be provided by the user. When the user requests a payout from their
-  // balance, the funds will be sent to whatever account is set here.
-  //
-  // [0] https://stripe.com/docs/payouts
-  if (financialProduct == FinancialProduct.EmbeddedFinance) {
-    token = await addExternalFinancialAccount(stripeAccount, country, currency);
-  } else {
-    token = await addExternalBankAccount(stripeAccount, currency);
-  }
+  const token = await addExternalFinancialAccount(
+    stripeAccount,
+    country,
+    currency,
+  );
 
   await stripe.accounts.createExternalAccount(accountId, {
     external_account: token.id,
