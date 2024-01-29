@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
-import FinancialProduct from "src/types/financial_product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getPlatform } from "src/utils/platform";
@@ -63,12 +62,6 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     capabilities: {
       card_payments: { requested: true },
       transfers: { requested: true },
-      // if we are creating an user an embedded finance platform, we must request
-      // the `treasury` capability in order to create a FinancialAccount for them
-      treasury: {
-        requested:
-          financialProduct == FinancialProduct.EmbeddedFinance ? true : false,
-      },
       card_issuing: { requested: true },
     },
   });
@@ -84,41 +77,6 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       country,
     },
   });
-
-  // Embedded Finance is a full financial services stack for your users:
-  // accounts[0] with Treasury to store and send funds, with cards[1] with
-  // Issuing for spending.
-  // This is different from the Expense Management example, where you
-  // top up balances[2] to fund spend on Issuing cards.
-  //
-  // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
-  // [1] https://stripe.com/docs/issuing/how-issuing-works
-  // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
-  if (financialProduct == FinancialProduct.EmbeddedFinance) {
-    // If this is an Embedded Finance user, create a Treasury Financial Account,
-    // in which the user will store their funds
-    await stripe.treasury.financialAccounts.create(
-      {
-        supported_currencies: ["usd"],
-        features: {
-          card_issuing: { requested: true },
-          deposit_insurance: { requested: true },
-          financial_addresses: { aba: { requested: true } },
-          inbound_transfers: { ach: { requested: true } },
-          intra_stripe_flows: { requested: true },
-          outbound_payments: {
-            ach: { requested: true },
-            us_domestic_wire: { requested: true },
-          },
-          outbound_transfers: {
-            ach: { requested: true },
-            us_domestic_wire: { requested: true },
-          },
-        },
-      },
-      { stripeAccount: account.id },
-    );
-  }
 
   return res.status(200).json(apiResponse({ success: true }));
 };

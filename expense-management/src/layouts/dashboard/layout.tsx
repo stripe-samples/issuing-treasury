@@ -9,7 +9,6 @@ import { TopNav } from "src/layouts/dashboard/top-nav";
 
 const SIDE_NAV_WIDTH = 280;
 
-
 const LayoutRoot = styled("div")(({ theme }) => ({
   display: "flex",
   flex: "1 1 auto",

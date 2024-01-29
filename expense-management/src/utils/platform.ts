@@ -18,11 +18,7 @@ const keyPresent = (key: string | undefined): boolean =>
   !!key && key.length > 0;
 
 const enabledPlatforms = () => {
-  const usEnabled =
-    (keyPresent(process.env.STRIPE_SECRET_KEY_US) &&
-      keyPresent(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US)) ||
-    (keyPresent(process.env.STRIPE_SECRET_KEY) &&
-      keyPresent(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY));
+  const usEnabled = false;
 
   const ukEnabled =
     keyPresent(process.env.STRIPE_SECRET_KEY_UK) &&
