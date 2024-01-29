@@ -21,14 +21,21 @@ export const hasOutstandingRequirements = async (
 };
 
 export async function createAccountOnboardingUrl(stripeAccount: StripeAccount) {
-  if (process.env.CONNECT_ONBOARDING_REDIRECT_URL == undefined) {
+  if (
+    process.env.CONNECT_ONBOARDING_REDIRECT_URL == undefined &&
+    process.env.VERCEL_URL == undefined
+  ) {
     throw new Error("CONNECT_ONBOARDING_REDIRECT_URL is not set");
   }
 
   const { accountId, platform } = stripeAccount;
+  let connectOnboardingRedirectUrl;
 
-  const connectOnboardingRedirectUrl =
-    process.env.CONNECT_ONBOARDING_REDIRECT_URL;
+  if (process.env.VERCEL_URL) {
+    connectOnboardingRedirectUrl = `https://${process.env.VERCEL_URL}`;
+  } else {
+    connectOnboardingRedirectUrl = process.env.CONNECT_ONBOARDING_REDIRECT_URL
+  }
 
   const stripe = stripeClient(platform);
   const { url } = await stripe.accountLinks.create({
