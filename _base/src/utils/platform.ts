@@ -15,7 +15,7 @@ const getPlatform = (country: string): Platform => {
 };
 
 const keyPresent = (key: string | undefined): boolean =>
-  !!key && key.length > 0;
+  !!key && key.length > 0 && key != "none";
 
 const enabledPlatforms = () => {
   const usEnabled =
