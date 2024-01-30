@@ -51,8 +51,7 @@ export const getServerSideProps = async (
   );
 
   const response = await getBalance(stripeAccount);
-  const balance = response.balance;
-  const availableBalance = balance.available[0];
+  const availableBalance = response.balance.issuing?.available[0];
 
   return {
     props: { fundingInstructions, availableBalance },
@@ -185,7 +184,7 @@ const Page = ({
               <CardContent>
                 <Stack spacing={1}>
                   <Typography>
-                    Your Issusing balance is currently{" "}
+                    Your Issuing balance is currently{" "}
                     <strong>
                       {currencyFormat(
                         availableBalance.amount / 100,
