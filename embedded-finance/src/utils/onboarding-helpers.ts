@@ -34,7 +34,7 @@ export async function createAccountOnboardingUrl(stripeAccount: StripeAccount) {
   if (process.env.VERCEL_URL) {
     connectOnboardingRedirectUrl = `https://${process.env.VERCEL_URL}`;
   } else {
-    connectOnboardingRedirectUrl = process.env.CONNECT_ONBOARDING_REDIRECT_URL
+    connectOnboardingRedirectUrl = process.env.CONNECT_ONBOARDING_REDIRECT_URL;
   }
 
   const stripe = stripeClient(platform);
