@@ -24,7 +24,7 @@ This sample demonstrates a basic web application with embedded finance features 
 
 Click the button below to get started on [Vercel](https://vercel.com/docs). During setup, you will be asked to provide values for some environment variables. See information about [required environment variables](#environment-variables) below to learn more about the API keys and secrets you'll need to provide.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Ftree%2Fbase-app%2Fembedded-finance&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,NEXTAUTH_SECRET&project-name=embedded-finance&demo-title=Embedded%20Finance%20app&demo-description=Full-stack%20financial%20services%20for%20your%20business%2C%20with%20Stripe%20Issuing%20and%20Treasury&repository-name=embedded-finance&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Fembedded-finance&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,NEXTAUTH_SECRET&project-name=embedded-finance&demo-title=Embedded%20Finance%20app&demo-description=Full-stack%20financial%20services%20for%20your%20business%2C%20with%20Stripe%20Issuing%20and%20Treasury&repository-name=embedded-finance&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D)
 
 ## Local development
 
