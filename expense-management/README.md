@@ -26,7 +26,7 @@ Click the button below to get started on [Vercel](https://vercel.com/docs). Duri
 
 This starter app supports both UK and EU Issuing users: you can provide Stripe API keys for platforms based in _one or both_ of those regions. Most users will only issue in one region, so will need to provide only the `_UK` or `_EU` environment variables. Note that Vercel considers all environment variables for one-click deployments to be compulsory: use the string value `none` for the regional environment variables that you don't want to provide.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Ftree%2Fbase-app%2Fexpense-management&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK,STRIPE_SECRET_KEY_UK,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU,STRIPE_SECRET_KEY_EU,NEXTAUTH_SECRET&project-name=expense-management&demo-title=Expense%20Management%20app&demo-description=A%20commercial%20pre-funded%20card&repository-name=expense-management&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fstripe-samples%2Fissuing-treasury%2Fexpense-management&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK,STRIPE_SECRET_KEY_UK,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU,STRIPE_SECRET_KEY_EU,NEXTAUTH_SECRET&project-name=expense-management&demo-title=Expense%20Management%20app&demo-description=A%20commercial%20pre-funded%20card&repository-name=expense-management&stores=%5B%7B%22type%22%3A%22postgres%22%7D%5D)
 
 ## Local development
 
