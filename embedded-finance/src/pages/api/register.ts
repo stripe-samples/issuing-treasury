@@ -76,6 +76,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       email: email,
       password: hashedPassword,
       accountId: account.id,
+      country: "US",
     },
   });
 
