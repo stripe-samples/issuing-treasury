@@ -32,7 +32,7 @@ export const getServerSideProps = async (
     return { redirect: { destination: "/", permanent: false } };
   }
 
-  return {};
+  return { props: {} };
 };
 
 const Page = () => {
