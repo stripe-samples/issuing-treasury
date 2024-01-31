@@ -1,7 +1,5 @@
 import * as Yup from "yup";
 
-import FinancialProduct from "src/types/financial_product";
-
 const cardholderBase = Yup.object({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
@@ -43,19 +41,6 @@ const user = Yup.object().shape({
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
   country: Yup.string().max(2).required("Country is required"),
-  financialProduct: Yup.string().when("country", {
-    is: "US",
-    then: (schema) =>
-      schema.oneOf(
-        [FinancialProduct.EmbeddedFinance],
-        "This financial product is not yet supported in the selected country",
-      ),
-    otherwise: (schema) =>
-      schema.oneOf(
-        [FinancialProduct.ExpenseManagement],
-        "This financial product is not yet supported in the selected country",
-      ),
-  }),
 });
 
 const businessBase = Yup.object().shape({

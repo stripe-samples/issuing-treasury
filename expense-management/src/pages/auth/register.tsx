@@ -15,7 +15,6 @@ import { ReactNode, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
-import FinancialProduct from "src/types/financial_product";
 import {
   extractJsonFromResponse,
   handleResult,
@@ -62,7 +61,6 @@ const Page = ({
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
     country: "GB",
-    financialProduct: FinancialProduct.ExpenseManagement,
   };
 
   const handleSubmit = async (
@@ -74,7 +72,6 @@ const Page = ({
       email: values.email,
       password: values.password,
       country: values.country,
-      financialProduct: values.financialProduct,
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
