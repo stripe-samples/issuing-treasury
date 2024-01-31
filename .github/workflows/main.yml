@@ -20,6 +20,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./_base
 
       - name: Build Next.js app
         run: npm run build
+        working-directory: ./_base
