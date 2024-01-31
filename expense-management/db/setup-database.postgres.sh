@@ -3,7 +3,7 @@
 # Ideally you should be able to use `npx prisma migrate dev` to migrate your Postgres database but if that fails for any
 # reason, you can use this script to get started quickly.
 
-DB_NAME="issuing_treasury"
+DB_NAME="expense_management"
 
 # Check if the database exists
 db_exists=$(psql -tAc "SELECT 1 FROM pg_database WHERE datname='$DB_NAME'")
@@ -27,8 +27,7 @@ CREATE TABLE IF NOT EXISTS users (
   last_login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  country TEXT NOT NULL,
-  use_case TEXT NOT NULL
+  country TEXT NOT NULL
 );
 "
 
