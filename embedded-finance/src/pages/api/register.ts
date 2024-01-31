@@ -15,11 +15,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   });
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, password, country, financialProduct } = req.body;
+  const { email, password, country } = req.body;
 
   try {
     await validationSchemas.user.validate(
-      { email, password, country, financialProduct },
+      { email, password, country },
       { abortEarly: false },
     );
   } catch (error) {
@@ -76,8 +76,6 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       email: email,
       password: hashedPassword,
       accountId: account.id,
-      financialProduct,
-      country,
     },
   });
 

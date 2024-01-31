@@ -90,7 +90,7 @@ If it errors out (perhaps due to permission issue running the Prisma CLI), simpl
 
     ./db/setup-database.postgres.sh
 
-This script creates a local Postgres `issuing_treasury` database.
+This script creates a local Postgres `expense_management` database.
 
 ### Application launch
 

@@ -23,7 +23,7 @@ export const authenticateUser = async (email: string, password: string) => {
 
     const stripeAccount = {
       accountId: user.accountId,
-      platform: getPlatform(user.country),
+      platform: getPlatform("US"),
     };
 
     const requiresOnboarding = await hasOutstandingRequirements(stripeAccount);
@@ -33,8 +33,6 @@ export const authenticateUser = async (email: string, password: string) => {
       email: user.email,
       accountId: user.accountId,
       requiresOnboarding: requiresOnboarding,
-      country: user.country,
-      financialProduct: user.financialProduct,
     };
   }
 

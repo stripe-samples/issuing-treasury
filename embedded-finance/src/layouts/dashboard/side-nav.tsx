@@ -18,25 +18,6 @@ import { Logo } from "src/components/logo";
 import { Scrollbar } from "src/components/scrollbar";
 import { items } from "src/layouts/dashboard/config";
 import { SideNavItem } from "src/layouts/dashboard/side-nav-item";
-import FinancialProduct from "src/types/financial_product";
-
-const validNavigationItem = (
-  item: {
-    title: string;
-    path: string;
-    icon: React.ReactNode;
-    financialProducts?: FinancialProduct[];
-  },
-  financialProduct: FinancialProduct,
-) => {
-  if (item.financialProducts) {
-    if (!item.financialProducts.includes(financialProduct)) {
-      return false;
-    }
-  }
-
-  return true;
-};
 
 export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   const { open, onClose } = props;
@@ -46,8 +27,6 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   if (session == undefined) {
     throw new Error("Session is missing in the request");
   }
-
-  const { financialProduct } = session;
 
   const content = (
     <Scrollbar
@@ -97,19 +76,17 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             }}
           >
             {items.map((item) => {
-              if (validNavigationItem(item, financialProduct)) {
-                const active = item.path ? pathname === item.path : false;
+              const active = item.path ? pathname === item.path : false;
 
-                return (
-                  <SideNavItem
-                    active={active}
-                    icon={item.icon}
-                    key={item.title}
-                    path={item.path}
-                    title={item.title}
-                  />
-                );
-              }
+              return (
+                <SideNavItem
+                  active={active}
+                  icon={item.icon}
+                  key={item.title}
+                  path={item.path}
+                  title={item.title}
+                />
+              );
             })}
           </Stack>
         </Box>
