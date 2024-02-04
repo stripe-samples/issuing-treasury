@@ -5,12 +5,15 @@ enum Platform {
 }
 
 const getPlatform = (country: string): Platform => {
-  if (country == "US") {
-    return Platform.US;
-  } else if (country == "GB") {
-    return Platform.UK;
-  } else {
-    return Platform.EU;
+  switch (country) {
+    case "US":
+      return Platform.US;
+    case "GB":
+      return Platform.UK;
+    case "EU":
+      return Platform.EU;
+    default:
+      throw new Error(`Unsupported country ${country}`);
   }
 };
 
