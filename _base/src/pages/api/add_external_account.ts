@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
-// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
-// @end-exclude-from-subapps
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import StripeAccount from "src/utils/stripe-account";

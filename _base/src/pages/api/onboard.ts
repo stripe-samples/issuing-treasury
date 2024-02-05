@@ -2,9 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
-// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
-// @end-exclude-from-subapps
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";

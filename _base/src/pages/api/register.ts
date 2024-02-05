@@ -3,9 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
-// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
-// @end-exclude-from-subapps
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getPlatform } from "src/utils/platform";

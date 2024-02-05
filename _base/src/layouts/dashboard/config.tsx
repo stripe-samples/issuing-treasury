@@ -9,9 +9,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
-// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
-// @end-exclude-from-subapps
 
 export const items = [
   {
