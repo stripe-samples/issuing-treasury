@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import { ArrowRightCircleIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
@@ -50,3 +51,4 @@ export const OverviewFinancialAccountOutboundPending = (props: {
     </Card>
   );
 };
+// @endif

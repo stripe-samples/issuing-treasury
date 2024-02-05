@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
@@ -40,3 +41,4 @@ const simulateReceivedCredit = async (
 };
 
 export default handler;
+// @endif

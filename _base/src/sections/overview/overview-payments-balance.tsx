@@ -1,3 +1,4 @@
+// @if financialProduct==expense-management
 import { Avatar, Card, CardContent, Stack, Typography } from "@mui/material";
 import Stripe from "stripe";
 
@@ -43,3 +44,4 @@ export const OverviewAvailableBalance = (props: {
     </Card>
   );
 };
+// @endif

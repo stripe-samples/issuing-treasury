@@ -47,34 +47,90 @@ export const getServerSideProps = async (
   }
 
   const {
+    // @if financialProduct==embedded-finance
     [Platform.US]: enableUS,
+    // @endif
+    // @if financialProduct==expense-management
     [Platform.UK]: enableUK,
     [Platform.EU]: enableEU,
+    // @endif
   } = enabledPlatforms();
 
-  return { props: { enableUS, enableUK, enableEU } };
+  return {
+    props: {
+      // @if financialProduct==embedded-finance
+      enableUS,
+      // @endif
+      // @if financialProduct==expense-management
+      enableUK,
+      enableEU,
+      // @endif
+    },
+  };
 };
 
 const Page = ({
+  // @if financialProduct==embedded-finance
   enableUS,
+  // @endif
+  // @if financialProduct==expense-management
   enableUK,
   enableEU,
+  // @endif
 }: {
+  // @if financialProduct==embedded-finance
   enableUS: boolean;
+  // @endif
+  // @if financialProduct==expense-management
   enableUK: boolean;
   enableEU: boolean;
+  // @endif
 }) => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
+  // @begin-exclude-from-subapps
   const { setMode } = useContext(RegistrationModeContext);
+  // @end-exclude-from-subapps
 
   const initialValues = {
     email: "",
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
-    country: "US",
+    // @if financialProduct==expense-management
+    ...{
+      country: "GB",
+    },
+    // @endif
+    // @if financialProduct==embedded-finance
+    ...{
+      country: "US",
+    },
+    // @endif
+    // @begin-exclude-from-subapps
     financialProduct: FinancialProduct.EmbeddedFinance,
+    // @end-exclude-from-subapps
+  };
+
+  const handleCountryChange = (
+    event: SelectChangeEvent,
+    element: ReactElement,
+    setFieldValue: (field: string, value: string) => void,
+  ) => {
+    const country = element.props.value;
+    setFieldValue("country", country);
+
+    // @begin-exclude-from-subapps
+    if (country === "US") {
+      setMode(RegistrationMode.IssuingTreasury);
+
+      setFieldValue("financialProduct", FinancialProduct.EmbeddedFinance);
+    } else {
+      setMode(RegistrationMode.Issuing);
+
+      setFieldValue("financialProduct", FinancialProduct.ExpenseManagement);
+    }
+    // @end-exclude-from-subapps
   };
 
   const handleSubmit = async (
@@ -86,7 +142,9 @@ const Page = ({
       email: values.email,
       password: values.password,
       country: values.country,
+      // @begin-exclude-from-subapps
       financialProduct: values.financialProduct,
+      // @end-exclude-from-subapps
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
@@ -132,7 +190,16 @@ const Page = ({
         validationSchema={validationSchemas.user}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isValid, dirty, values, setFieldValue }) => (
+        {({
+          errors,
+          touched,
+          isValid,
+          dirty,
+          // @begin-exclude-from-subapps
+          values,
+          // @end-exclude-from-subapps
+          setFieldValue,
+        }) => (
           <Form>
             <Stack spacing={3}>
               <Field
@@ -158,25 +225,11 @@ const Page = ({
                 label="Country"
                 name="country"
                 select
-                onChange={(_: SelectChangeEvent, element: ReactElement) => {
-                  const country = element.props.value;
-                  setFieldValue("country", element.props.value);
-
-                  if (country == "US") {
-                    setMode(RegistrationMode.IssuingTreasury);
-                    setFieldValue(
-                      "financialProduct",
-                      FinancialProduct.EmbeddedFinance,
-                    );
-                  } else {
-                    setMode(RegistrationMode.Issuing);
-                    setFieldValue(
-                      "financialProduct",
-                      FinancialProduct.ExpenseManagement,
-                    );
-                  }
-                }}
+                onChange={(event: SelectChangeEvent, element: ReactElement) =>
+                  handleCountryChange(event, element, setFieldValue)
+                }
               >
+                {/* @if financialProduct==expense-management */}
                 <MenuItem value="AT" disabled={!enableEU}>
                   Austria
                 </MenuItem>
@@ -240,10 +293,14 @@ const Page = ({
                 <MenuItem value="GB" disabled={!enableUK}>
                   United Kingdom
                 </MenuItem>
+                {/* @endif */}
+                {/* @if financialProduct==embedded-finance */}
                 <MenuItem value="US" disabled={!enableUS}>
                   United States
                 </MenuItem>
+                {/* @endif */}
               </Field>
+              {/* @begin-exclude-from-subapps */}
               <Divider />
               <Field
                 as={RadioGroup}
@@ -292,6 +349,7 @@ const Page = ({
                   />
                 </Tooltip>
               </Field>
+              {/* @end-exclude-from-subapps */}
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
                 size="large"

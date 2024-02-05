@@ -1,3 +1,4 @@
+// @if financialProduct==expense-management
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import {
   Alert,
@@ -77,3 +78,4 @@ const TestDataTopUpIssuingBalance = ({}) => {
 };
 
 export default TestDataTopUpIssuingBalance;
+// @endif

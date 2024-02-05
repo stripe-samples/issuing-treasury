@@ -3,7 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
+// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
+// @end-exclude-from-subapps
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getPlatform } from "src/utils/platform";
@@ -16,11 +18,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   });
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, password, country, financialProduct } = req.body;
+  const {
+    email,
+    password,
+    country,
+    // @begin-exclude-from-subapps
+    financialProduct,
+    // @end-exclude-from-subapps
+  } = req.body;
 
   try {
     await validationSchemas.user.validate(
-      { email, password, country, financialProduct },
+      {
+        email,
+        password,
+        country,
+        // @begin-exclude-from-subapps
+        financialProduct,
+        // @end-exclude-from-subapps
+      },
       { abortEarly: false },
     );
   } catch (error) {
@@ -63,13 +79,21 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     capabilities: {
       transfers: { requested: true },
       card_issuing: { requested: true },
+      // @if financialProduct==embedded-finance
       // If we are creating an user an embedded finance platform, we must request
       // the `treasury` capability in order to create a FinancialAccount for them
+      // @endif
+      // @begin-exclude-from-subapps
       ...(financialProduct == FinancialProduct.EmbeddedFinance && {
+        // @end-exclude-from-subapps
+        // @if financialProduct==embedded-finance
         treasury: {
           requested: true,
         },
+        // @endif
+        // @begin-exclude-from-subapps
       }),
+      // @end-exclude-from-subapps
     },
   });
 
@@ -80,21 +104,17 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       email: email,
       password: hashedPassword,
       accountId: account.id,
+      // @begin-exclude-from-subapps
       financialProduct,
+      // @end-exclude-from-subapps
       country,
     },
   });
 
-  // Embedded Finance is a full financial services stack for your users:
-  // accounts[0] with Treasury to store and send funds, with cards[1] with
-  // Issuing for spending.
-  // This is different from the Expense Management example, where you
-  // top up balances[2] to fund spend on Issuing cards.
-  //
-  // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
-  // [1] https://stripe.com/docs/issuing/how-issuing-works
-  // [2] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
+  // @begin-exclude-from-subapps
   if (financialProduct == FinancialProduct.EmbeddedFinance) {
+    // @end-exclude-from-subapps
+    // @if financialProduct==embedded-finance
     // If this is an Embedded Finance user, create a Treasury Financial Account,
     // in which the user will store their funds
     await stripe.treasury.financialAccounts.create(
@@ -118,7 +138,10 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       { stripeAccount: account.id },
     );
+    // @endif
+    // @begin-exclude-from-subapps
   }
+  // @end-exclude-from-subapps
 
   return res.status(200).json(apiResponse({ success: true }));
 };

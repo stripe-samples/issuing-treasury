@@ -1,13 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
+// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
+// @end-exclude-from-subapps
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 import {
   getBalance,
+  // @if financialProduct==embedded-finance
   getFinancialAccountDetails,
+  // @endif
 } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
@@ -20,7 +24,13 @@ const simulateAuthorization = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount, currency, financialProduct } = session;
+  const {
+    stripeAccount,
+    currency,
+    // @begin-exclude-from-subapps
+    financialProduct,
+    // @end-exclude-from-subapps
+  } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
@@ -30,15 +40,26 @@ const simulateAuthorization = async (
   // use Treasury will maintain an Issuing Balance. Here, we determine where
   // to check for funds, which should illustrate where money comes from to
   // fund Issuing transactions.
-  let balance;
-  if (financialProduct == FinancialProduct.EmbeddedFinance) {
-    const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
-    const financialAccount = responseFaDetails.financialaccount;
-    balance = financialAccount.balance.cash.usd;
-  } else {
-    const responseBalance = await getBalance(stripeAccount);
-    balance = responseBalance.balance.issuing?.available[0].amount || 0;
-  }
+  const balance = await (async () => {
+    // @begin-exclude-from-subapps
+    if (financialProduct == FinancialProduct.EmbeddedFinance) {
+      // @end-exclude-from-subapps
+      // @if financialProduct==embedded-finance
+      const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
+      const financialAccount = responseFaDetails.financialaccount;
+      return financialAccount.balance.cash.usd;
+      // @endif
+      // @begin-exclude-from-subapps
+    } else {
+      // @end-exclude-from-subapps
+      // @if financialProduct==expense-management
+      const responseBalance = await getBalance(stripeAccount);
+      return responseBalance.balance.issuing?.available[0].amount || 0;
+      // @endif
+      // @begin-exclude-from-subapps
+    }
+    // @end-exclude-from-subapps
+  })();
 
   if (balance < 1000) {
     return res.status(400).json(

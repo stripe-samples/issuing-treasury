@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import {
   Button,
@@ -143,3 +144,4 @@ export const OverviewFinancialAccountFundsFlowChart = ({
     </Card>
   );
 };
+// @endif

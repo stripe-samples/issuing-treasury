@@ -7,6 +7,7 @@ import { getStripeSecretKey } from "./stripe-authentication";
 import { ChartData, BalanceChartData } from "src/types/chart-data";
 import stripeClient from "src/utils/stripe-loader";
 
+// @if financialProduct==embedded-finance
 export async function getFinancialAccountTransactions(
   stripeAccount: StripeAccount,
 ) {
@@ -78,6 +79,7 @@ export async function getFinancialAccountDetailsExp(
     financialaccount: financialAccount,
   };
 }
+// @endif
 
 type FundsFlowByDate = {
   date: string;
@@ -88,6 +90,7 @@ type FundsFlowByDate = {
 const NUMBER_OF_DAYS = 10;
 const DATE_FORMAT = "MMM dd";
 
+// @if financialProduct==embedded-finance
 export async function getFinancialAccountTransactionDetails(
   stripeAccount: StripeAccount,
 ) {
@@ -171,6 +174,7 @@ export async function getFinancialAccountTransactionDetails(
     faFundsFlowChartData: faTransactionsChart,
   };
 }
+// @endif
 
 export async function getCardholders(stripeAccount: StripeAccount) {
   const { accountId, platform } = stripeAccount;
@@ -286,6 +290,7 @@ export async function getBalance(stripeAccount: StripeAccount) {
   };
 }
 
+// @if financialProduct==expense-management
 export async function getBalanceTransactions(
   stripeAccount: StripeAccount,
   currency: string,
@@ -381,6 +386,7 @@ export async function getBalanceTransactions(
     balanceFundsFlowChartData: balanceTransactionsChart,
   };
 }
+// @endif
 
 export type FinancialAddress = {
   type: "iban" | "sort_code";
