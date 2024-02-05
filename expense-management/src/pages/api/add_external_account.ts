@@ -44,7 +44,9 @@ const addExternalAccount = async (
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
-  const token = await addExternalBankAccount(stripeAccount, currency);
+  const token = await (async () => {
+    return await addExternalBankAccount(stripeAccount, currency);
+  })();
 
   await stripe.accounts.createExternalAccount(accountId, {
     external_account: token.id,

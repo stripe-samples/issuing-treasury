@@ -19,7 +19,11 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     await validationSchemas.user.validate(
-      { email, password, country },
+      {
+        email,
+        password,
+        country,
+      },
       { abortEarly: false },
     );
   } catch (error) {
@@ -60,7 +64,6 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     }),
     capabilities: {
-      card_payments: { requested: true },
       transfers: { requested: true },
       card_issuing: { requested: true },
     },
