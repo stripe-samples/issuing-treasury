@@ -18,7 +18,9 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const { stripeAccount } = session;
   const { accountId, platform } = stripeAccount;
 
-  const validationSchema = validationSchemas.cardholder.default;
+  const validationSchema = (() => {
+    return validationSchemas.cardholder.default;
+  })();
 
   const {
     firstName,

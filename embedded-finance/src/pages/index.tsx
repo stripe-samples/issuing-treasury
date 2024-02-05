@@ -26,16 +26,20 @@ export const getServerSideProps = async (
   const session = await getSessionForServerSideProps(context);
   const { stripeAccount } = session;
 
+  let financialAccount = null;
+  let faFundsFlowChartData = null;
+  let faTransactions = null;
+
   const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
-  const financialAccount = responseFaDetails.financialaccount;
+  financialAccount = responseFaDetails.financialaccount;
 
   const faFundsFlowChartDataResult =
     await getFinancialAccountTransactionDetails(stripeAccount);
-  const faFundsFlowChartData = faFundsFlowChartDataResult.faFundsFlowChartData;
+  faFundsFlowChartData = faFundsFlowChartDataResult.faFundsFlowChartData;
 
   const responseFaTransations =
     await getFinancialAccountTransactionsExpanded(stripeAccount);
-  const faTransactions = responseFaTransations.fa_transactions;
+  faTransactions = responseFaTransations.fa_transactions;
 
   return {
     props: {
@@ -90,6 +94,22 @@ const Page = ({
   faFundsFlowChartData: ChartData;
   faTransactions: Stripe.Treasury.Transaction[];
 }) => {
+  const BalanceWidget = (() => {
+    return FinancialAccountStuff({
+      financialAccount,
+      faFundsFlowChartData,
+      faTransactions,
+    });
+  })();
+
+  const TestDataGenerationPanel = (() => {
+    return (
+      <FloatingTestPanel title="Simulate a received credit">
+        <TestDataCreateReceivedCredit financialAccount={financialAccount} />
+      </FloatingTestPanel>
+    );
+  })();
+
   return (
     <>
       <Box
@@ -99,18 +119,10 @@ const Page = ({
           py: 8,
         }}
       >
-        <Container maxWidth="xl">
-          {FinancialAccountStuff({
-            financialAccount,
-            faFundsFlowChartData,
-            faTransactions,
-          })}
-        </Container>
+        <Container maxWidth="xl">{BalanceWidget}</Container>
       </Box>
 
-      <FloatingTestPanel title="Simulate a received credit">
-        <TestDataCreateReceivedCredit financialAccount={financialAccount} />
-      </FloatingTestPanel>
+      {TestDataGenerationPanel}
     </>
   );
 };

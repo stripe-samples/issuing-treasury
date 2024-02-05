@@ -18,11 +18,13 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
-  const financialAccounts = await stripe.treasury.financialAccounts.list({
-    stripeAccount: accountId,
-  });
+  const financialAccount = await (async () => {
+    const financialAccounts = await stripe.treasury.financialAccounts.list({
+      stripeAccount: accountId,
+    });
 
-  const financialAccount = financialAccounts.data[0];
+    return financialAccounts.data[0];
+  })();
 
   const { cardholderid, card_type } = req.body;
   const cardholder = await stripe.issuing.cardholders.retrieve(cardholderid, {
@@ -47,7 +49,6 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   let cardOptions: Partial<Stripe.Issuing.CardCreateParams> = {
     cardholder: cardholderid,
     currency: currency,
-    financial_account: financialAccount.id,
   };
 
   if (card_type == "physical") {
@@ -74,12 +75,26 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
       type: "physical",
       status: "inactive",
     };
+
+    if (financialAccount) {
+      cardOptions = {
+        ...cardOptions,
+        financial_account: financialAccount.id,
+      };
+    }
   } else {
     cardOptions = {
       ...cardOptions,
       type: "virtual",
       status: "active",
     };
+
+    if (financialAccount) {
+      cardOptions = {
+        ...cardOptions,
+        financial_account: financialAccount.id,
+      };
+    }
   }
 
   await stripe.issuing.cards.create(
