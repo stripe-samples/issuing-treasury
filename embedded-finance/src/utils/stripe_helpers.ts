@@ -2,6 +2,7 @@ import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
 import StripeAccount from "./stripe-account";
+import { getStripeSecretKey } from "./stripe-authentication";
 
 import { ChartData } from "src/types/chart-data";
 import stripeClient from "src/utils/stripe-loader";
@@ -270,4 +271,76 @@ export async function getAuthorizationDetails(
   return {
     authorization,
   };
+}
+
+export async function getBalance(stripeAccount: StripeAccount) {
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
+
+  const balance = await stripe.balance.retrieve({
+    stripeAccount: accountId,
+  });
+
+  return {
+    balance: balance,
+  };
+}
+
+export type FinancialAddress = {
+  type: "iban" | "sort_code";
+  supported_networks: string[];
+  iban?: {
+    account_holder_name: string;
+    bic: string;
+    country: string;
+    iban: string;
+  };
+  sort_code?: {
+    account_holder_name: string;
+    account_number: string;
+    sort_code: string;
+  };
+};
+
+export type FundingInstructions = {
+  currency: string;
+  funding_type: string;
+  livemode: boolean;
+  object: string;
+  bank_transfer: {
+    country: string;
+    type: string;
+    financial_addresses: FinancialAddress[];
+  };
+};
+
+export async function createFundingInstructions(
+  stripeAccount: StripeAccount,
+  country: string,
+  currency: string,
+): Promise<FundingInstructions> {
+  const { accountId, platform } = stripeAccount;
+  const bankTransferType =
+    country == "GB" ? "gb_bank_transfer" : "eu_bank_transfer";
+  const data = {
+    currency: currency as string,
+    funding_type: "bank_transfer",
+    "bank_transfer[type]": bankTransferType,
+  };
+
+  // using fetch, because this API is not yet supported in the Node.js libary
+  const response = await fetch(
+    "https://api.stripe.com/v1/issuing/funding_instructions",
+    {
+      method: "POST",
+      headers: {
+        "Stripe-Account": accountId,
+        "content-type": "application/x-www-form-urlencoded",
+        Authorization: "Bearer " + getStripeSecretKey(platform),
+      },
+      body: new URLSearchParams(data),
+    },
+  );
+  const responseBody = await response.json();
+  return responseBody;
 }

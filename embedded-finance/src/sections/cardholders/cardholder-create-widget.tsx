@@ -80,9 +80,9 @@ const CreateCardholderForm = ({
   }
   const { country } = session;
 
-  // See pages/api/cardholders.ts for more information on cardholder
-  // phone number requirements.
-  const validationSchema = validationSchemas.cardholder.default;
+  const validationSchema = (() => {
+    return validationSchemas.cardholder.default;
+  })();
 
   const initialValues = {
     firstName: "",

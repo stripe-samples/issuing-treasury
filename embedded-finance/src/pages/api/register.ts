@@ -19,7 +19,11 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     await validationSchemas.user.validate(
-      { email, password, country },
+      {
+        email,
+        password,
+        country,
+      },
       { abortEarly: false },
     );
   } catch (error) {
@@ -60,12 +64,13 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     }),
     capabilities: {
-      card_payments: { requested: true },
       transfers: { requested: true },
+      card_issuing: { requested: true },
+      // If we are creating an user an embedded finance platform, we must request
+      // the `treasury` capability in order to create a FinancialAccount for them
       treasury: {
         requested: true,
       },
-      card_issuing: { requested: true },
     },
   });
 
@@ -76,10 +81,12 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       email: email,
       password: hashedPassword,
       accountId: account.id,
-      country: "US",
+      country,
     },
   });
 
+  // If this is an Embedded Finance user, create a Treasury Financial Account,
+  // in which the user will store their funds
   await stripe.treasury.financialAccounts.create(
     {
       supported_currencies: ["usd"],
