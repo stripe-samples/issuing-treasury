@@ -14,36 +14,23 @@ import {
   Divider,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
-// @begin-exclude-from-subapps
 import { GetServerSidePropsContext } from "next";
-// @end-exclude-from-subapps
 import { signOut } from "next-auth/react";
-import React, {
-  ChangeEvent,
-  ReactNode,
-  // @begin-exclude-from-subapps
-  useContext,
-  // @end-exclude-from-subapps
-  useState,
-} from "react";
+import React, { ChangeEvent, ReactNode, useContext, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
-// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
-// @end-exclude-from-subapps
 import {
   extractJsonFromResponse,
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-// @begin-exclude-from-subapps
 import {
   RegistrationMode,
   RegistrationModeContext,
 } from "src/utils/registration-mode-context";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-// @end-exclude-from-subapps
 import validationSchemas from "src/utils/validation_schemas";
 
 // @begin-exclude-from-subapps

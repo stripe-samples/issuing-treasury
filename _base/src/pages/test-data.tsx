@@ -4,13 +4,9 @@ import React, { ReactNode } from "react";
 
 import DashboardLayout from "src/layouts/dashboard/layout";
 import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
-// @if financialProduct==embedded-finance
 import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
-// @endif
 import TestDataCreatePayoutsToBank from "src/sections/test-data/test-data-create-payout-to-bank";
-// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
-// @end-exclude-from-subapps
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 

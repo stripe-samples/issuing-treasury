@@ -8,41 +8,22 @@ import Stripe from "stripe";
 import FloatingTestPanel from "src/components/floating-test-panel";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import { OverviewBalanceFundsFlowChart } from "src/sections/overview/overview-balance-funds-flow-chart";
-// @if financialProduct==embedded-finance
 import { OverviewFinancialAccountBalance } from "src/sections/overview/overview-fa-balance";
 import { OverviewFinancialAccountFundsFlowChart } from "src/sections/overview/overview-fa-funds-flow-chart";
 import { OverviewFinancialAccountOutboundPending } from "src/sections/overview/overview-fa-outbound-pending";
-// @endif
-// @if financialProduct==expense-management
 import { OverviewIssuingBalance } from "src/sections/overview/overview-issuing-balance";
 import { OverviewLatestBalanceTransactions } from "src/sections/overview/overview-latest-balance-transactions";
-// @endif
-// @if financialProduct==embedded-finance
 import { OverviewLatestTransactions } from "src/sections/overview/overview-latest-transactions";
-// @endif
 import { OverviewAvailableBalance } from "src/sections/overview/overview-payments-balance";
-// @if financialProduct==expense-management
 import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
-// @endif
-// @if financialProduct==embedded-finance
 import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
-// @endif
-import {
-  // @if financialProduct==embedded-finance
-  ChartData,
-  // @endif
-  BalanceChartData,
-} from "src/types/chart-data";
-// @begin-exclude-from-subapps
+import { ChartData, BalanceChartData } from "src/types/chart-data";
 import FinancialProduct from "src/types/financial_product";
-// @end-exclude-from-subapps
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
-  // @if financialProduct==embedded-finance
   getFinancialAccountDetails,
   getFinancialAccountTransactionDetails,
   getFinancialAccountTransactionsExpanded,
-  // @endif
   getBalance,
   getBalanceTransactions,
 } from "src/utils/stripe_helpers";

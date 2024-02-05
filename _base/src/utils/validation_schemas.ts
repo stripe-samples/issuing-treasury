@@ -1,8 +1,6 @@
 import * as Yup from "yup";
 
-// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
-// @end-exclude-from-subapps
 
 const cardholderBase = Yup.object({
   firstName: Yup.string().required("First name is required"),
