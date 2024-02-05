@@ -35,7 +35,9 @@ export const authenticateUser = async (email: string, password: string) => {
       email: user.email,
       accountId: user.accountId,
       country: user.country,
+      // @begin-exclude-from-subapps
       financialProduct: user.financialProduct,
+      // @end-exclude-from-subapps
       requiresOnboarding: requiresOnboarding,
     };
   }

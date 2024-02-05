@@ -18,6 +18,7 @@ import { Logo } from "src/components/logo";
 import { Scrollbar } from "src/components/scrollbar";
 import { items } from "src/layouts/dashboard/config";
 import { SideNavItem } from "src/layouts/dashboard/side-nav-item";
+// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
 
 const validNavigationItem = (
@@ -37,6 +38,7 @@ const validNavigationItem = (
 
   return true;
 };
+// @end-exclude-from-subapps
 
 export const SideNav = (props: { onClose: () => void; open: boolean }) => {
   const { open, onClose } = props;
@@ -47,7 +49,9 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
     throw new Error("Session is missing in the request");
   }
 
+  // @begin-exclude-from-subapps
   const { financialProduct } = session;
+  // @end-exclude-from-subapps
 
   const content = (
     <Scrollbar
@@ -97,7 +101,9 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
             }}
           >
             {items.map((item) => {
+              // @begin-exclude-from-subapps
               if (validNavigationItem(item, financialProduct)) {
+                // @end-exclude-from-subapps
                 const active = item.path ? pathname === item.path : false;
 
                 return (
@@ -109,7 +115,9 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
                     title={item.title}
                   />
                 );
+                // @begin-exclude-from-subapps
               }
+              // @end-exclude-from-subapps
             })}
           </Stack>
         </Box>

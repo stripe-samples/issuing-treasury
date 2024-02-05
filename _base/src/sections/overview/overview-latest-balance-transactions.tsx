@@ -1,3 +1,4 @@
+// @if financialProduct==expense-management
 import {
   Box,
   Card,
@@ -98,3 +99,4 @@ export const OverviewLatestBalanceTransactions = (props: {
     </Card>
   );
 };
+// @endif

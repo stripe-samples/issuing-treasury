@@ -14,25 +14,39 @@ import {
   Divider,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
+// @begin-exclude-from-subapps
 import { GetServerSidePropsContext } from "next";
+// @end-exclude-from-subapps
 import { signOut } from "next-auth/react";
-import React, { ChangeEvent, ReactNode, useContext, useState } from "react";
+import React, {
+  ChangeEvent,
+  ReactNode,
+  // @begin-exclude-from-subapps
+  useContext,
+  // @end-exclude-from-subapps
+  useState,
+} from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
+// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
+// @end-exclude-from-subapps
 import {
   extractJsonFromResponse,
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
+// @begin-exclude-from-subapps
 import {
   RegistrationMode,
   RegistrationModeContext,
 } from "src/utils/registration-mode-context";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
+// @end-exclude-from-subapps
 import validationSchemas from "src/utils/validation_schemas";
 
+// @begin-exclude-from-subapps
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
@@ -45,20 +59,29 @@ export const getServerSideProps = async (
     },
   };
 };
+// @end-exclude-from-subapps
 
-const Page = ({ financialProduct }: { financialProduct: FinancialProduct }) => {
+const Page = (
+  // @begin-exclude-from-subapps
+  { financialProduct }: { financialProduct: FinancialProduct },
+  // @end-exclude-from-subapps
+) => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
   const [showConnectOnboardingGuide, setShowConnectOnboardingGuide] =
     useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  // @begin-exclude-from-subapps
   const { setMode } = useContext(RegistrationModeContext);
+  // @end-exclude-from-subapps
 
+  // @begin-exclude-from-subapps
   setMode(
     financialProduct == FinancialProduct.EmbeddedFinance
       ? RegistrationMode.IssuingTreasury
       : RegistrationMode.Issuing,
   );
+  // @end-exclude-from-subapps
 
   const initialValues = {
     businessName: "",

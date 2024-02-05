@@ -116,7 +116,9 @@ export const authOptions: NextAuthOptions = {
       session.requiresOnboarding = token.requiresOnboarding;
       session.businessName = token.businessName;
       session.country = token.country;
+      // @begin-exclude-from-subapps
       session.financialProduct = token.financialProduct;
+      // @end-exclude-from-subapps
       session.currency = token.currency;
 
       return session;

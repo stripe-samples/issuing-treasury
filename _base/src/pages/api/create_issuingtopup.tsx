@@ -1,3 +1,4 @@
+// @if financialProduct==expense-management
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
@@ -38,3 +39,4 @@ const simulateIssuingBalanceFunding = async (
 };
 
 export default handler;
+// @endif

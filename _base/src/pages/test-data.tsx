@@ -4,9 +4,13 @@ import React, { ReactNode } from "react";
 
 import DashboardLayout from "src/layouts/dashboard/layout";
 import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
+// @if financialProduct==embedded-finance
 import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
+// @endif
 import TestDataCreatePayoutsToBank from "src/sections/test-data/test-data-create-payout-to-bank";
+// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
+// @end-exclude-from-subapps
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
@@ -14,7 +18,12 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { stripeAccount, financialProduct } = session;
+  const {
+    stripeAccount,
+    // @begin-exclude-from-subapps
+    financialProduct,
+    // @end-exclude-from-subapps
+  } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
   const responseAccount = await stripe.accounts.retrieve(accountId);
@@ -30,7 +39,14 @@ export const getServerSideProps = async (
   const currency = responseBalance.available[0].currency;
 
   return {
-    props: { hasExternalAccount, availableBalance, currency, financialProduct },
+    props: {
+      hasExternalAccount,
+      availableBalance,
+      currency,
+      // @begin-exclude-from-subapps
+      financialProduct,
+      // @end-exclude-from-subapps
+    },
   };
 };
 
@@ -38,13 +54,47 @@ const Page = ({
   hasExternalAccount,
   availableBalance,
   currency,
+  // @begin-exclude-from-subapps
   financialProduct,
+  // @end-exclude-from-subapps
 }: {
   hasExternalAccount: boolean;
   availableBalance: number;
   currency: string;
+  // @begin-exclude-from-subapps
   financialProduct: FinancialProduct;
+  // @end-exclude-from-subapps
 }) => {
+  const PayoutsWidget = (() => {
+    // @begin-exclude-from-subapps
+    if (financialProduct == FinancialProduct.EmbeddedFinance) {
+      // @end-exclude-from-subapps
+      // @if financialProduct==embedded-finance
+      return (
+        <TestDataCreatePayouts
+          hasExternalAccount={hasExternalAccount}
+          availableBalance={availableBalance}
+          currency={currency}
+        />
+      );
+      // @endif
+      // @begin-exclude-from-subapps
+    } else {
+      // @end-exclude-from-subapps
+      // @if financialProduct==expense-management
+      return (
+        <TestDataCreatePayoutsToBank
+          hasExternalAccount={hasExternalAccount}
+          availableBalance={availableBalance}
+          currency={currency}
+        />
+      );
+      // @endif
+      // @begin-exclude-from-subapps
+    }
+    // @end-exclude-from-subapps
+  })();
+
   return (
     <>
       <Box
@@ -60,19 +110,7 @@ const Page = ({
               <TestDataCreatePaymentLink />
             </Grid>
             <Grid item xs={12} sm={10} md={8}>
-              {financialProduct == FinancialProduct.EmbeddedFinance ? (
-                <TestDataCreatePayouts
-                  hasExternalAccount={hasExternalAccount}
-                  availableBalance={availableBalance}
-                  currency={currency}
-                />
-              ) : (
-                <TestDataCreatePayoutsToBank
-                  hasExternalAccount={hasExternalAccount}
-                  availableBalance={availableBalance}
-                  currency={currency}
-                />
-              )}
+              {PayoutsWidget}
             </Grid>
           </Grid>
         </Container>

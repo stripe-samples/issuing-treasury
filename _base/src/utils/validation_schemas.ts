@@ -1,6 +1,8 @@
 import * as Yup from "yup";
 
+// @begin-exclude-from-subapps
 import FinancialProduct from "src/types/financial_product";
+// @end-exclude-from-subapps
 
 const cardholderBase = Yup.object({
   firstName: Yup.string().required("First name is required"),
@@ -43,6 +45,7 @@ const user = Yup.object().shape({
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
   country: Yup.string().max(2).required("Country is required"),
+  // @begin-exclude-from-subapps
   financialProduct: Yup.string().when("country", {
     is: "US",
     then: (schema) =>
@@ -56,6 +59,7 @@ const user = Yup.object().shape({
         "This financial product is not yet supported in the selected country",
       ),
   }),
+  // @end-exclude-from-subapps
 });
 
 const businessBase = Yup.object().shape({
