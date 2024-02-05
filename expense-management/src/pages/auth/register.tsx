@@ -6,12 +6,13 @@ import {
   TextField,
   Typography,
   MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, ReactElement } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
@@ -34,21 +35,21 @@ export const getServerSideProps = async (
     return { redirect: { destination: "/", permanent: false } };
   }
 
-  const {
-    [Platform.US]: enableUS,
-    [Platform.UK]: enableUK,
-    [Platform.EU]: enableEU,
-  } = enabledPlatforms();
+  const { [Platform.UK]: enableUK, [Platform.EU]: enableEU } =
+    enabledPlatforms();
 
-  return { props: { enableUS, enableUK, enableEU } };
+  return {
+    props: {
+      enableUK,
+      enableEU,
+    },
+  };
 };
 
 const Page = ({
-  enableUS,
   enableUK,
   enableEU,
 }: {
-  enableUS: boolean;
   enableUK: boolean;
   enableEU: boolean;
 }) => {
@@ -60,7 +61,18 @@ const Page = ({
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
-    country: "GB",
+    ...{
+      country: "GB",
+    },
+  };
+
+  const handleCountryChange = (
+    event: SelectChangeEvent,
+    element: ReactElement,
+    setFieldValue: (field: string, value: string) => void,
+  ) => {
+    const country = element.props.value;
+    setFieldValue("country", country);
   };
 
   const handleSubmit = async (
@@ -117,7 +129,7 @@ const Page = ({
         validationSchema={validationSchemas.user}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isValid, dirty }) => (
+        {({ errors, touched, isValid, dirty, setFieldValue }) => (
           <Form>
             <Stack spacing={3}>
               <Field
@@ -138,7 +150,15 @@ const Page = ({
                 name="password"
                 type="password"
               />
-              <Field as={TextField} label="Country" name="country" select>
+              <Field
+                as={TextField}
+                label="Country"
+                name="country"
+                select
+                onChange={(event: SelectChangeEvent, element: ReactElement) =>
+                  handleCountryChange(event, element, setFieldValue)
+                }
+              >
                 <MenuItem value="AT" disabled={!enableEU}>
                   Austria
                 </MenuItem>
@@ -201,9 +221,6 @@ const Page = ({
                 </MenuItem>
                 <MenuItem value="GB" disabled={!enableUK}>
                   United Kingdom
-                </MenuItem>
-                <MenuItem value="US" disabled={!enableUS}>
-                  United States
                 </MenuItem>
               </Field>
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}

@@ -11,7 +11,7 @@ const getStripeSecretKey = (platform: Platform): string | null => {
       key = process.env.STRIPE_SECRET_KEY_EU;
       break;
     default:
-      throw new Error(`Unsupportedplatform: ${platform}`);
+      throw new Error(`Unsupported platform: ${platform}`);
   }
 
   return key || null;
