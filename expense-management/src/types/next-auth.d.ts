@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { DefaultSession } from "next-auth";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
+import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import { DefaultJWT } from "next-auth/jwt";
 
 declare module "next-auth" {
