@@ -6,13 +6,12 @@ import {
   TextField,
   Typography,
   MenuItem,
-  SelectChangeEvent,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { ReactNode, useState, ReactElement } from "react";
+import { ReactNode, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
@@ -56,15 +55,6 @@ const Page = ({ enableUS }: { enableUS: boolean }) => {
     ...{
       country: "US",
     },
-  };
-
-  const handleCountryChange = (
-    event: SelectChangeEvent,
-    element: ReactElement,
-    setFieldValue: (field: string, value: string) => void,
-  ) => {
-    const country = element.props.value;
-    setFieldValue("country", country);
   };
 
   const handleSubmit = async (
@@ -121,7 +111,7 @@ const Page = ({ enableUS }: { enableUS: boolean }) => {
         validationSchema={validationSchemas.user}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isValid, dirty, setFieldValue }) => (
+        {({ errors, touched, isValid, dirty }) => (
           <Form>
             <Stack spacing={3}>
               <Field
@@ -142,15 +132,7 @@ const Page = ({ enableUS }: { enableUS: boolean }) => {
                 name="password"
                 type="password"
               />
-              <Field
-                as={TextField}
-                label="Country"
-                name="country"
-                select
-                onChange={(event: SelectChangeEvent, element: ReactElement) =>
-                  handleCountryChange(event, element, setFieldValue)
-                }
-              >
+              <Field as={TextField} label="Country" name="country" select>
                 <MenuItem value="US" disabled={!enableUS}>
                   United States
                 </MenuItem>

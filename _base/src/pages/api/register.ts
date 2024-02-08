@@ -16,25 +16,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   });
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
-  const {
-    email,
-    password,
-    country,
-    // @begin-exclude-from-subapps
-    financialProduct,
-    // @end-exclude-from-subapps
-  } = req.body;
+  const { email, password, country } = req.body;
 
   try {
     await validationSchemas.user.validate(
-      {
-        email,
-        password,
-        country,
-        // @begin-exclude-from-subapps
-        financialProduct,
-        // @end-exclude-from-subapps
-      },
+      { email, password, country },
       { abortEarly: false },
     );
   } catch (error) {
@@ -45,6 +31,13 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   }
+
+  // @begin-exclude-from-subapps
+  const financialProduct =
+    country === "US"
+      ? FinancialProduct.EmbeddedFinance
+      : FinancialProduct.ExpenseManagement;
+  // @end-exclude-from-subapps
 
   // Check if user exists
   const user = await prisma.user.findFirst({ where: { email } });
