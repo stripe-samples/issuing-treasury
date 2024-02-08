@@ -19,11 +19,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     await validationSchemas.user.validate(
-      {
-        email,
-        password,
-        country,
-      },
+      { email, password, country },
       { abortEarly: false },
     );
   } catch (error) {
