@@ -12,68 +12,60 @@ import {
   useTheme,
 } from "@mui/material";
 import NextLink from "next/link";
-import { ReactNode, useState, useContext } from "react";
+import { ReactNode, useState } from "react";
 
 import { Logo } from "src/components/logo";
-import {
-  RegistrationMode,
-  RegistrationModeContext,
-} from "src/utils/registration-mode-context";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
-  const [mode, setMode] = useState(RegistrationMode.IssuingTreasury);
-  const registrationModeContext = { mode, setMode };
 
   return (
-    <RegistrationModeContext.Provider value={registrationModeContext}>
+    <Box
+      component="main"
+      display="flex"
+      flex="auto"
+      flexDirection="column"
+      alignItems="center"
+      pt={20}
+      sx={{
+        backgroundColor: "neutral.50",
+      }}
+    >
+      <TopLogoBar />
       <Box
-        component="main"
         display="flex"
-        flex="auto"
-        flexDirection="column"
-        alignItems="center"
-        pt={20}
-        sx={{
-          backgroundColor: "neutral.50",
-        }}
+        width="100%"
+        flexWrap="wrap"
+        justifyContent="space-evenly"
+        maxWidth={theme.spacing(169)}
       >
-        <TopLogoBar />
         <Box
-          display="flex"
           width="100%"
-          flexWrap="wrap"
-          justifyContent="space-evenly"
-          maxWidth={theme.spacing(169)}
+          display="flex"
+          maxWidth={theme.spacing(65)}
+          px={4}
+          mb={4}
         >
-          <Box
-            width="100%"
-            display="flex"
-            maxWidth={theme.spacing(65)}
-            px={4}
-            mb={4}
-          >
-            <Box flexGrow={1}>
-              <WelcomeMessage />
-            </Box>
-          </Box>
-          <Box
-            width="100%"
-            display="flex"
-            maxWidth={theme.spacing(65)}
-            px={4}
-            mb={4}
-          >
-            <Box flexGrow={1}>
-              <Card>
-                <CardContent>{children}</CardContent>
-              </Card>
-            </Box>
+          <Box flexGrow={1}>
+            <WelcomeMessage />
           </Box>
         </Box>
-        <CookieBanner />
+        <Box
+          width="100%"
+          display="flex"
+          maxWidth={theme.spacing(65)}
+          px={4}
+          mb={4}
+        >
+          <Box flexGrow={1}>
+            <Card>
+              <CardContent>{children}</CardContent>
+            </Card>
+          </Box>
+        </Box>
       </Box>
-    </RegistrationModeContext.Provider>
+      <CookieBanner />
+    </Box>
   );
 };
 
@@ -104,41 +96,21 @@ const TopLogoBar = () => (
 );
 
 const WelcomeMessage = () => {
-  const { mode } = useContext(RegistrationModeContext);
-  let title;
-  let about;
-
-  if (mode == RegistrationMode.IssuingTreasury) {
-    title = (
-      <Typography variant="h4">
-        Stripe Issuing and Treasury platform demo
-      </Typography>
-    );
-
-    about = (
-      <Typography color="neutral.500">
-        This web app demonstrates Stripe Issuing and Treasury APIs in an
-        end-to-end integration. Create an account with the demo platform to
-        create cards, test purchases, and make and receive payments with a
-        financial account.
-      </Typography>
-    );
-  } else {
-    title = <Typography variant="h4">Stripe Issuing demo</Typography>;
-
-    about = (
-      <Typography color="neutral.500">
-        This web app demonstrates Stripe Issuing API in an end-to-end
-        integration. Create an account with the demo platform to create cards,
-        test purchases, and simulate balance funding.
-      </Typography>
-    );
-  }
-
   return (
     <Stack spacing={3}>
-      {title}
-      {about}
+      <Typography variant="h4">Stripe BaaS platform demo</Typography>
+      <Typography color="neutral.500">
+        Using Stripe&apos;s banking-as-a-service APIs, businesses have the
+        flexibility to add financial capabilities to their product. As shown in
+        these{" "}
+        <Link href="https://stripe.com/customers/all?solution=embed-financial-services">
+          user stories
+        </Link>
+        , our APIs serve business models ranging from expense management,
+        corporate benefits, B2B payments, BNPL, and more. This demo explores one
+        platform focused use case that enables businesses to visualize the
+        experience of their connected accounts.
+      </Typography>
       <Typography>
         View our{" "}
         <Link

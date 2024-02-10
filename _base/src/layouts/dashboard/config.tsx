@@ -48,6 +48,7 @@ export const items = [
       </SvgIcon>
     ),
   },
+  // @if financialProduct==embedded-finance
   {
     title: "Financial account",
     path: "/financial_account",
@@ -56,12 +57,16 @@ export const items = [
         <BanknotesIcon />
       </SvgIcon>
     ),
+    // @begin-exclude-from-subapps
     // Embedded Finance platforms use Treasury Financial Accounts[0]
     // to store money and fund payments on Issuing cards
     //
     // [0] https://stripe.com/docs/treasury/account-management/financial-accounts
     financialProducts: [FinancialProduct.EmbeddedFinance],
+    // @end-exclude-from-subapps
   },
+  // @endif
+  // @if financialProduct==expense-management
   {
     title: "Top ups",
     path: "/top-ups",
@@ -70,13 +75,16 @@ export const items = [
         <BanknotesIcon />
       </SvgIcon>
     ),
+    // @begin-exclude-from-subapps
     // Expense Management platforms do not use Treasury, and instead
     // fund payments on Issuing cards from Balances. These balances
     // can be topped up[0] via bank transfers
     //
     // [0] https://stripe.com/docs/issuing/adding-funds-to-your-card-program
     financialProducts: [FinancialProduct.ExpenseManagement],
+    // @end-exclude-from-subapps
   },
+  // @endif
   {
     title: "Test data",
     path: "/test-data",

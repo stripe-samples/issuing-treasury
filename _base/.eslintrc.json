@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier", "import"],
+  "plugins": ["@typescript-eslint", "prettier", "import", "unused-imports"],
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
@@ -9,13 +9,17 @@
     "plugin:import/typescript"
   ],
   "rules": {
-    "import/order": ["error",
-      {
+    "import/order": ["error", {
       "newlines-between": "always",
       "alphabetize": {
         "order": "asc"
       }
     }],
-    "no-console": "warn"
+    "no-console": "warn",
+    "unused-imports/no-unused-imports": "error", // Autofix unused imports
+    "unused-imports/no-unused-vars": [
+      "warn",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ] // Autofix unused vars, with options to ignore variables and arguments starting with _
   }
 }

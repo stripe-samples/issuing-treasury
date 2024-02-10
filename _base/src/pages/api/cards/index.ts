@@ -15,18 +15,35 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount, financialProduct, currency } = session;
+  const {
+    stripeAccount,
+    // @begin-exclude-from-subapps
+    financialProduct,
+    // @end-exclude-from-subapps
+    currency,
+  } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
-  let financialAccount = null;
-  if (financialProduct == FinancialProduct.EmbeddedFinance) {
-    const financialAccounts = await stripe.treasury.financialAccounts.list({
-      stripeAccount: accountId,
-    });
+  // @if financialProduct==embedded-finance
+  const financialAccount = await (async () => {
+    // @endif
+    // @begin-exclude-from-subapps
+    if (financialProduct == FinancialProduct.EmbeddedFinance) {
+      // @end-exclude-from-subapps
+      // @if financialProduct==embedded-finance
+      const financialAccounts = await stripe.treasury.financialAccounts.list({
+        stripeAccount: accountId,
+      });
 
-    financialAccount = financialAccounts.data[0];
-  }
+      return financialAccounts.data[0];
+      // @endif
+      // @begin-exclude-from-subapps
+    }
+    // @end-exclude-from-subapps
+    // @if financialProduct==embedded-finance
+  })();
+  // @endif
 
   const { cardholderid, card_type } = req.body;
   const cardholder = await stripe.issuing.cardholders.retrieve(cardholderid, {
@@ -78,12 +95,14 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
       status: "inactive",
     };
 
+    // @if financialProduct==embedded-finance
     if (financialAccount) {
       cardOptions = {
         ...cardOptions,
         financial_account: financialAccount.id,
       };
     }
+    // @endif
   } else {
     cardOptions = {
       ...cardOptions,
@@ -91,12 +110,14 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
       status: "active",
     };
 
+    // @if financialProduct==embedded-finance
     if (financialAccount) {
       cardOptions = {
         ...cardOptions,
         financial_account: financialAccount.id,
       };
     }
+    // @endif
   }
 
   await stripe.issuing.cards.create(

@@ -1,3 +1,4 @@
+// @if financialProduct==expense-management
 import {
   Alert,
   Button,
@@ -150,3 +151,4 @@ function TestDataCreatePayoutsToBank({
 }
 
 export default TestDataCreatePayoutsToBank;
+// @endif

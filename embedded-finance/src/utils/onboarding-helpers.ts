@@ -1,3 +1,4 @@
+import logger from "./logger";
 import StripeAccount from "./stripe-account";
 
 import stripeClient from "src/utils/stripe-loader";
@@ -14,6 +15,8 @@ export const hasOutstandingRequirements = async (
   const outstandingRequirements = account?.requirements?.currently_due?.filter(
     (requirement) => !IGNORE_REQUIREMENTS.includes(requirement),
   );
+
+  logger.debug("Outstanding requirements check:", outstandingRequirements);
 
   const result = (outstandingRequirements?.length ?? 0) > 0;
 

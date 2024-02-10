@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import { DefaultJWT } from "next-auth/jwt";
 
@@ -13,7 +13,9 @@ declare module "next-auth" {
     businessName: string;
     country: string;
     currency: string;
+    // @begin-exclude-from-subapps
     financialProduct: FinancialProduct;
+    // @end-exclude-from-subapps
     stripeAccount: StripeAccount;
   }
 }
@@ -26,6 +28,8 @@ declare module "next-auth/jwt" {
     businessName: string;
     country: string;
     currency: string;
+    // @begin-exclude-from-subapps
     financialProduct: FinancialProduct;
+    // @end-exclude-from-subapps
   }
 }

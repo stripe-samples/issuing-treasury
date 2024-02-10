@@ -32,17 +32,32 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { stripeAccount, financialProduct, currency } = session;
+  const {
+    stripeAccount,
+    // @begin-exclude-from-subapps
+    financialProduct,
+    // @end-exclude-from-subapps
+    // @if financialProduct==expense-management
+    currency,
+    // @endif
+  } = session;
 
+  // @if financialProduct==embedded-finance
   let financialAccount = null;
   let faFundsFlowChartData = null;
   let faTransactions = null;
+  // @endif
+  // @if financialProduct==expense-management
   let issuingBalance = null;
   let availableBalance = null;
   let balanceTransactions = null;
   let balanceFundsFlowChartData = null;
+  // @endif
 
+  // @begin-exclude-from-subapps
   if (financialProduct == FinancialProduct.EmbeddedFinance) {
+    // @end-exclude-from-subapps
+    // @if financialProduct==embedded-finance
     const responseFaDetails = await getFinancialAccountDetails(stripeAccount);
     financialAccount = responseFaDetails.financialaccount;
 
@@ -53,7 +68,11 @@ export const getServerSideProps = async (
     const responseFaTransations =
       await getFinancialAccountTransactionsExpanded(stripeAccount);
     faTransactions = responseFaTransations.fa_transactions;
+    // @endif
+    // @begin-exclude-from-subapps
   } else {
+    // @end-exclude-from-subapps
+    // @if financialProduct==expense-management
     const responseBalanceTransactions = await getBalanceTransactions(
       stripeAccount,
       currency,
@@ -65,21 +84,29 @@ export const getServerSideProps = async (
     const responseAccountBalance = await getBalance(stripeAccount);
     issuingBalance = responseAccountBalance.balance.issuing;
     availableBalance = responseAccountBalance.balance;
+    // @endif
+    // @begin-exclude-from-subapps
   }
+  // @end-exclude-from-subapps
 
   return {
     props: {
+      // @if financialProduct==embedded-finance
       financialAccount,
       faFundsFlowChartData,
       faTransactions,
+      // @endif
+      // @if financialProduct==expense-management
       issuingBalance,
       availableBalance,
       balanceTransactions,
       balanceFundsFlowChartData,
+      // @endif
     },
   };
 };
 
+// @if financialProduct==embedded-finance
 const FinancialAccountStuff = ({
   financialAccount,
   faFundsFlowChartData,
@@ -114,7 +141,9 @@ const FinancialAccountStuff = ({
     </Grid>
   );
 };
+// @endif
 
+// @if financialProduct==expense-management
 const IssuingBalanceStuff = ({
   issuingBalance,
   availableBalance,
@@ -123,8 +152,8 @@ const IssuingBalanceStuff = ({
 }: {
   issuingBalance: Stripe.Balance.Issuing;
   availableBalance: Stripe.Balance;
-  balanceFundsFlowChartData: BalanceChartData;
   balanceTransactions: Stripe.BalanceTransaction[];
+  balanceFundsFlowChartData: BalanceChartData;
 }) => {
   return (
     <Grid container spacing={3}>
@@ -154,24 +183,86 @@ const IssuingBalanceStuff = ({
     </Grid>
   );
 };
+// @endif
 
 const Page = ({
+  // @if financialProduct==embedded-finance
   financialAccount,
   faFundsFlowChartData,
   faTransactions,
+  // @endif
+  // @if financialProduct==expense-management
   issuingBalance,
   availableBalance,
-  balanceFundsFlowChartData,
   balanceTransactions,
+  balanceFundsFlowChartData,
+  // @endif
 }: {
+  // @if financialProduct==embedded-finance
   financialAccount: Stripe.Treasury.FinancialAccount;
   faFundsFlowChartData: ChartData;
   faTransactions: Stripe.Treasury.Transaction[];
+  // @endif
+  // @if financialProduct==expense-management
   issuingBalance: Stripe.Balance.Issuing;
   availableBalance: Stripe.Balance;
-  balanceFundsFlowChartData: BalanceChartData;
   balanceTransactions: Stripe.BalanceTransaction[];
+  balanceFundsFlowChartData: BalanceChartData;
+  // @endif
 }) => {
+  const BalanceWidget = (() => {
+    // @begin-exclude-from-subapps
+    if (financialAccount) {
+      // @end-exclude-from-subapps
+      // @if financialProduct==embedded-finance
+      return FinancialAccountStuff({
+        financialAccount,
+        faFundsFlowChartData,
+        faTransactions,
+      });
+      // @endif
+      // @begin-exclude-from-subapps
+    } else {
+      // @end-exclude-from-subapps
+      // @if financialProduct==expense-management
+      return IssuingBalanceStuff({
+        issuingBalance,
+        availableBalance,
+        balanceFundsFlowChartData,
+        balanceTransactions,
+      });
+      // @endif
+      // @begin-exclude-from-subapps
+    }
+    // @end-exclude-from-subapps
+  })();
+
+  const TestDataGenerationPanel = (() => {
+    // @begin-exclude-from-subapps
+    if (financialAccount) {
+      // @end-exclude-from-subapps
+      // @if financialProduct==embedded-finance
+      return (
+        <FloatingTestPanel title="Simulate a received credit">
+          <TestDataCreateReceivedCredit financialAccount={financialAccount} />
+        </FloatingTestPanel>
+      );
+      // @endif
+      // @begin-exclude-from-subapps
+    } else {
+      // @end-exclude-from-subapps
+      // @if financialProduct==expense-management
+      return (
+        <FloatingTestPanel title="Simulate Issuing Balance Funding">
+          <TestDataTopUpIssuingBalance />
+        </FloatingTestPanel>
+      );
+      // @endif
+      // @begin-exclude-from-subapps
+    }
+    // @end-exclude-from-subapps
+  })();
+
   return (
     <>
       <Box
@@ -181,31 +272,10 @@ const Page = ({
           py: 8,
         }}
       >
-        <Container maxWidth="xl">
-          {financialAccount
-            ? FinancialAccountStuff({
-                financialAccount,
-                faFundsFlowChartData,
-                faTransactions,
-              })
-            : IssuingBalanceStuff({
-                issuingBalance,
-                availableBalance,
-                balanceFundsFlowChartData,
-                balanceTransactions,
-              })}
-        </Container>
+        <Container maxWidth="xl">{BalanceWidget}</Container>
       </Box>
 
-      {financialAccount ? (
-        <FloatingTestPanel title="Simulate a received credit">
-          <TestDataCreateReceivedCredit financialAccount={financialAccount} />
-        </FloatingTestPanel>
-      ) : (
-        <FloatingTestPanel title="Simulate Issuing Balance Funding">
-          <TestDataTopUpIssuingBalance />
-        </FloatingTestPanel>
-      )}
+      {TestDataGenerationPanel}
     </>
   );
 };

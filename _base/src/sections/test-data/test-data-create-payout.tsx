@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import {
   Alert,
   Button,
@@ -152,3 +153,4 @@ function TestDataCreatePayout({
 }
 
 export default TestDataCreatePayout;
+// @endif

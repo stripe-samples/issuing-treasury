@@ -1,24 +1,28 @@
 enum Platform {
   US,
-  UK,
-  EU,
 }
 
 const getPlatform = (country: string): Platform => {
-  if (country == "US") {
-    return Platform.US;
-  } else if (country == "GB") {
-    return Platform.UK;
-  } else {
-    return Platform.EU;
+  switch (country) {
+    case "US":
+      return Platform.US;
+    default:
+      throw new Error(`Unsupported country ${country}`);
   }
 };
 
+const keyPresent = (key: string | undefined): boolean =>
+  !!key && key.length > 0 && key != "none";
+
 const enabledPlatforms = () => {
+  const usEnabled =
+    (keyPresent(process.env.STRIPE_SECRET_KEY_US) &&
+      keyPresent(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US)) ||
+    (keyPresent(process.env.STRIPE_SECRET_KEY) &&
+      keyPresent(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY));
+
   return {
-    [Platform.US]: true,
-    [Platform.UK]: false,
-    [Platform.EU]: false,
+    [Platform.US]: usEnabled,
   };
 };
 

@@ -15,7 +15,6 @@ import { ReactNode, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
-import FinancialProduct from "src/types/financial_product";
 import {
   extractJsonFromResponse,
   handleResult,
@@ -35,21 +34,21 @@ export const getServerSideProps = async (
     return { redirect: { destination: "/", permanent: false } };
   }
 
-  const {
-    [Platform.US]: enableUS,
-    [Platform.UK]: enableUK,
-    [Platform.EU]: enableEU,
-  } = enabledPlatforms();
+  const { [Platform.UK]: enableUK, [Platform.EU]: enableEU } =
+    enabledPlatforms();
 
-  return { props: { enableUS, enableUK, enableEU } };
+  return {
+    props: {
+      enableUK,
+      enableEU,
+    },
+  };
 };
 
 const Page = ({
-  enableUS,
   enableUK,
   enableEU,
 }: {
-  enableUS: boolean;
   enableUK: boolean;
   enableEU: boolean;
 }) => {
@@ -61,8 +60,9 @@ const Page = ({
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
-    country: "GB",
-    financialProduct: FinancialProduct.ExpenseManagement,
+    ...{
+      country: "GB",
+    },
   };
 
   const handleSubmit = async (
@@ -74,7 +74,6 @@ const Page = ({
       email: values.email,
       password: values.password,
       country: values.country,
-      financialProduct: values.financialProduct,
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
@@ -204,9 +203,6 @@ const Page = ({
                 </MenuItem>
                 <MenuItem value="GB" disabled={!enableUK}>
                   United Kingdom
-                </MenuItem>
-                <MenuItem value="US" disabled={!enableUS}>
-                  United States
                 </MenuItem>
               </Field>
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}

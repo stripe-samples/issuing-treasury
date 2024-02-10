@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
@@ -48,3 +49,4 @@ export const OverviewFinancialAccountBalance = (props: {
     </Card>
   );
 };
+// @endif

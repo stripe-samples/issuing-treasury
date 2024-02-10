@@ -1,3 +1,4 @@
+// @if financialProduct==expense-management
 import BusinessIcon from "@mui/icons-material/Business";
 import ForkRightIcon from "@mui/icons-material/ForkRight";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -224,3 +225,4 @@ const Page = ({
 Page.getLayout = (page: ReactNode) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;
+// @endif

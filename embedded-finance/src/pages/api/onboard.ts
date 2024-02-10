@@ -69,9 +69,15 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         address: {
           // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
           line1: "address_full_match",
-          city: "South San Francisco",
-          state: "CA",
-          postal_code: "94080",
+          ...(country === "US" && {
+            city: "South San Francisco",
+            state: "CA",
+            postal_code: "94080",
+          }),
+          ...(country === "GB" && {
+            city: "London",
+            postal_code: "WC32 4AP",
+          }),
           country: country,
         },
         // These values together cause the DOB to be verified in testmode: https://stripe.com/docs/connect/testing#test-dobs

@@ -14,51 +14,24 @@ import {
   Divider,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
-import { GetServerSidePropsContext } from "next";
 import { signOut } from "next-auth/react";
-import React, { ChangeEvent, ReactNode, useContext, useState } from "react";
+import React, { ChangeEvent, ReactNode, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
-import FinancialProduct from "src/types/financial_product";
 import {
   extractJsonFromResponse,
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-import {
-  RegistrationMode,
-  RegistrationModeContext,
-} from "src/utils/registration-mode-context";
-import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import validationSchemas from "src/utils/validation_schemas";
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  const session = await getSessionForServerSideProps(context);
-  const { financialProduct } = session;
-
-  return {
-    props: {
-      financialProduct,
-    },
-  };
-};
-
-const Page = ({ financialProduct }: { financialProduct: FinancialProduct }) => {
+const Page = () => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
   const [showConnectOnboardingGuide, setShowConnectOnboardingGuide] =
     useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { setMode } = useContext(RegistrationModeContext);
-
-  setMode(
-    financialProduct == FinancialProduct.EmbeddedFinance
-      ? RegistrationMode.IssuingTreasury
-      : RegistrationMode.Issuing,
-  );
 
   const initialValues = {
     businessName: "",

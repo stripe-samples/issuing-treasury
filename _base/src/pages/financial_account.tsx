@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import {
   Card,
   CardContent,
@@ -237,3 +238,4 @@ const Page = ({
 Page.getLayout = (page: ReactNode) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;
+// @endif

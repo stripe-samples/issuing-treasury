@@ -5,6 +5,7 @@ import {
   Stack,
   TextField,
   Typography,
+  MenuItem,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
@@ -20,6 +21,7 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
+import { Platform, enabledPlatforms } from "src/utils/platform";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 import validationSchemas from "src/utils/validation_schemas";
 
@@ -32,10 +34,16 @@ export const getServerSideProps = async (
     return { redirect: { destination: "/", permanent: false } };
   }
 
-  return {};
+  const { [Platform.US]: enableUS } = enabledPlatforms();
+
+  return {
+    props: {
+      enableUS,
+    },
+  };
 };
 
-const Page = () => {
+const Page = ({ enableUS }: { enableUS: boolean }) => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
 
@@ -44,7 +52,9 @@ const Page = () => {
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
-    country: "US",
+    ...{
+      country: "US",
+    },
   };
 
   const handleSubmit = async (
@@ -122,6 +132,11 @@ const Page = () => {
                 name="password"
                 type="password"
               />
+              <Field as={TextField} label="Country" name="country" select>
+                <MenuItem value="US" disabled={!enableUS}>
+                  United States
+                </MenuItem>
+              </Field>
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
                 size="large"

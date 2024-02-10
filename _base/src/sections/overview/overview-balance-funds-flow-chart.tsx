@@ -1,3 +1,4 @@
+// @if financialProduct==expense-management
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import {
   Button,
@@ -145,3 +146,4 @@ export const OverviewBalanceFundsFlowChart = ({
     </Card>
   );
 };
+// @endif

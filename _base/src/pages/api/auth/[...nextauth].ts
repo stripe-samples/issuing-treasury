@@ -5,6 +5,7 @@ import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { authenticateUser } from "src/utils/authentication";
+import logger from "src/utils/logger";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
 import { getPlatform } from "src/utils/platform";
 import stripeClient from "src/utils/stripe-loader";
@@ -33,18 +34,27 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/login",
   },
   callbacks: {
+    // User session context setup flow step 2:
+    // This will return a token object that also gets saved in the client's browser cookie and then subsequently
+    // provided in every request.
     jwt: async ({ token, user }: { token: JWT; user?: User }) => {
-      const stripeAccount = {
-        accountId: token.accountId,
-        platform: getPlatform(token.country),
-      };
-
+      // If the `requiresOnboarding` field is set to anything other than `undefined`, it means we've already set it up.
+      // Otherwise, we wouldn't have been able to set the `requiresOnboarding` value as setting up the token is a
+      // prerequisite for checking and setting that field. So we're safe to use the information in the token here.
+      logger.debug("Inside JWT callback, token provided:", token);
+      logger.debug("Inside JWT callback, user provided:", user);
       if (token.requiresOnboarding != undefined) {
+        const stripeAccount = {
+          accountId: token.accountId,
+          platform: getPlatform(token.country),
+        };
+
         token.requiresOnboarding =
           token.requiresOnboarding &&
           (await hasOutstandingRequirements(stripeAccount));
       }
 
+      logger.debug("User's email:", user?.email);
       if (user?.email) {
         return { ...token, ...user };
       }
@@ -106,7 +116,9 @@ export const authOptions: NextAuthOptions = {
       session.requiresOnboarding = token.requiresOnboarding;
       session.businessName = token.businessName;
       session.country = token.country;
+      // @begin-exclude-from-subapps
       session.financialProduct = token.financialProduct;
+      // @end-exclude-from-subapps
       session.currency = token.currency;
 
       return session;

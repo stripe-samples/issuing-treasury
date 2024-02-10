@@ -1,0 +1,19 @@
+{
+  "name": "issuing-treasury",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "codegen": "./codegen.sh"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "workspaces": [
+    "./embedded-finance/",
+    "./expense-management/"
+  ],
+  "engines": {
+    "node": "18"
+  }
+}

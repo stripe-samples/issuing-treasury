@@ -6,23 +6,15 @@ import {
   TextField,
   Typography,
   MenuItem,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  FormLabel,
-  Divider,
-  Tooltip,
-  SelectChangeEvent,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { signIn } from "next-auth/react";
-import { ReactNode, useState, ReactElement, useContext } from "react";
+import { ReactNode, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
-import FinancialProduct from "src/types/financial_product";
 import {
   extractJsonFromResponse,
   handleResult,
@@ -30,10 +22,6 @@ import {
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { Platform, enabledPlatforms } from "src/utils/platform";
-import {
-  RegistrationMode,
-  RegistrationModeContext,
-} from "src/utils/registration-mode-context";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 import validationSchemas from "src/utils/validation_schemas";
 
@@ -47,34 +35,63 @@ export const getServerSideProps = async (
   }
 
   const {
+    // @if financialProduct==embedded-finance
     [Platform.US]: enableUS,
+    // @endif
+    // @if financialProduct==expense-management
     [Platform.UK]: enableUK,
     [Platform.EU]: enableEU,
+    // @endif
   } = enabledPlatforms();
 
-  return { props: { enableUS, enableUK, enableEU } };
+  return {
+    props: {
+      // @if financialProduct==embedded-finance
+      enableUS,
+      // @endif
+      // @if financialProduct==expense-management
+      enableUK,
+      enableEU,
+      // @endif
+    },
+  };
 };
 
 const Page = ({
+  // @if financialProduct==embedded-finance
   enableUS,
+  // @endif
+  // @if financialProduct==expense-management
   enableUK,
   enableEU,
+  // @endif
 }: {
+  // @if financialProduct==embedded-finance
   enableUS: boolean;
+  // @endif
+  // @if financialProduct==expense-management
   enableUK: boolean;
   enableEU: boolean;
+  // @endif
 }) => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
-  const { setMode } = useContext(RegistrationModeContext);
 
   const initialValues = {
     email: "",
     password: "",
     // TODO: See if we can improve the way we handle errors from the backend
     submit: null,
-    country: "US",
-    financialProduct: FinancialProduct.EmbeddedFinance,
+    // @if financialProduct==expense-management
+    ...{
+      country: "GB",
+    },
+    // @endif
+    // @if financialProduct==embedded-finance
+    ...{
+      country: "US",
+    },
+    // @endif
   };
 
   const handleSubmit = async (
@@ -86,7 +103,6 @@ const Page = ({
       email: values.email,
       password: values.password,
       country: values.country,
-      financialProduct: values.financialProduct,
     });
     const result = await extractJsonFromResponse(response);
     handleResult({
@@ -132,7 +148,15 @@ const Page = ({
         validationSchema={validationSchemas.user}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, isValid, dirty, values, setFieldValue }) => (
+        {({
+          errors,
+          touched,
+          isValid,
+          dirty,
+          // @begin-exclude-from-subapps
+          values,
+          // @end-exclude-from-subapps
+        }) => (
           <Form>
             <Stack spacing={3}>
               <Field
@@ -153,30 +177,8 @@ const Page = ({
                 name="password"
                 type="password"
               />
-              <Field
-                as={TextField}
-                label="Country"
-                name="country"
-                select
-                onChange={(_: SelectChangeEvent, element: ReactElement) => {
-                  const country = element.props.value;
-                  setFieldValue("country", element.props.value);
-
-                  if (country == "US") {
-                    setMode(RegistrationMode.IssuingTreasury);
-                    setFieldValue(
-                      "financialProduct",
-                      FinancialProduct.EmbeddedFinance,
-                    );
-                  } else {
-                    setMode(RegistrationMode.Issuing);
-                    setFieldValue(
-                      "financialProduct",
-                      FinancialProduct.ExpenseManagement,
-                    );
-                  }
-                }}
-              >
+              <Field as={TextField} label="Country" name="country" select>
+                {/* @if financialProduct==expense-management */}
                 <MenuItem value="AT" disabled={!enableEU}>
                   Austria
                 </MenuItem>
@@ -240,58 +242,28 @@ const Page = ({
                 <MenuItem value="GB" disabled={!enableUK}>
                   United Kingdom
                 </MenuItem>
+                {/* @endif */}
+                {/* @if financialProduct==embedded-finance */}
                 <MenuItem value="US" disabled={!enableUS}>
                   United States
                 </MenuItem>
+                {/* @endif */}
               </Field>
-              <Divider />
-              <Field
-                as={RadioGroup}
-                label="Use case"
-                name="financialProduct"
-                error={!!(touched.financialProduct && errors.financialProduct)}
-              >
-                <FormLabel sx={{ mb: 2 }}>
-                  Which financial product would you like to register to use?
-                </FormLabel>
-                <Tooltip
-                  title={
-                    values.country != "US" &&
-                    "Embedded finance is not yet supported in the selected country"
-                  }
-                >
-                  <FormControlLabel
-                    value={FinancialProduct.EmbeddedFinance}
-                    control={<Radio />}
-                    label={
-                      <>
-                        <Typography>
-                          Full-stack financial services for your business
-                        </Typography>
-                        <Typography variant="caption">
-                          Create cards, make payments, and send and receive
-                          money with a financial account
-                        </Typography>
-                      </>
-                    }
-                    disabled={values.country != "US"}
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={
-                    values.country == "US" &&
-                    isDemoMode() &&
-                    "This financial product is not yet available in this demo for US businesses"
-                  }
-                >
-                  <FormControlLabel
-                    value={FinancialProduct.ExpenseManagement}
-                    control={<Radio />}
-                    label="A commercial pre-funded card issuing program"
-                    disabled={values.country == "US"}
-                  />
-                </Tooltip>
-              </Field>
+              {/* @begin-exclude-from-subapps */}
+              {values.country == "US" ? (
+                <Typography color="neutral.500" variant="body2">
+                  Create commercial cards and bank account replacements; create
+                  cardholders, issue virtual or physical cards for spending,
+                  fund accounts, send and receive money, view transactions, and
+                  more.
+                </Typography>
+              ) : (
+                <Typography color="neutral.500" variant="body2">
+                  Create commercial cards; create cardholders, issue virtual or
+                  physical cards for spending, view transactions, and more.
+                </Typography>
+              )}
+              {/* @end-exclude-from-subapps */}
               {errors.submit && <Alert severity="error">{errors.submit}</Alert>}
               <Button
                 size="large"

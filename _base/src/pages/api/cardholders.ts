@@ -15,24 +15,40 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount, country: userCountry } = session;
+  const {
+    stripeAccount,
+    // @begin-exclude-from-subapps
+    country: userCountry,
+    // @end-exclude-from-subapps
+  } = session;
   const { accountId, platform } = stripeAccount;
 
-  // PSD2 requires most transactions on payment cards issued in the EU and UK
-  // to be authenticated in order to proceed. This is called Strong Customer
-  // Authentication[0], or SCA. Stripe typically uses 3D Secure[1] to authenticate
-  // transactions, which requires a phone number to send an OTP to via SMS.
-  // So phone numbers must be mandatorily collected for cardholders of cards
-  // issued by EU or UK Stripe Issuing users.
-  //
-  // [0] https://stripe.com/docs/strong-customer-authentication
-  // [1] https://stripe.com/docs/issuing/3d-secure
-  let validationSchema;
-  if (userCountry == "US") {
-    validationSchema = validationSchemas.cardholder.default;
-  } else {
-    validationSchema = validationSchemas.cardholder.withSCA;
-  }
+  const validationSchema = (() => {
+    // @begin-exclude-from-subapps
+    if (userCountry == "US") {
+      // @end-exclude-from-subapps
+      // @if financialProduct==embedded-finance
+      return validationSchemas.cardholder.default;
+      // @endif
+      // @begin-exclude-from-subapps
+    } else {
+      // @end-exclude-from-subapps
+      // @if financialProduct==expense-management
+      // PSD2 requires most transactions on payment cards issued in the EU and UK
+      // to be authenticated in order to proceed. This is called Strong Customer
+      // Authentication[0], or SCA. Stripe typically uses 3D Secure[1] to authenticate
+      // transactions, which requires a phone number to send an OTP to via SMS.
+      // So phone numbers must be mandatorily collected for cardholders of cards
+      // issued by EU or UK Stripe Issuing users.
+      //
+      // [0] https://stripe.com/docs/strong-customer-authentication
+      // [1] https://stripe.com/docs/issuing/3d-secure
+      return validationSchemas.cardholder.withSCA;
+      // @endif
+      // @begin-exclude-from-subapps
+    }
+    // @end-exclude-from-subapps
+  })();
 
   const {
     firstName,

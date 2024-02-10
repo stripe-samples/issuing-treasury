@@ -16,7 +16,14 @@ const cardholderBase = Yup.object({
   accept: Yup.boolean()
     .required("The terms of service and privacy policy must be accepted.")
     .oneOf([true], "The terms of service and privacy policy must be accepted."),
-});
+}).test(
+  "name-length",
+  "The combined first and last names must be less than 24 characters",
+  function (value) {
+    const { firstName, lastName } = value;
+    return (firstName?.length || 0) + (lastName?.length || 0) < 24;
+  },
+);
 
 const cardholderWithSCA = cardholderBase.concat(
   Yup.object({
@@ -43,6 +50,7 @@ const user = Yup.object().shape({
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
   country: Yup.string().max(2).required("Country is required"),
+  // @begin-exclude-from-subapps
   financialProduct: Yup.string().when("country", {
     is: "US",
     then: (schema) =>
@@ -56,6 +64,7 @@ const user = Yup.object().shape({
         "This financial product is not yet supported in the selected country",
       ),
   }),
+  // @end-exclude-from-subapps
 });
 
 const businessBase = Yup.object().shape({

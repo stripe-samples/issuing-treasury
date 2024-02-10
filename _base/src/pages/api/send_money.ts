@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
@@ -109,3 +110,4 @@ const sendMoney = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default handler;
+// @endif

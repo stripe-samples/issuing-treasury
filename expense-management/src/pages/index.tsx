@@ -22,17 +22,22 @@ export const getServerSideProps = async (
   const session = await getSessionForServerSideProps(context);
   const { stripeAccount, currency } = session;
 
+  let issuingBalance = null;
+  let availableBalance = null;
+  let balanceTransactions = null;
+  let balanceFundsFlowChartData = null;
+
   const responseBalanceTransactions = await getBalanceTransactions(
     stripeAccount,
     currency,
   );
-  const balanceTransactions = responseBalanceTransactions.balanceTransactions;
-  const balanceFundsFlowChartData =
+  balanceTransactions = responseBalanceTransactions.balanceTransactions;
+  balanceFundsFlowChartData =
     responseBalanceTransactions.balanceFundsFlowChartData;
 
   const responseAccountBalance = await getBalance(stripeAccount);
-  const issuingBalance = responseAccountBalance.balance.issuing;
-  const availableBalance = responseAccountBalance.balance;
+  issuingBalance = responseAccountBalance.balance.issuing;
+  availableBalance = responseAccountBalance.balance;
 
   return {
     props: {
@@ -52,8 +57,8 @@ const IssuingBalanceStuff = ({
 }: {
   issuingBalance: Stripe.Balance.Issuing;
   availableBalance: Stripe.Balance;
-  balanceFundsFlowChartData: BalanceChartData;
   balanceTransactions: Stripe.BalanceTransaction[];
+  balanceFundsFlowChartData: BalanceChartData;
 }) => {
   return (
     <Grid container spacing={3}>
@@ -87,14 +92,31 @@ const IssuingBalanceStuff = ({
 const Page = ({
   issuingBalance,
   availableBalance,
-  balanceFundsFlowChartData,
   balanceTransactions,
+  balanceFundsFlowChartData,
 }: {
   issuingBalance: Stripe.Balance.Issuing;
   availableBalance: Stripe.Balance;
-  balanceFundsFlowChartData: BalanceChartData;
   balanceTransactions: Stripe.BalanceTransaction[];
+  balanceFundsFlowChartData: BalanceChartData;
 }) => {
+  const BalanceWidget = (() => {
+    return IssuingBalanceStuff({
+      issuingBalance,
+      availableBalance,
+      balanceFundsFlowChartData,
+      balanceTransactions,
+    });
+  })();
+
+  const TestDataGenerationPanel = (() => {
+    return (
+      <FloatingTestPanel title="Simulate Issuing Balance Funding">
+        <TestDataTopUpIssuingBalance />
+      </FloatingTestPanel>
+    );
+  })();
+
   return (
     <>
       <Box
@@ -104,19 +126,10 @@ const Page = ({
           py: 8,
         }}
       >
-        <Container maxWidth="xl">
-          {IssuingBalanceStuff({
-            issuingBalance,
-            availableBalance,
-            balanceFundsFlowChartData,
-            balanceTransactions,
-          })}
-        </Container>
+        <Container maxWidth="xl">{BalanceWidget}</Container>
       </Box>
 
-      <FloatingTestPanel title="Simulate Issuing Balance Funding">
-        <TestDataTopUpIssuingBalance />
-      </FloatingTestPanel>
+      {TestDataGenerationPanel}
     </>
   );
 };

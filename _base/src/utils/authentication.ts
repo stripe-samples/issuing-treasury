@@ -28,13 +28,17 @@ export const authenticateUser = async (email: string, password: string) => {
 
     const requiresOnboarding = await hasOutstandingRequirements(stripeAccount);
 
+    // User session context setup flow step 1:
+    // This is the object that will be available as `user` in the `jwt` callback in [...nextauth].ts
     return {
       id: user.id.toString(),
       email: user.email,
       accountId: user.accountId,
-      requiresOnboarding: requiresOnboarding,
       country: user.country,
+      // @begin-exclude-from-subapps
       financialProduct: user.financialProduct,
+      // @end-exclude-from-subapps
+      requiresOnboarding: requiresOnboarding,
     };
   }
 

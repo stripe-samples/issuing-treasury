@@ -14,7 +14,20 @@ const cardholderBase = Yup.object({
   accept: Yup.boolean()
     .required("The terms of service and privacy policy must be accepted.")
     .oneOf([true], "The terms of service and privacy policy must be accepted."),
-});
+}).test(
+  "name-length",
+  "The combined first and last names must be less than 24 characters",
+  function (value) {
+    const { firstName, lastName } = value;
+    return (firstName?.length || 0) + (lastName?.length || 0) < 24;
+  },
+);
+
+const cardholderWithSCA = cardholderBase.concat(
+  Yup.object({
+    phoneNumber: Yup.string().required("Phone number is required for SCA"),
+  }),
+);
 
 const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
@@ -67,6 +80,7 @@ const schemas = {
   card,
   cardholder: {
     default: cardholderBase,
+    withSCA: cardholderWithSCA,
   },
   user,
 };

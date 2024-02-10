@@ -80,7 +80,18 @@ const CreateCardholderForm = ({
   }
   const { country } = session;
 
-  const validationSchema = validationSchemas.cardholder.withSCA;
+  const validationSchema = (() => {
+    // PSD2 requires most transactions on payment cards issued in the EU and UK
+    // to be authenticated in order to proceed. This is called Strong Customer
+    // Authentication[0], or SCA. Stripe typically uses 3D Secure[1] to authenticate
+    // transactions, which requires a phone number to send an OTP to via SMS.
+    // So phone numbers must be mandatorily collected for cardholders of cards
+    // issued by EU or UK Stripe Issuing users.
+    //
+    // [0] https://stripe.com/docs/strong-customer-authentication
+    // [1] https://stripe.com/docs/issuing/3d-secure
+    return validationSchemas.cardholder.withSCA;
+  })();
 
   const initialValues = {
     firstName: "",
@@ -299,9 +310,19 @@ const CardholderCreateWidget = () => {
         zipCode = faker.location.zipCode();
       }
 
+      const generateNamesWithMaxLength = (maxLength: number) => {
+        let firstName, lastName;
+        do {
+          firstName = faker.person.firstName();
+          lastName = faker.person.lastName();
+        } while (firstName.length + lastName.length >= maxLength);
+        return { firstName, lastName };
+      };
+      const { firstName, lastName } = generateNamesWithMaxLength(24);
+
       form.setValues({
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
+        firstName: firstName,
+        lastName: lastName,
         email: faker.internet.email().toLowerCase(),
         phoneNumber: faker.phone.number(),
         address1: faker.location.streetAddress(),

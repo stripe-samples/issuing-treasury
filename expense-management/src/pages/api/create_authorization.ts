@@ -20,8 +20,16 @@ const simulateAuthorization = async (
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
-  const responseBalance = await getBalance(stripeAccount);
-  const balance = responseBalance.balance.issuing?.available[0].amount || 0;
+  // A user must have sufficient funds in order to authorize a transaction
+  // on an Issuing card. For Embedded Finance users, these funds will be
+  // stored in a Treasury Financial Account, whereas other users who do not
+  // use Treasury will maintain an Issuing Balance. Here, we determine where
+  // to check for funds, which should illustrate where money comes from to
+  // fund Issuing transactions.
+  const balance = await (async () => {
+    const responseBalance = await getBalance(stripeAccount);
+    return responseBalance.balance.issuing?.available[0].amount || 0;
+  })();
 
   if (balance < 1000) {
     return res.status(400).json(

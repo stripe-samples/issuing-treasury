@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import {
   Alert,
@@ -91,3 +92,4 @@ const TestDataCreateReceivedCredit = ({
 };
 
 export default TestDataCreateReceivedCredit;
+// @endif

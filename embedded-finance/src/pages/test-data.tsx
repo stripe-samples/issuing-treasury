@@ -28,7 +28,11 @@ export const getServerSideProps = async (
   const currency = responseBalance.available[0].currency;
 
   return {
-    props: { hasExternalAccount, availableBalance, currency },
+    props: {
+      hasExternalAccount,
+      availableBalance,
+      currency,
+    },
   };
 };
 
@@ -41,6 +45,16 @@ const Page = ({
   availableBalance: number;
   currency: string;
 }) => {
+  const PayoutsWidget = (() => {
+    return (
+      <TestDataCreatePayouts
+        hasExternalAccount={hasExternalAccount}
+        availableBalance={availableBalance}
+        currency={currency}
+      />
+    );
+  })();
+
   return (
     <>
       <Box
@@ -56,11 +70,7 @@ const Page = ({
               <TestDataCreatePaymentLink />
             </Grid>
             <Grid item xs={12} sm={10} md={8}>
-              <TestDataCreatePayouts
-                hasExternalAccount={hasExternalAccount}
-                availableBalance={availableBalance}
-                currency={currency}
-              />
+              {PayoutsWidget}
             </Grid>
           </Grid>
         </Container>

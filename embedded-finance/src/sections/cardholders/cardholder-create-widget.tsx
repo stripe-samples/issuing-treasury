@@ -80,9 +80,9 @@ const CreateCardholderForm = ({
   }
   const { country } = session;
 
-  // See pages/api/cardholders.ts for more information on cardholder
-  // phone number requirements.
-  const validationSchema = validationSchemas.cardholder.default;
+  const validationSchema = (() => {
+    return validationSchemas.cardholder.default;
+  })();
 
   const initialValues = {
     firstName: "",
@@ -301,9 +301,19 @@ const CardholderCreateWidget = () => {
         zipCode = faker.location.zipCode();
       }
 
+      const generateNamesWithMaxLength = (maxLength: number) => {
+        let firstName, lastName;
+        do {
+          firstName = faker.person.firstName();
+          lastName = faker.person.lastName();
+        } while (firstName.length + lastName.length >= maxLength);
+        return { firstName, lastName };
+      };
+      const { firstName, lastName } = generateNamesWithMaxLength(24);
+
       form.setValues({
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
+        firstName: firstName,
+        lastName: lastName,
         email: faker.internet.email().toLowerCase(),
         phoneNumber: faker.phone.number(),
         address1: faker.location.streetAddress(),

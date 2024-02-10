@@ -1,3 +1,4 @@
+// @if financialProduct==embedded-finance
 import {
   Box,
   Card,
@@ -91,3 +92,4 @@ export const OverviewLatestTransactions = (props: {
     </Card>
   );
 };
+// @endif
