@@ -23,9 +23,9 @@ const ContentSecurityPolicy = `
   font-src 'self' fonts.gstatic.com;
   form-action 'self';
   frame-ancestors 'none';
-  frame-src js.stripe.com;
+  frame-src js.stripe.com connect-js.stripe.com;
   img-src 'self';
-  script-src 'self' js.stripe.com ${isDevelopment ? "'unsafe-eval'" : ""};
+  script-src 'self' js.stripe.com connect-js.stripe.com ${isDevelopment ? "'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline' fonts.googleapis.com;
   upgrade-insecure-requests;
 `;

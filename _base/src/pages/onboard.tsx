@@ -13,10 +13,14 @@ import {
   Chip,
   Divider,
 } from "@mui/material";
+import {
+  ConnectPayments,
+  ConnectComponentsProvider,
+} from "@stripe/react-connect-js";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { GetServerSidePropsContext } from "next";
 import { signOut } from "next-auth/react";
-import React, { ChangeEvent, ReactNode, useState } from "react";
+import React, { ChangeEvent, ReactNode, useEffect, useState } from "react";
 
 import AuthLayout from "src/layouts/auth/layout";
 import {
@@ -26,24 +30,37 @@ import {
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
+import StripeAccount from "src/utils/stripe-account";
+import { getStripePublishableKey } from "src/utils/stripe-authentication";
 import validationSchemas from "src/utils/validation_schemas";
 
-// @begin-exclude-from-subapps
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const session = await getSessionForServerSideProps(context);
-  const { financialProduct } = session;
+  const { stripeAccount } = session;
 
   return {
-    props: {
-      financialProduct,
-    },
+    props: { stripeAccount },
   };
 };
-// @end-exclude-from-subapps
 
-const Page = () => {
+// const fetchAccountSession = async (): Promise<AccountSession> => {
+//   const response = await fetch("/account_session", {
+//     method: "POST",
+//   });
+//   const responseJson = await response.json();
+//   if (!response.ok) {
+//     throw new Error(
+//       `Failed to obtain account session, could not initialize connect.js: ${responseJson.error}`,
+//     );
+//   } else {
+//     const { client_secret: clientSecret } = responseJson;
+//     return { clientSecret };
+//   }
+// };
+
+const Page = ({ stripeAccount }: { stripeAccount: StripeAccount }) => {
   const [isContinuingSuccessfully, setIsContinuingSuccessfully] =
     useState(false);
   const [showConnectOnboardingGuide, setShowConnectOnboardingGuide] =
@@ -99,6 +116,72 @@ const Page = () => {
     await signOut();
     setIsLoggingOut(true);
   };
+
+  const { platform } = stripeAccount;
+  const stripePublishableKey = getStripePublishableKey(platform);
+
+  if (!stripePublishableKey) {
+    throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY must be defined");
+  }
+
+  const [clientSecret, setClientSecret] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await postApi("/api/account-session");
+        const result = await extractJsonFromResponse(response);
+        await handleResult<string>({
+          result,
+          onSuccess: async () => {
+            const { client_secret: clientSecret } = await response.json();
+            setClientSecret(clientSecret); // Set the state with the fetched client secret
+            return clientSecret; // This return is for handleResult's onSuccess
+          },
+          onError: (error) => {
+            console.error("An error occurred: ", error);
+            // Optionally, handle the error state with useState if needed
+          },
+        });
+      } catch (error) {
+        console.error("Failed to fetch client secret: ", error);
+        // Handle any errors that occur during the fetch
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // We use `useState` to ensure the Connect instance is only initialized once
+  // const [stripeConnectInstance] = useState(() => {
+  //   const fetchClientSecret = async (): Promise<string> => {
+  //     // Fetch the AccountSession client secret
+  //     const response = await postApi("/api/account-session");
+  //     const result = await extractJsonFromResponse(response);
+  //     const clientSecret = handleResult<string>({
+  //       result,
+  //       onSuccess: async () => {
+  //         const { client_secret: clientSecret } = await response.json();
+  //         return clientSecret;
+  //       },
+  //       onError: (error) => {
+  //         console.error("An error occurred: ", error);
+  //         return undefined;
+  //       },
+  //     });
+
+  //     if (typeof clientSecret === "string") {
+  //       return clientSecret;
+  //     } else {
+  //       throw new Error("Client secret is not a string");
+  //     }
+  //   };
+
+  //   return loadConnectAndInitialize({
+  //     publishableKey: stripePublishableKey,
+  //     fetchClientSecret: fetchClientSecret,
+  //   });
+  // });
 
   return (
     <>
@@ -167,6 +250,11 @@ const Page = () => {
                     />
                   </>
                 )}
+                {/* <ConnectComponentsProvider
+                  connectInstance={stripeConnectInstance}
+                >
+                  <ConnectPayments />
+                </ConnectComponentsProvider> */}
                 {errors.submit && (
                   <Alert severity="error">{errors.submit}</Alert>
                 )}

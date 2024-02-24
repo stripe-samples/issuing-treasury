@@ -33,7 +33,8 @@ export default withAuth(
 
     const accessingOnboarding =
       req.nextUrl.pathname === "/onboard" ||
-      req.nextUrl.pathname === "/api/onboard";
+      req.nextUrl.pathname === "/api/onboard" ||
+      req.nextUrl.pathname === "/api/account-session";
     const stripeAccount = {
       accountId: token.accountId,
       platform: getPlatform(token.country),

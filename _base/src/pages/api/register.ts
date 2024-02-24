@@ -69,6 +69,9 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     }),
     capabilities: {
       transfers: { requested: true },
+      // This is required for Embedded Onboarding and to operate features in the Payments/Payouts page.
+      // It is not a requirement for `card_issuing` or `treasury`.
+      card_payments: { requested: true },
       card_issuing: { requested: true },
       // @if financialProduct==embedded-finance
       // If we are creating an user an embedded finance platform, we must request

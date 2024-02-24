@@ -37,14 +37,14 @@ export const extractJsonFromResponse = async <TData = object>(
   }
 };
 
-export const handleResult = async ({
+export const handleResult = async <T = void>({
   result,
   onSuccess,
   onError,
   onFinally,
 }: {
   result: ApiResponse;
-  onSuccess: () => Promise<void> | void;
+  onSuccess: () => Promise<T> | T;
   onError: (error: { message: string; details?: string | undefined }) => void;
   onFinally?: () => void;
 }) => {
