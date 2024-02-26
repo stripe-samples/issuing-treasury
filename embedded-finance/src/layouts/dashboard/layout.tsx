@@ -46,7 +46,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Head>
-        <title>Issuing & Treasury</title>
+        <title>BaaS Platform Demo</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <TopNav onNavOpen={() => setOpenNav(true)} />
@@ -57,7 +57,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <Box px={3} py={5} sx={{ backgroundColor: "neutral.50" }}>
             <Box mx="auto" maxWidth={800} textAlign="center">
               <Typography variant="body2" color="neutral.400">
-                Stripe Issuing & Treasury Platform Demo partners with Stripe
+                Stripe Issuing and Treasury Platform Demo partners with Stripe
                 Payments Company for money transmission services and account
                 services with funds held at Example Bank, Member FDIC. Stripe
                 Issuing & Treasury Platform Demo Visa® Commercial Credit cards
