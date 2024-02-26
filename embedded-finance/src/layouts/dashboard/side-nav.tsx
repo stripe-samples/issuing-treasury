@@ -99,12 +99,14 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           }}
           textAlign="center"
         >
-          <Typography color="neutral.100" variant="subtitle2">
-            Stripe Issuing and Treasury
-          </Typography>
-          <Typography color="neutral.100" variant="subtitle2">
-            platform demo
-          </Typography>
+          <>
+            <Typography color="neutral.100" variant="subtitle2">
+              Stripe Issuing and Treasury
+            </Typography>
+            <Typography color="neutral.100" variant="subtitle2">
+              platform demo
+            </Typography>
+          </>
           <Typography color="neutral.600" variant="subtitle2">
             Data, financial activity and cards are fictitious and for testing
             purposes only. You should not input personal information.
@@ -117,7 +119,7 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
               </SvgIcon>
             }
             fullWidth
-            href="https://github.com/stripe-samples/issuing-treasury/"
+            href="https://github.com/stripe-samples/issuing-treasury/tree/main/embedded-finance"
             sx={{ mt: 2 }}
             target="_blank"
             variant="contained"
