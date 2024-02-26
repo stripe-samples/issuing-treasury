@@ -60,8 +60,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 Stripe Issuing and Treasury Platform Demo partners with Stripe
                 Payments Company for money transmission services and account
                 services with funds held at Example Bank, Member FDIC. Stripe
-                Issuing & Treasury Platform Demo Visa® Commercial Credit cards
-                are issued by Example Bank.{" "}
+                Issuing and Treasury Platform Demo Visa® Commercial Credit
+                cards are issued by Example Bank.{" "}
                 <Link
                   href="https://stripe.com/privacy"
                   target="_blank"
