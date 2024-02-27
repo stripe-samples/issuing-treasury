@@ -69,6 +69,10 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     }),
     capabilities: {
       transfers: { requested: true },
+      // `card_payments` is only requested for the Test Data section to demonstrate payments and how it is a separate
+      // balance from the Issuing balance or Treasury Financial Account balance. It is not required for Issuing or
+      // Treasury.
+      card_payments: { requested: true },
       card_issuing: { requested: true },
       // @if financialProduct==embedded-finance
       // If we are creating an user an embedded finance platform, we must request

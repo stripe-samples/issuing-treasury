@@ -23,12 +23,14 @@ export const OverviewAvailableBalance = (props: {
         >
           <Stack spacing={1}>
             <Typography color="text.secondary" variant="overline">
-              Payments Available Balance
+              Payments Acquired Balance
             </Typography>
             <Typography variant="h4">
               {currencyFormat(value / 100, currency)}
             </Typography>
-            <Typography color="text.secondary">Available balance</Typography>
+            <Typography color="text.secondary">
+              Available acquired balance
+            </Typography>
           </Stack>
           <Avatar
             sx={{
