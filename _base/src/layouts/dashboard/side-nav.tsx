@@ -130,32 +130,85 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           }}
           textAlign="center"
         >
-          <Typography color="neutral.100" variant="subtitle2">
-            Stripe Issuing and Treasury
-          </Typography>
-          <Typography color="neutral.100" variant="subtitle2">
-            platform demo
-          </Typography>
+          {/* @begin-exclude-from-subapps */}
+          {financialProduct === FinancialProduct.EmbeddedFinance && (
+            // @end-exclude-from-subapps
+            // @if financialProduct==embedded-finance
+            <>
+              <Typography color="neutral.100" variant="subtitle2">
+                Stripe Issuing and Treasury
+              </Typography>
+              <Typography color="neutral.100" variant="subtitle2">
+                platform demo
+              </Typography>
+            </>
+            // @endif
+            // @begin-exclude-from-subapps
+          )}
+          {/* @end-exclude-from-subapps */}
+          {/* @begin-exclude-from-subapps */}
+          {financialProduct === FinancialProduct.ExpenseManagement && (
+            // @end-exclude-from-subapps
+            // @if financialProduct==expense-management
+            <Typography color="neutral.100" variant="subtitle2">
+              Stripe Issuing platform demo
+            </Typography>
+            // @endif
+            // @begin-exclude-from-subapps
+          )}
+          {/* @end-exclude-from-subapps */}
           <Typography color="neutral.600" variant="subtitle2">
             Data, financial activity and cards are fictitious and for testing
             purposes only. You should not input personal information.
           </Typography>
-          <Button
-            component="a"
-            endIcon={
-              <SvgIcon fontSize="small">
-                <ArrowTopRightOnSquareIcon />
-              </SvgIcon>
-            }
-            fullWidth
-            href="https://github.com/stripe-samples/issuing-treasury/"
-            sx={{ mt: 2 }}
-            target="_blank"
-            variant="contained"
-            color="secondary"
-          >
-            View on GitHub
-          </Button>
+          {/* @begin-exclude-from-subapps */}
+          {financialProduct === FinancialProduct.EmbeddedFinance && (
+            // @end-exclude-from-subapps
+            // @if financialProduct==embedded-finance
+            <Button
+              component="a"
+              endIcon={
+                <SvgIcon fontSize="small">
+                  <ArrowTopRightOnSquareIcon />
+                </SvgIcon>
+              }
+              fullWidth
+              href="https://github.com/stripe-samples/issuing-treasury/tree/main/embedded-finance"
+              sx={{ mt: 2 }}
+              target="_blank"
+              variant="contained"
+              color="secondary"
+            >
+              View on GitHub
+            </Button>
+            // @endif
+            // @begin-exclude-from-subapps
+          )}
+          {/* @end-exclude-from-subapps */}
+          {/* @begin-exclude-from-subapps */}
+          {financialProduct === FinancialProduct.ExpenseManagement && (
+            // @end-exclude-from-subapps
+            // @if financialProduct==expense-management
+            <Button
+              component="a"
+              endIcon={
+                <SvgIcon fontSize="small">
+                  <ArrowTopRightOnSquareIcon />
+                </SvgIcon>
+              }
+              fullWidth
+              href="https://github.com/stripe-samples/issuing-treasury/tree/main/expense-management"
+              sx={{ mt: 2 }}
+              target="_blank"
+              variant="contained"
+              color="secondary"
+            >
+              View on GitHub
+            </Button>
+            // @endif
+            // @begin-exclude-from-subapps
+          )}
+          {/* @end-exclude-from-subapps */}
         </Box>
       </Box>
     </Scrollbar>

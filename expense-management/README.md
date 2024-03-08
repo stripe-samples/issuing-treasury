@@ -3,7 +3,7 @@
 This sample demonstrates a basic web application with expense management features built on Stripe’s Issuing APIs.
 
 <p align="center">
-  <img width="715" alt="Issuing sample app card details screenshot" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/5acecf09-d65d-499c-9171-eb187656dd2b" />
+  <img width="715" alt="Issuing sample app card details screenshot" src="https://github.com/stripe-samples/issuing-treasury/blob/main/expense-management/public/assets/issuing-only-screenshot.jpeg" />
 </p>
 
 ## Features
