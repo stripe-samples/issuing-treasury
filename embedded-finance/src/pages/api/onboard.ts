@@ -59,6 +59,12 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         mcc: "5734",
         product_description: "Some demo product",
         url: "https://some-company.com",
+        annual_revenue: {
+          amount: 0,
+          currency: "usd",
+          fiscal_year_end: "2023-12-31",
+        },
+        estimated_worker_count: 1,
       },
       company: {
         name: businessName,
