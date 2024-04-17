@@ -23,7 +23,6 @@ services:
       sync: false
     - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU
       sync: false
-
     - key: STRIPE_SECRET_KEY_UK
       sync: false
     - key: STRIPE_SECRET_KEY_EU
