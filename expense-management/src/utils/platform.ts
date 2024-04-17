@@ -3,7 +3,15 @@ enum Platform {
   EU,
 }
 
+//EU Countries (excluding UK)= AT, BE, HR, CY, EE, FI, FR, DE, GR, IE, IT, LV, LT, LU, MT, PT, SK, SI, ES, 
+const euCountriesList = ['AT', 'BE', 'HR', 'CY', 'EE', 'FI', 'FR', 'DE', 'GR', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'PT', 'SK', 'SI', 'ES']
+
 const getPlatform = (country: string): Platform => {
+
+  if (euCountriesList.includes(country)) {
+    country = 'EU'
+  }
+
   switch (country) {
     case "GB":
       return Platform.UK;
