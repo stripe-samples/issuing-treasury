@@ -115,7 +115,7 @@ const Page = ({
   const TestDataGenerationPanel = (() => {
     return (
       <FloatingTestPanel title="Simulate Issuing Balance Funding">
-        <TestDataTopUpIssuingBalance currency={currency}/>
+        <TestDataTopUpIssuingBalance currency={currency} />
       </FloatingTestPanel>
     );
   })();
