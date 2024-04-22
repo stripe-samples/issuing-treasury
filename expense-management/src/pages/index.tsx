@@ -45,6 +45,7 @@ export const getServerSideProps = async (
       availableBalance,
       balanceTransactions,
       balanceFundsFlowChartData,
+      currency,
     },
   };
 };
@@ -94,11 +95,13 @@ const Page = ({
   availableBalance,
   balanceTransactions,
   balanceFundsFlowChartData,
+  currency,
 }: {
   issuingBalance: Stripe.Balance.Issuing;
   availableBalance: Stripe.Balance;
   balanceTransactions: Stripe.BalanceTransaction[];
   balanceFundsFlowChartData: BalanceChartData;
+  currency: string;
 }) => {
   const BalanceWidget = (() => {
     return IssuingBalanceStuff({
@@ -112,7 +115,7 @@ const Page = ({
   const TestDataGenerationPanel = (() => {
     return (
       <FloatingTestPanel title="Simulate Issuing Balance Funding">
-        <TestDataTopUpIssuingBalance />
+        <TestDataTopUpIssuingBalance currency={currency}/>
       </FloatingTestPanel>
     );
   })();

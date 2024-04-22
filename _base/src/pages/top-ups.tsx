@@ -55,7 +55,7 @@ export const getServerSideProps = async (
   const availableBalance = response.balance.issuing?.available[0];
 
   return {
-    props: { fundingInstructions, availableBalance },
+    props: { fundingInstructions, availableBalance, currency },
   };
 };
 
@@ -164,9 +164,11 @@ const SEPATransferTopupInstructions = ({
 const Page = ({
   fundingInstructions,
   availableBalance,
+  currency,
 }: {
   fundingInstructions: FundingInstructions;
   availableBalance: Stripe.Balance.Available;
+  currency: string;
 }) => {
   return (
     <>
@@ -216,7 +218,7 @@ const Page = ({
       </Box>
 
       <FloatingTestPanel title="Simulate Issuing Balance Funding">
-        <TestDataTopUpIssuingBalance />
+        <TestDataTopUpIssuingBalance currency={currency}/>
       </FloatingTestPanel>
     </>
   );

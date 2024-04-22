@@ -101,6 +101,7 @@ export const getServerSideProps = async (
       availableBalance,
       balanceTransactions,
       balanceFundsFlowChartData,
+      currency,
       // @endif
     },
   };
@@ -196,6 +197,7 @@ const Page = ({
   availableBalance,
   balanceTransactions,
   balanceFundsFlowChartData,
+  currency,
   // @endif
 }: {
   // @if financialProduct==embedded-finance
@@ -208,6 +210,7 @@ const Page = ({
   availableBalance: Stripe.Balance;
   balanceTransactions: Stripe.BalanceTransaction[];
   balanceFundsFlowChartData: BalanceChartData;
+  currency: string;
   // @endif
 }) => {
   const BalanceWidget = (() => {
@@ -254,7 +257,7 @@ const Page = ({
       // @if financialProduct==expense-management
       return (
         <FloatingTestPanel title="Simulate Issuing Balance Funding">
-          <TestDataTopUpIssuingBalance />
+          <TestDataTopUpIssuingBalance currency={currency}/>
         </FloatingTestPanel>
       );
       // @endif

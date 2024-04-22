@@ -17,8 +17,13 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
+import { currencyFormat } from "src/utils/format";
 
-const TestDataTopUpIssuingBalance = ({}) => {
+const TestDataTopUpIssuingBalance = ({
+  currency,
+}: {
+  currency: string;
+}) => {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -46,7 +51,7 @@ const TestDataTopUpIssuingBalance = ({}) => {
     <>
       <Stack spacing={1}>
         <Typography variant="body2">
-          Your issuing balance account will receive a £500.00{" "}
+          Your issuing balance account will receive a {currencyFormat(500, currency)} {" "}
           <Link
             href="https://stripe.com/docs/issuing/funding/balance"
             target="_blank"
