@@ -46,7 +46,19 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   const platform = getPlatform(country);
   const stripe = stripeClient(platform);
   const account = await stripe.accounts.create({
-    type: "custom",
+    // This is the only supported configuration for Stripe Connect with Issuing. You can see more details in the docs (https://docs.stripe.com/issuing/connect).
+    controller: {
+      stripe_dashboard: {
+        type: "none",
+      },
+      fees: {
+        payer: "application",
+      },
+      requirement_collection: "application",
+      losses: {
+        payments: "application",
+      },
+    },
     country: country,
     email: email,
     ...(isDemoMode() && {
