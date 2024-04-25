@@ -16,22 +16,28 @@ services:
   envVars:
     - key: PORT
       value: 10000
-    - key: DATABASE_URL
+    - key: POSTGRES_URL
       fromDatabase:
         name: issuing-treasury-db
         property: connectionString
-    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US
+    # This will default to the US region
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
       sync: false
-    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK
+    - key: STRIPE_SECRET_KEY
       sync: false
-    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU
-      sync: false
-    - key: STRIPE_SECRET_KEY_US
-      sync: false
-    - key: STRIPE_SECRET_KEY_UK
-      sync: false
-    - key: STRIPE_SECRET_KEY_EU
-      sync: false
+    # You can enable these and comment out the above keys if you want to try the multi-region deployment
+    # - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US
+    #   sync: false
+    # - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK
+    #   sync: false
+    # - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU
+    #   sync: false
+    # - key: STRIPE_SECRET_KEY_US
+    #   sync: false
+    # - key: STRIPE_SECRET_KEY_UK
+    #   sync: false
+    # - key: STRIPE_SECRET_KEY_EU
+    #   sync: false
     - key: NEXTAUTH_SECRET
       generateValue: true
 
