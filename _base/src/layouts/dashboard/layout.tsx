@@ -56,7 +56,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Head>
-        <title>BaaS Platform Demo</title>
+        <title>Stripe BaaS platform demo</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <TopNav onNavOpen={() => setOpenNav(true)} />
@@ -71,11 +71,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 // @end-exclude-from-subapps
                 // @if financialProduct==embedded-finance
                 <Typography variant="body2" color="neutral.400">
-                  Stripe Issuing and Treasury Platform Demo partners with Stripe
-                  Payments Company for money transmission services and account
-                  services with funds held at Example Bank, Member FDIC. Stripe
-                  Issuing and Treasury Platform Demo Visa® Commercial Credit
-                  cards are issued by Example Bank.{" "}
+                  Stripe BaaS platform demo partners with Stripe Payments
+                  Company for money transmission services and account services
+                  with funds held at Example Bank, Member FDIC. Stripe BaaS
+                  Platform Demo Visa® Commercial Credit cards are issued by
+                  Example Bank.{" "}
                   <Link
                     href="https://stripe.com/privacy"
                     target="_blank"
@@ -93,10 +93,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 // @end-exclude-from-subapps
                 // @if financialProduct==expense-management
                 <Typography variant="body2" color="neutral.400">
-                  Stripe Issuing Platform Demo partners with Stripe Payments
+                  Stripe BaaS platform demo partners with Stripe Payments
                   Company for money transmission services and account services.
-                  Stripe Issuing Platform Demo Visa® Commercial Credit cards
-                  are issued by Example Bank.{" "}
+                  Stripe BaaS platform demo Visa® Commercial Credit cards are
+                  issued by Example Bank.{" "}
                   <Link
                     href="https://stripe.com/privacy"
                     target="_blank"

@@ -130,33 +130,9 @@ export const SideNav = (props: { onClose: () => void; open: boolean }) => {
           }}
           textAlign="center"
         >
-          {/* @begin-exclude-from-subapps */}
-          {financialProduct === FinancialProduct.EmbeddedFinance && (
-            // @end-exclude-from-subapps
-            // @if financialProduct==embedded-finance
-            <>
-              <Typography color="neutral.100" variant="subtitle2">
-                Stripe Issuing and Treasury
-              </Typography>
-              <Typography color="neutral.100" variant="subtitle2">
-                platform demo
-              </Typography>
-            </>
-            // @endif
-            // @begin-exclude-from-subapps
-          )}
-          {/* @end-exclude-from-subapps */}
-          {/* @begin-exclude-from-subapps */}
-          {financialProduct === FinancialProduct.ExpenseManagement && (
-            // @end-exclude-from-subapps
-            // @if financialProduct==expense-management
-            <Typography color="neutral.100" variant="subtitle2">
-              Stripe Issuing platform demo
-            </Typography>
-            // @endif
-            // @begin-exclude-from-subapps
-          )}
-          {/* @end-exclude-from-subapps */}
+          <Typography color="neutral.100" variant="subtitle2">
+            Stripe BaaS platform demo
+          </Typography>
           <Typography color="neutral.600" variant="subtitle2">
             Data, financial activity and cards are fictitious and for testing
             purposes only. You should not input personal information.
