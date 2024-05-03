@@ -1,0 +1,42 @@
+previewsEnabled: false
+services:
+- type: web
+  name: issuing-treasury
+  env: node
+  plan: free
+  buildCommand: npm install; npx prisma migrate deploy; npx prisma generate; npm run build;
+  # If you plan to have your own custom domain, you can remove these environment variables being assigned here and
+  # assign them to your custom domain values through the Render.com dashboard once this web service has been provisioned
+  startCommand: >
+    NEXTAUTH_URL=$RENDER_EXTERNAL_URL
+    CONNECT_ONBOARDING_REDIRECT_URL=$RENDER_EXTERNAL_URL
+    npm run start
+  autoDeploy: false
+  envVars:
+    - key: PORT
+      value: 10000
+    - key: DATABASE_URL
+      fromDatabase:
+        name: issuing-treasury-db
+        property: connectionString
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US
+      sync: false
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK
+      sync: false
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU
+      sync: false
+    - key: STRIPE_SECRET_KEY_US
+      sync: false
+    - key: STRIPE_SECRET_KEY_UK
+      sync: false
+    - key: STRIPE_SECRET_KEY_EU
+      sync: false
+    - key: NEXTAUTH_SECRET
+      generateValue: true
+
+databases:
+- name: issuing-treasury-db
+  plan: free
+  databaseName: issuing_treasury
+  user: issuing_treasury
+  ipAllowList: [] # only allow internal connections

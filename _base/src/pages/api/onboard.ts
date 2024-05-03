@@ -9,6 +9,7 @@ import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 import validationSchemas from "src/utils/validation_schemas";
+import { getCountryVars } from "src/utils/country-helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -53,7 +54,11 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
+  const {city, postcode} = getCountryVars(country);
+
+  
   const onboardingData: Stripe.AccountUpdateParams = {
+
     business_profile: { name: businessName },
     // TODO: Only update the fields during the demo that are outstanding to speed things up
     // FOR-DEMO-ONLY: We're using fake data for illustrative purposes in this demo. The fake data will be used to bypass
@@ -83,15 +88,17 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         address: {
           // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
           line1: "address_full_match",
+   
           ...(country === "US" && {
             city: "South San Francisco",
             state: "CA",
             postal_code: "94080",
           }),
-          ...(country === "GB" && {
-            city: "London",
-            postal_code: "WC32 4AP",
+          ...({
+            city: city,
+            postal_code: postcode,
           }),
+
           country: country,
         },
         // These values together cause the DOB to be verified in testmode: https://stripe.com/docs/connect/testing#test-dobs

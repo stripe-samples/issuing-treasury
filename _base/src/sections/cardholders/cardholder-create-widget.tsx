@@ -23,6 +23,7 @@ import { Formik, Form, Field, FormikProps, FormikValues } from "formik";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import React, { RefObject, useRef } from "react";
+import { getCountryVars } from "src/utils/country-helpers";
 
 import {
   extractJsonFromResponse,
@@ -30,6 +31,7 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 import validationSchemas from "src/utils/validation_schemas";
+import { log } from "xstate";
 
 const validCardholderCountries = (
   country: string,
@@ -310,10 +312,11 @@ const CardholderCreateWidget = () => {
   const handleAutofill = () => {
     const form = formRef.current;
     if (form) {
-      const locale = clm.getLocaleByAlpha2(country) || "en_US";
+      let locale = clm.getLocaleByAlpha2(country) || "en_US";
+
       const faker =
         allFakers[locale as keyof typeof allFakers] || allFakers["en_US"];
-
+  
       let state;
       let zipCode;
       if (country == "US") {
@@ -338,7 +341,7 @@ const CardholderCreateWidget = () => {
         firstName: firstName,
         lastName: lastName,
         email: faker.internet.email().toLowerCase(),
-        phoneNumber: faker.phone.number(),
+        phoneNumber: getCountryVars(country).phone, //faker.phone.number(),
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
         state: state,
