@@ -15,7 +15,7 @@ services:
   envVars:
     - key: PORT
       value: 10000
-    - key: DATABASE_URL
+    - key: POSTGRES_URL
       fromDatabase:
         name: issuing-treasury-db
         property: connectionString
