@@ -174,8 +174,6 @@ export function getCountryVars(country: string) {
         city: city,
         postcode: postcode
     }
-
-    console.log(countryVars);
     
     return countryVars;
 }
