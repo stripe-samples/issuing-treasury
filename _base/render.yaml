@@ -10,7 +10,7 @@ services:
   startCommand: >
     NEXTAUTH_URL=$RENDER_EXTERNAL_URL
     CONNECT_ONBOARDING_REDIRECT_URL=$RENDER_EXTERNAL_URL
-    cd _base
+    cd _base;
     npm run start
   autoDeploy: false
   envVars:
