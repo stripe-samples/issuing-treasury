@@ -1,5 +1,6 @@
 
 import { faker } from "@faker-js/faker";
+import { log } from "xstate";
 
 export function getCountryVars(country: string) {
     let phoneRegEx;
@@ -170,7 +171,7 @@ export function getCountryVars(country: string) {
     };
 
     let countryVars = {
-        phone: faker.phone.number(faker.helpers.fromRegExp(phoneRegEx)),
+        phone:  "+" + phoneRegEx?.replace(/\W/g, '') + faker.string.numeric(phoneRegEx?.match(/#/g)?.length), //faker.phone.number(faker.helpers.fromRegExp(phoneRegEx)),
         city: city,
         postcode: postcode
     }
