@@ -26,18 +26,18 @@ services:
     - key: STRIPE_SECRET_KEY
       sync: false
     # You can enable these and comment out the above keys if you want to try the multi-region deployment
-    # - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US
-    #   sync: false
-    # - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK
-    #   sync: false
-    # - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU
-    #   sync: false
-    # - key: STRIPE_SECRET_KEY_US
-    #   sync: false
-    # - key: STRIPE_SECRET_KEY_UK
-    #   sync: false
-    # - key: STRIPE_SECRET_KEY_EU
-    #   sync: false
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US
+      sync: false
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK
+      sync: false
+    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU
+      sync: false
+    - key: STRIPE_SECRET_KEY_US
+      sync: false
+    - key: STRIPE_SECRET_KEY_UK
+      sync: false
+    - key: STRIPE_SECRET_KEY_EU
+      sync: false
     - key: NEXTAUTH_SECRET
       generateValue: true
 
