@@ -21,10 +21,10 @@ services:
         name: issuing-treasury-db
         property: connectionString
     # This will default to the US region
-    - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-      sync: false
-    - key: STRIPE_SECRET_KEY
-      sync: false
+    # - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    #   sync: false
+    # - key: STRIPE_SECRET_KEY
+    #   sync: false
     # You can enable these and comment out the above keys if you want to try the multi-region deployment
     - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US
       sync: false
