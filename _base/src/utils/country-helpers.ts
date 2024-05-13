@@ -64,7 +64,7 @@ export function getCountryVars(country: string) {
             break;
 
         case 'FR': //France
-            phoneRegEx = "+33(#)#########";
+            phoneRegEx = "+33(#)#### ####";
             city = "Paris";
             postcode = "75001"
             break;
