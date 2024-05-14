@@ -5,7 +5,7 @@ This sample demonstrates a basic web application with multi-region embedded fina
 **Note: this directory contains a demo application showcasing a wide range of Banking-as-a-Service products at Stripe. You can use it today at https://baas.stripe.dev. If you are beginning an integration with Stripe's Banking-as-a-Service APIs, we recommend you instead read and use sample application code that is focussed on the financial product you want to build. See the non-`_base` directories in the root of this repository (for example: `embedded-finance`, `expense-management`).**
 
 <p align="center">
-  <img width="715" alt="BaaS platform demo card details screenshot" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/5acecf09-d65d-499c-9171-eb187656dd2b" />
+  <img width="715" alt="Stripe BaaS platform sample app card details screenshot" src="https://github.com/stripe-samples/issuing-treasury/assets/103917180/5acecf09-d65d-499c-9171-eb187656dd2b" />
 </p>
 
 ## Demo
