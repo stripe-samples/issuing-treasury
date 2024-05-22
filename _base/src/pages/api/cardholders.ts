@@ -99,6 +99,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const ip =
     req.headers["x-real-ip"]?.toString() || req.connection.remoteAddress;
   const stripe = stripeClient(platform);
+
   await stripe.issuing.cardholders.create(
     {
       type: "individual",
@@ -110,7 +111,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
         last_name: lastName,
         card_issuing: {
           user_terms_acceptance: {
-            date: Date.now(),
+            date: Math.floor(Date.now() / 1000),
             ip: ip,
           },
         },
