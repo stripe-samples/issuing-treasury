@@ -1,3 +1,4 @@
+import { getUnixTime } from "date-fns/getUnixTime";
 import { parsePhoneNumber } from "libphonenumber-js";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -82,7 +83,7 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
         last_name: lastName,
         card_issuing: {
           user_terms_acceptance: {
-            date: Date.now(),
+            date: getUnixTime(new Date()),
             ip: ip,
           },
         },
@@ -121,7 +122,7 @@ const updateCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
         last_name: req.body.lastName,
         card_issuing: {
           user_terms_acceptance: {
-            date: Date.now(),
+            date: getUnixTime(new Date()),
             ip: ip,
           },
         },
