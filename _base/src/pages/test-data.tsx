@@ -32,13 +32,11 @@ export const getServerSideProps = async (
   });
 
   const availableBalance = responseBalance.available[0].amount;
-  const currency = responseBalance.available[0].currency;
 
   return {
     props: {
       hasExternalAccount,
       availableBalance,
-      currency,
       // @begin-exclude-from-subapps
       financialProduct,
       // @end-exclude-from-subapps
@@ -49,14 +47,12 @@ export const getServerSideProps = async (
 const Page = ({
   hasExternalAccount,
   availableBalance,
-  currency,
   // @begin-exclude-from-subapps
   financialProduct,
   // @end-exclude-from-subapps
 }: {
   hasExternalAccount: boolean;
   availableBalance: number;
-  currency: string;
   // @begin-exclude-from-subapps
   financialProduct: FinancialProduct;
   // @end-exclude-from-subapps
@@ -70,7 +66,6 @@ const Page = ({
         <TestDataCreatePayouts
           hasExternalAccount={hasExternalAccount}
           availableBalance={availableBalance}
-          currency={currency}
         />
       );
       // @endif
@@ -82,7 +77,6 @@ const Page = ({
         <TestDataCreatePayoutsToBank
           hasExternalAccount={hasExternalAccount}
           availableBalance={availableBalance}
-          currency={currency}
         />
       );
       // @endif

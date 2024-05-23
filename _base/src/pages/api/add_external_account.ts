@@ -113,7 +113,7 @@ const addExternalAccount = async (
       // [0] https://stripe.com/docs/payouts
       return await addExternalFinancialAccount(
         stripeAccount,
-        country,
+        country.toString(),
         currency,
       );
       // @endif

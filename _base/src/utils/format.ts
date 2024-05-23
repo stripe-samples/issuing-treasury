@@ -1,58 +1,38 @@
 import { format, fromUnixTime } from "date-fns";
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
-});
+import {
+  CountryConfigMap,
+  SupportedCountry,
+} from "src/utils/account-management-helpers";
 
-export function formatUSD(amount: number) {
-  return currencyFormatter.format(amount);
-}
-
-export const newCurrencyFormatter = (currency: string) => {
-  let locale;
-
-  switch (currency) {
-    case "gbp": {
-      locale = "en-GB";
-      break;
-    }
-    case "eur": {
-      locale = "en-EU";
-      break;
-    }
-    default: {
-      locale = "en-US";
-      break;
-    }
-  }
-
-  return new Intl.NumberFormat(locale, {
+export const formatCurrencyForCountry = (
+  amountInMinorUnits: number,
+  country: SupportedCountry,
+) => {
+  const countryConfig = CountryConfigMap[country];
+  const currencyFormatter = new Intl.NumberFormat(countryConfig.locale, {
     style: "currency",
-    currency: currency.toUpperCase(),
+    currency: countryConfig.currency.toString(),
     minimumFractionDigits: 2,
   });
+  // Convert amount from minor units to major units (e.g., cents to dollars)
+  return currencyFormatter.format(amountInMinorUnits / 100);
 };
 
-export function currencyFormat(amount: number, currency: string) {
-  return newCurrencyFormatter(currency).format(amount);
-}
-
-export function formatDateTime(secondsSinceEpoch: number) {
+export const formatDateTime = (secondsSinceEpoch: number) => {
   return format(fromUnixTime(secondsSinceEpoch), "MMM dd, yyyy");
-}
+};
 
-export function formatDateAndTime(secondsSinceEpoch: number) {
+export const formatDateAndTime = (secondsSinceEpoch: number) => {
   return format(fromUnixTime(secondsSinceEpoch), "MMM dd, yyyy 'at' h:mm a");
-}
+};
 
-export function capitalize(value: string) {
+export const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1);
-}
+};
 
-export function titleize(str: string) {
+export const titleize = (str: string) => {
   return str
     .toLowerCase()
     .replace(/(?:^|\s|-)\w/g, (match) => match.toUpperCase());
-}
+};

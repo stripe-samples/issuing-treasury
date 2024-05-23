@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
 import {
@@ -16,17 +17,15 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
-import { currencyFormat } from "src/utils/format";
+import { formatCurrencyForCountry } from "src/utils/format";
 
-const TestDataCreateAuthorization = ({
-  cardId,
-  currency,
-}: {
-  cardId: string;
-  currency: string;
-}) => {
+const TestDataCreateAuthorization = ({ cardId }: { cardId: string }) => {
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
   const router = useRouter();
-
   const [submitting, setSubmitting] = useState(false);
   const [errorText, setErrorText] = useState("");
 
@@ -54,7 +53,7 @@ const TestDataCreateAuthorization = ({
     <>
       <Stack spacing={1}>
         <Typography variant="body2">
-          A {currencyFormat(10.0, currency)}{" "}
+          A {formatCurrencyForCountry(1000, country)}{" "}
           <Link
             href="https://stripe.com/docs/issuing/purchase/authorizations"
             target="_blank"

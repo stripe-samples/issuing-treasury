@@ -11,12 +11,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { useSession } from "next-auth/react";
 import Stripe from "stripe";
 
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
 import TransactionFlowDetails from "src/sections/overview/transaction-flow-details";
-import { formatDateTime, formatUSD } from "src/utils/format";
+import { formatCurrencyForCountry, formatDateTime } from "src/utils/format";
 
 const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
   open: "warning",
@@ -29,6 +30,12 @@ export const OverviewLatestTransactions = (props: {
   sx?: object;
 }) => {
   const { faTransactions = [], sx } = props;
+
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
 
   return (
     <Card sx={sx}>
@@ -54,7 +61,7 @@ export const OverviewLatestTransactions = (props: {
                         {formatDateTime(transaction.created)}
                       </TableCell>
                       <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
-                        {`${formatUSD(transaction.amount / 100)} USD`}
+                        {formatCurrencyForCountry(transaction.amount, country)}
                       </TableCell>
                       <TableCell
                         sx={{

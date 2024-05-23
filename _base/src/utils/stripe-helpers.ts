@@ -141,7 +141,7 @@ export async function getFinancialAccountTransactionDetails(
   faTransactions.data.forEach((element: Stripe.Treasury.Transaction) => {
     const date = new Date(element.created * 1000);
     const formattedDate = format(date, DATE_FORMAT);
-    const amountInDollars = Math.abs(element.amount) / 100;
+    const amountInDollars = Math.abs(element.amount);
 
     if (fundsFlowByDate.hasOwnProperty(formattedDate)) {
       if (element.amount > 0) {
@@ -341,7 +341,7 @@ export async function getBalanceTransactions(
   ) {
     const date = new Date(transaction.created * 1000);
     const formattedDate = format(date, DATE_FORMAT);
-    const amount = Math.abs(transaction.amount) / 100;
+    const amount = Math.abs(transaction.amount);
     const type = transaction.type;
 
     if (

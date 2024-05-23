@@ -25,46 +25,15 @@ import { useSession } from "next-auth/react";
 import React, { RefObject, useRef } from "react";
 
 import {
+  getSupportedCountryConfigsInRegion,
+  SupportedCountry,
+} from "src/utils/account-management-helpers";
+import {
   extractJsonFromResponse,
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
 import validationSchemas from "src/utils/validation-schemas";
-
-const validCardholderCountries = (
-  country: string,
-): { name: string; code: string }[] => {
-  if (country == "US") {
-    return [{ name: "United States", code: "US" }];
-  }
-
-  if (country == "GB") {
-    return [{ name: "United Kingdom", code: "GB" }];
-  }
-
-  return [
-    { name: "Austria", code: "AT" },
-    { name: "Belgium", code: "BE" },
-    { name: "Croatia", code: "HR" },
-    { name: "Cyprus", code: "CY" },
-    { name: "Estonia", code: "EE" },
-    { name: "Finland", code: "FI" },
-    { name: "France", code: "FR" },
-    { name: "Germany", code: "DE" },
-    { name: "Greece", code: "GR" },
-    { name: "Ireland", code: "IE" },
-    { name: "Italy", code: "IT" },
-    { name: "Latvia", code: "LV" },
-    { name: "Lithuania", code: "LT" },
-    { name: "Luxembourg", code: "LU" },
-    { name: "Malta", code: "MT" },
-    { name: "Netherlands", code: "NL" },
-    { name: "Portugal", code: "PT" },
-    { name: "Slovakia", code: "SK" },
-    { name: "Slovenia", code: "SI" },
-    { name: "Spain", code: "ES" },
-  ];
-};
 
 const CreateCardholderForm = ({
   formRef,
@@ -82,7 +51,7 @@ const CreateCardholderForm = ({
 
   const validationSchema = (() => {
     // @begin-exclude-from-subapps
-    if (country == "US") {
+    if (country === SupportedCountry.US) {
       // @end-exclude-from-subapps
       // @if financialProduct==embedded-finance
       return validationSchemas.cardholder.default;
@@ -121,6 +90,9 @@ const CreateCardholderForm = ({
   };
 
   const [errorText, setErrorText] = React.useState("");
+
+  // Get all the countries that are supported by the platform Stripe Account
+  const countryConfigs = getSupportedCountryConfigsInRegion(country);
 
   const handleSubmit = async (
     values: FormikValues,
@@ -252,9 +224,9 @@ const CreateCardholderForm = ({
                 error={touched.country && Boolean(errors.country)}
                 helperText={touched.country && errors.country}
               >
-                {validCardholderCountries(country).map((validCountry) => (
-                  <MenuItem key={validCountry.code} value={validCountry.code}>
-                    {validCountry.name}
+                {countryConfigs.map((countryConfig) => (
+                  <MenuItem key={countryConfig.code} value={countryConfig.code}>
+                    {countryConfig.name}
                   </MenuItem>
                 ))}
               </Field>
@@ -310,13 +282,13 @@ const CardholderCreateWidget = () => {
   const handleAutofill = () => {
     const form = formRef.current;
     if (form) {
-      const locale = clm.getLocaleByAlpha2(country) || "en_US";
+      const locale = clm.getLocaleByAlpha2(country.toString()) || "en_US";
       const faker =
         allFakers[locale as keyof typeof allFakers] || allFakers["en_US"];
 
       let state;
       let zipCode;
-      if (country == "US") {
+      if (country === SupportedCountry.US) {
         state = faker.location.state();
         zipCode = faker.location.zipCode("#####");
       } else {

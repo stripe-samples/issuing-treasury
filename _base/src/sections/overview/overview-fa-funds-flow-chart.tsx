@@ -8,13 +8,20 @@ import {
   SvgIcon,
   useTheme,
 } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 import { Chart } from "src/components/chart";
 import { ChartData } from "src/types/chart-data";
-import { formatUSD } from "src/utils/format";
+import { SupportedCountry } from "src/utils/account-management-helpers";
+import { formatCurrencyForCountry } from "src/utils/format";
 
-const useChartOptions = (faFundsFlowChartData: ChartData) => {
+const useChartOptions = (
+  faFundsFlowChartData: ChartData,
+  country: SupportedCountry,
+) => {
   const theme = useTheme();
+  const formatCurrency = (amount: number) =>
+    formatCurrencyForCountry(amount, country);
 
   return {
     chart: {
@@ -78,7 +85,7 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
     },
     yaxis: {
       labels: {
-        formatter: formatUSD,
+        formatter: formatCurrency,
         offsetX: -10,
         style: {
           fontSize: "16px",
@@ -88,7 +95,7 @@ const useChartOptions = (faFundsFlowChartData: ChartData) => {
     },
     tooltip: {
       y: {
-        formatter: formatUSD,
+        formatter: formatCurrency,
       },
     },
   };
@@ -101,7 +108,12 @@ export const OverviewFinancialAccountFundsFlowChart = ({
   faFundsFlowChartData: ChartData;
   sx?: object;
 }) => {
-  const chartOptions = useChartOptions(faFundsFlowChartData);
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
+  const chartOptions = useChartOptions(faFundsFlowChartData, country);
 
   const chartSeries = [
     {

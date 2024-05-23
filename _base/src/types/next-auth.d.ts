@@ -2,6 +2,8 @@
 import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import { DefaultJWT } from "next-auth/jwt";
 
+import { SupportedCountry } from "src/utils/account-management-helpers";
+
 declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
@@ -11,7 +13,7 @@ declare module "next-auth" {
     accountId: string;
     requiresOnboarding: boolean;
     businessName: string;
-    country: string;
+    country: SupportedCountry;
     currency: string;
     // @begin-exclude-from-subapps
     financialProduct: FinancialProduct;
@@ -26,7 +28,7 @@ declare module "next-auth/jwt" {
     accountId: string;
     requiresOnboarding: boolean;
     businessName: string;
-    country: string;
+    country: SupportedCountry;
     currency: string;
     // @begin-exclude-from-subapps
     financialProduct: FinancialProduct;

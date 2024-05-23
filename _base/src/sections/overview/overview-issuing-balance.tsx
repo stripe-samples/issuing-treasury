@@ -1,16 +1,24 @@
 // @if financialProduct==expense-management
 import { Avatar, Card, CardContent, Stack, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
 import Stripe from "stripe";
 
 import CurrencyIcon from "src/components/currency-icon";
-import { currencyFormat } from "src/utils/format";
+import { CountryConfigMap } from "src/utils/account-management-helpers";
+import { formatCurrencyForCountry } from "src/utils/format";
 
 export const OverviewIssuingBalance = (props: {
   sx: object;
   balance: Stripe.Balance.Available;
 }) => {
   const { sx, balance } = props;
-  const { amount: value, currency } = balance;
+  const { amount: value } = balance;
+
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
 
   return (
     <Card sx={sx}>
@@ -26,7 +34,7 @@ export const OverviewIssuingBalance = (props: {
               Issuing Balance
             </Typography>
             <Typography variant="h4">
-              {currencyFormat(value / 100, currency)}
+              {formatCurrencyForCountry(value, country)}
             </Typography>
             <Typography color="text.secondary">
               Available Issuing balance
@@ -39,7 +47,7 @@ export const OverviewIssuingBalance = (props: {
               width: 56,
             }}
           >
-            <CurrencyIcon currency={currency} />
+            <CurrencyIcon currency={CountryConfigMap[country].currency} />
           </Avatar>
         </Stack>
       </CardContent>
