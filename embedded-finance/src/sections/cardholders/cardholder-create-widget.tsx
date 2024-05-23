@@ -1,4 +1,4 @@
-import { allFakers } from "@faker-js/faker";
+import { Faker } from "@faker-js/faker";
 import {
   Alert,
   Button,
@@ -18,7 +18,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import clm from "country-locale-map";
 import { Formik, Form, Field, FormikProps, FormikValues } from "formik";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -30,7 +29,11 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
-import { getFakeAddressByCountry } from "src/utils/demo-helpers";
+import {
+  getFakeAddressByCountry,
+  getFakePhoneByCountry,
+  LocalizedFakerMap,
+} from "src/utils/demo-helpers";
 import validationSchemas from "src/utils/validation-schemas";
 
 const CreateCardholderForm = ({
@@ -90,6 +93,11 @@ const CreateCardholderForm = ({
     });
   };
 
+  // For SCA in EU/UK
+  const phoneNumberRequired = () => {
+    return false;
+  };
+
   return (
     <Formik
       innerRef={formRef}
@@ -137,7 +145,7 @@ const CreateCardholderForm = ({
               <Field
                 as={TextField}
                 fullWidth
-                required
+                required={phoneNumberRequired}
                 label="Phone number"
                 name="phoneNumber"
                 error={touched.phoneNumber && Boolean(errors.phoneNumber)}
@@ -257,9 +265,7 @@ const CardholderCreateWidget = () => {
   const handleAutofill = () => {
     const form = formRef.current;
     if (form) {
-      const locale = clm.getLocaleByAlpha2(country.toString()) || "en_US";
-      const faker =
-        allFakers[locale as keyof typeof allFakers] || allFakers["en_US"];
+      const faker = LocalizedFakerMap[country] as Faker;
 
       const generateNamesWithMaxLength = (maxLength: number) => {
         let firstName, lastName;
@@ -277,11 +283,11 @@ const CardholderCreateWidget = () => {
         firstName: firstName,
         lastName: lastName,
         email: faker.internet.email().toLowerCase(),
-        phoneNumber: faker.phone.number(),
+        phoneNumber: getFakePhoneByCountry(country),
         address1: fakeAddress.address1,
         city: fakeAddress.city,
         state: fakeAddress.state,
-        postalCode: fakeAddress.zipCode,
+        postalCode: fakeAddress.postalCode,
         country: country,
         accept: true,
       });
