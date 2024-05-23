@@ -1,7 +1,11 @@
 import bcrypt from "bcrypt";
 
 import { prisma } from "src/db";
-import { getPlatformStripeAccountForCountry } from "src/utils/account-management-helpers";
+import {
+  getPlatformStripeAccountForCountry,
+  isSupportedCountry,
+  SupportedCountry,
+} from "src/utils/account-management-helpers";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
 
 export const authenticateUser = async (email: string, password: string) => {
@@ -20,9 +24,15 @@ export const authenticateUser = async (email: string, password: string) => {
       data: { lastLoginAt: new Date() },
     });
 
+    if (!isSupportedCountry(user.country)) {
+      throw new Error(`Unsupported country ${user.country}`);
+    }
+
     const stripeAccount = {
       accountId: user.accountId,
-      platform: getPlatformStripeAccountForCountry(user.country),
+      platform: getPlatformStripeAccountForCountry(
+        user.country as unknown as SupportedCountry,
+      ),
     };
 
     const requiresOnboarding = await hasOutstandingRequirements(stripeAccount);

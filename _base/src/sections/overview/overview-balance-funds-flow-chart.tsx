@@ -8,13 +8,20 @@ import {
   SvgIcon,
   useTheme,
 } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 import { Chart } from "src/components/chart";
 import { BalanceChartData } from "src/types/chart-data";
-import { currencyFormat } from "src/utils/format";
+import { SupportedCountry } from "src/utils/account-management-helpers";
+import { formatCurrencyForCountry } from "src/utils/format";
 
-const useChartOptions = (balanceFundsFlowChartData: BalanceChartData) => {
+const useChartOptions = (
+  balanceFundsFlowChartData: BalanceChartData,
+  country: SupportedCountry,
+) => {
   const theme = useTheme();
+  const formatCurrency = (amountInMinorUnits: number) =>
+    formatCurrencyForCountry(amountInMinorUnits, country);
 
   return {
     chart: {
@@ -78,8 +85,7 @@ const useChartOptions = (balanceFundsFlowChartData: BalanceChartData) => {
     },
     yaxis: {
       labels: {
-        formatter: (amount: number) =>
-          currencyFormat(amount, balanceFundsFlowChartData.currency),
+        formatter: formatCurrency,
         offsetX: -10,
         style: {
           fontSize: "16px",
@@ -89,8 +95,7 @@ const useChartOptions = (balanceFundsFlowChartData: BalanceChartData) => {
     },
     tooltip: {
       y: {
-        formatter: (amount: number) =>
-          currencyFormat(amount, balanceFundsFlowChartData.currency),
+        formatter: formatCurrency,
       },
     },
   };
@@ -103,7 +108,12 @@ export const OverviewBalanceFundsFlowChart = ({
   balanceFundsFlowChartData: BalanceChartData;
   sx?: object;
 }) => {
-  const chartOptions = useChartOptions(balanceFundsFlowChartData);
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
+  const chartOptions = useChartOptions(balanceFundsFlowChartData, country);
 
   const chartSeries = [
     {

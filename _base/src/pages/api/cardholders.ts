@@ -3,6 +3,7 @@ import { parsePhoneNumber } from "libphonenumber-js";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
+import { SupportedCountry } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -19,14 +20,14 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     stripeAccount,
     // @begin-exclude-from-subapps
-    country: userCountry,
+    country: cardholderCountry,
     // @end-exclude-from-subapps
   } = session;
   const { accountId, platform } = stripeAccount;
 
   const validationSchema = (() => {
     // @begin-exclude-from-subapps
-    if (userCountry == "US") {
+    if (cardholderCountry == SupportedCountry.US) {
       // @end-exclude-from-subapps
       // @if financialProduct==embedded-finance
       return validationSchemas.cardholder.default;
