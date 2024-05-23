@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
+import { StripeAccount } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import StripeAccount from "src/utils/stripe-account";
 import stripeClient from "src/utils/stripe-loader";
 
 const TEST_GB_ACCOUNT_NUMBER = "00012345";

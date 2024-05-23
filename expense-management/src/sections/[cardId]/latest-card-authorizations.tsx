@@ -13,13 +13,18 @@ import {
   Button,
   SvgIcon,
 } from "@mui/material";
+import { useSession } from "next-auth/react";
 import React from "react";
 import Stripe from "stripe";
 
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
 import { SeverityColor } from "src/types/severity-color";
-import { capitalize, currencyFormat, formatDateTime } from "src/utils/format";
+import {
+  capitalize,
+  formatCurrencyForCountry,
+  formatDateTime,
+} from "src/utils/format";
 
 const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
   closed: "primary",
@@ -34,6 +39,12 @@ const LatestCardAuthorizations = ({
   authorizations: Stripe.Issuing.Authorization[];
   sx?: object;
 }) => {
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
+
   return (
     <>
       <Card sx={sx}>
@@ -69,9 +80,9 @@ const LatestCardAuthorizations = ({
                             whiteSpace: "nowrap",
                           }}
                         >
-                          {currencyFormat(
-                            authorization.amount / 100,
-                            authorization.currency,
+                          {formatCurrencyForCountry(
+                            authorization.amount,
+                            country,
                           )}
                         </TableCell>
                         <TableCell>

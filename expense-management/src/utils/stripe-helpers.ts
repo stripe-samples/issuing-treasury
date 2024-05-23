@@ -1,10 +1,10 @@
 import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
-import StripeAccount from "./stripe-account";
 import { getStripeSecretKey } from "./stripe-authentication";
 
 import { BalanceChartData } from "src/types/chart-data";
+import { StripeAccount } from "src/utils/account-management-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
 type FundsFlowByDate = {
@@ -180,7 +180,7 @@ export async function getBalanceTransactions(
   ) {
     const date = new Date(transaction.created * 1000);
     const formattedDate = format(date, DATE_FORMAT);
-    const amount = Math.abs(transaction.amount) / 100;
+    const amount = Math.abs(transaction.amount);
     const type = transaction.type;
 
     if (

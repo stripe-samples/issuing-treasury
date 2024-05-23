@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
+import { SupportedCountry } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
@@ -75,16 +76,12 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         address: {
           // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
           line1: "address_full_match",
-          ...(country === "US" && {
+          ...(country === SupportedCountry.US && {
             city: "South San Francisco",
             state: "CA",
             postal_code: "94080",
           }),
-          ...(country === "GB" && {
-            city: "London",
-            postal_code: "WC32 4AP",
-          }),
-          country: country,
+          country: country.toString(),
         },
         // These values together cause the DOB to be verified in testmode: https://stripe.com/docs/connect/testing#test-dobs
         dob: {

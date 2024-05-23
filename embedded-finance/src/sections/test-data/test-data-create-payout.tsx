@@ -10,6 +10,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
 import {
@@ -17,17 +18,20 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
-import { currencyFormat } from "src/utils/format";
+import { formatCurrencyForCountry } from "src/utils/format";
 
 function TestDataCreatePayout({
   availableBalance: availableBalanceProp,
   hasExternalAccount: hasExternalAccountProp,
-  currency: currencyProp,
 }: {
   availableBalance: number;
   hasExternalAccount: boolean;
-  currency: string;
 }) {
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
   const [submitting, setSubmitting] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [availableBalance, setAvailableBalance] =
@@ -110,7 +114,7 @@ function TestDataCreatePayout({
             </Link>{" "}
             of{" "}
             <strong>
-              {currencyFormat(availableBalance / 100, currencyProp)}
+              {formatCurrencyForCountry(availableBalance, country)}
             </strong>
             .
           </Typography>

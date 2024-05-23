@@ -25,13 +25,11 @@ export const getServerSideProps = async (
   });
 
   const availableBalance = responseBalance.available[0].amount;
-  const currency = responseBalance.available[0].currency;
 
   return {
     props: {
       hasExternalAccount,
       availableBalance,
-      currency,
     },
   };
 };
@@ -39,18 +37,15 @@ export const getServerSideProps = async (
 const Page = ({
   hasExternalAccount,
   availableBalance,
-  currency,
 }: {
   hasExternalAccount: boolean;
   availableBalance: number;
-  currency: string;
 }) => {
   const PayoutsWidget = (() => {
     return (
       <TestDataCreatePayouts
         hasExternalAccount={hasExternalAccount}
         availableBalance={availableBalance}
-        currency={currency}
       />
     );
   })();

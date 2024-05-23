@@ -5,17 +5,18 @@ import {
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
-const CurrencyIcon = (props: { currency: string }) => {
-  const { currency } = props;
-  let icon;
+import { Currency } from "src/utils/account-management-helpers";
 
-  if (currency == "usd") {
-    icon = <CurrencyDollarIcon />;
-  } else if (currency == "gbp") {
-    icon = <CurrencyPoundIcon />;
-  } else if (currency == "eur") {
-    icon = <CurrencyEuroIcon />;
-  }
+const currencyIconMap: Record<Currency, React.ReactNode> = {
+  [Currency.USD]: <CurrencyDollarIcon />,
+  [Currency.GBP]: <CurrencyPoundIcon />,
+  [Currency.EUR]: <CurrencyEuroIcon />,
+};
+
+const CurrencyIcon = (props: { currency: Currency }) => {
+  const { currency } = props;
+
+  const icon = currencyIconMap[currency];
 
   return <SvgIcon>{icon}</SvgIcon>;
 };

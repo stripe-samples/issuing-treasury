@@ -1,10 +1,10 @@
 import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
-import StripeAccount from "./stripe-account";
 import { getStripeSecretKey } from "./stripe-authentication";
 
 import { ChartData } from "src/types/chart-data";
+import { StripeAccount } from "src/utils/account-management-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
 export async function getFinancialAccountTransactions(
@@ -138,7 +138,7 @@ export async function getFinancialAccountTransactionDetails(
   faTransactions.data.forEach((element: Stripe.Treasury.Transaction) => {
     const date = new Date(element.created * 1000);
     const formattedDate = format(date, DATE_FORMAT);
-    const amountInDollars = Math.abs(element.amount) / 100;
+    const amountInDollars = Math.abs(element.amount);
 
     if (fundsFlowByDate.hasOwnProperty(formattedDate)) {
       if (element.amount > 0) {

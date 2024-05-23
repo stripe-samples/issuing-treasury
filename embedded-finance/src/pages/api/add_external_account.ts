@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
+import { StripeAccount } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import StripeAccount from "src/utils/stripe-account";
 import stripeClient from "src/utils/stripe-loader";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
@@ -67,7 +67,11 @@ const addExternalAccount = async (
     // balance, the funds will be sent to whatever account is set here.
     //
     // [0] https://stripe.com/docs/payouts
-    return await addExternalFinancialAccount(stripeAccount, country, currency);
+    return await addExternalFinancialAccount(
+      stripeAccount,
+      country.toString(),
+      currency,
+    );
   })();
 
   await stripe.accounts.createExternalAccount(accountId, {

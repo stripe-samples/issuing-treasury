@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 
+import { SupportedCountry } from "src/utils/account-management-helpers";
+
 const cardholderBase = Yup.object({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
@@ -33,6 +35,8 @@ const getCharacterValidationError = (str: string) => {
   return `Your password must have at least 1 ${str} character`;
 };
 
+const supportedCountries = Object.values(SupportedCountry) as string[];
+
 const user = Yup.object().shape({
   email: Yup.string()
     .email("Must be a valid email")
@@ -47,7 +51,10 @@ const user = Yup.object().shape({
     .matches(/[0-9]/, getCharacterValidationError("digit"))
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase")),
-  country: Yup.string().max(2).required("Country is required"),
+  country: Yup.string()
+    .required("Country is required")
+    .max(2)
+    .oneOf(supportedCountries, "Country is not supported"),
 });
 
 const businessBase = Yup.object().shape({

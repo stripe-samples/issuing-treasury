@@ -24,47 +24,14 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import React, { RefObject, useRef } from "react";
 
+import { getSupportedCountryConfigsInRegion } from "src/utils/account-management-helpers";
 import {
   extractJsonFromResponse,
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
+import { getFakeAddressByCountry } from "src/utils/demo-helpers";
 import validationSchemas from "src/utils/validation-schemas";
-
-const validCardholderCountries = (
-  country: string,
-): { name: string; code: string }[] => {
-  if (country == "US") {
-    return [{ name: "United States", code: "US" }];
-  }
-
-  if (country == "GB") {
-    return [{ name: "United Kingdom", code: "GB" }];
-  }
-
-  return [
-    { name: "Austria", code: "AT" },
-    { name: "Belgium", code: "BE" },
-    { name: "Croatia", code: "HR" },
-    { name: "Cyprus", code: "CY" },
-    { name: "Estonia", code: "EE" },
-    { name: "Finland", code: "FI" },
-    { name: "France", code: "FR" },
-    { name: "Germany", code: "DE" },
-    { name: "Greece", code: "GR" },
-    { name: "Ireland", code: "IE" },
-    { name: "Italy", code: "IT" },
-    { name: "Latvia", code: "LV" },
-    { name: "Lithuania", code: "LT" },
-    { name: "Luxembourg", code: "LU" },
-    { name: "Malta", code: "MT" },
-    { name: "Netherlands", code: "NL" },
-    { name: "Portugal", code: "PT" },
-    { name: "Slovakia", code: "SK" },
-    { name: "Slovenia", code: "SI" },
-    { name: "Spain", code: "ES" },
-  ];
-};
 
 const CreateCardholderForm = ({
   formRef,
@@ -107,6 +74,9 @@ const CreateCardholderForm = ({
   };
 
   const [errorText, setErrorText] = React.useState("");
+
+  // Get all the countries that are supported by the platform Stripe Account
+  const countryConfigs = getSupportedCountryConfigsInRegion(country);
 
   const handleSubmit = async (
     values: FormikValues,
@@ -238,9 +208,9 @@ const CreateCardholderForm = ({
                 error={touched.country && Boolean(errors.country)}
                 helperText={touched.country && errors.country}
               >
-                {validCardholderCountries(country).map((validCountry) => (
-                  <MenuItem key={validCountry.code} value={validCountry.code}>
-                    {validCountry.name}
+                {countryConfigs.map((countryConfig) => (
+                  <MenuItem key={countryConfig.code} value={countryConfig.code}>
+                    {countryConfig.name}
                   </MenuItem>
                 ))}
               </Field>
@@ -296,19 +266,9 @@ const CardholderCreateWidget = () => {
   const handleAutofill = () => {
     const form = formRef.current;
     if (form) {
-      const locale = clm.getLocaleByAlpha2(country) || "en_US";
+      const locale = clm.getLocaleByAlpha2(country.toString()) || "en_US";
       const faker =
         allFakers[locale as keyof typeof allFakers] || allFakers["en_US"];
-
-      let state;
-      let zipCode;
-      if (country == "US") {
-        state = faker.location.state();
-        zipCode = faker.location.zipCode("#####");
-      } else {
-        state = faker.location.county();
-        zipCode = faker.location.zipCode();
-      }
 
       const generateNamesWithMaxLength = (maxLength: number) => {
         let firstName, lastName;
@@ -320,15 +280,17 @@ const CardholderCreateWidget = () => {
       };
       const { firstName, lastName } = generateNamesWithMaxLength(24);
 
+      const fakeAddress = getFakeAddressByCountry(country);
+
       form.setValues({
         firstName: firstName,
         lastName: lastName,
         email: faker.internet.email().toLowerCase(),
         phoneNumber: faker.phone.number(),
-        address1: faker.location.streetAddress(),
-        city: faker.location.city(),
-        state: state,
-        postalCode: zipCode,
+        address1: fakeAddress.address1,
+        city: fakeAddress.city,
+        state: fakeAddress.state,
+        postalCode: fakeAddress.zipCode,
         country: country,
         accept: true,
       });

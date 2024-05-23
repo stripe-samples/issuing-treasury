@@ -21,9 +21,13 @@ import CardDetails from "src/sections/[cardId]/card-details";
 import CardIllustration from "src/sections/[cardId]/card-illustration";
 import LatestCardAuthorizations from "src/sections/[cardId]/latest-card-authorizations";
 import TestDataCreateAuthorization from "src/sections/test-data/test-data-create-authorization";
-import { currencyFormat } from "src/utils/format";
+import {
+  CountryConfigMap,
+  StripeAccount,
+  SupportedCountry,
+} from "src/utils/account-management-helpers";
+import { formatCurrencyForCountry } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import StripeAccount from "src/utils/stripe-account";
 import { getStripePublishableKey } from "src/utils/stripe-authentication";
 import { getCardDetails } from "src/utils/stripe-helpers";
 
@@ -35,7 +39,7 @@ export const getServerSideProps = async (
   if (cardId === undefined) {
     throw new Error("cardId must be provided");
   }
-  const { stripeAccount, currency } = session;
+  const { stripeAccount, country } = session;
   const cardTransactions = await getCardDetails(stripeAccount, cardId);
 
   return {
@@ -45,7 +49,7 @@ export const getServerSideProps = async (
       stripeAccount: stripeAccount,
       cardId: context?.params?.cardId,
       card: cardTransactions.card_details,
-      currency: currency,
+      country: country,
     },
   };
 };
@@ -56,14 +60,14 @@ const Page = ({
   stripeAccount,
   cardId,
   card,
-  currency,
+  country,
 }: {
   authorizations: Stripe.Issuing.Authorization[];
   currentSpend: number;
   stripeAccount: StripeAccount;
   cardId: string;
   card: Stripe.Issuing.Card;
-  currency: string;
+  country: SupportedCountry;
 }) => {
   const { accountId, platform } = stripeAccount;
   const stripePublishableKey = getStripePublishableKey(platform);
@@ -79,7 +83,7 @@ const Page = ({
   const spendingLimit = card.spending_controls.spending_limits?.[0];
   const spendingLimitDisplay =
     spendingLimit != undefined
-      ? `${currencyFormat(spendingLimit.amount / 100, currency)} ${spendingLimit.interval}`
+      ? `${formatCurrencyForCountry(spendingLimit.amount, country)} ${spendingLimit.interval}`
       : "No spending limit set";
 
   return (
@@ -114,7 +118,7 @@ const Page = ({
                         Current spend
                       </Typography>
                       <Typography variant="h4">
-                        {currencyFormat(currentSpend / 100, currency)}
+                        {formatCurrencyForCountry(currentSpend, country)}
                       </Typography>
                       <Typography pt={1} color="text.secondary">
                         Spending limit:
@@ -130,7 +134,9 @@ const Page = ({
                         width: 56,
                       }}
                     >
-                      <CurrencyIcon currency={currency} />
+                      <CurrencyIcon
+                        currency={CountryConfigMap[country].currency}
+                      />
                     </Avatar>
                   </Stack>
                 </CardContent>
@@ -150,7 +156,7 @@ const Page = ({
         </Container>
       </Box>
       <FloatingTestPanel title="Create a test purchase">
-        <TestDataCreateAuthorization cardId={cardId} currency={currency} />
+        <TestDataCreateAuthorization cardId={cardId} />
       </FloatingTestPanel>
     </>
   );

@@ -14,9 +14,10 @@ import Stripe from "stripe";
 import { SeverityPill } from "src/components/severity-pill";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import { SeverityColor } from "src/types/severity-color";
+import { SupportedCountry } from "src/utils/account-management-helpers";
 import {
   capitalize,
-  currencyFormat,
+  formatCurrencyForCountry,
   formatDateAndTime,
   titleize,
 } from "src/utils/format";
@@ -31,12 +32,13 @@ export const getServerSideProps = async (
   if (authorizationId === undefined) {
     throw new Error("authorizationId must be provided");
   }
-  const { stripeAccount } = session;
+  const { stripeAccount, country } = session;
   const result = await getAuthorizationDetails(stripeAccount, authorizationId);
 
   return {
     props: {
       authorization: result.authorization,
+      country,
     },
   };
 };
@@ -49,8 +51,10 @@ const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
 
 const Page = ({
   authorization,
+  country,
 }: {
   authorization: Stripe.Issuing.Authorization;
+  country: SupportedCountry;
 }) => {
   const declineReason = authorization.request_history.at(-1)?.reason;
 
@@ -109,10 +113,7 @@ const Page = ({
                 <Typography variant="subtitle2">Amount</Typography>
                 <Box sx={{ mt: 0.5 }}>
                   <Typography variant="body2" color="text.secondary">
-                    {currencyFormat(
-                      authorization.amount / 100,
-                      authorization.currency,
-                    )}
+                    {formatCurrencyForCountry(authorization.amount, country)}
                   </Typography>
                 </Box>
               </Grid>
