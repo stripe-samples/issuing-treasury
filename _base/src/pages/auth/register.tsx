@@ -23,7 +23,7 @@ import {
 import { isDemoMode } from "src/utils/demo-helpers";
 import { Platform, enabledPlatforms } from "src/utils/platform";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
-import validationSchemas from "src/utils/validation_schemas";
+import validationSchemas from "src/utils/validation-schemas";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,

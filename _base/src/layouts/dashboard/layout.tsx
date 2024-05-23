@@ -7,7 +7,7 @@ import { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { SideNav } from "src/layouts/dashboard/side-nav";
 import { TopNav } from "src/layouts/dashboard/top-nav";
-import FinancialProduct from "src/types/financial_product";
+import FinancialProduct from "src/types/financial-product";
 
 const SIDE_NAV_WIDTH = 280;
 

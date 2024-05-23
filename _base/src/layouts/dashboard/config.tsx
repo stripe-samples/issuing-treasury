@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
-import FinancialProduct from "src/types/financial_product";
+import FinancialProduct from "src/types/financial-product";
 
 export const items = [
   {
@@ -51,7 +51,7 @@ export const items = [
   // @if financialProduct==embedded-finance
   {
     title: "Financial account",
-    path: "/financial_account",
+    path: "/financial-account",
     icon: (
       <SvgIcon fontSize="small">
         <BanknotesIcon />
