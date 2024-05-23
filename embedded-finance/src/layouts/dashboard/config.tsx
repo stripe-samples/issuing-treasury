@@ -48,7 +48,7 @@ export const items = [
   },
   {
     title: "Financial account",
-    path: "/financial_account",
+    path: "/financial-account",
     icon: (
       <SvgIcon fontSize="small">
         <BanknotesIcon />

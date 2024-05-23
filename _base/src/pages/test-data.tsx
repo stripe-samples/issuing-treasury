@@ -6,7 +6,7 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 import TestDataCreatePaymentLink from "src/sections/test-data/test-data-create-payment-link";
 import TestDataCreatePayouts from "src/sections/test-data/test-data-create-payout";
 import TestDataCreatePayoutsToBank from "src/sections/test-data/test-data-create-payout-to-bank";
-import FinancialProduct from "src/types/financial_product";
+import FinancialProduct from "src/types/financial-product";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 

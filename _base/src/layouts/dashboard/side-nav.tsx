@@ -19,7 +19,7 @@ import { Scrollbar } from "src/components/scrollbar";
 import { items } from "src/layouts/dashboard/config";
 import { SideNavItem } from "src/layouts/dashboard/side-nav-item";
 // @begin-exclude-from-subapps
-import FinancialProduct from "src/types/financial_product";
+import FinancialProduct from "src/types/financial-product";
 
 const validNavigationItem = (
   item: {

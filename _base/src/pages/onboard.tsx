@@ -26,7 +26,7 @@ import {
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import validationSchemas from "src/utils/validation_schemas";
+import validationSchemas from "src/utils/validation-schemas";
 
 // @begin-exclude-from-subapps
 export const getServerSideProps = async (

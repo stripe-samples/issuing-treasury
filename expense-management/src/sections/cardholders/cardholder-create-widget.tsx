@@ -29,7 +29,7 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
-import validationSchemas from "src/utils/validation_schemas";
+import validationSchemas from "src/utils/validation-schemas";
 
 const validCardholderCountries = (
   country: string,

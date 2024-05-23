@@ -2,13 +2,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
-import FinancialProduct from "src/types/financial_product";
+import FinancialProduct from "src/types/financial-product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
-import validationSchemas from "src/utils/validation_schemas";
+import validationSchemas from "src/utils/validation-schemas";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
