@@ -15,7 +15,7 @@ import { CardsSearch } from "src/sections/cards/cards-search";
 import CardsTable from "src/sections/cards/cards-table";
 import { applyPagination } from "src/utils/apply-pagination";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import { getCards } from "src/utils/stripe_helpers";
+import { getCards } from "src/utils/stripe-helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,

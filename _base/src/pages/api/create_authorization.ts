@@ -10,7 +10,7 @@ import {
   // @if financialProduct==embedded-finance
   getFinancialAccountDetails,
   // @endif
-} from "src/utils/stripe_helpers";
+} from "src/utils/stripe-helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
