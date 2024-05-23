@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
 
+import { getPlatformStripeAccountForCountry } from "./utils/account-management-helpers";
 import { hasOutstandingRequirements } from "./utils/onboarding-helpers";
-import { getPlatformStripeAccountForCountry } from "./utils/platform-stripe-account-helpers";
 
 export default withAuth(
   // This will only be called once the user is authorized
