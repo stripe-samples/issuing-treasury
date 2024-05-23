@@ -3,9 +3,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
+import {
+  getPlatformStripeAccountForCountry,
+  SupportedCountry,
+} from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-import { getPlatformStripeAccountForCountry } from "src/utils/platform-stripe-account-helpers";
 import stripeClient from "src/utils/stripe-loader";
 import validationSchemas from "src/utils/validation-schemas";
 
@@ -15,11 +18,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   });
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, password, country } = req.body;
+  const { email, password, country: rawCountry } = req.body;
 
   try {
     await validationSchemas.user.validate(
-      { email, password, country },
+      { email, password, country: rawCountry },
       { abortEarly: false },
     );
   } catch (error) {
@@ -30,6 +33,8 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   }
+
+  const country = rawCountry as SupportedCountry;
 
   // Check if user exists
   const user = await prisma.user.findFirst({ where: { email } });
@@ -59,7 +64,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
         payments: "application",
       },
     },
-    country: country,
+    country: country.toString(),
     email: email,
     ...(isDemoMode() && {
       // FOR-DEMO-ONLY: We're hardcoding the business type to individual. You should either remove this line or modify it
@@ -88,7 +93,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       email: email,
       password: hashedPassword,
       accountId: account.id,
-      country,
+      country: country.toString(),
     },
   });
 

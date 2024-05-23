@@ -4,10 +4,13 @@ import { Session } from "next-auth/core/types";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+import {
+  getPlatformStripeAccountForCountry,
+  SupportedCountry,
+} from "src/utils/account-management-helpers";
 import { authenticateUser } from "src/utils/authentication";
 import logger from "src/utils/logger";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
-import { getPlatformStripeAccountForCountry } from "src/utils/platform-stripe-account-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
 export const authOptions: NextAuthOptions = {
@@ -73,7 +76,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (country != undefined) {
-          token.country = country;
+          token.country = country as unknown as SupportedCountry;
         }
 
         if (currency != undefined) {

@@ -1,12 +1,12 @@
 import { Stripe } from "stripe";
 
-import { Platform } from "./platform-stripe-account-helpers";
-import { getStripeSecretKey } from "./stripe-authentication";
+import { PlatformStripeAccount } from "src/utils/account-management-helpers";
+import { getStripeSecretKey } from "src/utils/stripe-authentication";
 
 const API_VERSION = "2023-10-16";
 const APP_INFO_NAME = "Stripe Issuing & Treasury Starter Application";
 
-const stripeClient = (platform: Platform) => {
+const stripeClient = (platform: PlatformStripeAccount) => {
   const stripeSecretKey = getStripeSecretKey(platform);
 
   if (!stripeSecretKey) {

@@ -1,3 +1,7 @@
+import { faker } from "@faker-js/faker";
+
+import { SupportedCountry } from "./account-management-helpers";
+
 // This helper function is used to determine if the app is running in demo mode which we deploy at baas.stripe.dev
 // To make it easier for you transition to a real production app, we've made it so that you can delete this code, all
 // references to it, and logic guarded by it and the app will still work. The only thing that will change is that your
@@ -7,15 +11,38 @@ export const isDemoMode = () => {
   return process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 };
 
-export const generateDemoEmail = () => {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const alphanumericPart = Array.from(
-    { length: 6 },
-    () => characters[Math.floor(Math.random() * characters.length)],
-  ).join("");
+export const TOS_ACCEPTANCE = { date: 1691518261, ip: "127.0.0.1" };
 
-  return `demo-user-${alphanumericPart}@stripe.dev`;
+type FakeAddress = {
+  address1: string;
+  city: string;
+  state: string;
+  zipCode: string;
 };
 
-export const TOS_ACCEPTANCE = { date: 1691518261, ip: "127.0.0.1" };
+export const getFakeAddressByCountry = (
+  country: SupportedCountry,
+): FakeAddress => {
+  switch (country) {
+    // @if financialProduct==embedded-finance
+    case SupportedCountry.US:
+      return {
+        address1: faker.location.streetAddress(),
+        city: faker.location.city(),
+        state: faker.location.state(),
+        zipCode: faker.location.zipCode("#####"),
+      };
+    // @endif
+    // @if financialProduct==expense-management
+    case SupportedCountry.UK:
+      return {
+        address1: faker.location.streetAddress(),
+        city: faker.location.city(),
+        state: faker.location.county(),
+        zipCode: faker.location.zipCode(),
+      };
+    // @endif
+    default:
+      throw new Error(`Unsupported country: ${country}`);
+  }
+};

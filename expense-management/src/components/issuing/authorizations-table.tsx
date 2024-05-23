@@ -12,6 +12,7 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
+import { useSession } from "next-auth/react";
 import React, { ChangeEvent } from "react";
 import Stripe from "stripe";
 
@@ -19,7 +20,11 @@ import { SeverityPill } from "../severity-pill";
 
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityColor } from "src/types/severity-color";
-import { capitalize, currencyFormat, formatDateTime } from "src/utils/format";
+import {
+  capitalize,
+  formatCurrencyForCountry,
+  formatDateTime,
+} from "src/utils/format";
 
 const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
   closed: "primary",
@@ -55,6 +60,12 @@ const AuthorizationsTable = ({
   rowsPerPage?: number;
   selected?: string[];
 }) => {
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
+
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
 
@@ -117,10 +128,7 @@ const AuthorizationsTable = ({
                       align="right"
                       sx={{ textTransform: "uppercase", whiteSpace: "nowrap" }}
                     >
-                      {currencyFormat(
-                        authorization.amount / 100,
-                        authorization.currency,
-                      )}
+                      {formatCurrencyForCountry(authorization.amount, country)}
                     </TableCell>
                     <TableCell sx={{ whiteSpace: "nowrap" }}>
                       {authorization.card.cardholder.name}

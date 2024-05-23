@@ -1,9 +1,12 @@
 import bcrypt from "bcrypt";
 
-import { hasOutstandingRequirements } from "./onboarding-helpers";
-import { getPlatformStripeAccountForCountry } from "./platform-stripe-account-helpers";
-
 import { prisma } from "src/db";
+import {
+  getPlatformStripeAccountForCountry,
+  isSupportedCountry,
+  SupportedCountry,
+} from "src/utils/account-management-helpers";
+import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
 
 export const authenticateUser = async (email: string, password: string) => {
   const userToAuthenticate = await prisma.user.findFirst({
@@ -21,9 +24,15 @@ export const authenticateUser = async (email: string, password: string) => {
       data: { lastLoginAt: new Date() },
     });
 
+    if (!isSupportedCountry(user.country)) {
+      throw new Error(`Unsupported country ${user.country}`);
+    }
+
     const stripeAccount = {
       accountId: user.accountId,
-      platform: getPlatformStripeAccountForCountry(user.country),
+      platform: getPlatformStripeAccountForCountry(
+        user.country as unknown as SupportedCountry,
+      ),
     };
 
     const requiresOnboarding = await hasOutstandingRequirements(stripeAccount);

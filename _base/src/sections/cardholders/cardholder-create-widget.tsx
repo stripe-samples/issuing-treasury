@@ -33,6 +33,7 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
+import { getFakeAddressByCountry } from "src/utils/demo-helpers";
 import validationSchemas from "src/utils/validation-schemas";
 
 const CreateCardholderForm = ({
@@ -286,16 +287,6 @@ const CardholderCreateWidget = () => {
       const faker =
         allFakers[locale as keyof typeof allFakers] || allFakers["en_US"];
 
-      let state;
-      let zipCode;
-      if (country === SupportedCountry.US) {
-        state = faker.location.state();
-        zipCode = faker.location.zipCode("#####");
-      } else {
-        state = faker.location.county();
-        zipCode = faker.location.zipCode();
-      }
-
       const generateNamesWithMaxLength = (maxLength: number) => {
         let firstName, lastName;
         do {
@@ -306,15 +297,17 @@ const CardholderCreateWidget = () => {
       };
       const { firstName, lastName } = generateNamesWithMaxLength(24);
 
+      const fakeAddress = getFakeAddressByCountry(country);
+
       form.setValues({
         firstName: firstName,
         lastName: lastName,
         email: faker.internet.email().toLowerCase(),
         phoneNumber: faker.phone.number(),
-        address1: faker.location.streetAddress(),
-        city: faker.location.city(),
-        state: state,
-        postalCode: zipCode,
+        address1: fakeAddress.address1,
+        city: fakeAddress.city,
+        state: fakeAddress.state,
+        postalCode: fakeAddress.zipCode,
         country: country,
         accept: true,
       });

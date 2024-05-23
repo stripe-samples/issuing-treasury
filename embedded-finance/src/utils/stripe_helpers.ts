@@ -1,7 +1,7 @@
 import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
-import StripeAccount from "./stripe-account";
+import { StripeAccount } from "./account-management-helpers";
 import { getStripeSecretKey } from "./stripe-authentication";
 
 import { ChartData } from "src/types/chart-data";

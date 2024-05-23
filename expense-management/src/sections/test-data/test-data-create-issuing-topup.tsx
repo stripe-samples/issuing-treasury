@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
 import {
@@ -16,8 +17,14 @@ import {
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
+import { formatCurrencyForCountry } from "src/utils/format";
 
 const TestDataTopUpIssuingBalance = ({}) => {
+  const { data: session } = useSession();
+  if (session == undefined) {
+    throw new Error("Session is missing in the request");
+  }
+  const { country } = session;
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -45,7 +52,8 @@ const TestDataTopUpIssuingBalance = ({}) => {
     <>
       <Stack spacing={1}>
         <Typography variant="body2">
-          Your issuing balance account will receive a £500.00{" "}
+          Your issuing balance account will receive a{" "}
+          {formatCurrencyForCountry(50000, country)}{" "}
           <Link
             href="https://stripe.com/docs/issuing/funding/balance"
             target="_blank"

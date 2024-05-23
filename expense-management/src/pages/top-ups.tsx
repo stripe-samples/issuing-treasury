@@ -21,7 +21,8 @@ import Stripe from "stripe";
 import FloatingTestPanel from "src/components/floating-test-panel";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
-import { currencyFormat } from "src/utils/format";
+import { SupportedCountry } from "src/utils/account-management-helpers";
+import { formatCurrencyForCountry } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   FinancialAddress,
@@ -46,7 +47,7 @@ export const getServerSideProps = async (
   // [0] https://stripe.com/docs/api/issuing/funding_instructions
   const fundingInstructions = await createFundingInstructions(
     stripeAccount,
-    country,
+    country.toString(),
     currency,
   );
 
@@ -54,7 +55,7 @@ export const getServerSideProps = async (
   const availableBalance = response.balance.issuing?.available[0];
 
   return {
-    props: { fundingInstructions, availableBalance },
+    props: { fundingInstructions, availableBalance, country },
   };
 };
 
@@ -70,7 +71,7 @@ const FPSTransferTopupInstructions = ({
   const sortCode = financialAddress.sort_code;
 
   if (!sortCode) {
-    return;
+    return <></>;
   }
 
   return (
@@ -117,7 +118,7 @@ const SEPATransferTopupInstructions = ({
   const iban = financialAddress.iban;
 
   if (!iban) {
-    return;
+    return <></>;
   }
 
   return (
@@ -163,9 +164,11 @@ const SEPATransferTopupInstructions = ({
 const Page = ({
   fundingInstructions,
   availableBalance,
+  country,
 }: {
   fundingInstructions: FundingInstructions;
   availableBalance: Stripe.Balance.Available;
+  country: SupportedCountry;
 }) => {
   return (
     <>
@@ -186,9 +189,9 @@ const Page = ({
                   <Typography>
                     Your Issuing balance is currently{" "}
                     <strong>
-                      {currencyFormat(
-                        availableBalance.amount / 100,
-                        availableBalance.currency,
+                      {formatCurrencyForCountry(
+                        availableBalance.amount,
+                        country,
                       )}
                     </strong>
                   </Typography>

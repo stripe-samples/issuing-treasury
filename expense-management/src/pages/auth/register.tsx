@@ -16,15 +16,15 @@ import { ReactNode, useState } from "react";
 import AuthLayout from "src/layouts/auth/layout";
 // import { COUNTRIES } from "src/types/constants";
 import {
+  PlatformStripeAccount,
+  enabledPlatforms,
+} from "src/utils/account-management-helpers";
+import {
   extractJsonFromResponse,
   handleResult,
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-import {
-  PlatformStripeAccount,
-  enabledPlatforms,
-} from "src/utils/platform-stripe-account-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 import validationSchemas from "src/utils/validation-schemas";
 
