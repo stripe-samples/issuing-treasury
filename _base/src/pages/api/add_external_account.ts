@@ -2,9 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
 import FinancialProduct from "src/types/financial-product";
+import { StripeAccount } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
-import StripeAccount from "src/utils/stripe-account";
 import stripeClient from "src/utils/stripe-loader";
 
 // @if financialProduct==expense-management

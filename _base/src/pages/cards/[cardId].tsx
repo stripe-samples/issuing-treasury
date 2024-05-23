@@ -21,9 +21,9 @@ import CardDetails from "src/sections/[cardId]/card-details";
 import CardIllustration from "src/sections/[cardId]/card-illustration";
 import LatestCardAuthorizations from "src/sections/[cardId]/latest-card-authorizations";
 import TestDataCreateAuthorization from "src/sections/test-data/test-data-create-authorization";
+import { StripeAccount } from "src/utils/account-management-helpers";
 import { currencyFormat } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import StripeAccount from "src/utils/stripe-account";
 import { getStripePublishableKey } from "src/utils/stripe-authentication";
 import { getCardDetails } from "src/utils/stripe-helpers";
 

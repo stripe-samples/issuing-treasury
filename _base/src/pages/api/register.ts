@@ -4,9 +4,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
 import FinancialProduct from "src/types/financial-product";
+import { getPlatformStripeAccountForCountry } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-import { getPlatformStripeAccountForCountry } from "src/utils/platform-stripe-account-helpers";
 import stripeClient from "src/utils/stripe-loader";
 import validationSchemas from "src/utils/validation-schemas";
 

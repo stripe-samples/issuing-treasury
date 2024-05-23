@@ -1,10 +1,10 @@
 import { format, addDays } from "date-fns";
 import Stripe from "stripe";
 
-import StripeAccount from "./stripe-account";
 import { getStripeSecretKey } from "./stripe-authentication";
 
 import { ChartData, BalanceChartData } from "src/types/chart-data";
+import { StripeAccount } from "src/utils/account-management-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
 // @if financialProduct==embedded-finance

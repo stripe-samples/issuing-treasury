@@ -1,6 +1,6 @@
 import logger from "./logger";
-import StripeAccount from "./stripe-account";
 
+import { StripeAccount } from "src/utils/account-management-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
 const IGNORE_REQUIREMENTS = ["external_account"];

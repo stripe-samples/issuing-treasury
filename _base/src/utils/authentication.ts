@@ -1,9 +1,8 @@
 import bcrypt from "bcrypt";
 
-import { hasOutstandingRequirements } from "./onboarding-helpers";
-import { getPlatformStripeAccountForCountry } from "./platform-stripe-account-helpers";
-
 import { prisma } from "src/db";
+import { getPlatformStripeAccountForCountry } from "src/utils/account-management-helpers";
+import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
 
 export const authenticateUser = async (email: string, password: string) => {
   const userToAuthenticate = await prisma.user.findFirst({
