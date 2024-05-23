@@ -1,4 +1,4 @@
-import { Platform } from "./platform";
+import { Platform } from "./platform-stripe-account-helpers";
 
 interface StripeAccount {
   accountId: string;

@@ -7,7 +7,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { authenticateUser } from "src/utils/authentication";
 import logger from "src/utils/logger";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
-import { getPlatform } from "src/utils/platform";
+import { getPlatform } from "src/utils/platform-stripe-account-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
 export const authOptions: NextAuthOptions = {

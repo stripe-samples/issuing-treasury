@@ -1,6 +1,6 @@
 import { Stripe } from "stripe";
 
-import { Platform } from "./platform";
+import { Platform } from "./platform-stripe-account-helpers";
 import { getStripeSecretKey } from "./stripe-authentication";
 
 const API_VERSION = "2023-10-16";

@@ -5,7 +5,7 @@ import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-import { getPlatform } from "src/utils/platform";
+import { getPlatform } from "src/utils/platform-stripe-account-helpers";
 import stripeClient from "src/utils/stripe-loader";
 import validationSchemas from "src/utils/validation-schemas";
 
