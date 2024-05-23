@@ -13,7 +13,7 @@ export const isDemoMode = () => {
 
 export const TOS_ACCEPTANCE = { date: 1691518261, ip: "127.0.0.1" };
 
-const localizedFakerMap: Record<SupportedCountry, unknown> = {
+export const LocalizedFakerMap: Record<SupportedCountry, unknown> = {
   [SupportedCountry.US]: fakerEN_US,
 };
 
@@ -21,13 +21,26 @@ type FakeAddress = {
   address1: string;
   city: string;
   state: string;
-  zipCode: string;
+  postalCode: string;
+};
+
+export const getFakePhoneByCountry = (country: SupportedCountry): string => {
+  const faker = LocalizedFakerMap[country] as Faker;
+
+  switch (country) {
+    case SupportedCountry.US:
+      return faker.phone.number("###-###-####"); // US phone number format
+    default:
+      throw new Error(
+        `Fake phone number generation not implemented for country: ${country}`,
+      );
+  }
 };
 
 export const getFakeAddressByCountry = (
   country: SupportedCountry,
 ): FakeAddress => {
-  const faker = localizedFakerMap[country] as Faker;
+  const faker = LocalizedFakerMap[country] as Faker;
 
   switch (country) {
     case SupportedCountry.US:
@@ -35,7 +48,7 @@ export const getFakeAddressByCountry = (
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
         state: faker.location.state(),
-        zipCode: faker.location.zipCode("#####"),
+        postalCode: faker.location.zipCode("#####"),
       };
     default:
       throw new Error(

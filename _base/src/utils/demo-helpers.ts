@@ -36,7 +36,7 @@ export const isDemoMode = () => {
 
 export const TOS_ACCEPTANCE = { date: 1691518261, ip: "127.0.0.1" };
 
-const localizedFakerMap: Record<SupportedCountry, unknown> = {
+export const LocalizedFakerMap: Record<SupportedCountry, unknown> = {
   // @if financialProduct==expense-management
   [SupportedCountry.AT]: fakerDE_AT,
   [SupportedCountry.BE]: fakerFR_BE,
@@ -69,13 +69,32 @@ type FakeAddress = {
   address1: string;
   city: string;
   state: string;
-  zipCode: string;
+  postalCode: string;
+};
+
+export const getFakePhoneByCountry = (country: SupportedCountry): string => {
+  const faker = LocalizedFakerMap[country] as Faker;
+
+  switch (country) {
+    // @if financialProduct==expense-management
+    case SupportedCountry.UK:
+      return faker.phone.number("07#########"); // UK phone number format
+    // @endif
+    // @if financialProduct==embedded-finance
+    case SupportedCountry.US:
+      return faker.phone.number("###-###-####"); // US phone number format
+    // @endif
+    default:
+      throw new Error(
+        `Fake phone number generation not implemented for country: ${country}`,
+      );
+  }
 };
 
 export const getFakeAddressByCountry = (
   country: SupportedCountry,
 ): FakeAddress => {
-  const faker = localizedFakerMap[country] as Faker;
+  const faker = LocalizedFakerMap[country] as Faker;
 
   switch (country) {
     // @if financialProduct==expense-management
@@ -84,7 +103,7 @@ export const getFakeAddressByCountry = (
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
         state: faker.location.county(),
-        zipCode: faker.location.zipCode(),
+        postalCode: faker.location.zipCode(),
       };
     // @endif
     // @if financialProduct==embedded-finance
@@ -93,7 +112,7 @@ export const getFakeAddressByCountry = (
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
         state: faker.location.state(),
-        zipCode: faker.location.zipCode("#####"),
+        postalCode: faker.location.zipCode("#####"),
       };
     // @endif
     default:
