@@ -24,7 +24,7 @@ import { useSelection } from "src/hooks/use-selection";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import { getAuthorizations } from "src/utils/stripe_helpers";
+import { getAuthorizations } from "src/utils/stripe-helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,

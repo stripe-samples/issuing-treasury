@@ -29,7 +29,7 @@ import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   getFinancialAccountDetailsExp,
   getFinancialAccountTransactionsExpanded,
-} from "src/utils/stripe_helpers";
+} from "src/utils/stripe-helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,

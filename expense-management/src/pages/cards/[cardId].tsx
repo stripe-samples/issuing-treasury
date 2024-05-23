@@ -25,7 +25,7 @@ import { currencyFormat } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import StripeAccount from "src/utils/stripe-account";
 import { getStripePublishableKey } from "src/utils/stripe-authentication";
-import { getCardDetails } from "src/utils/stripe_helpers";
+import { getCardDetails } from "src/utils/stripe-helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,

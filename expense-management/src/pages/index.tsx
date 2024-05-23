@@ -14,7 +14,7 @@ import { OverviewAvailableBalance } from "src/sections/overview/overview-payment
 import TestDataTopUpIssuingBalance from "src/sections/test-data/test-data-create-issuing-topup";
 import { BalanceChartData } from "src/types/chart-data";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import { getBalance, getBalanceTransactions } from "src/utils/stripe_helpers";
+import { getBalance, getBalanceTransactions } from "src/utils/stripe-helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,

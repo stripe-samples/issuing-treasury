@@ -3,8 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
+import { getBalance } from "src/utils/stripe-helpers";
 import stripeClient from "src/utils/stripe-loader";
-import { getBalance } from "src/utils/stripe_helpers";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {

@@ -21,7 +21,7 @@ import {
   titleize,
 } from "src/utils/format";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import { getAuthorizationDetails } from "src/utils/stripe_helpers";
+import { getAuthorizationDetails } from "src/utils/stripe-helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,

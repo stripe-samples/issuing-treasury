@@ -16,7 +16,7 @@ import { CardholdersSearch } from "src/sections/cardholders/cardholders-search";
 import CardholdersTable from "src/sections/cardholders/cardholders-table";
 import { applyPagination } from "src/utils/apply-pagination";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
-import { getCardholders } from "src/utils/stripe_helpers";
+import { getCardholders } from "src/utils/stripe-helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
