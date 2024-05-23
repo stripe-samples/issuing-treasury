@@ -21,7 +21,10 @@ import {
   postApi,
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-import { Platform, enabledPlatforms } from "src/utils/platform";
+import {
+  Platform,
+  enabledPlatforms,
+} from "src/utils/platform-stripe-account-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
 import validationSchemas from "src/utils/validation-schemas";
 

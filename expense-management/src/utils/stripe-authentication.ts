@@ -1,4 +1,4 @@
-import { Platform } from "./platform";
+import { Platform } from "./platform-stripe-account-helpers";
 
 const getStripeSecretKey = (platform: Platform): string | null => {
   let key;

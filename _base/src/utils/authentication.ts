@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 
 import { hasOutstandingRequirements } from "./onboarding-helpers";
-import { getPlatform } from "./platform";
+import { getPlatform } from "./platform-stripe-account-helpers";
 
 import { prisma } from "src/db";
 
