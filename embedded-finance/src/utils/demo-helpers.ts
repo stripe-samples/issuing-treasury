@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { Faker, fakerEN_US } from "@faker-js/faker";
 
 import { SupportedCountry } from "./account-management-helpers";
 
@@ -13,6 +13,10 @@ export const isDemoMode = () => {
 
 export const TOS_ACCEPTANCE = { date: 1691518261, ip: "127.0.0.1" };
 
+const localizedFakerMap: Record<SupportedCountry, unknown> = {
+  [SupportedCountry.US]: fakerEN_US,
+};
+
 type FakeAddress = {
   address1: string;
   city: string;
@@ -23,6 +27,8 @@ type FakeAddress = {
 export const getFakeAddressByCountry = (
   country: SupportedCountry,
 ): FakeAddress => {
+  const faker = localizedFakerMap[country] as Faker;
+
   switch (country) {
     case SupportedCountry.US:
       return {
@@ -32,6 +38,8 @@ export const getFakeAddressByCountry = (
         zipCode: faker.location.zipCode("#####"),
       };
     default:
-      throw new Error(`Unsupported country: ${country}`);
+      throw new Error(
+        `Fake address generation not implemented for country: ${country}`,
+      );
   }
 };

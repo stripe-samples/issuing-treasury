@@ -1,4 +1,22 @@
-import { faker } from "@faker-js/faker";
+import {
+  Faker,
+  faker,
+  fakerDE_AT,
+  fakerFR_BE,
+  fakerEL,
+  fakerDE,
+  fakerES,
+  fakerFI,
+  fakerFR,
+  fakerHR,
+  fakerEN_IE,
+  fakerIT,
+  fakerLV,
+  fakerNL,
+  fakerPT_PT,
+  fakerSK,
+  fakerEN_GB,
+} from "@faker-js/faker";
 
 import { SupportedCountry } from "./account-management-helpers";
 
@@ -13,6 +31,30 @@ export const isDemoMode = () => {
 
 export const TOS_ACCEPTANCE = { date: 1691518261, ip: "127.0.0.1" };
 
+const localizedFakerMap: Record<SupportedCountry, unknown> = {
+  [SupportedCountry.AT]: fakerDE_AT,
+  [SupportedCountry.BE]: fakerFR_BE,
+  [SupportedCountry.CY]: fakerEL,
+  [SupportedCountry.DE]: fakerDE,
+  [SupportedCountry.EE]: faker,
+  [SupportedCountry.ES]: fakerES,
+  [SupportedCountry.FI]: fakerFI,
+  [SupportedCountry.FR]: fakerFR,
+  [SupportedCountry.GR]: fakerEL,
+  [SupportedCountry.HR]: fakerHR,
+  [SupportedCountry.IE]: fakerEN_IE,
+  [SupportedCountry.IT]: fakerIT,
+  [SupportedCountry.LT]: faker,
+  [SupportedCountry.LU]: faker,
+  [SupportedCountry.LV]: fakerLV,
+  [SupportedCountry.MT]: faker,
+  [SupportedCountry.NL]: fakerNL,
+  [SupportedCountry.PT]: fakerPT_PT,
+  [SupportedCountry.SI]: faker,
+  [SupportedCountry.SK]: fakerSK,
+  [SupportedCountry.UK]: fakerEN_GB,
+};
+
 type FakeAddress = {
   address1: string;
   city: string;
@@ -23,6 +65,8 @@ type FakeAddress = {
 export const getFakeAddressByCountry = (
   country: SupportedCountry,
 ): FakeAddress => {
+  const faker = localizedFakerMap[country] as Faker;
+
   switch (country) {
     case SupportedCountry.UK:
       return {
@@ -32,6 +76,8 @@ export const getFakeAddressByCountry = (
         zipCode: faker.location.zipCode(),
       };
     default:
-      throw new Error(`Unsupported country: ${country}`);
+      throw new Error(
+        `Fake address generation not implemented for country: ${country}`,
+      );
   }
 };
