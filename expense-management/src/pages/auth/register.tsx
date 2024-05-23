@@ -22,7 +22,7 @@ import {
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import {
-  Platform,
+  PlatformStripeAccount,
   enabledPlatforms,
 } from "src/utils/platform-stripe-account-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
@@ -37,8 +37,10 @@ export const getServerSideProps = async (
     return { redirect: { destination: "/", permanent: false } };
   }
 
-  const { [Platform.UK]: enableUK, [Platform.EU]: enableEU } =
-    enabledPlatforms();
+  const {
+    [PlatformStripeAccount.UK]: enableUK,
+    [PlatformStripeAccount.EU]: enableEU,
+  } = enabledPlatforms();
 
   return {
     props: {

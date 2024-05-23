@@ -6,7 +6,7 @@ import { apiResponse } from "src/types/api-response";
 import FinancialProduct from "src/types/financial-product";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
-import { getPlatform } from "src/utils/platform-stripe-account-helpers";
+import { getPlatformStripeAccountForCountry } from "src/utils/platform-stripe-account-helpers";
 import stripeClient from "src/utils/stripe-loader";
 import validationSchemas from "src/utils/validation-schemas";
 
@@ -51,7 +51,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Create a Connected Account
-  const platform = getPlatform(country);
+  const platform = getPlatformStripeAccountForCountry(country);
   const stripe = stripeClient(platform);
   const account = await stripe.accounts.create({
     // This is the only supported configuration for Stripe Connect with Issuing. You can see more details in the docs (https://docs.stripe.com/issuing/connect).

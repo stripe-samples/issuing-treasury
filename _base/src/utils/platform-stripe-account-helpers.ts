@@ -1,27 +1,85 @@
-enum Platform {
-  // @if financialProduct==embedded-finance
-  US,
-  // @endif
+enum SupportedCountry {
   // @if financialProduct==expense-management
-  UK,
-  EU,
+  AT = "AT",
+  BE = "BE",
+  CY = "CY",
+  DE = "DE",
+  EE = "EE",
+  ES = "ES",
+  FI = "FI",
+  FR = "FR",
+  GB = "GB",
+  GR = "GR",
+  HR = "HR",
+  IE = "IE",
+  IT = "IT",
+  LT = "LT",
+  LU = "LU",
+  LV = "LV",
+  MT = "MT",
+  NL = "NL",
+  PT = "PT",
+  SI = "SI",
+  SK = "SK",
+  // @endif
+  // @if financialProduct==embedded-finance
+  US = "US",
   // @endif
 }
 
-const getPlatform = (country: string): Platform => {
-  switch (country) {
-    // @if financialProduct==embedded-finance
-    case "US":
-      return Platform.US;
-    // @endif
-    // @if financialProduct==expense-management
-    case "GB":
-      return Platform.UK;
-    case "EU":
-      return Platform.EU;
-    // @endif
-    default:
-      throw new Error(`Unsupported country ${country}`);
+enum PlatformStripeAccount {
+  // @if financialProduct==embedded-finance
+  US = "US",
+  // @endif
+  // @if financialProduct==expense-management
+  UK = "UK",
+  EU = "EU",
+  // @endif
+}
+
+const countryToPlatformStripeAccountMap: Record<
+  SupportedCountry,
+  PlatformStripeAccount
+> = {
+  // @if financialProduct==expense-management
+  [SupportedCountry.AT]: PlatformStripeAccount.EU,
+  [SupportedCountry.BE]: PlatformStripeAccount.EU,
+  [SupportedCountry.CY]: PlatformStripeAccount.EU,
+  [SupportedCountry.DE]: PlatformStripeAccount.EU,
+  [SupportedCountry.EE]: PlatformStripeAccount.EU,
+  [SupportedCountry.ES]: PlatformStripeAccount.EU,
+  [SupportedCountry.FI]: PlatformStripeAccount.EU,
+  [SupportedCountry.FR]: PlatformStripeAccount.EU,
+  [SupportedCountry.GB]: PlatformStripeAccount.UK,
+  [SupportedCountry.GR]: PlatformStripeAccount.EU,
+  [SupportedCountry.HR]: PlatformStripeAccount.EU,
+  [SupportedCountry.IE]: PlatformStripeAccount.EU,
+  [SupportedCountry.IT]: PlatformStripeAccount.EU,
+  [SupportedCountry.LT]: PlatformStripeAccount.EU,
+  [SupportedCountry.LU]: PlatformStripeAccount.EU,
+  [SupportedCountry.LV]: PlatformStripeAccount.EU,
+  [SupportedCountry.MT]: PlatformStripeAccount.EU,
+  [SupportedCountry.NL]: PlatformStripeAccount.EU,
+  [SupportedCountry.PT]: PlatformStripeAccount.EU,
+  [SupportedCountry.SI]: PlatformStripeAccount.EU,
+  [SupportedCountry.SK]: PlatformStripeAccount.EU,
+  // @endif
+  // @if financialProduct==embedded-finance
+  [SupportedCountry.US]: PlatformStripeAccount.US,
+  // @endif
+};
+
+const isSupportedCountry = (country: unknown): country is SupportedCountry => {
+  return Object.values(SupportedCountry).includes(country as SupportedCountry);
+};
+
+const getPlatformStripeAccountForCountry = (
+  country: string,
+): PlatformStripeAccount => {
+  if (isSupportedCountry(country)) {
+    return countryToPlatformStripeAccountMap[country];
+  } else {
+    throw new Error(`Invalid or unsupported country: ${country}`);
   }
 };
 
@@ -49,13 +107,17 @@ const enabledPlatforms = () => {
 
   return {
     // @if financialProduct==embedded-finance
-    [Platform.US]: usEnabled,
+    [PlatformStripeAccount.US]: usEnabled,
     // @endif
     // @if financialProduct==expense-management
-    [Platform.UK]: ukEnabled,
-    [Platform.EU]: euEnabled,
+    [PlatformStripeAccount.UK]: ukEnabled,
+    [PlatformStripeAccount.EU]: euEnabled,
     // @endif
   };
 };
 
-export { Platform, getPlatform, enabledPlatforms };
+export {
+  PlatformStripeAccount,
+  getPlatformStripeAccountForCountry,
+  enabledPlatforms,
+};

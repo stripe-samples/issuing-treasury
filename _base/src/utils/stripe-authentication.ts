@@ -1,19 +1,19 @@
-import { Platform } from "./platform-stripe-account-helpers";
+import { PlatformStripeAccount } from "./platform-stripe-account-helpers";
 
-const getStripeSecretKey = (platform: Platform): string | null => {
+const getStripeSecretKey = (platform: PlatformStripeAccount): string | null => {
   let key;
 
   switch (platform) {
     // @if financialProduct==embedded-finance
-    case Platform.US:
+    case PlatformStripeAccount.US:
       key = process.env.STRIPE_SECRET_KEY_US || process.env.STRIPE_SECRET_KEY;
       break;
     // @endif
     // @if financialProduct==expense-management
-    case Platform.UK:
+    case PlatformStripeAccount.UK:
       key = process.env.STRIPE_SECRET_KEY_UK;
       break;
-    case Platform.EU:
+    case PlatformStripeAccount.EU:
       key = process.env.STRIPE_SECRET_KEY_EU;
       break;
     // @endif
@@ -24,22 +24,24 @@ const getStripeSecretKey = (platform: Platform): string | null => {
   return key || null;
 };
 
-const getStripePublishableKey = (platform: Platform): string | null => {
+const getStripePublishableKey = (
+  platform: PlatformStripeAccount,
+): string | null => {
   let key;
 
   switch (platform) {
     // @if financialProduct==embedded-finance
-    case Platform.US:
+    case PlatformStripeAccount.US:
       key =
         process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_US ||
         process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
       break;
     // @endif
     // @if financialProduct==expense-management
-    case Platform.UK:
+    case PlatformStripeAccount.UK:
       key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_UK;
       break;
-    case Platform.EU:
+    case PlatformStripeAccount.EU:
       key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_EU;
       break;
     // @endif

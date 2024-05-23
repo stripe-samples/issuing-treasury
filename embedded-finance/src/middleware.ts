@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
 
 import { hasOutstandingRequirements } from "./utils/onboarding-helpers";
-import { getPlatform } from "./utils/platform-stripe-account-helpers";
+import { getPlatformStripeAccountForCountry } from "./utils/platform-stripe-account-helpers";
 
 export default withAuth(
   // This will only be called once the user is authorized
@@ -30,13 +30,12 @@ export default withAuth(
         "Pre-onboarding auth check: requiresOnboarding field is missing in the token",
       );
     }
-
     const accessingOnboarding =
       req.nextUrl.pathname === "/onboard" ||
       req.nextUrl.pathname === "/api/onboard";
     const stripeAccount = {
       accountId: token.accountId,
-      platform: getPlatform(token.country),
+      platform: getPlatformStripeAccountForCountry(token.country),
     };
     const requiresOnboarding =
       token.requiresOnboarding &&
