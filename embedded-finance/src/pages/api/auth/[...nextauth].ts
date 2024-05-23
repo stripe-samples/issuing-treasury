@@ -7,7 +7,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { authenticateUser } from "src/utils/authentication";
 import logger from "src/utils/logger";
 import { hasOutstandingRequirements } from "src/utils/onboarding-helpers";
-import { getPlatform } from "src/utils/platform-stripe-account-helpers";
+import { getPlatformStripeAccountForCountry } from "src/utils/platform-stripe-account-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
 export const authOptions: NextAuthOptions = {
@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
       if (token.requiresOnboarding != undefined) {
         const stripeAccount = {
           accountId: token.accountId,
-          platform: getPlatform(token.country),
+          platform: getPlatformStripeAccountForCountry(token.country),
         };
 
         token.requiresOnboarding =
@@ -61,7 +61,7 @@ export const authOptions: NextAuthOptions = {
 
       // If accountId is undefined, that means we're most likely not authenticated yet
       if (token.accountId != undefined && token.businessName == undefined) {
-        const platform = getPlatform(token.country);
+        const platform = getPlatformStripeAccountForCountry(token.country);
         const stripe = stripeClient(platform);
         const account = await stripe.accounts.retrieve(token.accountId);
         const businessName = account.business_profile?.name;
@@ -108,7 +108,7 @@ export const authOptions: NextAuthOptions = {
 
       const stripeAccount = {
         accountId: token.accountId,
-        platform: getPlatform(token.country),
+        platform: getPlatformStripeAccountForCountry(token.country),
       };
 
       session.email = token.email;

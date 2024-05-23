@@ -1,13 +1,29 @@
-enum Platform {
-  US,
+enum SupportedCountry {
+  US = "US",
 }
 
-const getPlatform = (country: string): Platform => {
-  switch (country) {
-    case "US":
-      return Platform.US;
-    default:
-      throw new Error(`Unsupported country ${country}`);
+enum PlatformStripeAccount {
+  US = "US",
+}
+
+const countryToPlatformStripeAccountMap: Record<
+  SupportedCountry,
+  PlatformStripeAccount
+> = {
+  [SupportedCountry.US]: PlatformStripeAccount.US,
+};
+
+const isSupportedCountry = (country: unknown): country is SupportedCountry => {
+  return Object.values(SupportedCountry).includes(country as SupportedCountry);
+};
+
+const getPlatformStripeAccountForCountry = (
+  country: string,
+): PlatformStripeAccount => {
+  if (isSupportedCountry(country)) {
+    return countryToPlatformStripeAccountMap[country];
+  } else {
+    throw new Error(`Invalid or unsupported country: ${country}`);
   }
 };
 
@@ -22,8 +38,12 @@ const enabledPlatforms = () => {
       keyPresent(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY));
 
   return {
-    [Platform.US]: usEnabled,
+    [PlatformStripeAccount.US]: usEnabled,
   };
 };
 
-export { Platform, getPlatform, enabledPlatforms };
+export {
+  PlatformStripeAccount,
+  getPlatformStripeAccountForCountry,
+  enabledPlatforms,
+};

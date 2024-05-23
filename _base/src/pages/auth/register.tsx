@@ -22,7 +22,7 @@ import {
 } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import {
-  Platform,
+  PlatformStripeAccount,
   enabledPlatforms,
 } from "src/utils/platform-stripe-account-helpers";
 import { getSessionForLoginOrRegisterServerSideProps } from "src/utils/session-helpers";
@@ -39,11 +39,11 @@ export const getServerSideProps = async (
 
   const {
     // @if financialProduct==embedded-finance
-    [Platform.US]: enableUS,
+    [PlatformStripeAccount.US]: enableUS,
     // @endif
     // @if financialProduct==expense-management
-    [Platform.UK]: enableUK,
-    [Platform.EU]: enableEU,
+    [PlatformStripeAccount.UK]: enableUK,
+    [PlatformStripeAccount.EU]: enableEU,
     // @endif
   } = enabledPlatforms();
 
