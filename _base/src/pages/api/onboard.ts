@@ -31,6 +31,10 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   } = session;
   const { accountId, platform } = stripeAccount;
 
+  console.log("====================================");
+  console.log("country", country);
+  console.log("====================================");
+
   const {
     businessName,
     skipOnboarding,
@@ -81,7 +85,17 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       company: {
         name: businessName,
         // Fake business TIN: https://stripe.com/docs/connect/testing#test-business-tax-ids
-        tax_id: "000000000",
+        // tax_id: "000000000",
+
+        ...(country === SupportedCountry.US && {
+          tax_id: "000000000",
+        }),
+        ...(country === SupportedCountry.UK && {
+          tax_id: "000000000",
+        }),
+        ...(country === SupportedCountry.DE && {
+          tax_id: "HRA000000000",
+        }),
       },
       individual: {
         address: {
@@ -98,6 +112,10 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
           ...(country === SupportedCountry.UK && {
             city: "London",
             postal_code: "WC32 4AP",
+          }),
+          ...(country === SupportedCountry.DE && {
+            city: "Berline",
+            postal_code: "10115",
           }),
           // @endif
           country: country.toString(),
@@ -138,7 +156,11 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   const stripe = stripeClient(platform);
-  await stripe.accounts.update(accountId, onboardingData);
+  const response = await stripe.accounts.update(accountId, onboardingData);
+  console.log("====================================");
+  console.log("Account onboarding data", onboardingData);
+  console.log("Account response", response);
+  console.log("====================================");
 
   // FOR-DEMO-ONLY: We're going to check if the user wants to skip the onboarding process. If they do, we'll redirect to
   // the home page. In a real application, you would not allow this bypass so that you can collect the real KYC data

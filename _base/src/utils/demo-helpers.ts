@@ -73,12 +73,17 @@ type FakeAddress = {
 };
 
 export const getFakePhoneByCountry = (country: SupportedCountry): string => {
+  console.log("====================================");
+  console.log("country", country);
+  console.log("====================================");
   const faker = LocalizedFakerMap[country] as Faker;
 
   switch (country) {
     // @if financialProduct==expense-management
     case SupportedCountry.UK:
       return faker.phone.number("07#########"); // UK phone number format
+    case SupportedCountry.DE:
+      return faker.phone.number("+49(#)#########"); // DE phone number format
     // @endif
     // @if financialProduct==embedded-finance
     case SupportedCountry.US:
@@ -99,6 +104,13 @@ export const getFakeAddressByCountry = (
   switch (country) {
     // @if financialProduct==expense-management
     case SupportedCountry.UK:
+      return {
+        address1: faker.location.streetAddress(),
+        city: faker.location.city(),
+        state: faker.location.county(),
+        postalCode: faker.location.zipCode(),
+      };
+    case SupportedCountry.DE:
       return {
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
