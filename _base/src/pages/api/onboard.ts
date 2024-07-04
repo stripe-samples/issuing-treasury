@@ -3,7 +3,10 @@ import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
 import FinancialProduct from "src/types/financial-product";
-import { SupportedCountry } from "src/utils/account-management-helpers";
+import {
+  CountryConfigMap,
+  SupportedCountry,
+} from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
@@ -70,7 +73,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         url: "https://some-company.com",
         annual_revenue: {
           amount: 0,
-          currency: "usd",
+          currency: CountryConfigMap[country].currency,
           fiscal_year_end: "2023-12-31",
         },
         estimated_worker_count: 1,

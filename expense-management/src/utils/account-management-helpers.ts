@@ -23,9 +23,9 @@ export enum SupportedCountry {
 }
 
 export enum Currency {
-  USD = "USD",
-  GBP = "GBP",
-  EUR = "EUR",
+  USD = "usd",
+  GBP = "gbp",
+  EUR = "eur",
 }
 
 export enum PlatformStripeAccount {
