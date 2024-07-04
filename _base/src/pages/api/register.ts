@@ -5,6 +5,7 @@ import { prisma } from "src/db";
 import { apiResponse } from "src/types/api-response";
 import FinancialProduct from "src/types/financial-product";
 import {
+  CountryConfigMap,
   getPlatformStripeAccountForCountry,
   SupportedCountry,
 } from "src/utils/account-management-helpers";
@@ -131,7 +132,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     // in which the user will store their funds
     await stripe.treasury.financialAccounts.create(
       {
-        supported_currencies: ["usd"],
+        supported_currencies: [CountryConfigMap[country].currency],
         features: {
           card_issuing: { requested: true },
           deposit_insurance: { requested: true },

@@ -2,6 +2,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { apiResponse } from "src/types/api-response";
+import { CountryConfigMap } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -16,7 +17,7 @@ const simulateReceivedCredit = async (
   res: NextApiResponse,
 ) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount } = session;
+  const { stripeAccount, country } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
@@ -30,7 +31,7 @@ const simulateReceivedCredit = async (
   await stripe.testHelpers.treasury.receivedCredits.create(
     {
       amount: 50000,
-      currency: "usd",
+      currency: CountryConfigMap[country].currency,
       financial_account: financialAccount.id,
       network: "ach",
     },

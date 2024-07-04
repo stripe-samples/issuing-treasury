@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { apiResponse } from "src/types/api-response";
 import NetworkType from "src/types/network-type";
 import TransactionResult from "src/types/transaction-result";
+import { CountryConfigMap } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -15,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 
 const sendMoney = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
-  const { stripeAccount } = session;
+  const { stripeAccount, country } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
 
@@ -56,7 +57,7 @@ const sendMoney = async (req: NextApiRequest, res: NextApiResponse) => {
     {
       financial_account: financialAccount.id,
       amount: amount,
-      currency: "usd",
+      currency: CountryConfigMap[country].currency,
       statement_descriptor: "Descriptor",
       destination_payment_method_data: {
         type: "us_bank_account",
