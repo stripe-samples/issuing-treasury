@@ -111,10 +111,8 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         email: email,
         first_name: "John",
         last_name: "Smith",
-        // Fake phone number: https://stripe.com/docs/connect/testing
-        // TODO: Normally 000-000-0000 is a valid testmode phone number, but it's currently broken. Once Stripe fixes
-        // it, we can change back to 000-000-0000. For now, this is a fake number that will pass validation.
-        phone: "2015550123",
+        // Fake phone number: https://docs.stripe.com/connect/testing#using-oauth
+        phone: "000-000-0000",
       },
       ...(skipOnboarding && { tos_acceptance: TOS_ACCEPTANCE }),
       // Faking Terms of Service acceptances
