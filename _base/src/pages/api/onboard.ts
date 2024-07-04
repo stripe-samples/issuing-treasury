@@ -8,7 +8,11 @@ import {
   SupportedCountry,
 } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
-import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
+import {
+  getFakeAddressByCountry,
+  isDemoMode,
+  TOS_ACCEPTANCE,
+} from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -31,9 +35,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   } = session;
   const { accountId, platform } = stripeAccount;
 
-  console.log("====================================");
-  console.log("country", country);
-  console.log("====================================");
+  const countryData = getFakeAddressByCountry(country);
 
   const {
     businessName,
@@ -85,14 +87,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       company: {
         name: businessName,
         // Fake business TIN: https://stripe.com/docs/connect/testing#test-business-tax-ids
-        // tax_id: "000000000",
-
-        ...(country === SupportedCountry.US && {
-          tax_id: "000000000",
-        }),
-        ...(country === SupportedCountry.UK && {
-          tax_id: "000000000",
-        }),
+        tax_id: "000000000",
         ...(country === SupportedCountry.DE && {
           tax_id: "HRA000000000",
         }),
@@ -101,6 +96,8 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         address: {
           // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
           line1: "address_full_match",
+          city: countryData.city,
+          postal_code: countryData.postalCode,
           // @if financialProduct==embedded-finance
           ...(country === SupportedCountry.US && {
             city: "South San Francisco",
@@ -109,13 +106,38 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
           }),
           // @endif
           // @if financialProduct==expense-management
-          ...(country === SupportedCountry.UK && {
-            city: "London",
-            postal_code: "WC32 4AP",
+          //OVERRIDDING faker generates invalid country data
+          ...(country === SupportedCountry.BE && {
+            city: "Brussel",
+            postal_code: "1000",
+          }),
+          ...(country === SupportedCountry.FI && {
+            city: "Helsinki",
+            postal_code: "00100",
+          }),
+          ...(country === SupportedCountry.FR && {
+            city: "Paris",
+            postal_code: "75001",
           }),
           ...(country === SupportedCountry.DE && {
-            city: "Berline",
+            city: "Berlin",
             postal_code: "10115",
+          }),
+          ...(country === SupportedCountry.LU && {
+            city: "Luxemburg",
+            postal_code: "1111",
+          }),
+          ...(country === SupportedCountry.NL && {
+            city: "Amsterdam",
+            postal_code: "1008 DG",
+          }),
+          ...(country === SupportedCountry.PT && {
+            city: "Lisbon",
+            postal_code: "1000",
+          }),
+          ...(country === SupportedCountry.ES && {
+            city: "Madrid",
+            postal_code: "28001",
           }),
           // @endif
           country: country.toString(),
@@ -156,11 +178,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   const stripe = stripeClient(platform);
-  const response = await stripe.accounts.update(accountId, onboardingData);
-  console.log("====================================");
-  console.log("Account onboarding data", onboardingData);
-  console.log("Account response", response);
-  console.log("====================================");
+  await stripe.accounts.update(accountId, onboardingData);
 
   // FOR-DEMO-ONLY: We're going to check if the user wants to skip the onboarding process. If they do, we'll redirect to
   // the home page. In a real application, you would not allow this bypass so that you can collect the real KYC data
