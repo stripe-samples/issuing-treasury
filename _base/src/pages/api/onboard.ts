@@ -3,12 +3,15 @@ import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
 import FinancialProduct from "src/types/financial-product";
-import {
-  CountryConfigMap,
-  SupportedCountry,
-} from "src/utils/account-management-helpers";
+import { CountryConfigMap } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
-import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
+import {
+  isDemoMode,
+  TOS_ACCEPTANCE,
+  getStaticFakeCompanyTaxIdNumberByCountry,
+  getStaticFakePhoneByCountry,
+  getStaticFakeAddressByCountry,
+} from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -80,26 +83,11 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       company: {
         name: businessName,
-        // Fake business TIN: https://stripe.com/docs/connect/testing#test-business-tax-ids
-        tax_id: "000000000",
+        tax_id: getStaticFakeCompanyTaxIdNumberByCountry(country),
       },
       individual: {
         address: {
-          // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
-          line1: "address_full_match",
-          // @if financialProduct==embedded-finance
-          ...(country === SupportedCountry.US && {
-            city: "South San Francisco",
-            state: "CA",
-            postal_code: "94080",
-          }),
-          // @endif
-          // @if financialProduct==expense-management
-          ...(country === SupportedCountry.UK && {
-            city: "London",
-            postal_code: "WC32 4AP",
-          }),
-          // @endif
+          ...getStaticFakeAddressByCountry(country),
           country: country.toString(),
         },
         // These values together cause the DOB to be verified in testmode: https://stripe.com/docs/connect/testing#test-dobs
@@ -111,8 +99,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         email: email,
         first_name: "John",
         last_name: "Smith",
-        // Fake phone number: https://docs.stripe.com/connect/testing#using-oauth
-        phone: "000-000-0000",
+        phone: getStaticFakePhoneByCountry(country),
       },
       ...(skipOnboarding && { tos_acceptance: TOS_ACCEPTANCE }),
       // Faking Terms of Service acceptances
