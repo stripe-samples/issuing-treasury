@@ -52,12 +52,12 @@ export default withAuth(
     const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
     const cspHeader = `
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect-js.stripe.com/v1.0/connect.js;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect-js.stripe.com/v1.0/connect.js https://js.stripe.com;
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       img-src 'self' blob: data:;
       font-src 'self' https://fonts.gstatic.com;
       object-src 'none';
-      frame-src https://connect-js.stripe.com/;
+      frame-src https://connect-js.stripe.com/ https://js.stripe.com;
       base-uri 'self';
       form-action 'self';
       frame-ancestors 'none';
