@@ -48,6 +48,8 @@ const createAccountSession = async (
           },
         },
       },
+    }, {
+      apiVersion: "2023-10-16;embedded_connect_beta=v2"
     });
 
     res.json({

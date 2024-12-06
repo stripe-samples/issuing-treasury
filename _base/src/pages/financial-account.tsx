@@ -4,6 +4,7 @@ import {
   CardContent,
   Stack,
   Typography,
+  Link,
   Chip,
   CardHeader,
   List,
@@ -16,7 +17,7 @@ import {
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import { loadConnectAndInitialize } from "@stripe/connect-js";
+import { loadConnectAndInitialize } from "@stripe/connect-js/pure";
 import {
   ConnectComponentsProvider,
   ConnectFinancialAccount,
@@ -39,6 +40,7 @@ import {
   getFinancialAccountDetailsExp,
   getFinancialAccountTransactionsExpanded,
 } from "src/utils/stripe-helpers";
+import { EmbeddedComponentsSwitcher } from "src/components/embedded-components-switcher";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -117,16 +119,28 @@ const Page = ({
                 xs={12}
               >
                 {faAddressCreated ? (
-                  <ConnectComponentsProvider
-                    connectInstance={stripeConnectInstance}
-                  >
-                    <ConnectFinancialAccount
-                      financialAccount={financialAccount.id}
-                    />
-                    <ConnectFinancialAccountTransactions
-                      financialAccount={financialAccount.id}
-                    />
-                  </ConnectComponentsProvider>
+                  <Container maxWidth="xl">
+                    <Grid container spacing={3}>
+                      <Grid item xs={12}>
+                        <ConnectComponentsProvider
+                          connectInstance={stripeConnectInstance}
+                        >
+                          <ConnectFinancialAccount
+                            financialAccount={financialAccount.id}
+                          />
+                        </ConnectComponentsProvider>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <ConnectComponentsProvider
+                          connectInstance={stripeConnectInstance}
+                        >
+                          <ConnectFinancialAccountTransactions
+                            financialAccount={financialAccount.id}
+                          />
+                        </ConnectComponentsProvider>
+                      </Grid>
+                    </Grid>
+                  </Container>
                 ) : (
                   <Grid item xs={12}>
                     <Card sx={{ height: "100%" }}>
@@ -141,17 +155,15 @@ const Page = ({
                     </Card>
                   </Grid>
                 )}
-                <Grid container sx={{ justifyContent: "flex-end" }}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={useEmbeddedComponents}
-                        onChange={() =>
-                          setUseEmbeddedComponents(!useEmbeddedComponents)
-                        }
-                      />
+                <Grid
+                  container
+                  sx={{ marginTop: 4, justifyContent: "flex-end" }}
+                >
+                  <EmbeddedComponentsSwitcher
+                    value={useEmbeddedComponents}
+                    onChange={() =>
+                      setUseEmbeddedComponents(!useEmbeddedComponents)
                     }
-                    label="Use embedded components"
                   />
                 </Grid>
               </Grid>
@@ -332,16 +344,11 @@ const Page = ({
                 xs={12}
               >
                 <Grid container sx={{ justifyContent: "flex-end" }}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={useEmbeddedComponents}
-                        onChange={() =>
-                          setUseEmbeddedComponents(!useEmbeddedComponents)
-                        }
-                      />
+                  <EmbeddedComponentsSwitcher
+                    value={useEmbeddedComponents}
+                    onChange={() =>
+                      setUseEmbeddedComponents(!useEmbeddedComponents)
                     }
-                    label="Use embedded components"
                   />
                 </Grid>
               </Grid>
