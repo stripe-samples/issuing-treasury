@@ -128,7 +128,7 @@ const Page = ({ cards: allCards }: { cards: Stripe.Issuing.Card[] }) => {
                   <ConnectComponentsProvider
                     connectInstance={stripeConnectInstance}
                   >
-                    <ConnectIssuingCardsList />
+                    <ConnectIssuingCardsList showSpendControls />
                   </ConnectComponentsProvider>
                   <Grid item xs={12}>
                     <Grid container sx={{ justifyContent: "flex-end" }}>
