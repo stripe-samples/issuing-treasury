@@ -15,6 +15,12 @@ import {
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
+import { loadConnectAndInitialize } from "@stripe/connect-js";
+import {
+  ConnectComponentsProvider,
+  ConnectFinancialAccount,
+  ConnectFinancialAccountTransactions,
+} from "@stripe/react-connect-js";
 import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
@@ -26,6 +32,7 @@ import { OverviewFinancialAccountBalance } from "src/sections/overview/overview-
 import { OverviewFinancialAccountOutboundPending } from "src/sections/overview/overview-fa-outbound-pending";
 import { OverviewLatestTransactions } from "src/sections/overview/overview-latest-transactions";
 import TestDataCreateReceivedCredit from "src/sections/test-data/test-data-create-received-credit";
+import { postApi } from "src/utils/api-helpers";
 import { getSessionForServerSideProps } from "src/utils/session-helpers";
 import {
   getFinancialAccountDetailsExp,
@@ -62,6 +69,32 @@ const Page = ({
   const [useEmbeddedComponents, setUseEmbeddedComponents] =
     React.useState(false);
 
+  const [stripeConnectInstance] = React.useState(() => {
+    const fetchClientSecret = async () => {
+      // Fetch the AccountSession client secret
+      const response = await postApi("/api/create_account_session", {
+        method: "POST",
+      });
+      if (!response.ok) {
+        return undefined;
+      } else {
+        const { client_secret: clientSecret } = await response.json();
+        return clientSecret;
+      }
+    };
+    return loadConnectAndInitialize({
+      // This is your test publishable API key.
+      publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+      fetchClientSecret: fetchClientSecret,
+      appearance: {
+        overlays: "dialog",
+        variables: {
+          colorPrimary: "#625afa",
+        },
+      },
+    });
+  });
+
   return (
     <>
       {useEmbeddedComponents ? (
@@ -82,6 +115,31 @@ const Page = ({
                 }}
                 xs={12}
               >
+                {faAddressCreated ? (
+                  <ConnectComponentsProvider
+                    connectInstance={stripeConnectInstance}
+                  >
+                    <ConnectFinancialAccount
+                      financialAccount={financialAccount.id}
+                    />
+                    <ConnectFinancialAccountTransactions
+                      financialAccount={financialAccount.id}
+                    />
+                  </ConnectComponentsProvider>
+                ) : (
+                  <Grid item xs={12}>
+                    <Card sx={{ height: "100%" }}>
+                      <CardHeader title="Account information" />
+                      <CardContent>
+                        <Alert severity="info">
+                          Your financial account is still being set up (this can
+                          take up to two minutes). Refresh this page to try
+                          again.
+                        </Alert>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                )}
                 <Grid container sx={{ justifyContent: "flex-end" }}>
                   <FormControlLabel
                     control={
