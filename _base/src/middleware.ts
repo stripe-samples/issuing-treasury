@@ -57,7 +57,7 @@ export default withAuth(
       img-src 'self' blob: data:;
       font-src 'self' https://fonts.gstatic.com;
       object-src 'none';
-      frame-src https://connect-js.stripe.com/ https://js.stripe.com;
+      frame-src https://connect-js.stripe.com https://js.stripe.com;
       base-uri 'self';
       form-action 'self';
       frame-ancestors 'none';
