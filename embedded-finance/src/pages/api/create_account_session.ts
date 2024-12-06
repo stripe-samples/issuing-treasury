@@ -58,10 +58,6 @@ const createAccountSession = async (
       client_secret: accountSession.client_secret,
     });
   } catch (error) {
-    console.error(
-      "An error occurred when calling the Stripe API to create an account session",
-      error,
-    );
     res.status(500);
     res.send({ error: (error as Error).message });
   }
