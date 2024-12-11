@@ -74,7 +74,9 @@ const createCardholder = async (req: NextApiRequest, res: NextApiResponse) => {
   const parsedPhoneNumber = parsePhoneNumber(phoneNumber, country);
   if (parsedPhoneNumber) {
     // remove any extension faker may have generated
-    parsedPhoneNumber.setExt("");
+    parsedPhoneNumber.setExt(
+      Object.assign(String(""), { __tag: "Extension" as const }),
+    );
     formattedPhoneNumber = parsedPhoneNumber.formatInternational();
   }
 
