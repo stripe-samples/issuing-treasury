@@ -4,15 +4,12 @@ import {
   CardContent,
   Stack,
   Typography,
-  Link,
   Chip,
   CardHeader,
   List,
   ListItem,
   ListItemText,
   Alert,
-  Switch,
-  FormControlLabel,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -27,6 +24,7 @@ import { GetServerSidePropsContext } from "next";
 import React, { ReactNode } from "react";
 import Stripe from "stripe";
 
+import { EmbeddedComponentsSwitcher } from "src/components/embedded-components-switcher";
 import FloatingTestPanel from "src/components/floating-test-panel";
 import DashboardLayout from "src/layouts/dashboard/layout";
 import SendMoneyWizardDialog from "src/sections/financial-account/send-money-wizard-dialog";
@@ -40,7 +38,6 @@ import {
   getFinancialAccountDetailsExp,
   getFinancialAccountTransactionsExpanded,
 } from "src/utils/stripe-helpers";
-import { EmbeddedComponentsSwitcher } from "src/components/embedded-components-switcher";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
