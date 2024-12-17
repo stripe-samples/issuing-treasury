@@ -78,11 +78,11 @@ export const getFakePhoneByCountry = (country: SupportedCountry): string => {
   switch (country) {
     // @if financialProduct==expense-management
     case SupportedCountry.UK:
-      return faker.phone.number("07#########"); // UK phone number format
+      return faker.helpers.fromRegExp("+44 7[0-9]{9}"); // UK phone number format
     // @endif
     // @if financialProduct==embedded-finance
     case SupportedCountry.US:
-      return faker.phone.number("###-###-####"); // US phone number format
+      return faker.helpers.fromRegExp("[2-9][0-9]{2}-[0-9]{3}-[0-9]{4}"); // US phone number format
     // @endif
     default:
       throw new Error(

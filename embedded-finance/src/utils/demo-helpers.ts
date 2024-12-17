@@ -29,7 +29,7 @@ export const getFakePhoneByCountry = (country: SupportedCountry): string => {
 
   switch (country) {
     case SupportedCountry.US:
-      return faker.phone.number("###-###-####"); // US phone number format
+      return faker.helpers.fromRegExp("[2-9][0-9]{2}-[0-9]{3}-[0-9]{4}"); // US phone number format
     default:
       throw new Error(
         `Fake phone number generation not implemented for country: ${country}`,
