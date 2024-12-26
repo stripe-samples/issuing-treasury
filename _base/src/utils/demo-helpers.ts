@@ -77,6 +77,46 @@ export const getFakePhoneByCountry = (country: SupportedCountry): string => {
 
   switch (country) {
     // @if financialProduct==expense-management
+    case SupportedCountry.AT:
+      return faker.phone.number("+43(#)### ####"); //Austria
+    case SupportedCountry.BE:
+      return faker.phone.number("+32(#)## ## ## ##"); //Belgium
+    case SupportedCountry.CY:
+      return faker.phone.number("+357(9)# ### ###"); //Cyprus
+    case SupportedCountry.DE:
+      return faker.phone.number("+49(#)#### #####"); //Germany
+    case SupportedCountry.EE:
+      return faker.phone.number("+372 ### ####"); //Estonia
+    case SupportedCountry.ES:
+      return faker.phone.number("+34(91)### ####"); //Spain
+    case SupportedCountry.FI:
+      return faker.phone.number("+358(#)## ### ####"); //Finland
+    case SupportedCountry.FR:
+      return faker.phone.number("+33(#)## ## ## ##"); //France
+    case SupportedCountry.GR:
+      return faker.phone.number("+30(#)### #### ###"); //Greece
+    case SupportedCountry.HR:
+      return faker.phone.number("+385 43 ### ###"); //Croatia
+    case SupportedCountry.IE:
+      return faker.phone.number("+353(#)## ### ####"); //Ireland
+    case SupportedCountry.IT:
+      return faker.phone.number("+39(###) ### ####"); //Italy
+    case SupportedCountry.LT:
+      return faker.phone.number("+370(#)## ######"); //Lithuania
+    case SupportedCountry.LU:
+      return faker.phone.number("+352 ### ###"); //Luxeumburg
+    case SupportedCountry.LV:
+      return faker.phone.number("+371(2) ### ####"); //Latvia
+    case SupportedCountry.MT:
+      return faker.phone.number("+356 #### ####"); //Malta
+    case SupportedCountry.NL:
+      return faker.phone.number("+31 (06) #### ####"); //Netherland
+    case SupportedCountry.PT:
+      return faker.phone.number("+351 2## ### ###"); //Portugal
+    case SupportedCountry.SI:
+      return faker.phone.number("+386(#)### ## ##"); //Slovenia
+    case SupportedCountry.SK:
+      return faker.phone.number("+386(#)### ## ##"); //Slovakia
     case SupportedCountry.UK:
       return faker.helpers.fromRegExp("+44 7[0-9]{9}"); // UK phone number format
     // @endif
@@ -91,14 +131,51 @@ export const getFakePhoneByCountry = (country: SupportedCountry): string => {
   }
 };
 
+const euCountriesList = [
+  "AT",
+  "BE",
+  "CY",
+  "DE",
+  "EE",
+  "ES",
+  "FI",
+  "FR",
+  "GR",
+  "HR",
+  "IE",
+  "IT",
+  "LT",
+  "LU",
+  "LV",
+  "MT",
+  "NL",
+  "PT",
+  "SI",
+  "SK",
+];
+
 export const getFakeAddressByCountry = (
   country: SupportedCountry,
 ): FakeAddress => {
   const faker = LocalizedFakerMap[country] as Faker;
 
-  switch (country) {
+  let region = "US";
+  if (euCountriesList.includes(country)) {
+    region = "EU";
+  } else if (country === "GB") {
+    region = "UK";
+  }
+
+  switch (region) {
     // @if financialProduct==expense-management
-    case SupportedCountry.UK:
+    case "EU":
+      return {
+        address1: faker.location.streetAddress(),
+        city: faker.location.city(),
+        state: faker.location.county(),
+        postalCode: faker.location.zipCode(),
+      };
+    case "UK": //SupportedCountry.UK:
       return {
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
@@ -107,7 +184,7 @@ export const getFakeAddressByCountry = (
       };
     // @endif
     // @if financialProduct==embedded-finance
-    case SupportedCountry.US:
+    case "US": //SupportedCountry.US:
       return {
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
