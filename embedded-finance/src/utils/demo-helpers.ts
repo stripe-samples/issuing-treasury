@@ -56,3 +56,11 @@ export const getFakeAddressByCountry = (
       );
   }
 };
+
+/**
+ * Returns the fiscal year end date dynamically based on the current year.
+ */
+export const getFiscalYearEnd = (): string => {
+  const lastYear = new Date().getFullYear() - 1;
+  return `${lastYear}-12-31`;
+};
