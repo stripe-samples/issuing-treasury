@@ -67,7 +67,7 @@ export const getFakePhoneByCountry = (country: SupportedCountry): string => {
 
   switch (country) {
     case SupportedCountry.UK:
-      return faker.phone.number("07#########"); // UK phone number format
+      return faker.helpers.fromRegExp("+44 7[0-9]{9}"); // UK phone number format
     default:
       throw new Error(
         `Fake phone number generation not implemented for country: ${country}`,
@@ -93,4 +93,12 @@ export const getFakeAddressByCountry = (
         `Fake address generation not implemented for country: ${country}`,
       );
   }
+};
+
+/**
+ * Returns the fiscal year end date dynamically based on the current year.
+ */
+export const getFiscalYearEnd = (): string => {
+  const lastYear = new Date().getFullYear() - 1;
+  return `${lastYear}-12-31`;
 };
