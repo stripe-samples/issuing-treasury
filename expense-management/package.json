@@ -23,7 +23,7 @@
     "@prisma/client": "^5.9.1",
     "@stripe/connect-js": "^3.3.22-preview-2",
     "@stripe/react-connect-js": "^3.3.25-preview-1",
-    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/react-stripe-js": "^3.3.0",
     "@stripe/stripe-js": "^2.4.0",
     "@xstate/react": "^4.0.3",
     "apexcharts": "3.45.2",
