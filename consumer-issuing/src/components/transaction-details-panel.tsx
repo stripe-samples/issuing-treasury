@@ -33,7 +33,14 @@ interface TransactionDetailsPanelProps {
       id: string;
       issuing_transaction?: string;
     };
-    auth?: Stripe.Issuing.Authorization;
+    auth?: Stripe.Issuing.Authorization & {
+      enriched_merchant_data?: {
+        merchant?: {
+          name?: string;
+          url?: string;
+        };
+      };
+    };
   };
   country: SupportedCountry;
   buttonText: string;
@@ -152,9 +159,22 @@ const TransactionDetailsPanel = ({
                 <Grid item xs={12}>
                   <Typography variant="subtitle2">Merchant</Typography>
                   <Box sx={{ mt: 0.5 }}>
-                    <Typography variant="body2" color="text.secondary">
-                      {transaction.auth.merchant_data.name}
-                    </Typography>
+                    {transaction.auth?.enriched_merchant_data?.merchant?.url ? (
+                      <Typography variant="body2" color="text.secondary">
+                        <a
+                          href={transaction.auth.enriched_merchant_data.merchant.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: 'inherit', textDecoration: 'none' }}
+                        >
+                          {transaction.auth?.enriched_merchant_data?.merchant?.name || transaction.auth?.merchant_data?.name || "Unknown merchant"}
+                        </a>
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        {transaction.auth?.enriched_merchant_data?.merchant?.name || transaction.auth?.merchant_data?.name || "Unknown merchant"}
+                      </Typography>
+                    )}
                   </Box>
                 </Grid>
                 <Grid item xs={12}>

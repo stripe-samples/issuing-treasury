@@ -112,14 +112,35 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       formData.append('individual[id_number]', '000000000');
     }
 
-    console.log('Stripe API Request:');
-    console.log('URL: https://api.stripe.com/v1/accounts');
-    console.log('Headers:');
-    console.log(`  Content-Type: application/x-www-form-urlencoded`);
-    console.log(`  Authorization: Bearer ${stripeSecretKey}`);
-    console.log(`  Stripe-Version: 2024-04-10;issuing_program_beta=v2`);
+    console.log('Creating a new account: POST https://api.stripe.com/v1/accounts');
     console.log('Body:');
-    console.log(formData.toString());
+    console.log(JSON.stringify({
+      country,
+      email,
+      controller: {
+        stripe_dashboard: {
+          type: 'none'
+        },
+        fees: {
+          payer: 'application'
+        },
+        requirement_collection: 'application',
+        losses: {
+          payments: 'application'
+        }
+      },
+      capabilities: {
+        transfers: { requested: true },
+        card_payments: { requested: true },
+        card_issuing_consumer_revolving_credit_card_celtic: { requested: true }
+      },
+      ...(isDemoMode() && {
+        business_type: 'individual',
+        individual: {
+          id_number: '000000000'
+        }
+      })
+    }, null, 2));
 
     const response = await fetch("https://api.stripe.com/v1/accounts", {
       method: "POST",

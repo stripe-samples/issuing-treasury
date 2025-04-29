@@ -50,10 +50,11 @@ export const OverviewIssuingBalance = (props: {
               Your Credit Account
             </Typography>
             <Typography variant="h4">
-              {formatCurrencyForCountry(availableAmount, country)}
+              {formatCurrencyForCountry(totalBalanceAmount, country)}
             </Typography>
             <Typography color="text.secondary">
-              Available credit balance
+            Total balance
+              
             </Typography>
           </Stack>
           <Stack spacing={1}>
@@ -67,10 +68,10 @@ export const OverviewIssuingBalance = (props: {
             </Stack>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography color="text.secondary">
-                Total balance
+              Available credit balance
               </Typography>
               <Typography variant="h6">
-                {formatCurrencyForCountry(totalBalanceAmount, country)}
+                {formatCurrencyForCountry(availableAmount, country)}
               </Typography>
             </Stack>
           </Stack>

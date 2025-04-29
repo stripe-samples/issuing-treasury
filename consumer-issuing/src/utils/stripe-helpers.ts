@@ -207,7 +207,7 @@ export async function getCreditLedgerEntries(
   }
 
   const creditLedgerEntries = await response.json();
-  console.log('Raw Credit Ledger Entries API Response:', JSON.stringify(creditLedgerEntries, null, 2));
+  console.log('Retrieving Credit Ledger Data from https://api.stripe.com/v1/issuing/credit_ledger_entries:', JSON.stringify(creditLedgerEntries, null, 2));
 
   const datesArray: string[] = Array.from(
     { length: NUMBER_OF_DAYS },
@@ -228,8 +228,6 @@ export async function getCreditLedgerEntries(
     }
     entriesBySource[sourceKey].push(entry);
   });
-
-  console.log('Entries grouped by source:', JSON.stringify(entriesBySource, null, 2));
 
   // Process each group of entries
   Object.values(entriesBySource).forEach((entries) => {
@@ -338,7 +336,6 @@ export async function getCreditLedgerEntries(
     balanceFundsFlowChartData: balanceTransactionsChart,
   };
 
-  console.log('Processed Credit Ledger Data:', JSON.stringify(result, null, 2));
   return result;
 }
 

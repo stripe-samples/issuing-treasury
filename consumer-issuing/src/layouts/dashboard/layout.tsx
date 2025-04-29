@@ -4,18 +4,12 @@ import Head from "next/head";
 import { usePathname } from "next/navigation";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
-import { SideNav } from "src/layouts/dashboard/side-nav";
 import { TopNav } from "src/layouts/dashboard/top-nav";
-
-const SIDE_NAV_WIDTH = 280;
 
 const LayoutRoot = styled("div")(({ theme }) => ({
   display: "flex",
   flex: "1 1 auto",
   maxWidth: "100%",
-  [theme.breakpoints.up("lg")]: {
-    paddingLeft: SIDE_NAV_WIDTH,
-  },
 }));
 
 const LayoutContainer = styled("div")({
@@ -46,32 +40,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Head>
-        <title>Llama Llama Credit</title>
+        <title>Stripe BaaS platform demo</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <TopNav onNavOpen={() => setOpenNav(true)} />
-      <SideNav onClose={() => setOpenNav(false)} open={openNav} />
       <LayoutRoot>
-        <LayoutContainer>
-          {children}
-          <Box px={3} py={5} sx={{ backgroundColor: "neutral.50" }}>
-            <Box mx="auto" maxWidth={800} textAlign="center">
-              <Typography variant="body2" color="neutral.400">
-                åLlama Llama Credit partners with Stripe Payments Company
-                for money transmission services and account services. Stripe
-                Consumer Issuing demo Visa® Commercial Credit cards are issued by
-                Example Bank.{" "}
-                <Link
-                  href="https://stripe.com/privacy"
-                  target="_blank"
-                  underline="none"
-                >
-                  Stripe Privacy Policy & Terms apply
-                </Link>
-              </Typography>
-            </Box>
-          </Box>
-        </LayoutContainer>
+        <LayoutContainer>{children}</LayoutContainer>
       </LayoutRoot>
     </>
   );

@@ -46,15 +46,15 @@ export const items = [
       </SvgIcon>
     ),
   },
-  {
-    title: "Test data",
-    path: "/test-data",
-    icon: (
-      <SvgIcon fontSize="small">
-        <WrenchScrewdriverIcon />
-      </SvgIcon>
-    ),
-  },
+  // {
+  //   title: "Test data",
+  //   path: "/test-data",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <WrenchScrewdriverIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
   {
     title: "Settings",
     path: "/settings",
