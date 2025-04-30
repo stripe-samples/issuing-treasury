@@ -3,8 +3,11 @@ import { styled } from "@mui/material/styles";
 import Head from "next/head";
 import { usePathname } from "next/navigation";
 import { ReactNode, useCallback, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import { TopNav } from "src/layouts/dashboard/top-nav";
+import { GoogleMapsProvider } from "src/components/google-maps-provider";
 
 const LayoutRoot = styled("div")(({ theme }) => ({
   display: "flex",
@@ -22,6 +25,8 @@ const LayoutContainer = styled("div")({
 const Layout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const handlePathnameChange = useCallback(() => {
     if (openNav) {
@@ -37,16 +42,23 @@ const Layout = ({ children }: { children: ReactNode }) => {
     [pathname],
   );
 
+  if (!session) {
+    router.push("/auth/login");
+    return null;
+  }
+
   return (
     <>
       <Head>
         <title>Stripe BaaS platform demo</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <TopNav onNavOpen={() => setOpenNav(true)} />
-      <LayoutRoot>
-        <LayoutContainer>{children}</LayoutContainer>
-      </LayoutRoot>
+      <GoogleMapsProvider>
+        <TopNav onNavOpen={() => setOpenNav(true)} />
+        <LayoutRoot>
+          <LayoutContainer>{children}</LayoutContainer>
+        </LayoutRoot>
+      </GoogleMapsProvider>
     </>
   );
 };

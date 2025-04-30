@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import React, { ReactNode, useState } from "react";
 import Stripe from "stripe";
+import { useSession } from "next-auth/react";
 
 import { SeverityPill } from "src/components/severity-pill";
 import { SeverityColor } from "src/types/severity-color";
@@ -22,6 +23,7 @@ import {
   formatDateAndTime,
   titleize,
 } from "src/utils/format";
+import { GoogleMapComponent } from "./google-map";
 
 interface TransactionDetailsPanelProps {
   transaction: {
@@ -34,10 +36,36 @@ interface TransactionDetailsPanelProps {
       issuing_transaction?: string;
     };
     auth?: Stripe.Issuing.Authorization & {
+      merchant_data?: {
+        name?: string;
+        category: string;
+        address?: {
+          line1?: string;
+          line2?: string;
+          city?: string;
+          state?: string;
+          postal_code?: string;
+          country?: string;
+        };
+      };
       enriched_merchant_data?: {
         merchant?: {
           name?: string;
           url?: string;
+          location?: {
+            coordinates?: {
+              latitude: number;
+              longitude: number;
+            };
+            address?: {
+              line1: string;
+              line2: string;
+              city: string;
+              state: string;
+              postal_code: string;
+              country: string;
+            };
+          };
         };
       };
     };
@@ -181,16 +209,37 @@ const TransactionDetailsPanel = ({
                   <Typography variant="subtitle2">Location</Typography>
                   <Box sx={{ mt: 0.5 }}>
                     <Typography variant="body2" color="text.secondary">
-                      {transaction.auth.merchant_data.city +
-                        ", " +
-                        transaction.auth.merchant_data.state +
-                        ", " +
-                        transaction.auth.merchant_data.postal_code +
-                        ", " +
-                        transaction.auth.merchant_data.country}
+                      {transaction.auth?.enriched_merchant_data?.merchant?.location?.address ? (
+                        [
+                          transaction.auth.enriched_merchant_data.merchant.location.address.line1,
+                          transaction.auth.enriched_merchant_data.merchant.location.address.line2,
+                          transaction.auth.enriched_merchant_data.merchant.location.address.city,
+                          transaction.auth.enriched_merchant_data.merchant.location.address.state,
+                          transaction.auth.enriched_merchant_data.merchant.location.address.postal_code,
+                          transaction.auth.enriched_merchant_data.merchant.location.address.country,
+                        ].filter(Boolean).join(", ")
+                      ) : (
+                        [
+                          transaction.auth?.merchant_data?.city,
+                          transaction.auth?.merchant_data?.state,
+                          transaction.auth?.merchant_data?.postal_code,
+                          transaction.auth?.merchant_data?.country,
+                        ].filter(Boolean).join(", ") || "Unknown location"
+                      )}
                     </Typography>
                   </Box>
                 </Grid>
+                {transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.latitude && 
+                 transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.longitude && (
+                  <Grid item xs={12}>
+                    <Box sx={{ mt: 1 }}>
+                      <GoogleMapComponent
+                        latitude={transaction.auth.enriched_merchant_data.merchant.location.coordinates.latitude}
+                        longitude={transaction.auth.enriched_merchant_data.merchant.location.coordinates.longitude}
+                      />
+                    </Box>
+                  </Grid>
+                )}
                 <Grid item xs={12}>
                   <Typography variant="subtitle2">Merchant category</Typography>
                   <Box sx={{ mt: 0.5 }}>

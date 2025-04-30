@@ -7,8 +7,10 @@
     "lint": "npm run lint --workspaces",
     "codegen": "./codegen.sh"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "@react-google-maps/api": "^2.20.6",
+    "@vis.gl/react-google-maps": "^1.5.2"
+  },
   "workspaces": [
     "./embedded-finance/",
     "./expense-management/"

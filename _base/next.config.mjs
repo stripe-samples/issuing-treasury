@@ -19,7 +19,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const ContentSecurityPolicy = `
   default-src 'none';
   base-uri 'none';
-  connect-src 'self';
+  connect-src 'self' https://maps.googleapis.com;
   font-src 'self' fonts.gstatic.com;
   form-action 'self';
   frame-ancestors 'none';

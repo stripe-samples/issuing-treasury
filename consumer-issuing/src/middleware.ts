@@ -51,13 +51,13 @@ export default withAuth(
 
     const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
     const cspHeader = `
-      default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect-js.stripe.com/v1.0/connect.js https://js.stripe.com;
+      default-src 'self' https://maps.googleapis.com;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect-js.stripe.com/v1.0/connect.js https://js.stripe.com https://maps.googleapis.com;
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-      img-src 'self' blob: data:;
+      img-src 'self' blob: data: https://maps.gstatic.com https://maps.googleapis.com;
       font-src 'self' https://fonts.gstatic.com;
       object-src 'none';
-      frame-src https://connect-js.stripe.com https://js.stripe.com;
+      frame-src https://connect-js.stripe.com https://js.stripe.com https://maps.googleapis.com;
       base-uri 'self';
       form-action 'self';
       frame-ancestors 'none';
