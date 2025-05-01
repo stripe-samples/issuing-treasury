@@ -33,7 +33,7 @@ export const AccountPopover = ({
 
   const handleLogout = async () => {
     onClose?.();
-    await signOut();
+    window.location.href = '/api/auth/signout';
   };
 
   return (

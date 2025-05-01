@@ -227,6 +227,12 @@ const TransactionDetailsPanel = ({
                         ].filter(Boolean).join(", ") || "Unknown location"
                       )}
                     </Typography>
+                    {transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.latitude && 
+                     transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.longitude && (
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, fontFamily: 'monospace' }}>
+                        {`${transaction.auth.enriched_merchant_data.merchant.location.coordinates.latitude.toFixed(6)}, ${transaction.auth.enriched_merchant_data.merchant.location.coordinates.longitude.toFixed(6)}`}
+                      </Typography>
+                    )}
                   </Box>
                 </Grid>
                 {transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.latitude && 
