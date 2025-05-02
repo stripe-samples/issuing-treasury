@@ -1,0 +1,60 @@
+import { NextApiRequest, NextApiResponse } from "next";
+
+import { apiResponse } from "src/types/api-response";
+import { handlerMapping } from "src/utils/api-helpers";
+import { getSessionForServerSide } from "src/utils/session-helpers";
+import { getStripeSecretKey } from "src/utils/stripe-authentication";
+import stripeClient from "src/utils/stripe-loader";
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) =>
+  handlerMapping(req, res, {
+    POST: createCreditRepayment,
+  });
+
+const createCreditRepayment = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
+  const session = await getSessionForServerSide(req, res);
+  const { stripeAccount } = session;
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
+
+  try {
+    // Make a direct API call to the credit repayments endpoint
+    const response = await fetch("https://api.stripe.com/v1/issuing/credit_repayments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${getStripeSecretKey(platform)}`,
+      },
+      body: new URLSearchParams({
+        account: accountId,
+        "instructed_by[type]": "user",
+        "instructed_by[user][payment_method_type]": "paper_check",
+        "amount[value]": req.body.amount.toString(),
+        "amount[currency]": req.body.currency,
+        credit_statement_descriptor: "Payment received",
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || "Failed to create credit repayment");
+    }
+
+    return res.status(200).json(apiResponse({ success: true, data }));
+  } catch (error) {
+    return res.status(400).json(
+      apiResponse({
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : "Unknown error occurred",
+        },
+      }),
+    );
+  }
+};
+
+export default handler; 
