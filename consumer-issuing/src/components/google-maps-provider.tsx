@@ -8,7 +8,7 @@ interface GoogleMapsProviderProps {
 export const GoogleMapsProvider = ({ children }: GoogleMapsProviderProps) => {
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
-      {children}
+      <>{children}</>
     </LoadScript>
   );
 }; 
