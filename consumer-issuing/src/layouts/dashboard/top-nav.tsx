@@ -19,6 +19,7 @@ import { usePopover } from "src/hooks/use-popover";
 import { AccountPopover } from "src/layouts/dashboard/account-popover";
 import { Logo } from "src/components/logo";
 import { items } from "src/layouts/dashboard/config";
+import { isDemoMode } from "src/utils/demo-helpers";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -38,7 +39,7 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
         component="header"
         sx={{
           backdropFilter: "blur(6px)",
-          backgroundColor: "neutral.800",
+          backgroundColor: isDemoMode() ? "#1B5E20" : "neutral.800",
           position: "sticky",
           top: 0,
           width: "100%",

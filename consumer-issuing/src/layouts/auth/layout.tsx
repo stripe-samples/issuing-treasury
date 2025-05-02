@@ -15,6 +15,7 @@ import NextLink from "next/link";
 import { ReactNode, useState } from "react";
 
 import { Logo } from "src/components/logo";
+import { isDemoMode } from "src/utils/demo-helpers";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
@@ -28,7 +29,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
       alignItems="center"
       pt={20}
       sx={{
-        backgroundColor: "neutral.50",
+        backgroundColor: isDemoMode() ? "#1B5E20" : "neutral.50",
+        minHeight: "100vh",
       }}
     >
       <TopLogoBar />
@@ -73,7 +75,7 @@ const TopLogoBar = () => (
   <Box
     component="header"
     sx={{
-      backgroundColor: "neutral.50",
+      backgroundColor: isDemoMode() ? "#1B5E20" : "neutral.50",
       left: 0,
       p: 3,
       position: "fixed",
@@ -98,24 +100,27 @@ const TopLogoBar = () => (
 const WelcomeMessage = () => {
   return (
     <Stack spacing={3}>
-      <Typography variant="h4">Llama Llama Credit</Typography>
-      <Typography color="neutral.500">
+      <Typography variant="h4" sx={{ color: isDemoMode() ? "white" : "inherit" }}>
+        Llama Llama Credit
+      </Typography>
+      <Typography color={isDemoMode() ? "white" : "neutral.500"}>
         Using Stripe&apos;s banking-as-a-service APIs, businesses have the
         flexibility to add financial capabilities to their product. As shown in
         these{" "}
-        <Link href="https://stripe.com/customers/all?solution=embed-financial-services">
+        <Link href="https://stripe.com/customers/all?solution=embed-financial-services" sx={{ color: isDemoMode() ? "white" : "inherit" }}>
           user stories
         </Link>
         , our APIs serve business models ranging from consumer issuing, expense management,
         corporate benefits, B2B payments, BNPL, and more. This demo explores one
         platform focused use case that enables businesses to offer revolving credit cards to their consumers modelled as Connected Accounts.
       </Typography>
-      <Typography>
+      <Typography sx={{ color: isDemoMode() ? "white" : "inherit" }}>
         View our{" "}
         <Link
           href="https://stripe.com/docs/baas/start-integration/sample-app"
           target="_blank"
           underline="none"
+          sx={{ color: isDemoMode() ? "white" : "inherit" }}
         >
           docs
         </Link>{" "}
@@ -124,6 +129,7 @@ const WelcomeMessage = () => {
           href="https://github.com/stripe-samples/issuing-treasury"
           target="_blank"
           underline="none"
+          sx={{ color: isDemoMode() ? "white" : "inherit" }}
         >
           source code
         </Link>{" "}
@@ -134,6 +140,7 @@ const WelcomeMessage = () => {
           href="https://stripe.com/privacy"
           target="_blank"
           underline="none"
+          sx={{ color: isDemoMode() ? "white" : "inherit" }}
         >
           Stripe Privacy Policy & Terms apply
         </Link>
@@ -159,7 +166,7 @@ const CookieBanner = () => {
           <Box
             component="footer"
             sx={{
-              backgroundColor: "neutral.100",
+              backgroundColor: isDemoMode() ? "#1B5E20" : "neutral.100",
               left: 0,
               bottom: 0,
               p: 3,
@@ -172,7 +179,7 @@ const CookieBanner = () => {
           >
             <Stack spacing={1} direction="row">
               <Box display="flex" alignItems="center" pl={1}>
-                <Typography color="neutral.500">
+                <Typography color={isDemoMode() ? "white" : "neutral.500"}>
                   This site uses necessary cookies to enable required functions
                   and features, such as login and account management services.
                 </Typography>
