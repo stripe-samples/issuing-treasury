@@ -33,7 +33,7 @@ const createCreditRepayment = async (
         "instructed_by[type]": "user",
         "instructed_by[user][payment_method_type]": "paper_check",
         "amount[value]": req.body.amount.toString(),
-        "amount[currency]": req.body.currency,
+        "amount[currency]": "usd",
         credit_statement_descriptor: "Payment received",
       }),
     });

@@ -1,4 +1,4 @@
-import { Button, InputAdornment, Stack, TextField, Alert } from "@mui/material";
+import { Button, InputAdornment, Grid, TextField, Alert, Box, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -13,6 +13,7 @@ export const TestDataMakePayment = () => {
   const { country, stripeAccount } = session;
   const [paymentAmount, setPaymentAmount] = useState<string>("");
   const [errorText, setErrorText] = useState<string>("");
+  const [successText, setSuccessText] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
 
   const handlePaymentAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,6 +21,8 @@ export const TestDataMakePayment = () => {
     // Only allow numbers and decimal point
     if (/^\d*\.?\d*$/.test(value)) {
       setPaymentAmount(value);
+      // Clear success message when user starts typing
+      setSuccessText("");
     }
   };
 
@@ -37,11 +40,23 @@ export const TestDataMakePayment = () => {
 
     setSubmitting(true);
     setErrorText("");
+    setSuccessText("");
+
+    const amount = parseFloat(paymentAmount);
+    const amountInCents = Math.round(amount * 100);
+    const currency = country.toLowerCase();
+
+    console.log("Submitting payment:", {
+      amount,
+      amountInCents,
+      currency,
+      formattedAmount: formatCurrencyForCountry(amount, country)
+    });
 
     try {
       const response = await postApi("/api/create_credit_repayment", {
-        amount: Math.round(parseFloat(paymentAmount) * 100), // Convert to cents
-        currency: country.toLowerCase(),
+        amount: amountInCents,
+        currency,
         account: stripeAccount.accountId,
       });
 
@@ -50,6 +65,7 @@ export const TestDataMakePayment = () => {
         result,
         onSuccess: () => {
           setPaymentAmount("");
+          setSuccessText(`Successfully processed payment of ${formatCurrencyForCountry(amount * 100, country)}`);
         },
         onError: (error) => {
           setErrorText(`Error: ${error.message}`);
@@ -65,33 +81,49 @@ export const TestDataMakePayment = () => {
   };
 
   return (
-    <Stack spacing={3}>
-      <TextField
-        fullWidth
-        label="Payment amount"
-        name="paymentAmount"
-        onChange={handlePaymentAmountChange}
-        onKeyDown={handleKeyDown}
-        type="text"
-        value={paymentAmount}
-        disabled={submitting}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              {formatCurrencyForCountry(0, country).split("0")[0]}
-            </InputAdornment>
-          ),
-        }}
-      />
-      {errorText && <Alert severity="error">{errorText}</Alert>}
-      <Button
-        color="primary"
-        onClick={handleSubmit}
-        variant="contained"
-        disabled={submitting}
-      >
-        {submitting ? "Processing..." : "Make Payment"}
-      </Button>
-    </Stack>
+    <Grid container rowSpacing={3}>
+      <Grid item xs={12}>
+        <Typography variant="subtitle2">Payment Amount</Typography>
+        <Box sx={{ mt: 0.5 }}>
+          <TextField
+            fullWidth
+            name="paymentAmount"
+            onChange={handlePaymentAmountChange}
+            onKeyDown={handleKeyDown}
+            type="text"
+            value={paymentAmount}
+            disabled={submitting}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  {formatCurrencyForCountry(0, country).split("0")[0]}
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+      </Grid>
+      {errorText && (
+        <Grid item xs={12}>
+          <Alert severity="error">{errorText}</Alert>
+        </Grid>
+      )}
+      {successText && (
+        <Grid item xs={12}>
+          <Alert severity="success">{successText}</Alert>
+        </Grid>
+      )}
+      <Grid item xs={12}>
+        <Button
+          color="primary"
+          onClick={handleSubmit}
+          variant="contained"
+          disabled={submitting}
+          fullWidth
+        >
+          {submitting ? "Processing..." : "Make Payment"}
+        </Button>
+      </Grid>
+    </Grid>
   );
 }; 
