@@ -16,6 +16,7 @@ const stripeClient = (platform: PlatformStripeAccount) => {
   }
 
   return new Stripe(stripeSecretKey, {
+    // @ts-expect-error we are using a different API version
     apiVersion: API_VERSION,
     typescript: true,
     appInfo: { name: APP_INFO_NAME },

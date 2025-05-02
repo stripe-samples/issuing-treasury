@@ -31,10 +31,6 @@ const cardholderWithSCA = cardholderBase.concat(
   }),
 );
 
-const getCharacterValidationError = (str: string) => {
-  return `Your password must have at least 1 ${str} character`;
-};
-
 const supportedCountries = Object.values(SupportedCountry) as string[];
 
 const user = Yup.object().shape({
