@@ -33,7 +33,9 @@ export const AccountPopover = ({
 
   const handleLogout = async () => {
     onClose?.();
-    window.location.href = '/api/auth/signout';
+    await signOut();
+    // await signOut({callbackUrl: '/auth/login'});
+    // window.location.href = '/api/auth/signout';
   };
 
   return (
