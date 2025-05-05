@@ -60,18 +60,18 @@ export const OverviewIssuingBalance = (props: {
           <Stack spacing={1}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography color="text.secondary">
-                Credit limit
-              </Typography>
-              <Typography variant="h6">
-                {formatCurrencyForCountry(creditLimitAmount, country)}
-              </Typography>
-            </Stack>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography color="text.secondary">
-              Available credit balance
+                Available credit
               </Typography>
               <Typography variant="h6">
                 {formatCurrencyForCountry(availableAmount, country)}
+              </Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography color="text.secondary" variant="body2">
+                Credit limit
+              </Typography>
+              <Typography variant="body1">
+                {formatCurrencyForCountry(creditLimitAmount, country)}
               </Typography>
             </Stack>
           </Stack>

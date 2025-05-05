@@ -99,12 +99,12 @@ const Page = ({
       >
         <Container maxWidth="xl">
           <Stack spacing={3}>
-            <Typography variant="h4">Card authorizations</Typography>
+            <Typography variant="h4">Card transactions</Typography>
             <Card sx={{ p: 2 }}>
               <OutlinedInput
                 defaultValue=""
                 fullWidth
-                placeholder="Search authorizations"
+                placeholder="Search transactions"
                 startAdornment={
                   <InputAdornment position="start">
                     <SvgIcon color="action" fontSize="small">

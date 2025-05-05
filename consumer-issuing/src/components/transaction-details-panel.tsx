@@ -52,6 +52,7 @@ interface TransactionDetailsPanelProps {
         merchant?: {
           name?: string;
           url?: string;
+          phone?: string;
           location?: {
             coordinates?: {
               latitude: number;
@@ -83,6 +84,15 @@ const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
   closed: "primary",
   pending: "warning",
   reversed: "error",
+};
+
+// Helper function to ensure URL has https:// prefix
+const ensureHttps = (url: string): string => {
+  if (!url) return url;
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `https://${url}`;
 };
 
 const TransactionDetailsPanel = ({
@@ -187,22 +197,33 @@ const TransactionDetailsPanel = ({
                 <Grid item xs={12}>
                   <Typography variant="subtitle2">Merchant</Typography>
                   <Box sx={{ mt: 0.5 }}>
-                    {transaction.auth?.enriched_merchant_data?.merchant?.url ? (
-                      <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary">
+                      {transaction.auth?.enriched_merchant_data?.merchant?.url ? (
                         <a
-                          href={transaction.auth.enriched_merchant_data.merchant.url}
+                          href={ensureHttps(transaction.auth.enriched_merchant_data.merchant.url)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style={{ color: 'inherit', textDecoration: 'none' }}
+                          style={{ 
+                            color: '#1976d2', // Material-UI primary blue
+                            textDecoration: 'underline'
+                          }}
                         >
                           {transaction.auth?.enriched_merchant_data?.merchant?.name || transaction.auth?.merchant_data?.name || "Unknown merchant"}
                         </a>
-                      </Typography>
-                    ) : (
-                      <Typography variant="body2" color="text.secondary">
-                        {transaction.auth?.enriched_merchant_data?.merchant?.name || transaction.auth?.merchant_data?.name || "Unknown merchant"}
-                      </Typography>
-                    )}
+                      ) : (
+                        transaction.auth?.enriched_merchant_data?.merchant?.name || transaction.auth?.merchant_data?.name || "Unknown merchant"
+                      )}
+                      {transaction.auth?.enriched_merchant_data?.merchant?.phone && (
+                        <Typography 
+                          component="span" 
+                          variant="body2" 
+                          color="text.secondary" 
+                          sx={{ ml: 1 }}
+                        >
+                          ({transaction.auth.enriched_merchant_data.merchant.phone})
+                        </Typography>
+                      )}
+                    </Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
