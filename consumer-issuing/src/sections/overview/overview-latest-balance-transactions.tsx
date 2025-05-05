@@ -16,7 +16,7 @@ import Stripe from "stripe";
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
 import TransactionDetailsPanel from "src/components/transaction-details-panel";
-import { formatCurrencyForCountry, formatDateTime } from "src/utils/format";
+import { formatCurrencyForCountry, formatDateTime, titleize } from "src/utils/format";
 
 const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
   open: "warning",
@@ -55,11 +55,15 @@ export const OverviewLatestBalanceTransactions = (props: {
                   <TableCell>Type</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Merchant</TableCell>
+                  <TableCell>Merchant Category</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {creditLedgerEntries.map((entry) => {
+                  const category = entry.auth?.merchant_data?.category
+                    ? titleize(entry.auth.merchant_data.category.replace(/_/g, " "))
+                    : "Unknown";
                   return (
                     <TableRow hover key={entry.id}>
                       <TableCell sx={{ whiteSpace: "nowrap" }}>
@@ -84,6 +88,9 @@ export const OverviewLatestBalanceTransactions = (props: {
                       </TableCell>
                       <TableCell sx={{ whiteSpace: "nowrap" }}>
                         {entry.auth?.merchant_data?.name || "Unknown merchant"}
+                      </TableCell>
+                      <TableCell sx={{ whiteSpace: "nowrap" }}>
+                        {category}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -111,7 +118,7 @@ export const OverviewLatestBalanceTransactions = (props: {
               <Divider />
               <Box p={3} color="neutral.400">
                 <Typography variant="body1">
-                  There are no transactions to show yet.
+                  There are no transactions to display.
                 </Typography>
               </Box>
             </>
