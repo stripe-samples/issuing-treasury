@@ -238,6 +238,14 @@ export async function getCreditLedgerEntries(
   const creditLedgerEntries = await response.json();
   console.log('Retrieving Credit Ledger Data from https://api.stripe.com/v1/issuing/credit_ledger_entries:', JSON.stringify(creditLedgerEntries, null, 2));
 
+  // Filter out credit ledger entries for issuing_credit_repayments with non-null funding_obligation
+  const filteredEntries = creditLedgerEntries.data.filter((entry: any) => {
+    if (entry.source?.type === "issuing_credit_repayment" && entry.source?.issuing_credit_repayment) {
+      return !entry.funding_obligation;
+    }
+    return true;
+  });
+
   const datesArray: string[] = Array.from(
     { length: NUMBER_OF_DAYS },
     (_, index) => {
@@ -250,7 +258,7 @@ export async function getCreditLedgerEntries(
 
   // Group entries by source
   const entriesBySource: { [source: string]: any[] } = {};
-  creditLedgerEntries.data.forEach((entry: any) => {
+  filteredEntries.forEach((entry: any) => {
     const sourceKey = entry.source ? JSON.stringify(entry.source) : 'unknown';
     if (!entriesBySource[sourceKey]) {
       entriesBySource[sourceKey] = [];
