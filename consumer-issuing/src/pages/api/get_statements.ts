@@ -21,7 +21,7 @@ export default async function handler(
 
     // First, get all the files
     const filesResponse = await fetch(
-      `https://api.stripe.com/v1/files?purpose=issuing_receipt&limit=100`,
+      `https://api.stripe.com/v1/files?purpose=issuing_receipt&limit=100&created[gt]=1746551400`,
       {
         method: "GET",
         headers: {

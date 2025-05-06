@@ -31,6 +31,13 @@ const typeMap: Record<string, string> = {
   issuing_credit_repayment: "Repayment"
 };
 
+const getTransactionType = (entry: any): string => {
+  if (entry.source?.type === 'issuing_transaction' && entry.transaction?.type === 'refund') {
+    return 'Refund';
+  }
+  return entry.source?.type ? typeMap[entry.source.type] || entry.source.type : 'Unknown';
+};
+
 const getStatusInfo = (entry: any): { text: string; color: SeverityColor } => {
   if (entry.source?.type === "issuing_credit_repayment") {
     const status = entry.creditRepayment?.status || "processing";
@@ -101,9 +108,7 @@ export const OverviewLatestBalanceTransactions = (props: {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {entry.source?.type
-                          ? typeMap[entry.source.type] || entry.source.type
-                          : "Unknown"}
+                        {getTransactionType(entry)}
                       </TableCell>
                       <TableCell>
                         <SeverityPill color={statusInfo.color}>

@@ -336,7 +336,6 @@ export async function getCreditLedgerEntries(
           { stripeAccount: accountId }
         );
         transaction.transaction = issuingTransaction;
-
         // Log the transaction request
         // await logApiRequest(
         //   stripeAccount.userId,
