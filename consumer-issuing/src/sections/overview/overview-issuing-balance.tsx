@@ -62,7 +62,7 @@ export const OverviewIssuingBalance = (props: {
               <Typography color="text.secondary">
                 Available credit
               </Typography>
-              <Typography variant="h6">
+              <Typography variant="h5">
                 {formatCurrencyForCountry(availableAmount, country)}
               </Typography>
             </Stack>
