@@ -27,7 +27,7 @@ const simulateAuthorization = async (
   // to check for funds, which should illustrate where money comes from to
   // fund Issuing transactions.
   const balance = await (async () => {
-    const responseBalance = await getBalance(stripeAccount);
+    const responseBalance = await getBalance(stripeAccount, session);
     return responseBalance.balance.issuing?.available[0].amount || 0;
   })();
 

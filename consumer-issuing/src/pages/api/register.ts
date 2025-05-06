@@ -11,6 +11,7 @@ import { handlerMapping } from "src/utils/api-helpers";
 import { isDemoMode } from "src/utils/demo-helpers";
 import { getStripeSecretKey } from "src/utils/stripe-authentication";
 import validationSchemas from "src/utils/validation-schemas";
+import { logApiRequest } from "src/utils/api-logger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -169,6 +170,41 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
         country: country.toString(),
       },
     });
+
+    // Log the API request after user is created
+    await logApiRequest(
+      email,
+      "https://api.stripe.com/v1/accounts",
+      "POST",
+      {
+        country,
+        email,
+        controller: {
+          stripe_dashboard: {
+            type: 'none'
+          },
+          fees: {
+            payer: 'application'
+          },
+          requirement_collection: 'application',
+          losses: {
+            payments: 'application'
+          }
+        },
+        capabilities: {
+          transfers: { requested: true },
+          card_payments: { requested: true },
+          card_issuing_consumer_revolving_credit_card_celtic: { requested: true }
+        },
+        ...(isDemoMode() && {
+          business_type: 'individual',
+          individual: {
+            id_number: '000000000'
+          }
+        })
+      },
+      account
+    );
 
     return res.status(200).json(apiResponse({ success: true }));
   } catch (error) {

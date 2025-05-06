@@ -51,7 +51,7 @@ export const getServerSideProps = async (
     currency,
   );
 
-  const response = await getBalance(stripeAccount);
+  const response = await getBalance(stripeAccount, session);
   const availableBalance = response.balance.issuing?.available[0];
 
   return {

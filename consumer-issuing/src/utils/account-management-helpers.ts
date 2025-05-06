@@ -35,10 +35,10 @@ export enum PlatformStripeAccount {
   US,
 }
 
-export interface StripeAccount {
+export type StripeAccount = {
   accountId: string;
   platform: PlatformStripeAccount;
-}
+};
 
 type CountryConfig = {
   code: string;

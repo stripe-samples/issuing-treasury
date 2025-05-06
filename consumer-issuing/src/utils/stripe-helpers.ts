@@ -1,10 +1,12 @@
 import { format, addDays } from "date-fns";
 import Stripe from "stripe";
+import { Session } from "next-auth";
 
 import { getStripeSecretKey } from "./stripe-authentication";
+import { logApiRequest } from "./api-logger";
 
 import { BalanceChartData } from "src/types/chart-data";
-import { StripeAccount } from "src/utils/account-management-helpers";
+import { StripeAccount, PlatformStripeAccount } from "src/utils/account-management-helpers";
 import stripeClient from "src/utils/stripe-loader";
 
 type FundsFlowByDate = {
@@ -117,7 +119,7 @@ export async function getAuthorizationDetails(
   };
 }
 
-export async function getBalance(stripeAccount: StripeAccount) {
+export async function getBalance(stripeAccount: StripeAccount, session: Session) {
   const { accountId, platform } = stripeAccount;
 
   // Get the credit ledger data using direct HTTP request
@@ -130,6 +132,15 @@ export async function getBalance(stripeAccount: StripeAccount) {
       "Stripe-Version": "2024-04-10;issuing_credit_beta=v1;issuing_underwritten_credit_beta=v1"
     },
   });
+
+  // Log the API request
+  await logApiRequest(
+    session.email,
+    "https://api.stripe.com/v1/issuing/credit_ledger",
+    "GET",
+    null,
+    await creditLedgerResponse.clone().json()
+  );
 
   if (!creditLedgerResponse.ok) {
     return {
@@ -181,6 +192,7 @@ export async function getBalance(stripeAccount: StripeAccount) {
 export async function getCreditLedgerEntries(
   stripeAccount: StripeAccount,
   currency: string,
+  session: Session
 ) {
   const { accountId, platform } = stripeAccount;
 
@@ -201,6 +213,23 @@ export async function getCreditLedgerEntries(
       },
     }
   );
+
+  // Log the API request
+  await logApiRequest(
+    session.email,
+    "https://api.stripe.com/v1/issuing/credit_ledger_entries",
+    "GET",
+    null,
+    await response.clone().json()
+  );
+
+  // await logApiRequest(
+  //   stripeAccount.userId,
+  //   "https://api.stripe.com/v1/issuing/credit_ledger_entries",
+  //   "GET",
+  //   null,
+  //   await response.clone().json()
+  // );
 
   if (!response.ok) {
     throw new Error(`Failed to fetch credit ledger entries: ${response.statusText}`);
@@ -258,6 +287,15 @@ export async function getCreditLedgerEntries(
           { stripeAccount: accountId }
         );
         transaction.auth = auth;
+
+        // Log the authorization request
+        // await logApiRequest(
+        //   stripeAccount.userId,
+        //   `https://api.stripe.com/v1/issuing/authorizations/${transaction.source.issuing_authorization}`,
+        //   "GET",
+        //   null,
+        //   auth
+        // );
       } catch (error) {
         console.error('Failed to fetch authorization details:', error);
       }
@@ -273,6 +311,16 @@ export async function getCreditLedgerEntries(
             }
           }
         );
+
+        // Log the credit repayment request
+        await logApiRequest(
+          session.email,
+          `https://api.stripe.com/v1/issuing/credit_repayments/${transaction.source.issuing_credit_repayment}`,
+          "GET",
+          null,
+          await response.clone().json()
+        );
+
         if (response.ok) {
           const creditRepayment = await response.json();
           transaction.creditRepayment = creditRepayment;
@@ -289,6 +337,15 @@ export async function getCreditLedgerEntries(
         );
         transaction.transaction = issuingTransaction;
 
+        // Log the transaction request
+        // await logApiRequest(
+        //   stripeAccount.userId,
+        //   `https://api.stripe.com/v1/issuing/transactions/${transaction.source.issuing_transaction}`,
+        //   "GET",
+        //   null,
+        //   issuingTransaction
+        // );
+
         // If the transaction has an authorization, fetch its details
         if (issuingTransaction.authorization && typeof issuingTransaction.authorization === 'string') {
           const auth = await stripe.issuing.authorizations.retrieve(
@@ -296,6 +353,15 @@ export async function getCreditLedgerEntries(
             { stripeAccount: accountId }
           );
           transaction.auth = auth;
+
+          // Log the authorization request
+          // await logApiRequest(
+          //   stripeAccount.userId,
+          //   `https://api.stripe.com/v1/issuing/authorizations/${issuingTransaction.authorization}`,
+          //   "GET",
+          //   null,
+          //   auth
+          // );
         }
       } catch (error) {
         console.error('Failed to fetch transaction or authorization details:', error);

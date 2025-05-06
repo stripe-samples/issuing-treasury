@@ -6,6 +6,7 @@ import {
   WrenchScrewdriverIcon,
   ShoppingBagIcon,
   CogIcon,
+  CommandLineIcon,
 } from "@heroicons/react/24/solid";
 import { SvgIcon } from "@mui/material";
 
@@ -43,6 +44,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "API Requests",
+    path: "/api-requests",
+    icon: (
+      <SvgIcon fontSize="small">
+        <CommandLineIcon />
       </SvgIcon>
     ),
   },

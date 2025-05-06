@@ -4,6 +4,7 @@ import { getPlatform } from "src/utils/platform";
 import { getStripeSecretKey } from "src/utils/stripe-authentication";
 import stripeClient from "src/utils/stripe-loader";
 import validationSchemas from "src/utils/validation-schemas";
+import { logApiRequest } from "src/utils/api-logger";
 
 import { apiResponse } from "src/types/api-response";
 import {
@@ -142,6 +143,18 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   const programResponseText = await createProgramResponse.text();
   console.log("Issuing program creation response body:", programResponseText);
 
+  // Log the issuing program creation request
+  await logApiRequest(
+    email,
+    "https://api.stripe.com/v1/issuing/programs",
+    "POST",
+    {
+      platform_program: process.env.PLATFORM_PROGRAM || "",
+      is_default: true
+    },
+    JSON.parse(programResponseText)
+  );
+
   if (!createProgramResponse.ok) {
     return res.status(400).json(
       apiResponse({
@@ -152,12 +165,14 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Create Credit Underwriting Record from the account
-  console.log("Creating underwriting record with params:", {
+  const underwritingParams = {
     "application[purpose]": "credit_line_opening",
     "application[submitted_at]": Math.floor(Date.now() / 1000).toString(),
     "credit_user[name]": businessName,
     "credit_user[email]": email
-  });
+  };
+
+  console.log("Creating underwriting record with params:", underwritingParams);
 
   const createUnderwritingResponse = await fetch("https://api.stripe.com/v1/issuing/credit_underwriting_records/create_from_application", {
     method: "POST",
@@ -167,12 +182,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       Authorization: "Bearer " + getStripeSecretKey(platform),
       "Stripe-Version": "2024-04-10;issuing_credit_beta=v1;issuing_underwritten_credit_beta=v1"
     },
-    body: new URLSearchParams({
-      "application[purpose]": "credit_line_opening",
-      "application[submitted_at]": Math.floor(Date.now() / 1000).toString(),
-      "credit_user[name]": businessName,
-      "credit_user[email]": email
-    }),
+    body: new URLSearchParams(underwritingParams),
   });
 
   console.log("Underwriting record creation response status:", createUnderwritingResponse.status);
@@ -181,6 +191,15 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     underwritingRecord = await createUnderwritingResponse.json();
     console.log("Underwriting record creation response:", underwritingRecord);
+
+    // Log the underwriting record creation request
+    await logApiRequest(
+      email,
+      "https://api.stripe.com/v1/issuing/credit_underwriting_records/create_from_application",
+      "POST",
+      underwritingParams,
+      underwritingRecord
+    );
   } catch (error) {
     console.error("Error parsing underwriting record response:", error);
     return res.status(400).json(
@@ -211,6 +230,12 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Report the underwriting decision
+  const decisionParams = {
+    decided_at: Math.floor(Date.now() / 1000).toString(),
+    "decision[type]": "credit_limit_approved",
+    "decision[credit_limit_approved][amount]": "2000"
+  };
+
   const reportDecisionResponse = await fetch(`https://api.stripe.com/v1/issuing/credit_underwriting_records/${underwritingRecord.id}/report_decision`, {
     method: "POST",
     headers: {
@@ -219,12 +244,19 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       Authorization: "Bearer " + getStripeSecretKey(platform),
       "Stripe-Version": "2024-04-10;issuing_credit_beta=v1;issuing_underwritten_credit_beta=v1"
     },
-    body: new URLSearchParams({
-      decided_at: Math.floor(Date.now() / 1000).toString(),
-      "decision[type]": "credit_limit_approved",
-      "decision[credit_limit_approved][amount]": "2000"
-    }),
+    body: new URLSearchParams(decisionParams),
   });
+
+  const decisionResponse = await reportDecisionResponse.json();
+
+  // Log the underwriting decision request
+  await logApiRequest(
+    email,
+    `https://api.stripe.com/v1/issuing/credit_underwriting_records/${underwritingRecord.id}/report_decision`,
+    "POST",
+    decisionParams,
+    decisionResponse
+  );
 
   if (!reportDecisionResponse.ok) {
     return res.status(400).json(
@@ -362,14 +394,16 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Activate the Credit Policy for the account
-  console.log("Activating credit policy with params:", {
+  const creditPolicyParams = {
     status: "active",
     credit_limit_amount: "2000",
     credit_limit_currency: "usd",
-    credit_limit_interval: "day",
-    credit_limit_interval_count: "1",
-    days_until_due: 0
-  });
+    credit_period_interval: "day",
+    credit_period_interval_count: "1",
+    days_until_due: "0"
+  };
+
+  console.log("Activating credit policy with params:", creditPolicyParams);
 
   const creditPolicyResponse = await fetch("https://api.stripe.com/v1/issuing/credit_policy", {
     method: "POST",
@@ -379,14 +413,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       Authorization: "Bearer " + getStripeSecretKey(platform),
       "Stripe-Version": "2024-04-10;issuing_credit_beta=v1;issuing_underwritten_credit_beta=v1"
     },
-    body: new URLSearchParams({
-      status: "active",
-      credit_limit_amount: "2000",
-      credit_limit_currency: "usd",
-      credit_period_interval: "day",
-      credit_period_interval_count: "1",
-      days_until_due: "0"
-    }),
+    body: new URLSearchParams(creditPolicyParams),
   });
 
   console.log("Credit policy activation response status:", creditPolicyResponse.status);
@@ -394,6 +421,15 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     creditPolicyResponseBody = await creditPolicyResponse.json();
     console.log("Credit policy activation response:", creditPolicyResponseBody);
+
+    // Log the credit policy activation request
+    await logApiRequest(
+      email,
+      "https://api.stripe.com/v1/issuing/credit_policy",
+      "POST",
+      creditPolicyParams,
+      creditPolicyResponseBody
+    );
   } catch (error) {
     console.error("Error parsing credit policy response:", error);
     return res.status(400).json(

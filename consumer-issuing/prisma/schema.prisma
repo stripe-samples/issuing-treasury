@@ -19,6 +19,20 @@ model User {
   lastLoginAt          DateTime @default(now()) @map("last_login_at")
   createdAt            DateTime @default(now()) @map("created_at")
   updatedAt            DateTime @default(now()) @updatedAt @map("updated_at")
+  apiRequestLogs       ApiRequestLog[] @relation("UserToApiRequestLog")
 
   @@map("users")
+}
+
+model ApiRequestLog {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  created       DateTime @default(now())
+  requestUrl    String   @map("request_url")
+  requestMethod String   @map("request_method")
+  requestBody   String?  @map("request_body")
+  responseBody  String?  @map("response_body")
+  user          User     @relation("UserToApiRequestLog", fields: [userId], references: [id])
+
+  @@map("api_request_logs")
 }

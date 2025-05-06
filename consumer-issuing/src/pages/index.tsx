@@ -31,12 +31,13 @@ export const getServerSideProps = async (
   const responseCreditLedgerEntries = await getCreditLedgerEntries(
     stripeAccount,
     currency,
+    session
   );
   creditLedgerEntries = responseCreditLedgerEntries.balanceTransactions;
   balanceFundsFlowChartData =
     responseCreditLedgerEntries.balanceFundsFlowChartData;
 
-  const responseAccountBalance = await getBalance(stripeAccount);
+  const responseAccountBalance = await getBalance(stripeAccount, session);
   issuingBalance = responseAccountBalance.balance.issuing;
   availableBalance = responseAccountBalance.balance;
 
