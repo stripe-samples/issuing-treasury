@@ -12,7 +12,7 @@ export const logApiRequest = async (
     return;
   }
 
-  console.log("Logging API request for user:", email);
+//   console.log("Logging API request for user:", email);
   try {
     await prisma.apiRequestLog.create({
       data: {

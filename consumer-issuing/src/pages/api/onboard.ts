@@ -120,10 +120,10 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   await stripe.accounts.update(accountId, onboardingData);
 
   // Create Issuing Program for the account
-  console.log("Creating issuing program with params:", {
-    platform_program: process.env.PLATFORM_PROGRAM,
-    is_default: "true"
-  });
+  // console.log("Creating issuing program with params:", {
+  //   platform_program: process.env.PLATFORM_PROGRAM,
+  //   is_default: "true"
+  // });
 
   const createProgramResponse = await fetch("https://api.stripe.com/v1/issuing/programs", {
     method: "POST",
@@ -139,9 +139,9 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     }),
   });
 
-  console.log("Issuing program creation response status:", createProgramResponse.status);
+  // console.log("Issuing program creation response status:", createProgramResponse.status);
   const programResponseText = await createProgramResponse.text();
-  console.log("Issuing program creation response body:", programResponseText);
+  // console.log("Issuing program creation response body:", programResponseText);
 
   // Log the issuing program creation request
   await logApiRequest(
@@ -172,7 +172,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     "credit_user[email]": email
   };
 
-  console.log("Creating underwriting record with params:", underwritingParams);
+  // console.log("Creating underwriting record with params:", underwritingParams);
 
   const createUnderwritingResponse = await fetch("https://api.stripe.com/v1/issuing/credit_underwriting_records/create_from_application", {
     method: "POST",
@@ -185,12 +185,12 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     body: new URLSearchParams(underwritingParams),
   });
 
-  console.log("Underwriting record creation response status:", createUnderwritingResponse.status);
+  // console.log("Underwriting record creation response status:", createUnderwritingResponse.status);
   
   let underwritingRecord;
   try {
     underwritingRecord = await createUnderwritingResponse.json();
-    console.log("Underwriting record creation response:", underwritingRecord);
+    // console.log("Underwriting record creation response:", underwritingRecord);
 
     // Log the underwriting record creation request
     await logApiRequest(
@@ -268,7 +268,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Check capability status before activating Credit Policy
-  console.log("Checking capability status for card_issuing_consumer_revolving_credit_card_celtic");
+  // console.log("Checking capability status for card_issuing_consumer_revolving_credit_card_celtic");
   
   const POLL_INTERVAL = 2000; // 2 seconds
   const MAX_ATTEMPTS = 30; // 1 minute total
@@ -289,7 +289,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     
     try {
       capabilityStatus = await capabilityResponse.json();
-      console.log("Capability status:", capabilityStatus);
+      // console.log("Capability status:", capabilityStatus);
       
       if (capabilityStatus.status === "active") {
         console.log("Capability is now active, proceeding with Credit Policy activation");
@@ -319,7 +319,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
 
     attempts++;
     if (attempts < MAX_ATTEMPTS) {
-      console.log(`Capability not yet active, waiting ${POLL_INTERVAL}ms before next check...`);
+      // console.log(`Capability not yet active, waiting ${POLL_INTERVAL}ms before next check...`);
       await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL));
     }
   }
@@ -337,7 +337,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Poll for Credit Policy presence
-  console.log("Checking for Credit Policy presence");
+  // console.log("Checking for Credit Policy presence");
   attempts = 0;
   let creditPolicy;
 
@@ -351,11 +351,11 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     });
 
-    console.log(`Credit Policy check attempt ${attempts + 1}/${MAX_ATTEMPTS} response status:`, creditPolicyResponse.status);
+    // console.log(`Credit Policy check attempt ${attempts + 1}/${MAX_ATTEMPTS} response status:`, creditPolicyResponse.status);
     
     try {
       const response = await creditPolicyResponse.json();
-      console.log("Credit Policy response:", response);
+      // console.log("Credit Policy response:", response);
       
       if (response.object === "issuing.credit_policy") {
         console.log("Credit Policy is present, proceeding with activation");
@@ -363,7 +363,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         break;
       }
       
-      console.log("No Credit Policy found yet, will retry...");
+      // console.log("No Credit Policy found yet, will retry...");
     } catch (error) {
       console.error("Error parsing Credit Policy response:", error);
       return res.status(400).json(
@@ -376,7 +376,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
 
     attempts++;
     if (attempts < MAX_ATTEMPTS) {
-      console.log(`Credit Policy not yet present, waiting ${POLL_INTERVAL}ms before next check...`);
+      // console.log(`Credit Policy not yet present, waiting ${POLL_INTERVAL}ms before next check...`);
       await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL));
     }
   }
@@ -403,7 +403,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     days_until_due: "0"
   };
 
-  console.log("Activating credit policy with params:", creditPolicyParams);
+  // console.log("Activating credit policy with params:", creditPolicyParams);
 
   const creditPolicyResponse = await fetch("https://api.stripe.com/v1/issuing/credit_policy", {
     method: "POST",
@@ -416,11 +416,11 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
     body: new URLSearchParams(creditPolicyParams),
   });
 
-  console.log("Credit policy activation response status:", creditPolicyResponse.status);
+  // console.log("Credit policy activation response status:", creditPolicyResponse.status);
   let creditPolicyResponseBody;
   try {
     creditPolicyResponseBody = await creditPolicyResponse.json();
-    console.log("Credit policy activation response:", creditPolicyResponseBody);
+    // console.log("Credit policy activation response:", creditPolicyResponseBody);
 
     // Log the credit policy activation request
     await logApiRequest(

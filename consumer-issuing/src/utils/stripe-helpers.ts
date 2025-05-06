@@ -236,7 +236,7 @@ export async function getCreditLedgerEntries(
   }
 
   const creditLedgerEntries = await response.json();
-  console.log('Retrieving Credit Ledger Data from https://api.stripe.com/v1/issuing/credit_ledger_entries:', JSON.stringify(creditLedgerEntries, null, 2));
+  // console.log('Retrieving Credit Ledger Data from https://api.stripe.com/v1/issuing/credit_ledger_entries:', JSON.stringify(creditLedgerEntries, null, 2));
 
   // Filter out credit ledger entries for issuing_credit_repayments with non-null funding_obligation
   const filteredEntries = creditLedgerEntries.data.filter((entry: any) => {
