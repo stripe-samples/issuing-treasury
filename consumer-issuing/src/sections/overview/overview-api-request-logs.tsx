@@ -10,7 +10,7 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import { format } from "date-fns";
 import { prettyPrintJson } from 'pretty-print-json';
 
@@ -52,32 +52,36 @@ type ApiRequestLog = {
   responseBody: string | null;
 };
 
-export const OverviewApiRequestLogs = (props: {
+export const OverviewApiRequestLogs = forwardRef((props: {
   sx?: object;
-}) => {
+}, ref) => {
   const { sx } = props;
   const [logs, setLogs] = useState<ApiRequestLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedLog, setSelectedLog] = useState<ApiRequestLog | null>(null);
 
-  useEffect(() => {
-    const fetchLogs = async () => {
-      try {
-        const response = await fetch('/api/get_api_request_logs');
-        if (!response.ok) {
-          throw new Error('Failed to fetch API request logs');
-        }
-        const data = await response.json();
-        setLogs(data.logs);
-      } catch (err) {
-        setError('Failed to load API request logs');
-        console.error('Error fetching API request logs:', err);
-      } finally {
-        setLoading(false);
+  const fetchLogs = async () => {
+    try {
+      const response = await fetch('/api/get_api_request_logs');
+      if (!response.ok) {
+        throw new Error('Failed to fetch API request logs');
       }
-    };
+      const data = await response.json();
+      setLogs(data.logs);
+    } catch (err) {
+      setError('Failed to load API request logs');
+      console.error('Error fetching API request logs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useImperativeHandle(ref, () => ({
+    refresh: fetchLogs
+  }));
+
+  useEffect(() => {
     fetchLogs();
   }, []);
 
@@ -173,27 +177,31 @@ export const OverviewApiRequestLogs = (props: {
                 <Typography variant="h6" gutterBottom>
                   Request Details
                 </Typography>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  Request Body
-                </Typography>
-                <Paper 
-                  variant="outlined" 
-                  sx={{ 
-                    p: 2, 
-                    mb: 2,
-                    backgroundColor: 'black',
-                    fontFamily: 'Courier New, monospace',
-                    fontSize: '0.875rem',
-                    whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    height: 200,
-                    overflow: 'auto'
-                  }}
-                >
-                  {renderJson(selectedLog.requestBody)}
-                </Paper>
+                {selectedLog.requestBody && (
+                  <>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                      Request Body
+                    </Typography>
+                    <Paper 
+                      variant="outlined" 
+                      sx={{ 
+                        p: 2, 
+                        mb: 2,
+                        backgroundColor: 'black',
+                        fontFamily: 'Courier New, monospace',
+                        fontSize: '0.875rem',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        height: 200,
+                        overflow: 'auto'
+                      }}
+                    >
+                      {renderJson(selectedLog.requestBody)}
+                    </Paper>
+                  </>
+                )}
 
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                   Response Body
@@ -222,4 +230,4 @@ export const OverviewApiRequestLogs = (props: {
       </Box>
     </>
   );
-}; 
+}); 
