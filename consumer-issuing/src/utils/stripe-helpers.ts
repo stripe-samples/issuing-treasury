@@ -261,6 +261,25 @@ export async function getCreditLedgerEntries(
       } catch (error) {
         console.error('Failed to fetch authorization details:', error);
       }
+    } else if (transaction.source?.type === "issuing_credit_repayment" && transaction.source?.issuing_credit_repayment) {
+      try {
+        const response = await fetch(
+          `https://api.stripe.com/v1/issuing/credit_repayments/${transaction.source.issuing_credit_repayment}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${getStripeSecretKey(platform)}`,
+              "Stripe-Version": "2024-04-10;issuing_credit_beta=v1;issuing_underwritten_credit_beta=v1"
+            }
+          }
+        );
+        if (response.ok) {
+          const creditRepayment = await response.json();
+          transaction.creditRepayment = creditRepayment;
+        }
+      } catch (error) {
+        console.error('Failed to fetch credit repayment details:', error);
+      }
     } else if (transaction.source?.type === "issuing_transaction" && transaction.source?.issuing_transaction) {
       try {
         // Fetch the issuing transaction details

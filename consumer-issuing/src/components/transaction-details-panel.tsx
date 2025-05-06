@@ -34,6 +34,7 @@ interface TransactionDetailsPanelProps {
       type: string;
       id: string;
       issuing_transaction?: string;
+      issuing_credit_repayment?: string;
     };
     auth?: Stripe.Issuing.Authorization & {
       merchant_data?: {
@@ -70,6 +71,10 @@ interface TransactionDetailsPanelProps {
         };
       };
     };
+    creditRepayment?: {
+      id: string;
+      status: string;
+    };
   };
   country: SupportedCountry;
   buttonText: string;
@@ -84,6 +89,12 @@ const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
   closed: "primary",
   pending: "warning",
   reversed: "error",
+};
+
+const creditRepaymentStatusMap: Record<string, SeverityColor> = {
+  succeeded: "success",
+  pending: "warning",
+  failed: "error",
 };
 
 // Helper function to ensure URL has https:// prefix
@@ -150,6 +161,32 @@ const TransactionDetailsPanel = ({
                   </Typography>
                 </Box>
               </Grid>
+            )}
+            {transaction.source.type === "issuing_credit_repayment" && (
+              <>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">Credit Repayment ID</Typography>
+                  <Box sx={{ mt: 0.5 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      {transaction.source.issuing_credit_repayment}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">Status</Typography>
+                  <Box sx={{ mt: 0.5 }}>
+                    {transaction.creditRepayment ? (
+                      <SeverityPill color={creditRepaymentStatusMap[transaction.creditRepayment.status] || "info"}>
+                        {capitalize(transaction.creditRepayment.status)}
+                      </SeverityPill>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        Unknown
+                      </Typography>
+                    )}
+                  </Box>
+                </Grid>
+              </>
             )}
             {transaction.auth && (
               <Grid item xs={12}>

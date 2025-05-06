@@ -17,8 +17,9 @@ import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
 import TransactionDetailsPanel from "src/components/transaction-details-panel";
 import { formatCurrencyForCountry, formatDateTime, titleize } from "src/utils/format";
+import { SeverityColor } from "src/types/severity-color";
 
-const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
+const statusMap: Record<string, SeverityColor> = {
   open: "warning",
   posted: "success",
   void: "error",
@@ -27,6 +28,27 @@ const statusMap: Record<string, "warning" | "success" | "error" | "info"> = {
 const typeMap: Record<string, string> = {
   issuing_authorization: "Authorization",
   issuing_transaction: "Transaction",
+  issuing_credit_repayment: "Repayment"
+};
+
+const getStatusInfo = (entry: any): { text: string; color: SeverityColor } => {
+  if (entry.source?.type === "issuing_credit_repayment") {
+    const status = entry.creditRepayment?.status || "processing";
+    return {
+      text: status === "processing" ? "Processing" : "Success",
+      color: status === "processing" ? "info" : "success"
+    };
+  } else if (entry.source?.type === "issuing_transaction") {
+    return {
+      text: "Posted",
+      color: "success"
+    };
+  } else {
+    return {
+      text: "Pending",
+      color: "warning"
+    };
+  }
 };
 
 export const OverviewLatestBalanceTransactions = (props: {
@@ -64,6 +86,8 @@ export const OverviewLatestBalanceTransactions = (props: {
                   const category = entry.auth?.merchant_data?.category
                     ? titleize(entry.auth.merchant_data.category.replace(/_/g, " "))
                     : "Unknown";
+                  const isRepayment = entry.source?.type === "issuing_credit_repayment";
+                  const statusInfo = getStatusInfo(entry);
                   return (
                     <TableRow hover key={entry.id}>
                       <TableCell sx={{ whiteSpace: "nowrap" }}>
@@ -82,15 +106,15 @@ export const OverviewLatestBalanceTransactions = (props: {
                           : "Unknown"}
                       </TableCell>
                       <TableCell>
-                        <SeverityPill color={entry.source?.type === "issuing_transaction" ? "success" : "warning"}>
-                          {entry.source?.type === "issuing_transaction" ? "Posted" : "Pending"}
+                        <SeverityPill color={statusInfo.color}>
+                          {statusInfo.text}
                         </SeverityPill>
                       </TableCell>
                       <TableCell sx={{ whiteSpace: "nowrap" }}>
-                        {entry.auth?.merchant_data?.name || "Unknown merchant"}
+                        {!isRepayment && (entry.auth?.merchant_data?.name || "Unknown merchant")}
                       </TableCell>
                       <TableCell sx={{ whiteSpace: "nowrap" }}>
-                        {category}
+                        {!isRepayment && category}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -118,7 +142,7 @@ export const OverviewLatestBalanceTransactions = (props: {
               <Divider />
               <Box p={3} color="neutral.400">
                 <Typography variant="body1">
-                  There are no transactions to display.
+                  There are no transactions to show yet.
                 </Typography>
               </Box>
             </>
