@@ -285,27 +285,33 @@ export async function getCreditLedgerEntries(
     transactionList.push(processedEntry);
   });
 
-  // Fetch additional details for authorizations
+  // Fetch all transactions and authorizations in bulk
   const stripe = stripeClient(platform);
+  const [transactionsResponse, authorizationsResponse] = await Promise.all([
+    stripe.issuing.transactions.list(
+      { limit: 100 },
+      { stripeAccount: accountId }
+    ),
+    stripe.issuing.authorizations.list(
+      { limit: 100 },
+      { stripeAccount: accountId }
+    )
+  ]);
+
+  // Create lookup maps for quick access
+  const transactionsMap = new Map(
+    transactionsResponse.data.map(t => [t.id, t])
+  );
+  const authorizationsMap = new Map(
+    authorizationsResponse.data.map(a => [a.id, a])
+  );
+
+  // Process transactions with the bulk-fetched data
   for (const transaction of transactionList) {
     if (transaction.source?.type === "issuing_authorization" && transaction.source?.issuing_authorization) {
-      try {
-        const auth = await stripe.issuing.authorizations.retrieve(
-          transaction.source.issuing_authorization,
-          { stripeAccount: accountId }
-        );
+      const auth = authorizationsMap.get(transaction.source.issuing_authorization);
+      if (auth) {
         transaction.auth = auth;
-
-        // Log the authorization request
-        // await logApiRequest(
-        //   stripeAccount.userId,
-        //   `https://api.stripe.com/v1/issuing/authorizations/${transaction.source.issuing_authorization}`,
-        //   "GET",
-        //   null,
-        //   auth
-        // );
-      } catch (error) {
-        console.error('Failed to fetch authorization details:', error);
       }
     } else if (transaction.source?.type === "issuing_credit_repayment" && transaction.source?.issuing_credit_repayment) {
       try {
@@ -337,41 +343,17 @@ export async function getCreditLedgerEntries(
         console.error('Failed to fetch credit repayment details:', error);
       }
     } else if (transaction.source?.type === "issuing_transaction" && transaction.source?.issuing_transaction) {
-      try {
-        // Fetch the issuing transaction details
-        const issuingTransaction = await stripe.issuing.transactions.retrieve(
-          transaction.source.issuing_transaction,
-          { stripeAccount: accountId }
-        );
+      const issuingTransaction = transactionsMap.get(transaction.source.issuing_transaction);
+      if (issuingTransaction) {
         transaction.transaction = issuingTransaction;
-        // Log the transaction request
-        // await logApiRequest(
-        //   stripeAccount.userId,
-        //   `https://api.stripe.com/v1/issuing/transactions/${transaction.source.issuing_transaction}`,
-        //   "GET",
-        //   null,
-        //   issuingTransaction
-        // );
-
-        // If the transaction has an authorization, fetch its details
+        
+        // If the transaction has an authorization, get it from our map
         if (issuingTransaction.authorization && typeof issuingTransaction.authorization === 'string') {
-          const auth = await stripe.issuing.authorizations.retrieve(
-            issuingTransaction.authorization,
-            { stripeAccount: accountId }
-          );
-          transaction.auth = auth;
-
-          // Log the authorization request
-          // await logApiRequest(
-          //   stripeAccount.userId,
-          //   `https://api.stripe.com/v1/issuing/authorizations/${issuingTransaction.authorization}`,
-          //   "GET",
-          //   null,
-          //   auth
-          // );
+          const auth = authorizationsMap.get(issuingTransaction.authorization);
+          if (auth) {
+            transaction.auth = auth;
+          }
         }
-      } catch (error) {
-        console.error('Failed to fetch transaction or authorization details:', error);
       }
     }
   }
