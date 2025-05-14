@@ -35,6 +35,7 @@ interface TransactionDetailsPanelProps {
       id: string;
       issuing_transaction?: string;
       issuing_credit_repayment?: string;
+      issuing_credit_ledger_adjustment?: string;
     };
     auth?: Stripe.Issuing.Authorization & {
       merchant_data?: {
@@ -74,6 +75,10 @@ interface TransactionDetailsPanelProps {
     creditRepayment?: {
       id: string;
       status: string;
+    };
+    creditLedgerAdjustment?: {
+      reason?: string;
+      reason_description?: string;
     };
   };
   country: SupportedCountry;
@@ -186,6 +191,28 @@ const TransactionDetailsPanel = ({
                     )}
                   </Box>
                 </Grid>
+              </>
+            )}
+            {transaction.source.type === "issuing_credit_ledger_adjustment" && (
+              <>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">Reason</Typography>
+                  <Box sx={{ mt: 0.5 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      {titleize(transaction.creditLedgerAdjustment?.reason?.replace(/_/g, " ") || "Unknown")}
+                    </Typography>
+                  </Box>
+                </Grid>
+                {transaction.creditLedgerAdjustment?.reason_description && (
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle2">Description</Typography>
+                    <Box sx={{ mt: 0.5 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {transaction.creditLedgerAdjustment.reason_description}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                )}
               </>
             )}
             {transaction.auth && (

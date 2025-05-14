@@ -28,7 +28,22 @@ const statusMap: Record<string, SeverityColor> = {
 const typeMap: Record<string, string> = {
   issuing_authorization: "Authorization",
   issuing_transaction: "Transaction",
-  issuing_credit_repayment: "Repayment"
+  issuing_credit_repayment: "Repayment",
+  issuing_credit_ledger_adjustment: "Adjustment"
+};
+
+const adjustmentReasonMap: Record<string, string> = {
+  interest_charge: "Interest Charge",
+  interest_credit: "Interest Credit",
+  late_fee: "Late Fee",
+  annual_fee: "Annual Fee",
+  foreign_transaction_fee: "Foreign Transaction Fee",
+  cash_advance_fee: "Cash Advance Fee",
+  balance_transfer_fee: "Balance Transfer Fee",
+  returned_payment_fee: "Returned Payment Fee",
+  statement_credit: "Statement Credit",
+  other: "Other Adjustment",
+  platform_issued_debit_memo: "Platform Issued Debit Memo",
 };
 
 const getTransactionType = (entry: any): string => {
@@ -46,6 +61,11 @@ const getStatusInfo = (entry: any): { text: string; color: SeverityColor } => {
       color: status === "processing" ? "info" : "success"
     };
   } else if (entry.source?.type === "issuing_transaction") {
+    return {
+      text: "Posted",
+      color: "success"
+    };
+  } else if (entry.source?.type === "issuing_credit_ledger_adjustment") {
     return {
       text: "Posted",
       color: "success"
@@ -92,8 +112,11 @@ export const OverviewLatestBalanceTransactions = (props: {
                 {creditLedgerEntries.map((entry) => {
                   const category = entry.auth?.merchant_data?.category
                     ? titleize(entry.auth.merchant_data.category.replace(/_/g, " "))
+                    : entry.source?.type === "issuing_credit_ledger_adjustment"
+                    ? adjustmentReasonMap[entry.creditLedgerAdjustment?.reason] || titleize(entry.creditLedgerAdjustment?.reason?.replace(/_/g, " ") || "Unknown")
                     : "Unknown";
                   const isRepayment = entry.source?.type === "issuing_credit_repayment";
+                  const isAdjustment = entry.source?.type === "issuing_credit_ledger_adjustment";
                   const statusInfo = getStatusInfo(entry);
                   return (
                     <TableRow hover key={entry.id}>
@@ -116,7 +139,7 @@ export const OverviewLatestBalanceTransactions = (props: {
                         </SeverityPill>
                       </TableCell>
                       <TableCell sx={{ whiteSpace: "nowrap" }}>
-                        {!isRepayment && (entry.auth?.merchant_data?.name || "Unknown merchant")}
+                        {!isRepayment && !isAdjustment && (entry.auth?.merchant_data?.name || "Unknown merchant")}
                       </TableCell>
                       <TableCell sx={{ whiteSpace: "nowrap" }}>
                         {!isRepayment && category}

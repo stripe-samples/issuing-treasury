@@ -355,6 +355,36 @@ export async function getCreditLedgerEntries(
           }
         }
       }
+    } else if (transaction.source?.type === "issuing_credit_ledger_adjustment" && transaction.source?.issuing_credit_ledger_adjustment) {
+      try {
+        const response = await fetch(
+          `https://api.stripe.com/v1/issuing/credit_ledger_adjustments/${transaction.source.issuing_credit_ledger_adjustment}`,
+          {
+            method: "GET",
+            headers: {
+              "Stripe-Account": accountId,
+              Authorization: `Bearer ${getStripeSecretKey(platform)}`,
+              "Stripe-Version": "2024-04-10;issuing_credit_beta=v1;issuing_underwritten_credit_beta=v1"
+            }
+          }
+        );
+
+        // Log the credit ledger adjustment request
+        await logApiRequest(
+          session.email,
+          `https://api.stripe.com/v1/issuing/credit_ledger_adjustments/${transaction.source.issuing_credit_ledger_adjustment}`,
+          "GET",
+          null,
+          await response.clone().json()
+        );
+
+        if (response.ok) {
+          const creditLedgerAdjustment = await response.json();
+          transaction.creditLedgerAdjustment = creditLedgerAdjustment;
+        }
+      } catch (error) {
+        console.error('Failed to fetch credit ledger adjustment details:', error);
+      }
     }
   }
 
