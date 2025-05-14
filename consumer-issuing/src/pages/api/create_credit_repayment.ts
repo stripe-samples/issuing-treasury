@@ -5,6 +5,7 @@ import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import { getStripeSecretKey } from "src/utils/stripe-authentication";
 import stripeClient from "src/utils/stripe-loader";
+import { v4 as uuidv4 } from 'uuid';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
@@ -32,6 +33,7 @@ const createCreditRepayment = async (
         account: accountId,
         "instructed_by[type]": "user",
         "instructed_by[user][payment_method_type]": "paper_check",
+        "instructed_by[user][payment_reference]": uuidv4(),
         "amount[value]": req.body.amount.toString(),
         "amount[currency]": "usd",
         credit_statement_descriptor: "Payment received",
