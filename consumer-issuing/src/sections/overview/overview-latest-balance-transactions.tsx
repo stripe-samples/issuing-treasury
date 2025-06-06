@@ -56,10 +56,28 @@ const getTransactionType = (entry: any): string => {
 const getStatusInfo = (entry: any): { text: string; color: SeverityColor } => {
   if (entry.source?.type === "issuing_credit_repayment") {
     const status = entry.creditRepayment?.status || "processing";
-    return {
-      text: status === "processing" ? "Processing" : "Success",
-      color: status === "processing" ? "info" : "success"
-    };
+    switch (status) {
+      case "processing":
+        return {
+          text: "Processing",
+          color: "info"
+        };
+      case "succeeded":
+        return {
+          text: "Success",
+          color: "success"
+        };
+      case "failed":
+        return {
+          text: "Failed",
+          color: "error"
+        };
+      default:
+        return {
+          text: "Pending",
+          color: "info"
+        };
+      }
   } else if (entry.source?.type === "issuing_transaction") {
     return {
       text: "Posted",
