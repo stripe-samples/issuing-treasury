@@ -141,6 +141,10 @@ export const TestDataMakePayment = () => {
     const amountInCents = Math.round(amount * 100);
     const currency = CountryConfigMap[country]?.currency || country.toLowerCase();
 
+    // Capture these values before making API calls to ensure they're available for success message
+    const formattedAmount = formatCurrencyForCountry(amountInCents, country);
+    const paymentTypeLabel = paymentType === "api_instructed" ? "on-Stripe" : "off-Stripe";
+
     const requestData: any = {
       amount: amountInCents,
       currency,
@@ -153,15 +157,6 @@ export const TestDataMakePayment = () => {
       requestData.customer_id = selectedCustomer;
     }
 
-    console.log("Submitting payment:", {
-      amount,
-      amountInCents,
-      currency,
-      paymentType,
-      requestData,
-      formattedAmount: formatCurrencyForCountry(amount, country)
-    });
-
     try {
       const response = await postApi("/api/create_credit_repayment", requestData);
 
@@ -172,8 +167,7 @@ export const TestDataMakePayment = () => {
           setPaymentAmount("");
           setSelectedPaymentMethod("");
           setSelectedCustomer("");
-          const paymentTypeLabel = paymentType === "api_instructed" ? "on-Stripe" : "off-Stripe";
-          setSuccessText(`Successfully processed ${paymentTypeLabel} payment of ${formatCurrencyForCountry(amount, country)}`);
+          setSuccessText(`Successfully processed ${paymentTypeLabel} payment of ${formattedAmount}`);
         },
         onError: (error) => {
           setErrorText(`Error: ${error.message}`);
