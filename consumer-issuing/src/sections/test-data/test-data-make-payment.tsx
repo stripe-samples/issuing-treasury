@@ -11,14 +11,33 @@ import {
   RadioGroup,
   Radio,
   FormLabel,
-  Chip
+  Chip,
+  Select,
+  MenuItem,
+  InputLabel,
+  CircularProgress
 } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { formatCurrencyForCountry } from "src/utils/format";
 import { extractJsonFromResponse, handleResult, postApi } from "src/utils/api-helpers";
 import { CountryConfigMap } from "src/utils/account-management-helpers";
+
+interface VerifiedPaymentMethod {
+  customer: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  paymentMethods: Array<{
+    id: string;
+    bank_name?: string;
+    last4?: string;
+    account_type?: string;
+    account_holder_type?: string;
+  }>;
+}
 
 export const TestDataMakePayment = () => {
   const { data: session } = useSession();
@@ -28,9 +47,43 @@ export const TestDataMakePayment = () => {
   const { country, stripeAccount } = session;
   const [paymentAmount, setPaymentAmount] = useState<string>("");
   const [paymentType, setPaymentType] = useState<string>("user_instructed");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("");
+  const [selectedCustomer, setSelectedCustomer] = useState<string>("");
+  const [verifiedPaymentMethods, setVerifiedPaymentMethods] = useState<VerifiedPaymentMethod[]>([]);
+  const [loadingPaymentMethods, setLoadingPaymentMethods] = useState(false);
   const [errorText, setErrorText] = useState<string>("");
   const [successText, setSuccessText] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Fetch verified payment methods when payment type changes to API-instructed
+  useEffect(() => {
+    if (paymentType === "api_instructed") {
+      fetchVerifiedPaymentMethods();
+    }
+  }, [paymentType]);
+
+  const fetchVerifiedPaymentMethods = async () => {
+    setLoadingPaymentMethods(true);
+    try {
+      const response = await fetch("/api/get_verified_payment_methods", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await extractJsonFromResponse(response);
+      if (result.success && result.data) {
+        setVerifiedPaymentMethods(result.data as VerifiedPaymentMethod[]);
+      } else {
+        setErrorText("Failed to load verified payment methods");
+      }
+    } catch (error) {
+      setErrorText("Error loading payment methods");
+    } finally {
+      setLoadingPaymentMethods(false);
+    }
+  };
 
   const handlePaymentAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -44,9 +97,25 @@ export const TestDataMakePayment = () => {
 
   const handlePaymentTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPaymentType(event.target.value);
-    // Clear messages when payment type changes
+    // Clear messages and selections when payment type changes
     setSuccessText("");
     setErrorText("");
+    setSelectedPaymentMethod("");
+    setSelectedCustomer("");
+  };
+
+  const handlePaymentMethodChange = (event: any) => {
+    const value = event.target.value;
+    setSelectedPaymentMethod(value);
+
+    // Find the customer for this payment method
+    for (const customerData of verifiedPaymentMethods) {
+      const paymentMethod = customerData.paymentMethods.find(pm => pm.id === value);
+      if (paymentMethod) {
+        setSelectedCustomer(customerData.customer.id);
+        break;
+      }
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -61,6 +130,11 @@ export const TestDataMakePayment = () => {
       return;
     }
 
+    if (paymentType === "api_instructed" && !selectedPaymentMethod) {
+      setErrorText("Please select a payment method for on-Stripe payments");
+      return;
+    }
+
     setSubmitting(true);
     setErrorText("");
     setSuccessText("");
@@ -69,27 +143,37 @@ export const TestDataMakePayment = () => {
     const amountInCents = Math.round(amount * 100);
     const currency = CountryConfigMap[country]?.currency || country.toLowerCase();
 
+    const requestData: any = {
+      amount: amountInCents,
+      currency,
+      payment_type: paymentType,
+      account: stripeAccount.accountId,
+    };
+
+    if (paymentType === "api_instructed") {
+      requestData.payment_method_id = selectedPaymentMethod;
+      requestData.customer_id = selectedCustomer;
+    }
+
     console.log("Submitting payment:", {
       amount,
       amountInCents,
       currency,
       paymentType,
+      requestData,
       formattedAmount: formatCurrencyForCountry(amount, country)
     });
 
     try {
-      const response = await postApi("/api/create_credit_repayment", {
-        amount: amountInCents,
-        currency,
-        payment_type: paymentType,
-        account: stripeAccount.accountId,
-      });
+      const response = await postApi("/api/create_credit_repayment", requestData);
 
       const result = await extractJsonFromResponse(response);
       handleResult({
         result,
         onSuccess: () => {
           setPaymentAmount("");
+          setSelectedPaymentMethod("");
+          setSelectedCustomer("");
           const paymentTypeLabel = paymentType === "api_instructed" ? "on-Stripe" : "off-Stripe";
           setSuccessText(`Successfully processed ${paymentTypeLabel} payment of ${formatCurrencyForCountry(amount, country)}`);
         },
@@ -105,6 +189,15 @@ export const TestDataMakePayment = () => {
       setSubmitting(false);
     }
   };
+
+  // Get all payment methods for the dropdown
+  const allPaymentMethods = verifiedPaymentMethods.flatMap(customerData =>
+    customerData.paymentMethods.map(pm => ({
+      ...pm,
+      customerName: customerData.customer.name || customerData.customer.email,
+      customerId: customerData.customer.id,
+    }))
+  );
 
   return (
     <Grid container rowSpacing={3}>
@@ -161,6 +254,45 @@ export const TestDataMakePayment = () => {
         </Typography>
       </Grid>
 
+      {paymentType === "api_instructed" && (
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="payment-method-select-label">Select Payment Method</InputLabel>
+            <Select
+              labelId="payment-method-select-label"
+              value={selectedPaymentMethod}
+              onChange={handlePaymentMethodChange}
+              disabled={submitting || loadingPaymentMethods}
+              label="Select Payment Method"
+            >
+              {loadingPaymentMethods ? (
+                <MenuItem disabled>
+                  <CircularProgress size={20} sx={{ mr: 1 }} />
+                  Loading payment methods...
+                </MenuItem>
+              ) : allPaymentMethods.length === 0 ? (
+                <MenuItem disabled>
+                  No verified bank accounts found
+                </MenuItem>
+              ) : (
+                allPaymentMethods.map((pm) => (
+                  <MenuItem key={pm.id} value={pm.id}>
+                    <Box>
+                      <Typography variant="body2">
+                        {pm.bank_name} ****{pm.last4} ({pm.account_type})
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Account holder: {pm.customerName}
+                      </Typography>
+                    </Box>
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
+        </Grid>
+      )}
+
       <Grid item xs={12}>
         <Typography variant="subtitle2">Payment Amount</Typography>
         <Box sx={{ mt: 0.5 }}>
@@ -197,7 +329,7 @@ export const TestDataMakePayment = () => {
           color="primary"
           onClick={handleSubmit}
           variant="contained"
-          disabled={submitting}
+          disabled={submitting || (paymentType === "api_instructed" && (!selectedPaymentMethod || loadingPaymentMethods))}
           fullWidth
         >
           {submitting
