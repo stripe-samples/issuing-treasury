@@ -55,12 +55,10 @@ export const TestDataMakePayment = () => {
   const [successText, setSuccessText] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Fetch verified payment methods when payment type changes to API-instructed
+  // Fetch verified payment methods immediately when component mounts
   useEffect(() => {
-    if (paymentType === "api_instructed") {
-      fetchVerifiedPaymentMethods();
-    }
-  }, [paymentType]);
+    fetchVerifiedPaymentMethods();
+  }, []);
 
   const fetchVerifiedPaymentMethods = async () => {
     setLoadingPaymentMethods(true);
