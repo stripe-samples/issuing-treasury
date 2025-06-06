@@ -75,6 +75,9 @@ interface TransactionDetailsPanelProps {
     creditRepayment?: {
       id: string;
       status: string;
+      instructed_by?: {
+        type: string;
+      };
     };
     creditLedgerAdjustment?: {
       reason?: string;
@@ -178,6 +181,30 @@ const TransactionDetailsPanel = ({
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
+                  <Typography variant="subtitle2">Payment Type</Typography>
+                  <Box sx={{ mt: 0.5 }}>
+                    {transaction.creditRepayment?.instructed_by?.type ? (
+                      <Stack direction="row" spacing={1}>
+                        <SeverityPill
+                          color={transaction.creditRepayment.instructed_by.type === "credit_repayments_api" ? "primary" : "secondary"}
+                        >
+                          {transaction.creditRepayment.instructed_by.type === "credit_repayments_api" ? "On-Stripe" : "Off-Stripe"}
+                        </SeverityPill>
+                        <Typography variant="body2" color="text.secondary" sx={{ alignSelf: 'center' }}>
+                          ({transaction.creditRepayment.instructed_by.type === "credit_repayments_api"
+                            ? "API-instructed"
+                            : "User-instructed"
+                          })
+                        </Typography>
+                      </Stack>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        Unknown
+                      </Typography>
+                    )}
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
                   <Typography variant="subtitle2">Status</Typography>
                   <Box sx={{ mt: 0.5 }}>
                     {transaction.creditRepayment ? (
@@ -267,7 +294,7 @@ const TransactionDetailsPanel = ({
                           href={ensureHttps(transaction.auth.enriched_merchant_data.merchant.url)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style={{ 
+                          style={{
                             color: '#1976d2', // Material-UI primary blue
                             textDecoration: 'underline'
                           }}
@@ -278,10 +305,10 @@ const TransactionDetailsPanel = ({
                         transaction.auth?.enriched_merchant_data?.merchant?.name || transaction.auth?.merchant_data?.name || "Unknown merchant"
                       )}
                       {transaction.auth?.enriched_merchant_data?.merchant?.phone && (
-                        <Typography 
-                          component="span" 
-                          variant="body2" 
-                          color="text.secondary" 
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          color="text.secondary"
                           sx={{ ml: 1 }}
                         >
                           ({transaction.auth.enriched_merchant_data.merchant.phone})
@@ -312,7 +339,7 @@ const TransactionDetailsPanel = ({
                         ].filter(Boolean).join(", ") || "Unknown location"
                       )}
                     </Typography>
-                    {transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.latitude && 
+                    {transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.latitude &&
                      transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.longitude && (
                       <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, fontFamily: 'monospace' }}>
                         {`${transaction.auth.enriched_merchant_data.merchant.location.coordinates.latitude.toFixed(6)}, ${transaction.auth.enriched_merchant_data.merchant.location.coordinates.longitude.toFixed(6)}`}
@@ -320,7 +347,7 @@ const TransactionDetailsPanel = ({
                     )}
                   </Box>
                 </Grid>
-                {transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.latitude && 
+                {transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.latitude &&
                  transaction.auth?.enriched_merchant_data?.merchant?.location?.coordinates?.longitude && (
                   <Grid item xs={12}>
                     <Box sx={{ mt: 1 }}>
@@ -362,4 +389,4 @@ const TransactionDetailsPanel = ({
   );
 };
 
-export default TransactionDetailsPanel; 
+export default TransactionDetailsPanel;

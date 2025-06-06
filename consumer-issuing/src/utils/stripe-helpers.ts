@@ -238,10 +238,10 @@ export async function getCreditLedgerEntries(
   const creditLedgerEntries = await response.json();
   // console.log('Retrieving Credit Ledger Data from https://api.stripe.com/v1/issuing/credit_ledger_entries:', JSON.stringify(creditLedgerEntries, null, 2));
 
-  // Filter out credit ledger entries for issuing_credit_repayments with non-null funding_obligation
+  // Include only credit ledger entries for issuing_credit_repayments with non-null funding_obligation
   const filteredEntries = creditLedgerEntries.data.filter((entry: any) => {
     if (entry.source?.type === "issuing_credit_repayment" && entry.source?.issuing_credit_repayment) {
-      return !entry.funding_obligation;
+      return !!entry.funding_obligation;
     }
     return true;
   });
@@ -270,17 +270,23 @@ export async function getCreditLedgerEntries(
   Object.values(entriesBySource).forEach((entries) => {
     // Calculate total amount for the group
     const totalAmount = entries.reduce((sum, entry) => sum + entry.amount, 0);
-    
-    // Skip groups with zero total
-    if (totalAmount === 0) {
+
+    // Skip groups with zero total, EXCEPT for credit repayments which should always be shown
+    // Failed credit repayments have offsetting entries that sum to 0
+    const isRepayment = entries[0]?.source?.type === "issuing_credit_repayment";
+    if (totalAmount === 0 && !isRepayment) {
       return;
     }
 
-    // Use the latest entry's date and metadata, but with the summed amount
+    // Use the latest entry's date and metadata
     const latestEntry = entries[entries.length - 1];
+
+    // For credit repayments, we'll use the actual repayment amount later when we fetch the details
+    // For other transactions, use the summed amount
     const processedEntry = {
       ...latestEntry,
-      amount: totalAmount
+      amount: totalAmount,
+      isRepayment: isRepayment
     };
     transactionList.push(processedEntry);
   });
@@ -338,6 +344,10 @@ export async function getCreditLedgerEntries(
         if (response.ok) {
           const creditRepayment = await response.json();
           transaction.creditRepayment = creditRepayment;
+          // Use the actual repayment amount instead of the net ledger effect (which is 0 for failed repayments)
+          if (creditRepayment.amount && creditRepayment.amount.value) {
+            transaction.amount = creditRepayment.amount.value;
+          }
         }
       } catch (error) {
         console.error('Failed to fetch credit repayment details:', error);
@@ -346,7 +356,7 @@ export async function getCreditLedgerEntries(
       const issuingTransaction = transactionsMap.get(transaction.source.issuing_transaction);
       if (issuingTransaction) {
         transaction.transaction = issuingTransaction;
-        
+
         // If the transaction has an authorization, get it from our map
         if (issuingTransaction.authorization && typeof issuingTransaction.authorization === 'string') {
           const auth = authorizationsMap.get(issuingTransaction.authorization);
