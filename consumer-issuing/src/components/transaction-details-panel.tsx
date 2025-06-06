@@ -75,6 +75,7 @@ interface TransactionDetailsPanelProps {
     creditRepayment?: {
       id: string;
       status: string;
+      credit_statement_descriptor?: string;
       instructed_by?: {
         type: string;
       };
@@ -183,15 +184,15 @@ const TransactionDetailsPanel = ({
                 <Grid item xs={12}>
                   <Typography variant="subtitle2">Payment Type</Typography>
                   <Box sx={{ mt: 0.5 }}>
-                    {transaction.creditRepayment?.instructed_by?.type ? (
+                    {transaction.creditRepayment?.credit_statement_descriptor ? (
                       <Stack direction="row" spacing={1}>
                         <SeverityPill
-                          color={transaction.creditRepayment.instructed_by.type === "credit_repayments_api" ? "primary" : "secondary"}
+                          color={transaction.creditRepayment.credit_statement_descriptor === "API Payment received" ? "primary" : "secondary"}
                         >
-                          {transaction.creditRepayment.instructed_by.type === "credit_repayments_api" ? "On-Stripe" : "Off-Stripe"}
+                          {transaction.creditRepayment.credit_statement_descriptor === "API Payment received" ? "On-Stripe" : "Off-Stripe"}
                         </SeverityPill>
                         <Typography variant="body2" color="text.secondary" sx={{ alignSelf: 'center' }}>
-                          ({transaction.creditRepayment.instructed_by.type === "credit_repayments_api"
+                          ({transaction.creditRepayment.credit_statement_descriptor === "API Payment received"
                             ? "API-instructed"
                             : "User-instructed"
                           })
