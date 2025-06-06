@@ -260,17 +260,23 @@ export const TestDataMakePayment = () => {
               labelId="payment-method-select-label"
               value={selectedPaymentMethod}
               onChange={handlePaymentMethodChange}
-              disabled={submitting || loadingPaymentMethods}
+              disabled={submitting}
               label="Select Payment Method"
             >
               {loadingPaymentMethods ? (
                 <MenuItem disabled>
-                  <CircularProgress size={20} sx={{ mr: 1 }} />
-                  Loading payment methods...
+                  <Box sx={{ display: 'flex', alignItems: 'center', py: 1 }}>
+                    <CircularProgress size={20} sx={{ mr: 2 }} />
+                    <Typography variant="body2">Loading payment methods...</Typography>
+                  </Box>
                 </MenuItem>
               ) : allPaymentMethods.length === 0 ? (
                 <MenuItem disabled>
-                  No verified bank accounts found
+                  <Box sx={{ py: 1 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      No verified bank accounts found
+                    </Typography>
+                  </Box>
                 </MenuItem>
               ) : (
                 allPaymentMethods.map((pm) => (
@@ -327,7 +333,7 @@ export const TestDataMakePayment = () => {
           color="primary"
           onClick={handleSubmit}
           variant="contained"
-          disabled={submitting || (paymentType === "api_instructed" && (!selectedPaymentMethod || loadingPaymentMethods))}
+          disabled={submitting || (paymentType === "api_instructed" && !selectedPaymentMethod)}
           fullWidth
         >
           {submitting
