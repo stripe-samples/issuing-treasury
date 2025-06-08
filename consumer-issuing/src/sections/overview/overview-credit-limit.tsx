@@ -10,8 +10,11 @@ import { TestDataMakePayment } from "src/sections/test-data/test-data-make-payme
 
 type Statement = {
   id: string;
-  filename: string;
-  url: string;
+  credit_period_starts_at: number | null;
+  credit_period_ends_at: number | null;
+  url: string | null;
+  file?: string;
+  status?: string;
 };
 
 export const OverviewCreditStatement = (props: {
@@ -70,19 +73,68 @@ export const OverviewCreditStatement = (props: {
               <Typography color="text.secondary">No statements available</Typography>
             ) : (
               <Stack spacing={1}>
-                {statements.map((statement) => (
-                  <Link
-                    key={statement.id}
-                    href={statement.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    underline="hover"
-                    color="primary"
-                    download={false}
-                  >
-                    {statement.filename.replace('.pdf', '')}
-                  </Link>
-                ))}
+                {statements.map((statement) => {
+                  // Handle null dates for pending statements
+                  if (!statement.credit_period_starts_at || !statement.credit_period_ends_at) {
+                    const statementName = statement.status === 'pending'
+                      ? "Current Statement (Pending)"
+                      : "Statement (Processing)";
+
+                    return statement.url ? (
+                      <Link
+                        key={statement.id}
+                        href={statement.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        underline="hover"
+                        color="primary"
+                        download={false}
+                      >
+                        {statementName}
+                      </Link>
+                    ) : (
+                      <Typography
+                        key={statement.id}
+                        color="text.secondary"
+                        variant="body2"
+                      >
+                        {statementName}
+                      </Typography>
+                    );
+                  }
+
+                  // Format the statement period as a readable name
+                  const endDate = new Date(statement.credit_period_ends_at * 1000);
+                  const statementDate = endDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  });
+
+                  const statementName = statementDate;
+
+                  return statement.url ? (
+                    <Link
+                      key={statement.id}
+                      href={statement.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      underline="hover"
+                      color="primary"
+                      download={false}
+                    >
+                      {statementName}
+                    </Link>
+                  ) : (
+                    <Typography
+                      key={statement.id}
+                      color="text.secondary"
+                      variant="body2"
+                    >
+                      {statementName}
+                    </Typography>
+                  );
+                })}
               </Stack>
             )}
           </Stack>
@@ -113,4 +165,4 @@ export const OverviewCreditStatement = (props: {
       </CardContent>
     </Card>
   );
-}; 
+};
