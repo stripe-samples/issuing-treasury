@@ -293,7 +293,7 @@ export async function getCreditLedgerEntries(
 
   // Fetch all transactions and authorizations in bulk
   const stripe = stripeClient(platform);
-  const [transactionsResponse, authorizationsResponse] = await Promise.all([
+  const [transactionsResponse, authorizationsResponse, creditRepaymentsResponse] = await Promise.all([
     stripe.issuing.transactions.list(
       { limit: 100 },
       { stripeAccount: accountId }
@@ -301,7 +301,25 @@ export async function getCreditLedgerEntries(
     stripe.issuing.authorizations.list(
       { limit: 100 },
       { stripeAccount: accountId }
-    )
+    ),
+    fetch("https://api.stripe.com/v1/issuing/credit_repayments?account=" + accountId + "&limit=100", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${getStripeSecretKey(platform)}`,
+        "Stripe-Version": "2024-04-10;issuing_credit_beta=v1;issuing_underwritten_credit_beta=v1"
+      }
+    }).then(async res => {
+      const responseData = await res.clone().json();
+      // Log the credit repayments request
+      await logApiRequest(
+        session.email,
+        "https://api.stripe.com/v1/issuing/credit_repayments",
+        "GET",
+        null,
+        responseData
+      );
+      return responseData;
+    })
   ]);
 
   // Create lookup maps for quick access
@@ -310,6 +328,9 @@ export async function getCreditLedgerEntries(
   );
   const authorizationsMap = new Map(
     authorizationsResponse.data.map(a => [a.id, a])
+  );
+  const creditRepaymentsMap = new Map(
+    (creditRepaymentsResponse.data || []).map((r: any) => [r.id, r])
   );
 
   // Process transactions with the bulk-fetched data
@@ -320,43 +341,15 @@ export async function getCreditLedgerEntries(
         transaction.auth = auth;
       }
     } else if (transaction.source?.type === "issuing_credit_repayment" && transaction.source?.issuing_credit_repayment) {
-      try {
-        const response = await fetch(
-          `https://api.stripe.com/v1/issuing/credit_repayments/${transaction.source.issuing_credit_repayment}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${getStripeSecretKey(platform)}`,
-              "Stripe-Version": "2024-04-10;issuing_credit_beta=v1;issuing_underwritten_credit_beta=v1"
-            }
-          }
-        );
-
-        // Log the credit repayment request
-        await logApiRequest(
-          session.email,
-          `https://api.stripe.com/v1/issuing/credit_repayments/${transaction.source.issuing_credit_repayment}`,
-          "GET",
-          null,
-          await response.clone().json()
-        );
-
-        if (response.ok) {
-          const creditRepayment = await response.json();
-          transaction.creditRepayment = creditRepayment;
-          // Use the actual repayment amount instead of the net ledger effect (which is 0 for failed repayments)
-          if (creditRepayment.amount && creditRepayment.amount.value) {
-            transaction.amount = creditRepayment.amount.value;
-          }
-        }
-      } catch (error) {
-        console.error('Failed to fetch credit repayment details:', error);
+      const creditRepayment = creditRepaymentsMap.get(transaction.source.issuing_credit_repayment);
+      if (creditRepayment) {
+        transaction.creditRepayment = creditRepayment;
       }
     } else if (transaction.source?.type === "issuing_transaction" && transaction.source?.issuing_transaction) {
       const issuingTransaction = transactionsMap.get(transaction.source.issuing_transaction);
       if (issuingTransaction) {
         transaction.transaction = issuingTransaction;
-
+        
         // If the transaction has an authorization, get it from our map
         if (issuingTransaction.authorization && typeof issuingTransaction.authorization === 'string') {
           const auth = authorizationsMap.get(issuingTransaction.authorization);
