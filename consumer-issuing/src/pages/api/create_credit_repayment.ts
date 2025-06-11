@@ -5,6 +5,7 @@ import { handlerMapping } from "src/utils/api-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import { getStripeSecretKey } from "src/utils/stripe-authentication";
 import stripeClient from "src/utils/stripe-loader";
+import { logApiRequest } from "src/utils/api-logger";
 import { v4 as uuidv4 } from 'uuid';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
@@ -68,8 +69,26 @@ const createCreditRepayment = async (
     const data = await response.json();
 
     if (!response.ok) {
+      // Log the failed API request
+      await logApiRequest(
+        session.email,
+        "https://api.stripe.com/v1/issuing/credit_repayments",
+        "POST",
+        Object.fromEntries(requestBody),
+        { error: data, status: response.status }
+      );
+
       throw new Error(data.error?.message || "Failed to create credit repayment");
     }
+
+    // Log the successful API request
+    await logApiRequest(
+      session.email,
+      "https://api.stripe.com/v1/issuing/credit_repayments",
+      "POST",
+      Object.fromEntries(requestBody),
+      data
+    );
 
     return res.status(200).json(apiResponse({ success: true, data }));
   } catch (error) {
