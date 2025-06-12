@@ -217,7 +217,7 @@ export const OverviewApiRequestLogs = forwardRef((props: {
                     wordBreak: 'break-word',
                     color: 'white',
                     fontWeight: 'bold',
-                    height: 400,
+                    height: 800,
                     overflow: 'auto'
                   }}
                 >

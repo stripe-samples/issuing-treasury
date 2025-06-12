@@ -47,15 +47,15 @@ export const items = [
       </SvgIcon>
     ),
   },
-  {
-    title: "API Requests",
-    path: "/api-requests",
-    icon: (
-      <SvgIcon fontSize="small">
-        <CommandLineIcon />
-      </SvgIcon>
-    ),
-  },
+  // {
+  //   title: "API Requests",
+  //   path: "/api-requests",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CommandLineIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
   // {
   //   title: "Test data",
   //   path: "/test-data",

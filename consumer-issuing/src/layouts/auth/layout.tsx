@@ -29,7 +29,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       alignItems="center"
       pt={20}
       sx={{
-        backgroundColor: isDemoMode() ? "#1B5E20" : "neutral.50",
+        backgroundColor: "27bb86",//isDemoMode() ? "#1B5E20" : "neutral.50",
         minHeight: "100vh",
       }}
     >
@@ -75,7 +75,7 @@ const TopLogoBar = () => (
   <Box
     component="header"
     sx={{
-      backgroundColor: isDemoMode() ? "#1B5E20" : "neutral.50",
+      backgroundColor: "27bb86", //isDemoMode() ? "#1B5E20" : "neutral.50",
       left: 0,
       p: 3,
       position: "fixed",
@@ -166,7 +166,7 @@ const CookieBanner = () => {
           <Box
             component="footer"
             sx={{
-              backgroundColor: isDemoMode() ? "#1B5E20" : "neutral.100",
+              backgroundColor: "27bb86", //isDemoMode() ? "#1B5E20" : "neutral.100",
               left: 0,
               bottom: 0,
               p: 3,

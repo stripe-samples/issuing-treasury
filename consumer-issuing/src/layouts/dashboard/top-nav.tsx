@@ -39,7 +39,7 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
         component="header"
         sx={{
           backdropFilter: "blur(6px)",
-          backgroundColor: isDemoMode() ? "#1B5E20" : "neutral.800",
+          backgroundColor: "#27bb86", //isDemoMode() ? "#1B5E20" : "neutral.800",
           position: "sticky",
           top: 0,
           width: "100%",
@@ -69,7 +69,7 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
                 <Logo />
               </Box>
               <Typography variant="h6" sx={{ color: "white" }}>
-                Welcome, {session.businessName} to Llama Llama Credit!
+                Welcome, {session.businessName} to Rocket Rides!
               </Typography>
             </Stack>
             <Stack alignItems="center" direction="row" spacing={2}>
@@ -111,7 +111,7 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
                     href={item.path}
                     startIcon={item.icon}
                     sx={{
-                      color: active ? "common.white" : "neutral.400",
+                      color: active ? "neutral.800": "common.white" ,
                       "&:hover": {
                         backgroundColor: "rgba(255, 255, 255, 0.04)",
                       },

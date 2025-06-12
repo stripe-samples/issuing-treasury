@@ -22,7 +22,7 @@ const LayoutContainer = styled("div")({
   width: "100%",
 });
 
-const Layout = ({ children }: { children: ReactNode }) => {
+const Layout = ({ children, hideTopNav = false }: { children: ReactNode, hideTopNav?: boolean }) => {
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(false);
   const { data: session } = useSession();
@@ -54,7 +54,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <GoogleMapsProvider>
-        <TopNav onNavOpen={() => setOpenNav(true)} />
+        { !hideTopNav && <TopNav onNavOpen={() => setOpenNav(true)} /> }
         <LayoutRoot>
           <LayoutContainer>{children}</LayoutContainer>
         </LayoutRoot>

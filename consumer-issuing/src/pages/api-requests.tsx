@@ -5,6 +5,7 @@ import DashboardLayout from "src/layouts/dashboard/layout";
 
 const ApiRequests = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingStatement, setIsFetchingStatement] = useState(false);
   const logsRef = useRef<{ refresh: () => Promise<void> }>(null);
 
   const handleFetchCreditData = async () => {
@@ -27,6 +28,23 @@ const ApiRequests = () => {
     }
   };
 
+  const handleFetchCurrentStatement = async () => {
+    setIsFetchingStatement(true);
+    try {
+      const response = await fetch("/api/get_current_statement");
+      const data = await response.json();
+      if (response.ok) {
+        await logsRef.current?.refresh();
+      } else {
+        console.error("Failed to fetch current statement:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching current statement:", error);
+    } finally {
+      setIsFetchingStatement(false);
+    }
+  };
+
   return (
     <Box
       component="main"
@@ -40,15 +58,26 @@ const ApiRequests = () => {
           <Typography variant="h4">
             API Requests
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            disabled={isLoading}
-            onClick={handleFetchCreditData}
-          >
-            {isLoading ? "Fetching..." : "Fetch Credit Data"}
-          </Button>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              disabled={isLoading}
+              onClick={handleFetchCreditData}
+            >
+              {isLoading ? "Fetching..." : "Fetch Credit Data"}
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              disabled={isFetchingStatement}
+              onClick={handleFetchCurrentStatement}
+            >
+              {isFetchingStatement ? "Fetching..." : "Fetch Current Statement"}
+            </Button>
+          </Box>
         </Box>
         <OverviewApiRequestLogs ref={logsRef} />
       </Container>
@@ -56,6 +85,6 @@ const ApiRequests = () => {
   );
 };
 
-ApiRequests.getLayout = (page: ReactNode) => <DashboardLayout>{page}</DashboardLayout>;
+ApiRequests.getLayout = (page: ReactNode) => <DashboardLayout hideTopNav>{page}</DashboardLayout>;
 
 export default ApiRequests; 

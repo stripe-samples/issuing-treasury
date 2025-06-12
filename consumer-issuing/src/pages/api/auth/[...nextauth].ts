@@ -119,7 +119,7 @@ export const authOptions: NextAuthOptions = {
       session.email = token.email;
       session.stripeAccount = stripeAccount;
       session.requiresOnboarding = token.requiresOnboarding;
-      session.businessName = token.businessName;
+      session.businessName = "Mrudula"; //token.businessName;
       session.country = token.country;
       session.currency = token.currency;
 
