@@ -69,7 +69,7 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
                 <Logo />
               </Box>
               <Typography variant="h6" sx={{ color: "white" }}>
-                Welcome, {session.businessName} to Rocket Rides!
+                Welcome, {session.businessName} to Furever!
               </Typography>
             </Stack>
             <Stack alignItems="center" direction="row" spacing={2}>

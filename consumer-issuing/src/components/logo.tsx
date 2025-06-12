@@ -3,8 +3,8 @@ import Image from "next/image";
 export const Logo = () => {
   return (
     <Image
-      src="/assets/rocket-rides-logo.png"
-      alt="Llama Llama Credit Logo"
+      src="/assets/furever_logo.png"
+      alt="Furever Logo"
       width={40}
       height={40}
       style={{

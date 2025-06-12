@@ -272,18 +272,21 @@ const TransactionDetailsPanel = ({
             {transaction.auth && (
               <>
                 <Grid item xs={12}>
-                  <Typography variant="subtitle2">Status</Typography>
+                  <Typography variant="subtitle2">Approval Status</Typography>
                   <Box sx={{ mt: 0.5 }}>
-                    <Stack direction="row" spacing={1}>
-                      <SeverityPill
-                        color={transaction.auth.approved ? "success" : "error"}
-                      >
-                        {transaction.auth.approved ? "Approved" : "Declined"}
-                      </SeverityPill>
-                      <SeverityPill color={statusMap[transaction.auth.status]}>
-                        {capitalize(transaction.auth.status)}
-                      </SeverityPill>
-                    </Stack>
+                    <SeverityPill
+                      color={transaction.auth.approved ? "success" : "error"}
+                    >
+                      {transaction.auth.approved ? "Approved" : "Declined"}
+                    </SeverityPill>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">Authorization Lifecycle Status</Typography>
+                  <Box sx={{ mt: 0.5 }}>
+                    <SeverityPill color={statusMap[transaction.auth.status]}>
+                      {capitalize(transaction.auth.status)}
+                    </SeverityPill>
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
