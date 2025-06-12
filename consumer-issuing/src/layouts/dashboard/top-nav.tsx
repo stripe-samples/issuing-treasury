@@ -100,7 +100,7 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
               />
             </Stack>
           </Stack>
-          <Box sx={{ borderTop: 1, borderColor: "neutral.700", px: 2, py: 1 }}>
+          <Box sx={{ borderTop: 1, borderColor: "neutral.700", backgroundColor: "neutral.800", px: 2, py: 1 }}>
             <Stack direction="row" spacing={1}>
               {items.map((item) => {
                 const active = item.path ? pathname === item.path : false;
@@ -111,7 +111,7 @@ export const TopNav = ({ onNavOpen }: { onNavOpen: () => void }) => {
                     href={item.path}
                     startIcon={item.icon}
                     sx={{
-                      color: active ? "neutral.800": "common.white" ,
+                      color: active ? "common.white" : "neutral.400",
                       "&:hover": {
                         backgroundColor: "rgba(255, 255, 255, 0.04)",
                       },
