@@ -1,3 +1,7 @@
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const isDevelopment = process.env.NODE_ENV === "development";
 
 // We are setting the CSP headers as strictly as possible. There are a few notable exceptions being made:
@@ -33,7 +37,7 @@ const ContentSecurityPolicy = `
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  outputFileTracingRoot: __dirname,
   async headers() {
     return [
       {
