@@ -3,7 +3,7 @@ import { Stripe } from "stripe";
 import { PlatformStripeAccount } from "src/utils/account-management-helpers";
 import { getStripeSecretKey } from "src/utils/stripe-authentication";
 
-const API_VERSION = "2023-10-16";
+const API_VERSION = "2025-12-15.clover";
 const APP_INFO_NAME = "Stripe Issuing & Treasury Starter Application";
 
 const stripeClient = (platform: PlatformStripeAccount) => {

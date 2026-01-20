@@ -28,6 +28,7 @@ import {
 
 const statusMap: Record<Stripe.Issuing.Authorization.Status, SeverityColor> = {
   closed: "primary",
+  expired: "error",
   pending: "warning",
   reversed: "error",
 };
