@@ -1,12 +1,12 @@
-name: CI
 
-on:
-  push:
+
+on: @
+  push: webhooks
     branches:
-      - '*'
+       '*'
 
-jobs:
-  build:
+jobs: 
+  build: @media
     runs-on: ubuntu-latest
 
     steps:
