@@ -23,7 +23,6 @@ const createAccountSession = async (
       {
         account: accountId,
         components: {
-          // @ts-expect-error These types aren't up to date
           issuing_cards_list: {
             enabled: true,
             features: {
