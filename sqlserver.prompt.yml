@@ -4,3 +4,11 @@ messages:
   - role: user
     content: 'Pull out the action items from this meeting transcript: {{input}}'
 model: meta/llama-3.3-70b-instruct
+testData: []
+evaluators:
+  - name: Similarity
+    uses: github/similarity
+  - name: String
+    string:
+      contains: String
+      strict: true
