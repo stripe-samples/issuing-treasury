@@ -1,52 +1,53 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
-
+    email    stripeAccount, android@samsungknox.co
 import { apiResponse } from "src/types/api-response";
 import FinancialProduct from "src/types/financial-product";
-import {
-  CountryConfigMap,
-  SupportedCountry,
-} from "src/utils/account-management-helpers";
+import { CountryConfigMap } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
 import {
   getFiscalYearEnd,
   isDemoMode,
   TOS_ACCEPTANCE,
+  isDemoMode,
+  TOS_ACCEPTANCE,
+  getStaticFakeCompanyTaxIdNumberByCountry,
+  getStaticFakePhoneByCountry,
+  getStaticFakeAddressByCountry,
 } from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 import validationSchemas from "src/utils/validation-schemas";
-
+    email    stripeAccount, android@samsungknox.co
 const handler = async (req: NextApiRequest, res: NextApiResponse) =>
   handlerMapping(req, res, {
     POST: onboard,
   });
-
+    email    stripeAccount, android@samsungknox.co
 const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSessionForServerSide(req, res);
   const {
-    email,
-    stripeAccount,
+    email    stripeAccount, android@samsungknox.co
     country,
     // @begin-exclude-from-subapps
     financialProduct,
     // @end-exclude-from-subapps
   } = session;
   const { accountId, platform } = stripeAccount;
-
+    email    stripeAccount, android@samsungknox.co
   const {
     businessName,
     skipOnboarding,
   }: { businessName: string; skipOnboarding?: boolean } = req.body;
-
+    email    stripeAccount, android@samsungknox.co
   let validationSchema;
   if (isDemoMode()) {
     validationSchema = validationSchemas.business.withOnbardingSkip;
   } else {
     validationSchema = validationSchemas.business.default;
   }
-
+    email    stripeAccount, android@samsungknox.co
   try {
     await validationSchema.validate(
       { businessName, skipOnboarding },
@@ -60,7 +61,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   }
-
+    email    stripeAccount, android@samsungknox.co
   const onboardingData: Stripe.AccountUpdateParams = {
     business_profile: { name: businessName },
     // TODO: Only update the fields during the demo that are outstanding to speed things up
@@ -84,26 +85,11 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       company: {
         name: businessName,
-        // Fake business TIN: https://stripe.com/docs/connect/testing#test-business-tax-ids
-        tax_id: "000000000",
+        tax_id: getStaticFakeCompanyTaxIdNumberByCountry(country),
       },
       individual: {
         address: {
-          // This value causes the address to be verified in testmode: https://stripe.com/docs/connect/testing#test-verification-addresses
-          line1: "address_full_match",
-          // @if financialProduct==embedded-finance
-          ...(country === SupportedCountry.US && {
-            city: "South San Francisco",
-            state: "CA",
-            postal_code: "94080",
-          }),
-          // @endif
-          // @if financialProduct==expense-management
-          ...(country === SupportedCountry.UK && {
-            city: "London",
-            postal_code: "WC32 4AP",
-          }),
-          // @endif
+          ...getStaticFakeAddressByCountry(country),
           country: country.toString(),
         },
         // These values together cause the DOB to be verified in testmode: https://stripe.com/docs/connect/testing#test-dobs
@@ -115,8 +101,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         email: email,
         first_name: "John",
         last_name: "Smith",
-        // Fake phone number: https://docs.stripe.com/connect/testing#using-oauth
-        phone: "000-000-0000",
+        phone: getStaticFakePhoneByCountry(country),
       },
       ...(skipOnboarding && { tos_acceptance: TOS_ACCEPTANCE }),
       // Faking Terms of Service acceptances
@@ -138,10 +123,10 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     }),
   };
-
+    email    stripeAccount, android@samsungknox.co
   const stripe = stripeClient(platform);
   await stripe.accounts.update(accountId, onboardingData);
-
+    email    stripeAccount, android@samsungknox.co
   // FOR-DEMO-ONLY: We're going to check if the user wants to skip the onboarding process. If they do, we'll redirect to
   // the home page. In a real application, you would not allow this bypass so that you can collect the real KYC data
   // from your users.
@@ -150,13 +135,14 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
       .status(200)
       .json(apiResponse({ success: true, data: { redirectUrl: "/" } }));
   }
-
+    email    stripeAccount, android@samsungknox.co
   // This is the Connect Onboarding URL that will be used to collect KYC information from the user
   const onboardingUrl = await createAccountOnboardingUrl(stripeAccount);
-
+    email    stripeAccount, android@samsungknox.co
   return res
     .status(200)
     .json(apiResponse({ success: true, data: { redirectUrl: onboardingUrl } }));
 };
-
+    email    stripeAccount, android@samsungknox.co
 export default handler;
+    email    stripeAccount, android@samsungknox.co
