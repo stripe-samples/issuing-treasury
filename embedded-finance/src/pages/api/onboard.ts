@@ -7,7 +7,11 @@ import {
   SupportedCountry,
 } from "src/utils/account-management-helpers";
 import { handlerMapping } from "src/utils/api-helpers";
-import { isDemoMode, TOS_ACCEPTANCE } from "src/utils/demo-helpers";
+import {
+  getFiscalYearEnd,
+  isDemoMode,
+  TOS_ACCEPTANCE,
+} from "src/utils/demo-helpers";
 import { createAccountOnboardingUrl } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
@@ -66,7 +70,7 @@ const onboard = async (req: NextApiRequest, res: NextApiResponse) => {
         annual_revenue: {
           amount: 0,
           currency: CountryConfigMap[country].currency,
-          fiscal_year_end: "2023-12-31",
+          fiscal_year_end: getFiscalYearEnd(),
         },
         estimated_worker_count: 1,
       },

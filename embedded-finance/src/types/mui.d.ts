@@ -18,8 +18,10 @@ declare module "@mui/material/Alert" {
     standard?: true;
   }
 
-  export interface AlertProps
-    extends Omit<React.HTMLAttributes<HTMLDivElement>, "color" | "variant"> {
+  export interface AlertProps extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    "color" | "variant"
+  > {
     color?: Color | keyof AlertPropsColorOverrides;
     variant?: keyof AlertPropsVariantOverrides;
   }

@@ -3,17 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "npm run build --workspaces",
-    "lint": "npm run lint --workspaces",
+    "build": "./scripts/build.sh",
+    "lint": "./scripts/lint.sh",
     "codegen": "./codegen.sh"
   },
-  "dependencies": {},
-  "devDependencies": {},
-  "workspaces": [
-    "./embedded-finance/",
-    "./expense-management/"
-  ],
   "engines": {
-    "node": "18"
+    "node": ">=24.11.1"
   }
 }

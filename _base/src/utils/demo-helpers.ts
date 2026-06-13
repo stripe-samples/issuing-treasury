@@ -364,6 +364,11 @@ export const getStaticFakeAddressByCountry = (
         postal_code: "NOT AVAILABLE",
       };
     case SupportedCountry.UK:
+      return faker.helpers.fromRegExp("+44 7[0-9]{9}"); // UK phone number format
+    // @endif
+    // @if financialProduct==embedded-finance
+    case SupportedCountry.US:
+      return faker.helpers.fromRegExp("[2-9][0-9]{2}-[0-9]{3}-[0-9]{4}"); // US phone number format
       return {
         address1: "address_full_match",
         city: "London",
@@ -435,4 +440,12 @@ export const getFakeAddressByCountry = (
         `Fake address generation not implemented for country: ${country}`,
       );
   }
+};
+
+/**
+ * Returns the fiscal year end date dynamically based on the current year.
+ */
+export const getFiscalYearEnd = (): string => {
+  const lastYear = new Date().getFullYear() - 1;
+  return `${lastYear}-12-31`;
 };

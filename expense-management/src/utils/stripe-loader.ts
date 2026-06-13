@@ -3,7 +3,7 @@ import { Stripe } from "stripe";
 import { PlatformStripeAccount } from "src/utils/account-management-helpers";
 import { getStripeSecretKey } from "src/utils/stripe-authentication";
 
-const API_VERSION = "2023-10-16";
+const API_VERSION = "2025-12-15.clover";
 const APP_INFO_NAME = "Stripe Issuing & Treasury Starter Application";
 
 const stripeClient = (platform: PlatformStripeAccount) => {
@@ -11,6 +11,11 @@ const stripeClient = (platform: PlatformStripeAccount) => {
 
   if (!stripeSecretKey) {
     throw new Error(
+      // Don't put any keys in code. Use an environment variable (as shown
+      // here) or secrets vault to supply keys to your integration.
+      //
+      // See https://docs.stripe.com/keys-best-practices and find your
+      // keys at https://dashboard.stripe.com/apikeys.
       "Cannot instantiate Stripe client. STRIPE_SECRET_KEY needs to be set in environment variables.",
     );
   }
