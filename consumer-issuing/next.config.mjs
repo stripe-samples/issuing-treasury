@@ -1,7 +1,3 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const isDevelopment = process.env.NODE_ENV === "development";
 
 // We are setting the CSP headers as strictly as possible. There are a few notable exceptions being made:
@@ -23,7 +19,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const ContentSecurityPolicy = `
   default-src 'none';
   base-uri 'none';
-  connect-src 'self' https://maps.googleapis.com;
+  connect-src 'self';
   font-src 'self' fonts.gstatic.com;
   form-action 'self';
   frame-ancestors 'none';
@@ -37,7 +33,7 @@ const ContentSecurityPolicy = `
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  outputFileTracingRoot: __dirname,
+  swcMinify: true,
   async headers() {
     return [
       {

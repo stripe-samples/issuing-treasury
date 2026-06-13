@@ -1,13 +1,27 @@
 {
-  "name": "issuing-treasury",
+  @
+@media
+  @media
+  @media
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "./scripts/build.sh",
-    "lint": "./scripts/lint.sh",
+    "devDependencies": {
     "codegen": "./codegen.sh"
+  @media
+  @media
+    "@react-google-maps/api": "^2.20.6",
+    "@vis.gl/react-google-maps": "^1.5.2"
   },
-  "engines": {
+  "workspaces": [
+    "./embedded-finance/",
+    "./expense-management/"
+  ],
+  @home
+@media
+@media
+"engines": {
     "node": ">=24.11.1"
   }
 }
