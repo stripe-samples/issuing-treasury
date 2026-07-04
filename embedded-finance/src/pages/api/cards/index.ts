@@ -3,6 +3,7 @@ import Stripe from "stripe";
 
 import { apiResponse } from "src/types/api-response";
 import { handlerMapping } from "src/utils/api-helpers";
+import { isCardIssuingActive } from "src/utils/onboarding-helpers";
 import { getSessionForServerSide } from "src/utils/session-helpers";
 import stripeClient from "src/utils/stripe-loader";
 import validationSchemas from "src/utils/validation-schemas";
@@ -17,6 +18,23 @@ const createCard = async (req: NextApiRequest, res: NextApiResponse) => {
   const { stripeAccount, currency } = session;
   const { accountId, platform } = stripeAccount;
   const stripe = stripeClient(platform);
+
+  // The `card_issuing` capability can still be activating for a short while
+  // after onboarding completes. Issuing a card before it is active fails, so
+  // surface a clear message instead of letting the Stripe error surface as a
+  // 500. See https://github.com/stripe-samples/issuing-treasury/issues/380
+  if (!(await isCardIssuingActive(stripeAccount))) {
+    return res.status(400).json(
+      apiResponse({
+        success: false,
+        error: {
+          message:
+            "Your account's card issuing capability is still being activated. " +
+            "This can take a few minutes after onboarding. Please try again shortly.",
+        },
+      }),
+    );
+  }
 
   const financialAccount = await (async () => {
     const financialAccounts = await stripe.treasury.financialAccounts.list({

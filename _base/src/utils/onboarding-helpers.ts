@@ -23,6 +23,20 @@ export const hasOutstandingRequirements = async (
   return result;
 };
 
+// After onboarding completes, the `card_issuing` capability is not necessarily
+// active right away: activation can take a couple of minutes. Issuing a card or
+// creating a cardholder before it becomes `active` fails, so callers should
+// gate those actions on this check.
+export const isCardIssuingActive = async (
+  stripeAccount: StripeAccount,
+): Promise<boolean> => {
+  const { accountId, platform } = stripeAccount;
+  const stripe = stripeClient(platform);
+  const account = await stripe.accounts.retrieve(accountId);
+
+  return account.capabilities?.card_issuing === "active";
+};
+
 export async function createAccountOnboardingUrl(stripeAccount: StripeAccount) {
   if (
     process.env.CONNECT_ONBOARDING_REDIRECT_URL == undefined &&
